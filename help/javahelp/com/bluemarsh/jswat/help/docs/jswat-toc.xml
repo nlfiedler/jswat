@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: jswat-toc.xml 6 2007-05-16 07:14:24Z nfiedler $
+-->
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN"
+         "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+
+<toc version="2.0">
+    <tocitem text="JSwat Help">
+        <tocitem text="Current Context" target="jswat-context"/>
+        <tocitem text="Classpath and Sourcepath" target="jswat-paths"/>
+        <tocitem text="Expression Evaluator" target="jswat-evaluator-view"/>
+        <tocitem text="Fixing Your Code" target="jswat-classes-view"/>
+        <tocitem text="Managing Debuggee Runtimes" target="jswat-runtime-manager"/>
+        <tocitem text="Viewing the Sourcepath" target="jswat-sources-view"/>
+        <tocitem text="Multithread Debugging" target="jswat-threads"/>
+        <tocitem text="Setting Breakpoints">
+            <tocitem text="Creating Breakpoints" target="jswat-create-breakpoint"/>
+            <tocitem text="Editing Breakpoints" target="jswat-edit-breakpoint"/>
+            <tocitem text="Breakpoint Monitors" target="jswat-breakpoint-monitors"/>
+            <tocitem text="Editing Breakpoint Groups" target="jswat-edit-bpgroup"/>
+        </tocitem>
+        <tocitem text="Debugging Sessions">
+            <tocitem text="Attaching to a Remote Debuggee" target="jswat-attach-debuggee"/>
+            <tocitem text="Starting a Local Debuggee" target="jswat-launch-debuggee"/>
+            <tocitem text="Stepping Through Your Program" target="jswat-stepping"/>
+            <tocitem text="Resuming the Debuggee" target="jswat-resume-debuggee"/>
+            <tocitem text="Finishing a Session" target="jswat-finish-session"/>
+            <tocitem text="Suspending the Debuggee" target="jswat-suspend-debuggee"/>
+            <tocitem text="Session Properties" target="jswat-session-properties"/>
+            <tocitem text="Multiple Sessions" target="jswat-sessions-multiple"/>
+        </tocitem>
+        <tocitem text="Viewing Program Information">
+            <tocitem text="Breakpoints" target="jswat-breakpoints-view"/>
+            <tocitem text="Byte Codes" target="jswat-bytecodes-view"/>
+            <tocitem text="Loaded Classes" target="jswat-classes-view"/>
+            <tocitem text="Variables and Fields" target="jswat-varibles-view"/>
+            <tocitem text="Call Stack" target="jswat-stack-view"/>
+            <tocitem text="Threads and Groups" target="jswat-thread-view"/>
+            <tocitem text="Sessions" target="jswat-sessions-view"/>
+            <tocitem text="Watched Expressions" target="jswat-watches-view"/>
+        </tocitem>
+        <tocitem text="Troubleshooting" target="jswat-troubleshooting"/>
+        <tocitem text="Getting Help" target="jswat-getting-help"/>
+        <tocitem text="Reporting Bugs" target="jswat-reporting-bugs"/>
+    </tocitem>
+</toc>

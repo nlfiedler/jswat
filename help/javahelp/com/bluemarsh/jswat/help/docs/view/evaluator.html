@@ -1,0 +1,124 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005-2007. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: evaluator.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Evaluator</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Expression Evaluator</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The <strong>Evaluator</strong> view allows the evaluation of
+  Java-like expressions in the context of the debuggee. This means you
+  can refer to variables and fields, invoke methods, and perform other
+  arithmetic and logic operations.</p>
+
+  <p>In order to reference variables and invoke methods, the current
+  thread and stack frame must be set. See the links to the help for the
+  <strong>Call Stack</strong> and <strong>Threads</strong> views at the
+  bottom of this page.</p>
+
+  <p>Most, but not all, Java expressions are supported. The following
+  operators are not supported in this expression evaluator.</p>
+
+  <ul>
+    <li>Conditional operators</li>
+    <li><code>new</code> keyword</li>
+    <li><code>super</code> keyword</li>
+    <li>Invocations on string literals - &quot;abc&quot;.length()</li>
+  </ul>
+
+  <p>Supported operators include (listed in order of precedence):</p>
+
+  <ul>
+    <li>- (unary), + (unary), !, ~</li>
+    <li>*, /, %</li>
+    <li>+, -</li>
+    <li>&lt;&lt;, &gt;&gt;, &gt;&gt;&gt;</li>
+    <li>&lt;, &gt;, &lt;=, &gt;=</li>
+    <li>==, !=</li>
+    <li>&amp;</li>
+    <li>^</li>
+    <li>|</li>
+    <li>&amp;&amp;</li>
+    <li>||</li>
+    <li>=</li>
+  </ul>
+
+  <p>Supported Java keywords include:</p>
+
+  <ul>
+    <li>boolean</li>
+    <li>byte</li>
+    <li>char</li>
+    <li>double</li>
+    <li>false</li>
+    <li>float</li>
+    <li>int</li>
+    <li>long</li>
+    <li>null</li>
+    <li>short</li>
+    <li>this</li>
+    <li>true</li>
+  </ul>
+
+  <p>Referencing variables and invoking methods in the debuggee is
+  supported when the debugging session is active and the current thread
+  is set and suspended. Method invocations may include expressions for
+  the method arguments, as well as nested method calls.</p>
+
+  <p>Below are some examples of valid expressions:</p>
+
+  <ul>
+    <li>var</li>
+    <li>var + 123</li>
+    <li>123 * 456</li>
+    <li>m * (c * c)</li>
+    <li>meth(1 + 2, arr[j+i], true)</li>
+    <li>false</li>
+    <li>null</li>
+    <li>&quot;abc&quot;</li>
+    <li>128</li>
+    <li>a == true</li>
+    <li>255 &amp; 32</li>
+    <li>a || b</li>
+    <li>this.field * 2</li>
+  </ul>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="stack.html">Call Stack</a></li>
+    <li><a href="threads.html">Threads and Groups</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

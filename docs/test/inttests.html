@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: inttests.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org" />
+
+  <title>JSwat - Integration Tests</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>Integration Tests</h2>
+
+  <p>To perform testing beyond that of the simple unit tests, there are
+  several test classes provided in the <code>tests/integration</code>
+  directory. These are short Java classes that exercise some aspect of
+  JSwat in order to ensure it is functioning properly. The idea is that
+  these tests demonstrate that JSwat as a whole is working as
+  expected.</p>
+
+  <h3>Requirements</h3>
+
+  <p>These are the same as the requirements for <a href=
+  "../dev/compile.html">compiling</a> JSwat.</p>
+
+  <h3>Setting Up</h3>
+
+  <p>As with compiling JSwat, preparations must be made in order to
+  compile and run the integration tests. They are as follows:</p>
+
+  <ol>
+    <li>Follow the instructions for <a href=
+    "../dev/compile.html">compiling</a> JSwat.</li>
+
+    <li>Invoke the <em>compile</em> target of the
+    <code>build.xml</code> file in the <code>test/integration</code>
+    directory. The compiled code will be generated in the
+    <code>test/integration/build</code> directory.</li>
+  </ol>
+
+  <h3>Running the Tests</h3>
+
+  <p>After performing all of the preparation, actually running the
+  tests involves starting JSwat, initiating a debugging session,
+  specifying the classpath and name of the test class, and launching
+  the debuggee. From there, it is simply a matter of ensuring that
+  JSwat reacts appropriately to the actions of the test code. Below are
+  descriptions of the test classes and how they are expected to
+  operate, and in what way JSwat should behave.</p>
+
+  <h4>ClickMe</h4>
+
+  <p>This class creates a window containing a button and waits for the
+  button to be pressed, at which point the button label is changed to
+  indicate the number of times it was pressed. This class is good for
+  testing the behavior of the Variables view after the debuggee has hit
+  a breakpoint and subsequently resumed. In that case, expanding a node
+  in the Variables view should either work correctly, or do nothing. In
+  other words, there should not be an exception just because the
+  debuggee is no longer suspended.</p>
+
+  <h4>DeepStack</h4>
+
+  <p>This simple class is used for testing the call stack top component
+  in JSwat. To test the call stack, open the source for
+  <code>DeepStack</code> and set a breakpoint in the
+  <code>subroutine_4()</code> method (the last method in the call
+  chain). Then start a session for the <code>DeepStack</code> class and
+  resume so as to hit the breakpoint. Make sure the JSwat call stack
+  window is open and ensure that it shows the thread stack as would be
+  expected (e.g. entry on the top should be <code>subroutine_4()</code>
+  and <code>main()</code> should be at the bottom).</p>
+
+  <p>The call stack supports a few actions, including showing the
+  source code for a particular frame, and setting a frame as the
+  current in the debugging context. Showing the source will open the
+  corresponding source file and scroll to the line for that frame.
+  Setting the current frame will make the icon for that frame have a
+  bold outline, and change the debugging context (i.e. the Variables
+  view will show the variables in that frame).</p>
+
+  <h4>InAndOut</h4>
+
+  <p>This class is very simple and demonstrates the proper functioning
+  of the &quot;Process Output&quot; window. This includes displaying
+  the output from the <code>InAndOut</code> class as well as sending
+  input to that class. Input is sent to the debuggee via the input
+  field in the &quot;Process Output&quot; window.</p>
+
+  <p>When this class is executed, you should see a message to the
+  standard output, a message to standard error, and then a prompt for
+  input. The class will wait indefinitely for that input. Once provided
+  with input, it will display the input value and a final message
+  before exiting.</p>
+
+  <h4>Librarian</h4>
+
+  <p>All this class does is import some classes from the JDI external
+  library in order to print the JDI version number to the console. The
+  purpose of this is to confirm that if the session classpath is not
+  appropriately set, the source editor will indicate that the classes
+  cannot be found (the red error stripes). After setting the classpath
+  to include the <code>tools.jar</code> file included in the JDK
+  <code>lib</code> directory, the error stripes should immediately
+  disappear.</p>
+
+  <h4>Overloaded</h4>
+
+  <p>Use this class to test the method breakpoints and their ability to
+  stop at any or all of the methods in the class. By defining a method
+  breakpoint with no method name, the breakpoint will stop at all of
+  the methods in the class. Likewise, defining a method breakpoint with
+  a method name but no parameters will stop at all methods by the given
+  name.</p>
+
+  <h4>PackRat</h4>
+
+  <p>This code is used for testing the Variables view, to ensure that
+  the view updates the variable values appropriately, shows the correct
+  value types, and displays arrays in a suitable manner. Test the
+  Variables view by setting breakpoints in various methods of
+  <code>PackRat</code> and stepping through the code. You should see
+  the values of variables changing in the Variables view. Expand some
+  of the nodes in the Variables view and observe that object references
+  will show their fields as child nodes, and array references will show
+  the elements as child nodes.</p>
+
+  <h4>Pitcher</h4>
+
+  <p>This code throws exceptions and is useful for testing the
+  exception breakpoints. Test this by setting an exception breakpoint
+  for <code>java.net.MalformedURLException</code> and debugging the
+  <code>Pitcher</code> class. The exception breakpoint should suspend
+  the debuggee at the point where the exception is caught. Resume the
+  debuggee and it should stop again when the uncaught exceptions are
+  thrown.</p>
+
+  <h4>SetFielder</h4>
+
+  <p>This class has two fields whose values are changed and is used for
+  testing the watch breakpoints. Test this by setting a watch
+  breakpoint for each of the two fields in the <code>SetFielder</code>
+  class. The debuggee should suspend when each of these fields is
+  accessed and modified by the debuggee.</p>
+
+  <h4>Snoozer</h4>
+
+  <p>The Snoozer class creates several threads and has them sleep for
+  several seconds each. This is used for testing the thread
+  breakpoints. It can also be used to test single-stepping through code
+  that is being executed by multiple threads simultaneously. Test this
+  by creating a thread breakpoint with a thread filter value of
+  &quot;abc&quot;. The breakpoint should be hit just one time, when the
+  &quot;abc&quot; thread is started. Single-stepping should proceed
+  normally, unless the thread breakpoint does not have a thread filter.
+  It is also possible to test line breakpoint thread filters in the
+  same way.</p>
+</body>
+</html>

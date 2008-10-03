@@ -1,0 +1,10 @@
+com.bluemarsh.jswat.command.BangBangInputProcessor
+#position=1
+com.bluemarsh.jswat.command.BangPrefixInputProcessor
+#position=2
+com.bluemarsh.jswat.command.MultipleCommandInputProcessor
+#position=100
+com.bluemarsh.jswat.command.RepeaterInputProcessor
+#position=200
+com.bluemarsh.jswat.command.AliasInputProcessor
+#position=300

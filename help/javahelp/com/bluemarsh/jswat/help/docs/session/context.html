@@ -1,0 +1,83 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: context.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Current Context</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Current Context</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The current context is the location in your application on which
+  the debugger is currently focused. When multiple sessions are running,
+  only one session is current. Within the current session, the thread
+  from which the debugger regained control is the default current
+  thread. Inside the current thread, the most recent frame in the stack
+  is the default current frame.</p>
+
+  <p>You can make any session, thread, or call current by double-clicking
+  its node in the appropriate debugger window.</p>
+
+  <h3>Debugger Windows and Context</h3>
+
+  <p>Most debugger windows depend on the current context. When you
+  change the current context, the contents of these windows are updated
+  to reflect the new context.</p>
+
+  <p>For example, the Threads window shows the threads in the current
+  session, while the Call Stack window shows the call stack for the
+  current thread. The Variables window shows the variables that are
+  local to the current call, and the Classes window shows the classes
+  that have been loaded by the current session.</p>
+
+  <p>One exception is the Watches window. This windows list all watches
+  set in the debugger. While the set of watches is shared by all
+  sessions, an individual watch expression is evaluated and displayed
+  based on the current context.</p>
+
+  <h3>The Source Editor and Context</h3>
+
+  <p>When a variable is active in the current context, the source editor
+  displays the value of the variable when you move the mouse pointer
+  over it. In cases where a program includes different variables with
+  the same name, the source editor displays the value based on the
+  current context, and not on the instance of the variable in the source
+  code.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="../view/threads.html">Threads and Groups</a></li>
+    <li><a href="../view/stack.html">Call Stack</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

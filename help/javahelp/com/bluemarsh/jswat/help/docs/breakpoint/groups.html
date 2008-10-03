@@ -1,0 +1,66 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: groups.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Editing Breakpoint Groups</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Editing Breakpoint Groups</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>Changes to existing breakpoints groups can be made by selecting the
+  group in the <strong>Breakpoints</strong> window and right-clicking on
+  it and selecting <em>Customize</em> from the context menu. A dialog
+  featuring the breakpoint group customizer will be displayed. When you
+  are done, click <em>Ok</em> to save your changes.</p>
+
+  <h3>Groups and Conditions</h3>
+
+  <p>As with breakpoints, it is possible to set a boolean expression to
+  act as a condition for a breakpoint group. This condition applies to
+  all of the breakpoints contained in that group. So in order for a
+  breakpoint to suspend the debuggee, not only must the breakpoint's
+  conditions be satisfied, but so must the conditions of the
+  breakpoint's group. Likewise, the conditions of the parent of the
+  breakpoint group must also be satisfied, and so on, up to the top-most
+  breakpoint group. For this reason, it is a good idea to avoid setting
+  conditions on the Default group. Otherwise you may wonder why none of
+  your breakpoints are stopping when you expect them to.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="create.html">Creating Breakpoints</a></li>
+    <li><a href="edit.html">Editing Breakpoints</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

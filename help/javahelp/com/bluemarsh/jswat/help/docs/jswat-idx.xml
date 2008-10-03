@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: jswat-idx.xml 6 2007-05-16 07:14:24Z nfiedler $
+-->
+<!DOCTYPE index
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN"
+         "http://java.sun.com/products/javahelp/index_2_0.dtd">
+
+<index version="2.0">
+    <indexitem text="attaching" target="jswat-attach-debuggee"/>
+
+    <indexitem text="breakpoints" target="jswat-breakpoints-view"/>
+    <indexitem text="byte codes" target="jswat-bytecodes-view"/>
+
+    <indexitem text="call stack" target="jswat-stack-view"/>
+    <indexitem text="classes" target="jswat-classes-view"/>
+    <indexitem text="classpath" target="jswat-paths"/>
+    <indexitem text="context" target="jswat-context"/>
+
+    <indexitem text="expressions" target="jswat-evaluator-view"/>
+    <indexitem text="evaluator" target="jswat-evaluator-view"/>
+
+    <indexitem text="fields" target="jswat-varibles-view"/>
+    <indexitem text="finishing" target="jswat-finish-session"/>
+    <indexitem text="frames" target="jswat-stack-view"/>
+
+    <indexitem text="group, breakpoint" target="jswat-edit-bpgroup"/>
+
+    <indexitem text="hotswap" target="jswat-classes-view"/>
+
+    <indexitem text="launching" target="jswat-launch-debuggee"/>
+    <indexitem text="local variables" target="jswat-varibles-view"/>
+
+    <indexitem text="monitors" target="jswat-breakpoint-monitors"/>
+    <indexitem text="multi-threading" target="jswat-threads"/>
+
+    <indexitem text="resuming" target="jswat-resume-debuggee"/>
+    <indexitem text="runtimes" target="jswat-runtime-manager"/>
+
+    <indexitem text="sessions" target="jswat-sessions-view"/>
+    <indexitem text="sessions, multiple" target="jswat-sessions-multiple"/>
+    <indexitem text="session properties" target="jswat-session-properties"/>
+    <indexitem text="sourcepath" target="jswat-paths"/>
+    <indexitem text="stack" target="jswat-stack-view"/>
+    <indexitem text="stepping" target="jswat-stepping"/>
+    <indexitem text="suspending" target="jswat-suspend-debuggee"/>
+
+    <indexitem text="terminating" target="jswat-finish-session"/>
+    <indexitem text="thread groups" target="jswat-thread-view"/>
+    <indexitem text="threads" target="jswat-thread-view"/>
+    <indexitem text="troubleshooting" target="jswat-troubleshooting"/>
+
+    <indexitem text="variables" target="jswat-varibles-view"/>
+
+    <indexitem text="watches" target="jswat-watches-view"/>
+</index>

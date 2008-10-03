@@ -1,0 +1,19 @@
+* Background is white, no alpha channel.
+
+* Image is from the Yosemite desktop image (top-left 800x300 pixels, scaled
+  down to 400x150 to fit the splash screen).
+
+* Built on NetBeans logo from www.netbeans.org site.
+
+* Title text is Nimbus Sans L, bold, 32 point, white.
+  Offset is 15 pixels from left, 118 pixels from top to baseline.
+
+* Subtitle text is Nimbus Sans L, bold, 20 point, white.
+  Offset is 117 pixels from left, 118 pixels from top to baseline.
+
+* Copyright text is Nimbus Sans L, bold, 14 point, white.
+  Offset is 60 pixels from left, 140 pixels from top to baseline.
+
+* License and info text is Nimbus Sans L, 9 point.
+  Web address is Nimbus Sans L, bold, 9 point.
+  Color is same as text in "built on netBeans" logo (0x0E1B55).

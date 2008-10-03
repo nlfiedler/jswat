@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: netbeans.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org" />
+
+  <title>The Great Refactoring of 2004/2005</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>The Great Refactoring of 2004/2005</h2>
+
+  <h3>Why The Change?</h3>
+
+  <p>After some time considering the numerous features that I wanted to
+  add to JSwat, I came to realize that a system existed already that
+  implemented most of the core functionality -- the <a href=
+  "http://www.netbeans.org/products/platform/">NetBeans Platform</a>.
+  This is not the NetBeans IDE, although the IDE is based on the
+  Platform. The NetBeans Platform provides a great many features for
+  applications such as JSwat, and it is open source software and free
+  to use.</p>
+
+  <p>There are two drawbacks to using this platform however. First the
+  console interface adapter will likely not be possible to implement on
+  the NetBeans Platform. The second drawback is the jEdit plugin will
+  be impossible to implement, or at least it would not make any sense
+  since the Platform provides its own very good source editor.</p>
+
+  <h3>What Had To Go</h3>
+
+  <p>Basically all of the interface code. The interface adapters,
+  source viewer, and much of the panel code has been replaced.</p>
+
+  <h3>How That Was Done</h3>
+
+  <p>Essentially every class in JSwat was refactored from the ground
+  up. Starting with the core functionality, many of the old assumptions
+  were now invalid, so much of the code was discarded. Slowly the core
+  module was built up with the appropriate functionality and
+  behavior.</p>
+
+  <p>The interface code, which consists of the actions and the top
+  components, was written from scratch. Bits and pieces of the old code
+  were utilized where possible, but for the most part the code is brand
+  new.</p>
+
+  <p>Unlike the refactoring of 2001, the work to rewrite JSwat for
+  NetBeans took 18 months. This is due almost entirely to the fact that
+  I refactored the expression evaluator twice, the breakpoints
+  infrastructure three times, and everything else two times or more.
+  Using the NetBeans Platform was the best decision I ever made
+  regarding JSwat, despite the significant learning curve.</p>
+
+  <h3>How This Has Helped</h3>
+
+  <p>That should be obvious: JSwat has inherited hundreds of features
+  from the NetBeans Platform, not the least of which is the fact that
+  the code is now based on a very solid platform.</p>
+
+  <p>Additionally, the design and implementation of JSwat has undergone
+  a thorough and complete overhaul. More stringent unit tests have been
+  developed to ensure that JSwat behaves correctly in each module. This
+  has resulted in what is unequivocally the best version of JSwat to
+  date.</p>
+</body>
+</html>

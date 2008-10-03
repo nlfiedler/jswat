@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: installer.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org" />
+
+  <title>JSwat Development Documentation</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>JSwat Installer</h2>
+
+  <p>The installer project is found in the <code>installer</code>
+  directory in the JSwat source tree. This is a simple Java application
+  that extracts the JSwat production build to a location of the
+  user&#39;s choosing, and makes some minor changes to the extracted
+  files.</p>
+
+  <h3>Testing</h3>
+
+  <p>Testing the installer is simple, just invoke the <em>jar</em>
+  target of the <code>installer/build.xml</code> Ant script, then run
+  the <code>installer/dist/installer.jar</code> file. This is most
+  easily done if you open the installer project in NetBeans. The
+  installer has the necessary dummy data to perform a dry-run install,
+  which is sufficient for making sure it works.</p>
+
+  <h3>Building</h3>
+
+  <p>Building the installer is achieved by building JSwat for release.
+  See the <a href="release.html">release</a> document for
+  instructions.</p>
+</body>
+</html>

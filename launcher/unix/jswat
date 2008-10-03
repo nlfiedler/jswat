@@ -1,0 +1,99 @@
+#!/bin/sh
+# The contents of this file are subject to the terms of the Common Development
+# and Distribution License (the License). You may not use this file except in
+# compliance with the License.
+#
+# You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+# or http://www.netbeans.org/cddl.txt.
+
+# When distributing Covered Code, include this CDDL Header Notice in each file
+# and include the License file at http://www.netbeans.org/cddl.txt.
+# If applicable, add the following below the CDDL Header, with the fields
+# enclosed by brackets [] replaced by your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+#
+# The Original Software is NetBeans. The Initial Developer of the Original
+# Software is Sun Microsystems, Inc. Portions Copyright 1997-2004 Sun
+# Microsystems, Inc. All Rights Reserved.
+#
+# $Id: jswat 2692 2006-12-24 10:40:51Z nfiedler $
+#
+
+#
+# resolve symlinks
+#
+
+PRG=$0
+
+while [ -h "$PRG" ]; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+    if expr "$link" : '^/' 2> /dev/null >/dev/null; then
+	PRG="$link"
+    else
+	PRG="`dirname "$PRG"`/$link"
+    fi
+done
+
+progdir=`dirname "$PRG"`
+
+# Rather than etc/jswat.conf, get the Unix version of the file.
+if [ -f "$progdir"/../etc/jswat.conf ] ; then
+    . "$progdir"/../etc/jswat.conf
+fi
+
+if [ -f /etc/jswat.conf ] ; then
+    . /etc/jswat.conf
+fi
+
+args="$@"
+
+userdir=${netbeans_default_userdir}
+while [ $# -gt 0 ] ; do
+    case "$1" in
+        --userdir) shift; if [ $# -gt 0 ] ; then userdir=$1; fi
+            ;;
+    esac
+    shift
+done
+
+if [ -f "${userdir}"/etc/jswat.conf ] ; then
+    . "${userdir}"/etc/jswat.conf
+fi
+
+netbeans_clusters=""
+for i in jswat4 ide9 extra ; do
+    if [ -d "$progdir/../$i" ] ; then
+        netbeans_clusters="$netbeans_clusters:$progdir/../$i"
+    fi
+done
+
+if [ ! -z "$netbeans_extraclusters" ] ; then
+    netbeans_clusters="$netbeans_clusters:$netbeans_extraclusters"
+fi
+
+nbexec="$progdir"/../platform8/lib/nbexec
+
+case "`uname`" in
+    Darwin*)
+        "$nbexec" \
+            --jdkhome "$netbeans_jdkhome" \
+            -J-Dcom.apple.mrj.application.apple.menu.about.name=JSwat \
+            -J-Xdock:name=JSwat \
+            "-J-Xdock:icon=$progdir/../nb4.1/netbeans.icns" \
+            --branding jswat \
+            --clusters "$netbeans_clusters" \
+            --userdir "${userdir}" \
+            ${netbeans_default_options} \
+            $args
+        ;;
+    *)
+        "$nbexec" \
+            --jdkhome "$netbeans_jdkhome" \
+            --branding jswat \
+            --clusters "$netbeans_clusters" \
+            --userdir "${userdir}" \
+            ${netbeans_default_options} \
+            $args
+        ;;
+esac

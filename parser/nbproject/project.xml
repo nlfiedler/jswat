@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
+            <code-name-base>com.bluemarsh.jswat.parser</code-name-base>
+            <suite-component/>
+            <module-dependencies/>
+            <public-packages>
+                <package>com.bluemarsh.jswat.parser.analysis</package>
+                <package>com.bluemarsh.jswat.parser.lexer</package>
+                <package>com.bluemarsh.jswat.parser.node</package>
+                <package>com.bluemarsh.jswat.parser.parser</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/com-bluemarsh-jswat-parser.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/com-bluemarsh-jswat-parser.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

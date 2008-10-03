@@ -1,0 +1,77 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: troubleshooting.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Troubleshooting</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Troubleshooting</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <h3>Red underlines in source viewer</h3>
+
+  <p>The red squiggly underlines in the source viewer are an indication
+  that the Java parser in NetBeans was unable to resolve certain
+  symbols. This is quite normal as you may not have configured the
+  sourcepath or classpath to include everything required in your Java
+  application. The error indiciators are harmless and do not impact the
+  performance of JSwat. You can safely ignore them.</p>
+
+  <h3>Breakpoints fail to resolve</h3>
+
+  <p>Breakpoints that refuse to resolve can be caused by a few
+  conditions.</p>
+
+  <p>First, if you are setting a line breakpoint in a source file, make
+  sure that the source file you are setting the breakpoint in actually
+  pertains to the code you are debugging. This can arise when you have
+  multiple branches of code with similar source files.</p>
+
+  <p>Next, are you certain there is executable code at the line on which
+  you have set the breakpoint? If a Java statement is split across more
+  than one line, not all of those lines are considered to be
+  "executable", and thus a breakpoint may never resolve if set on one of
+  those lines.</p>
+
+  <p>To be sure which source lines have executable code, use the
+  <code>lines</code> command in the <strong>Commands</strong> window.
+  This command takes a class name argument and displays the line numbers
+  containing executable code.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="getting-help.html">Getting Help</a></li>
+    <li><a href="reporting-bugs.html">Reporting Bugs</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

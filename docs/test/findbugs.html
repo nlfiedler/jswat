@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: findbugs.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
+
+  <title>JSwat - FindBugs</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>FindBugs</h2>
+
+  <p><a href="http://findbugs.sourceforge.net/">FindBugs</a> is a
+  static analysis tool that operates on the bytecode of your Java
+  appliation to identify bugs in the code itself. Some of the
+  &quot;bugs&quot; it finds are not so important, but many of them are
+  worth evaluation. On average, the false positive rate is low enough
+  to make using the tool worth while.</p>
+
+  <h3>Using it to Find Bugs</h3>
+
+  <p>Using FindBugs on JSwat is pretty straight forward. Launch the
+  FindBugs program and the main window should appear. In the project
+  settings window, specify the root of the JSwat source tree (e.g.
+  <code>core/src</code>), the build directory (e.g.
+  <code>core/build</code>), and the <code>.jar</code> files that are
+  included in the classpath for that module (e.g.
+  <code>platform5/core/org-openide.jar</code>, et cetra). See the
+  module <code>build.xml</code> file for the classpath. Once the
+  project settings are defined, click the &quot;Find Bugs&quot; button
+  to have the tool perform its analysis.</p>
+
+  <p>An even simpler method of using FindBugs is to get the NetBeans
+  plugin, available <a href=
+  "http://fnleisurehacker.fn.funpic.de/wordpress/?page_id=102">here</a>.
+  Once the NetBeans plugin is installed, just select the JSwat project
+  and invoke the FindBugs action from the main toolbar in the NetBeans
+  IDE.</p>
+
+  <p>There are some bugs that should not be fixed. These are either not
+  really bugs (i.e. a string comparison using the equals operator is
+  not always wrong), or they are bizarre in some way or another and I
+  cannot understand what the tool is trying to tell me (e.g. an obscure
+  runtime exception that is not explicitly caught, such as
+  <code>NoSuchFieldException</code>). In general though, there should
+  be very few problems overall.</p>
+</body>
+</html>

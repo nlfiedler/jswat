@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: modules.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
+
+  <title>JSwat - Writing New Modules</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>Writing New Modules</h2>
+
+  <p>Writing new modules for JSwat is as easy as writing new modules
+  for the NetBeans Platform. Simply use the NetBeans IDE 5.5 or later
+  to quickly set up a module project. Prior to starting, see the
+  instructions on <a href="compile.html">compiling</a> JSwat to get
+  your build environment set up correctly.</p>
+
+  <p>To learn more about using NetBeans IDE module support, see the
+  built-in help, and the web site <a href=
+  "http://platform.netbeans.org/">documentation</a>.</p>
+
+  <h3>What <em>not</em> to Check In</h3>
+
+  <p>Try to avoid checking in the following files into the source
+  repository:</p>
+
+  <ul>
+    <li><code>nbproject/genfiles.properties</code></li>
+
+    <li><code>nbproject/build-impl.xml</code></li>
+
+    <li><code>nbproject/private/</code></li>
+  </ul>
+
+  <p>To achieve this, set the <code>svn:ignore</code> property on the
+  <code>nbproject</code> directory like so:</p>
+  <pre>
+genfiles.properties
+build-impl.xml
+private
+</pre>
+</body>
+</html>

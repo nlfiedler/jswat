@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: build.xml 6 2007-05-16 07:14:24Z nfiedler $
+-->
+<!--
+   You may freely edit this file. See harness/README in the NetBeans platform
+   for some information on what you could do (e.g. targets to override).
+   If you delete this file and reopen the project it will be recreated.
+-->
+<project name="com.bluemarsh.jswat.parser" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project com.bluemarsh.jswat.parser.</description>
+
+    <!-- Permit external customizations. -->
+    <property file="../build.properties"/>
+    <import file="nbproject/build-impl.xml"/>
+
+    <!-- Location of build generated files. -->
+    <property name="build.dir" value="build"/>
+    <!-- Location of parser generated files. -->
+    <property name="output.dir" value="output"/>
+    <!-- Path and filename of the SableCC jar file, required to generate parser.
+    This jar file should contain the sablecc ant task definition. -->
+    <property name="sablecc.jar" location="sablecc.jar"/>
+
+    <target name="testuserdir-delete">
+        <!-- Do nothing in the hopes that our userdir will stick around. -->
+    </target>
+
+    <target name="generate"
+            description="Creates the Java parser from the grammar file.">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${output.dir}"/>
+        <!-- Define the sablecc Ant task for generating the parser. -->
+        <taskdef name="sablecc" classpath="${sablecc.jar}"
+                 classname="org.sablecc.ant.taskdef.Sablecc"/>
+        <sablecc src="grammar" outputdirectory="${output.dir}" includes="j14.sablecc"/>
+        <javac srcdir="${output.dir}" destdir="${build.dir}" debug="off"/>
+        <jar jarfile="release/modules/ext/com-bluemarsh-jswat-parser.jar">
+            <fileset dir="${build.dir}"/>
+            <fileset dir="${output.dir}">
+                <include name="**/*.dat"/>
+            </fileset>
+        </jar>
+        <delete dir="${build.dir}"/>
+        <delete dir="${output.dir}"/>
+    </target>
+</project>

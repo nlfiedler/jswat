@@ -1,0 +1,30 @@
+/*
+ * $Id: style.css 1593 2005-03-23 08:10:43Z nfiedler $
+ */
+
+h1 {
+  border-bottom-color: #ff9843;
+  border-style: solid;
+  border-top-color: #ff9843;
+  border-width: 1px 0px 1px 0px;
+  color: #080c77;
+  font-weight: bold;
+}
+
+h2 {
+  border-bottom-color: #ff9843;
+  border-style: solid;
+  border-width: 0px 0px 1px 0px;
+  color: #ee6d06;
+  font-weight: bold;
+}
+
+h3 {
+  color: #ee6d06;
+  font-weight: bold;
+}
+
+h4, h5, h6 {
+  color: #ee6d06;
+  font-weight: normal;
+}

@@ -1,0 +1,134 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: attach-debuggee.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org">
+
+  <title>Remote Debugging</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Remote Debugging</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>Remote debugging is the process of debugging a program that is
+  running on a different computer. This technique is useful when you are
+  developing a program that runs on a server or in a different
+  environment than the computer on which you are developing the program.
+  This method can be used even for programs running on the same machine
+  as the debugger, which is useful if that program has a complex startup
+  procedure.</p>
+
+  <p>Attaching to a remote debuggee is performed by way of the attach
+  dialog. This dialog prompts you for a few pieces of information, some
+  of which will have default values if the fields are left blank.</p>
+
+  <p>You can open the dialog box by choosing Session &gt; Attach.</p>
+
+  <h3>To start remote debugging:</h3>
+
+  <h4>Attaching</h4>
+
+  <ol>
+    <li>On the computer where program is located, start the program in
+    debugging mode. See your VM documentation for instructions on
+    starting a program in debugging mode. For the Sun Microsystems Java
+    Virtual Machine, the options can be found at:<br><a href=
+    "http://java.sun.com/products/jpda/doc/conninv.html">http://java.sun.com/products/jpda/doc/conninv.html</a></li>
+
+    <li>In the Attach dialog, select the connector type and enter any
+    required information, then click Attach. See your VM documentation
+    for information about the connectors it provides.</li>
+  </ol>
+
+  <h4>Listening</h4>
+
+  <p>Listening for a connection from a debuggee differs in that the
+  debugger starts listening for a connection from the debuggee, which
+  must occur before the debuggee has been launched.</p>
+
+  <ol>
+    <li>In the Attach dialog, select the connector type and enter any
+    required information, then click Attach. See your VM documentation
+    for information about the connectors it provides.</li>
+
+    <li>On the computer where program is located, start the program in
+    debugging mode. See your VM documentation for instructions on
+    starting a program in debugging mode. For the Sun Microsystems Java
+    Virtual Machine, the options can be found at:<br><a href=
+    "http://java.sun.com/products/jpda/doc/conninv.html">http://java.sun.com/products/jpda/doc/conninv.html</a></li>
+  </ol>
+
+  <p><em>Note that if the debuggee is not launched within the timeout
+  period defined in the <strong>Options</strong> dialog, the debugger
+  will cease listening for a connection.</em> A progress bar is
+  displayed to indicate that the debugger is waiting. The listen
+  operation can be cancelled by clicking on the progress bar and
+  clicking the close button.</p>
+
+  <h4>Options</h4>
+
+  <dl>
+    <dt><em>Resume immediately</em></dt>
+
+    <dd>If checked, the debugger will instruct the debuggee to resume
+    execution as soon as a connection is established.</dd>
+
+    <dt><em>Ignore debuggee classpath</em></dt>
+
+    <dd>If checked, the debugger will use the value for
+    &quot;Classes&quot; in the session settings, rather than the
+    classpath defined by the JVM running the debuggee application.</dd>
+  </dl>
+
+  <h3>What to do next</h3>
+
+  <p>After attaching to the debuggee, you are ready to begin debugging
+  by setting breakpoints and stepping through your code.</p>
+
+  <p><em>Note that the classpath session setting will temporarily take
+  on the value of the classpath setting in the debuggee.</em> To learn
+  more about the classpath and how it is used, see the <a href=
+  "../session/paths.html">Classpath and Sourcepath</a> topic.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="resume-debuggee.html">Resuming the Debuggee</a></li>
+
+    <li><a href="suspend-debuggee.html">Suspending the
+    Debuggee</a></li>
+
+    <li><a href="finish-session.html">Finishing the Session</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

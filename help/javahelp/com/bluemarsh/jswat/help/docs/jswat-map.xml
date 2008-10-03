@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: jswat-map.xml 6 2007-05-16 07:14:24Z nfiedler $
+-->
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN"
+         "http://java.sun.com/products/javahelp/map_2_0.dtd">
+
+<map version="2.0">
+    <mapID target="jswat-attach-debuggee" url="action/attach-debuggee.html"/>
+
+    <mapID target="jswat-breakpoint-monitors" url="breakpoint/monitors.html"/>
+    <mapID target="jswat-breakpoints-view" url="view/breakpoints.html"/>
+    <mapID target="jswat-bytecodes-view" url="view/bytecodes.html"/>
+
+    <mapID target="jswat-classes-view" url="view/classes.html"/>
+    <mapID target="jswat-create-breakpoint" url="breakpoint/create.html"/>
+    <mapID target="jswat-context" url="session/context.html"/>
+
+    <mapID target="jswat-edit-bpgroup" url="breakpoint/groups.html"/>
+    <mapID target="jswat-edit-breakpoint" url="breakpoint/edit.html"/>
+    <mapID target="jswat-evaluator-view" url="view/evaluator.html"/>
+
+    <mapID target="jswat-finish-session" url="action/finish-session.html"/>
+
+    <mapID target="jswat-getting-help" url="general/getting-help.html"/>
+
+    <mapID target="jswat-launch-debuggee" url="action/launch-debuggee.html"/>
+
+    <mapID target="jswat-paths" url="session/paths.html"/>
+
+    <mapID target="jswat-reporting-bugs" url="general/reporting-bugs.html"/>
+    <mapID target="jswat-resume-debuggee" url="action/resume-debuggee.html"/>
+    <mapID target="jswat-runtime-manager" url="action/runtime-manager.html"/>
+
+    <mapID target="jswat-session-properties" url="session/properties.html"/>
+    <mapID target="jswat-sessions-multiple" url="session/multiple.html"/>
+    <mapID target="jswat-sessions-view" url="view/sessions.html"/>
+    <mapID target="jswat-sources-view" url="view/sources.html"/>
+    <mapID target="jswat-stack-view" url="view/stack.html"/>
+    <mapID target="jswat-stepping" url="session/stepping.html"/>
+    <mapID target="jswat-suspend-debuggee" url="action/suspend-debuggee.html"/>
+
+    <mapID target="jswat-thread-view" url="view/threads.html"/>
+    <mapID target="jswat-threads" url="session/threads.html"/>
+    <mapID target="jswat-troubleshooting" url="general/troubleshooting.html"/>
+
+    <mapID target="jswat-varibles-view" url="view/variables.html"/>
+
+    <mapID target="jswat-watches-view" url="view/watches.html"/>
+    <mapID target="jswat-welcome" url="general/welcome.html"/>
+</map>

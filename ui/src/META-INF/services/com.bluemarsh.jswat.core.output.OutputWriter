@@ -1,0 +1,2 @@
+#-com.bluemarsh.jswat.core.output.DefaultOutputWriter
+com.bluemarsh.jswat.ui.NbOutputWriter

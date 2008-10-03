@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: layer.xml 26 2008-06-30 00:10:25Z nfiedler $
+-->
+<!DOCTYPE filesystem
+  PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN"
+         "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Actions">
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.ui.Bundle"/>
+        <folder name="Debug">
+            <file name="com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-FinishSessionAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-LaunchDebuggeeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ManageRuntimesAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-NewBreakpointAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-NewSessionAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-RunToCursorAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-SessionPropertiesAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StackDownAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StackUpAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepIntoAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOutAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOverAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOverCodeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-toolbar-SessionStatusAction.instance"/>
+        </folder>
+    </folder>
+
+    <folder name="Editors">
+        <!-- For every type of file, we need to allow setting breakpoints. -->
+        <folder name="text">
+            <folder name="base">
+                <folder name="GlyphGutterActions">
+                    <file name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.instance"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="x-java">
+                <folder name="Popup">
+                    <!-- Hide the actions that may cause trouble for our users. -->
+                    <file name="format_hidden"/>
+                    <file name="fix-imports_hidden"/>
+                    <file name="try-catch_hidden"/>
+                </folder>
+                <folder name="ToolTips">
+                    <!-- Does not seem to work under text/base, nor directly under Editors. -->
+                    <file name="com-bluemarsh-jswat-ui-editor-ToolTipAnnotation.instance"/>
+                </folder>
+            </folder>
+        </folder>
+        <!-- Popup folder was under text/base prior to NB 5.0. -->
+        <folder name="Popup">
+            <file name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.instance"/>
+                <attr name="position" intvalue="0"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-RunToCursorAction.instance"/>
+                <attr name="position" intvalue="1"/>
+            </file>
+        </folder>
+        <folder name="AnnotationTypes">
+            <file name="Breakpoint.xml" url="resources/editor/Breakpoint.xml"/>
+            <file name="DisabledBreakpoint.xml" url="resources/editor/DisabledBreakpoint.xml"/>
+            <file name="CurrentPC.xml" url="resources/editor/CurrentPC.xml"/>
+            <!-- The following are combination annotations. -->
+            <file name="BreakpointPC.xml" url="resources/editor/Breakpoint+PC.xml"/>
+            <file name="DisabledBreakpointPC.xml" url="resources/editor/DisabledBreakpoint+PC.xml"/>
+        </folder>
+    </folder>
+</filesystem>

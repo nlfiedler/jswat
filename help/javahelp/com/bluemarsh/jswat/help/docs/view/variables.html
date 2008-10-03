@@ -1,0 +1,72 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: variables.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Varibles</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Local Varibles and Fields</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The <strong>Variables</strong> view shows local variables within
+  the current debugging context (combination of current thread and stack
+  frame). The fields of the current class ("this") are shown under a
+  node called <strong>this</strong> in the display. This allows you to
+  view any local variables that may have the same name as a field in the
+  current class.</p>
+
+  <p>The <strong>Variables</strong> view, like other tree-structured
+  views, will attempt to keep the expanded branches open while stepping
+  through code. If, however, you have clicked on a column header in the
+  view in order to sort the display, the tree will always collapse when
+  it is updated. This is apparently a feature of the tree-table
+  component in the NetBeans Platform.</p>
+
+  <h3>Setting Watch Breakpoints</h3>
+
+  <p>The view context menu provides an item that creates a special type
+  of variable breakpoint. This breakpoint is set for a particular field
+  in a specific instance of the enclosing class. When that field is
+  changed the breakpoint will suspend the debuggee. You can change the
+  attributes of the breakpoint via the <a
+  href="breakpoints.html">Breakpoints</a> view. Because this breakpoint
+  is set to filter on a specific object instance, it will self-destruct
+  when the session disconnects from the debuggee, as there is no way for
+  it to connect with that object later.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="classes.html">Viewing Classes</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

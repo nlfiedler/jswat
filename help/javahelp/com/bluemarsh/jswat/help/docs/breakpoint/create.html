@@ -1,0 +1,105 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: create.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Creating Breakpoints</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Creating Breakpoints</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>Creating breakpoints is done using the New Breakpoint dialog box.
+  You can open the dialog box by choosing Breakpoint &gt; New
+  Breakpoint from the menu bar.</p>
+
+  <p>There are several types of breakpoints that can be created, which
+  are described below.</p>
+
+  <dl>
+    <dt><strong>Class</strong></dt>
+
+    <dd>Stops when a class matching a given pattern loads or unloads.
+    Since a class may be loaded by multiple class loaders, this may be
+    hit more than once.</dd>
+
+    <dt><strong>Exception</strong></dt>
+
+    <dd>Stops when an exception matching a given pattern is thrown and
+    caught or not caught. In Java 5.0, uncaught exceptions are
+    difficult to detect and thus this type of breakpoint may not always
+    stop when expected.</dd>
+
+    <dt><strong>Line</strong></dt>
+
+    <dd>Stops when a particular line of code in a source file is
+    reached. This can only be created by clicking on a line in the
+    source viewer.</dd>
+
+    <dt><strong>Method</strong></dt>
+
+    <dd>Stops when a particular method in a class matching a given
+    pattern is reached. <em>Note that setting method breakpoints in
+    either the instance initializer or constructors is not entirely
+    reliable. The Sun JPDA implementation does not properly distinquish
+    between the two, so breakpoints in either may, or may not, actually
+    stop as expected. Use line breakpoints instead.</em></dd>
+
+    <dt><strong>Thread</strong></dt>
+
+    <dd>Stops when a thread matching a given pattern is started or
+    dies.</dd>
+
+    <dt><strong>Trace</strong></dt>
+
+    <dd>Never stops, only shows a brief message in the Output window
+    when any method is entered and exited. Produces copious amounts of
+    output.</dd>
+
+    <dt><strong>Variable</strong></dt>
+
+    <dd>Stops when a specific field in a class is accessed or
+    modified.</dd>
+  </dl>
+
+  <p>Breakpoints support optional actions that are performed when the
+  breakpoint stops. These are called monitors, and you can learn more
+  about the available monitors in the <a href="monitors.html">Breakpoint
+  Monitors</a> topic.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="edit.html">Editing Breakpoints</a></li>
+    <li><a href="monitors.html">Breakpoint Monitors</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

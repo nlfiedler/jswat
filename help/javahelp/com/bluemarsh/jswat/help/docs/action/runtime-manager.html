@@ -1,0 +1,102 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: runtime-manager.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Managing the Runtimes</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Managing Debuggee Runtimes</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The runtime manager dialog displays a list of the currently
+  defined Java runtimes available for launching a debuggee. Each
+  runtime specifies the path to the base directory of the Java runtime,
+  the name of the executable that starts the runtime, and optional Java
+  class source paths.</p>
+
+  <p>You can open the dialog box by choosing Tools &gt; Runtime
+  Manager.</p>
+
+  <h3>Adding a Runtime</h3>
+
+  <p>To add a new runtime for use in launching a debuggee, click on the
+  &quot;Add Runtime&quot; button in the Runtime Manager dialog. A file
+  chooser will appear -- use this to select the base directory of an
+  installed Java runtime. The Runtime Manager dialog will then
+  automatically attempt to determine the name of the runtime
+  executable, as well as possible locations of the source code for the
+  Java core classes.</p>
+
+  <h3>Removing a Runtime</h3>
+
+  <p>In the list of available runtimes, select the runtime to be
+  deleted. Then click the Remove button and the selected runtime will
+  be removed from the list. Note the installed runtime itself is left
+  untouched.</p>
+
+  <h3>Specifying Runtime Details</h3>
+
+  <h4>Executable Filename</h4>
+
+  <p>The name of the runtime executable will very likely be
+  <code>java</code> or <code>java.exe</code>, depending on whether your
+  system is Unix-like or Microsoft Windows. The Runtime Manager will
+  have already attempted to locate a suitable executable, but if your
+  runtime is different than the standard, you may specify a different
+  executable name here. Note that on Windows you will need to include
+  the <code>.exe</code> extension on the name of the executable. You
+  may include a path to the executable, if necessary, although the path
+  must be relative to the runtime base directory.</p>
+
+  <h4>Source Paths</h4>
+
+  <p>In most cases, the standard <code>src.zip</code> will contain the
+  source code for the Java core classes (e.g.
+  <code>java/lang/String.java</code>). Other possible choices are
+  <code>src.jar</code> and a directory named <code>src</code>. The
+  Runtime Manager will have already attempted to locate all possible
+  source locations, but if your runtime is different than the standard,
+  you may specify different paths using the source path editor portion
+  of the Runtime Manager dialog.</p>
+
+  <p>Note that the source paths provided for the runtime will be added
+  to the source path of the current session. If you do not want this to
+  happen, then remove all of the source paths for the runtime using the
+  Runtime Manager dialog.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="launch-debuggee.html">Launching the Debuggee</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>
