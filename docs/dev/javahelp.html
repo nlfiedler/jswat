@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: javahelp.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org" />
+
+  <title>JSwat - How to Write Help Topics</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>How to Write Help Topics</h2>
+
+  <p>The built-in help for JSwat is written using <a href=
+  "http://java.sun.com/products/javahelp/">JavaHelp</a>, which is
+  essentially HTML pages with XML meta-data. The help for JSwat
+  currently resides in the <strong>help</strong> module.</p>
+
+  <p>If you are unfamiliar with JavaHelp, be sure to read the
+  documentation available at the JavaHelp product page.</p>
+
+  <h3>Mapping Topic Names</h3>
+
+  <p>The first step in creating a new help topic is to define the
+  unique name of the topic. For example,
+  <code>jswat-attach-debuggee</code> refers specifically to the
+  <code>action/attach-debuggee.html</code> help page. This topic name
+  is used throughout the JavaHelp meta-data, as well as within the
+  JSwat source code. The mapping is defined in the
+  <code>jswat-map.xml</code> file.</p>
+
+  <h3>Table of Contents</h3>
+
+  <p>The new help topic must be added to the table of contents file,
+  <code>jswat-toc.xml</code>. You may add the same topic multiple
+  times, each with a different descriptive text.</p>
+
+  <h3>Help Index</h3>
+
+  <p>Similar to the table of contents is the help index. This is
+  defined in the file <code>jswat-idx.xml</code> and is fairly
+  self-explanatory.</p>
+
+  <h3>Writing the Topic</h3>
+
+  <p>The help pages themselves are written in HTML. You should be able
+  to use any HTML 4 tags, although you should avoid using frames. XHTML
+  is also okay, accept that the JavaHelp software does not parse
+  terminated empty elements (e.g. <code>&lt;br/&gt;</code>), so use the
+  HTML format for empty elements (e.g. <code>&lt;br&gt;</code>).</p>
+
+  <h3>Referring to the Topic</h3>
+
+  <p>Making references to the help topic is done through the NetBeans
+  help APIs. Specifically, when displaying a dialog you can associate a
+  help topic with that dialog. Likewise, actions and top components
+  also can have help topics. The name used in the code should be
+  identical to the name of the help topic in the
+  <code>jswat-map.xml</code> file.</p>
+</body>
+</html>

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.bluemarsh.jswat.help/1
+OpenIDE-Module-Layer: com/bluemarsh/jswat/help/layer.xml
+OpenIDE-Module-Localizing-Bundle: com/bluemarsh/jswat/help/Bundle.properties
+OpenIDE-Module-Requires: org.netbeans.api.javahelp.Help
+OpenIDE-Module-Specification-Version: 1.0
+

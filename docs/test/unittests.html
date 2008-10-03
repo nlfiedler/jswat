@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: unittests.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
+
+  <title>JSwat - Unit Tests</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>Unit Tests</h2>
+
+  <p>Testing JSwat starts with the <strong>unit tests</strong>. These
+  are bits of Java code that exercise the JSwat classes in order to
+  ensure their proper functioning. Most of the classes in the core
+  module are covered by one or more unit tests.</p>
+
+  <h3>Preparation</h3>
+
+  <p>Preparation for running the unit tests consists of following the
+  instructions for <a href="../dev/compile.html">compiling</a>
+  JSwat.</p>
+
+  <h3>Running the Tests</h3>
+
+  <p>Once the preparation is complete, running the tests is easy:</p>
+
+  <ol>
+    <li>Run the <em>test</em> target of the <code>build.xml</code> file
+    in the module source directory.</li>
+  </ol>
+
+  <h3>Debugging the Tests</h3>
+
+  <p>If you need to debug the unit tests then follow these simple steps
+  (<em>Note that this must be done in the NetBeans IDE to be able to
+  invoke the debugger.</em>):</p>
+
+  <ol>
+    <li>Define the <code>test.class</code> property in the
+    <code>project.properties</code> file in the module&#39;s
+    <code>nbproject</code> directory. Set the property value to the
+    name of the unit test class.</li>
+
+    <li>Run the <em>debug-test-single</em> target of the
+    <code>build.xml</code> file in the module source directory.</li>
+  </ol>
+</body>
+</html>

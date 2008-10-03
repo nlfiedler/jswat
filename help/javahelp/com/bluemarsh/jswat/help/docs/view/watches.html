@@ -1,0 +1,125 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: watches.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Watches</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Watched Expressions</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The <strong>Watches</strong> view shows the values of expressions
+  as evaluated within the current debugging context (combination of
+  current thread and stack frame). You can add new expressions to the
+  view by right-clicking and selecting <em>Add Watch</em> from the
+  context menu. Simply enter any Java expression (with some
+  restrictions, see the evaluator link below) and it will be evaluated
+  each time the debuggee is suspended (when a breakpoint is hit, and
+  while single-stepping).</p>
+
+  <p>Removing watched expressions is as easy as creating them, just
+  right-click on the watch node and select "Delete" from the context
+  menu.</p>
+
+  <h3>Fixed Watches</h3>
+
+  <p>The <em>Add Watch</em> dialog has a checkbox to create a fixed
+  watch. A fixed watch is very different from a normal watch. While a
+  normal watch expression is evaluated each time the debuggee suspends,
+  the fixed watch expression is evaluated just one time, and it must
+  refer to an object. This object is then stored as a reference such
+  that the same object is shown every time the debuggee suspends. This
+  can be quite useful if you are only interested in how a single object
+  changes during the lifetime of your application.</p>
+
+  <p>Fixed watches will self-destruct when the debugger disconnects from
+  the debuggee. This is necessary because the object references are only
+  valid during a single debugging session.</p>
+
+  <h3>Display Modifiers</h3>
+
+  <p>When creating a new watch, you can append the value with one of
+  several flags, which controls how the value is displayed. Currently
+  this is only effective for primitive values (e.g. byte, integer,
+  char). For example, if the expression <code>nvalue</code> referred to
+  an <code>int</code> value, you could enter the expression as
+  <code>nvalue,x</code> to see the value in hexadecimal format. Below is
+  a table of the supported modifiers.</p>
+
+  <table summary="display modifiers" border="1">
+    <tr>
+      <th>Modifier</th>
+      <th>Meaning</th>
+    </tr>
+    <tr>
+      <td>,b</td>
+      <td>Binary</td>
+    </tr>
+    <tr>
+      <td>,o</td>
+      <td>Octal</td>
+    </tr>
+    <tr>
+      <td>,s</td>
+      <td>String</td>
+    </tr>
+    <tr>
+      <td>,u</td>
+      <td>Unicode</td>
+    </tr>
+    <tr>
+      <td>,x</td>
+      <td>Hexadecimal</td>
+    </tr>
+  </table>
+
+  <p>For primitive types where the given modifier does not make sense,
+  the evaluated value will be returned unmodified (e.g. if you were to
+  use <code>x</code> on a <code>boolean</code>).</p>
+
+  <h3>Sorting</h3>
+
+  <p>The <strong>Watches</strong> view, like other tree-structured
+  views, will attempt to keep the expanded branches open while stepping
+  through code. If, however, you have clicked on a column header in the
+  view in order to sort the display, the tree will always collapse when
+  it is updated. This is apparently a feature the tree-table component
+  in the NetBeans Platform.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="evaluator.html">Expression Evaluator</a></li>
+    <li><a href="variables.html">Local Varibles and Fields</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

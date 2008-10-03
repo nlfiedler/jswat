@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2007. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: layer.xml 26 2008-06-30 00:10:25Z nfiedler $
+-->
+<!DOCTYPE filesystem
+  PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN"
+         "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Actions">
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.views.Bundle"/>
+        <folder name="Window">
+            <file name="com-bluemarsh-jswat-views-actions-BreakpointsViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-ByteCodesViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-ClassesViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-EvaluatorViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-SessionsViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-SourcesViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-StackViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-ThreadsViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-VariablesViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-views-actions-WatchesViewAction.instance"/>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Session">
+            <file name="com-bluemarsh-jswat-views-actions-SessionsViewAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-SessionsViewAction.instance"/>
+                <attr name="position" intvalue="800"/>
+            </file>
+        </folder>
+        <folder name="Breakpoint">
+            <file name="com-bluemarsh-jswat-views-actions-BreakpointsViewAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-BreakpointsViewAction.instance"/>
+                <attr name="position" intvalue="300"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-views-actions-SourcesViewAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-SourcesViewAction.instance"/>
+                <attr name="position" intvalue="60"/>
+            </file>
+            <folder name="Debugging">
+                <attr name="position" intvalue="50"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:org/openide/resources/actions/empty.gif"/>
+                <file name="com-bluemarsh-jswat-views-actions-BreakpointsViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-BreakpointsViewAction.instance"/>
+                    <attr name="position" intvalue="500"/>
+                </file>
+                <file name="com-bluemarsh-jswat-views-actions-ByteCodesViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-ByteCodesViewAction.instance"/>
+                    <attr name="position" intvalue="900"/>
+                </file>
+                <file name="com-bluemarsh-jswat-views-actions-ClassesViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-ClassesViewAction.instance"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="com-bluemarsh-jswat-views-actions-EvaluatorViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-EvaluatorViewAction.instance"/>
+                    <attr name="position" intvalue="800"/>
+                </file>
+                <file name="com-bluemarsh-jswat-views-actions-SessionsViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-SessionsViewAction.instance"/>
+                    <attr name="position" intvalue="600"/>
+                </file>
+                <file name="com-bluemarsh-jswat-views-actions-StackViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-StackViewAction.instance"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="com-bluemarsh-jswat-views-actions-ThreadsViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-ThreadsViewAction.instance"/>
+                    <attr name="position" intvalue="700"/>
+                </file>
+                <file name="com-bluemarsh-jswat-views-actions-VariablesViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-VariablesViewAction.instance"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="com-bluemarsh-jswat-views-actions-WatchesViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-WatchesViewAction.instance"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Shortcuts">
+        <!-- O = Alt, S = Shift, D = Ctrl (O and D work on PC or Mac, whereas
+        A and C are platform specific, i.e. they differ on PC and Mac) -->
+        <file name="D-1.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.SourcesViewAction"/>
+        </file>
+        <file name="OS-1.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.VariablesViewAction"/>
+        </file>
+        <file name="OS-2.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.WatchesViewAction"/>
+        </file>
+        <file name="OS-3.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.StackViewAction"/>
+        </file>
+        <file name="OS-4.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.ClassesViewAction"/>
+        </file>
+        <file name="OS-7.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.ThreadsViewAction"/>
+        </file>
+        <file name="OS-5.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.BreakpointsViewAction"/>
+        </file>
+        <file name="OS-6.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.SessionsViewAction"/>
+        </file>
+        <file name="OS-8.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.EvaluatorViewAction"/>
+        </file>
+    </folder>
+
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="breakpoints.settings" url="resources/breakpoints_settings.xml"/>
+            <file name="bytecodes.settings" url="resources/bytecodes_settings.xml"/>
+            <file name="classes.settings" url="resources/classes_settings.xml"/>
+            <file name="evaluator.settings" url="resources/evaluator_settings.xml"/>
+            <file name="sessions.settings" url="resources/sessions_settings.xml"/>
+            <file name="sources.settings" url="resources/sources_settings.xml"/>
+            <file name="stack.settings" url="resources/stack_settings.xml"/>
+            <file name="threads.settings" url="resources/threads_settings.xml"/>
+            <file name="variables.settings" url="resources/variables_settings.xml"/>
+            <file name="watches.settings" url="resources/watches_settings.xml"/>
+        </folder>
+
+        <!-- Note that without Modes, the windows would not remember their
+        open status when the application restarts. -->
+        <folder name="Modes">
+            <file name="debugger.wsmode" url="resources/debugger_wsmode.xml"/>
+            <folder name="debugger">
+                <file name="breakpoints.wstcref" url="resources/breakpoints_wstcref.xml"/>
+                <file name="evaluator.wstcref" url="resources/evaluator_wstcref.xml"/>
+                <file name="sessions.wstcref" url="resources/sessions_wstcref.xml"/>
+                <file name="variables.wstcref" url="resources/variables_wstcref.xml"/>
+                <file name="watches.wstcref" url="resources/watches_wstcref.xml"/>
+            </folder>
+            <folder name="editor">
+                <file name="bytecodes.wstcref" url="resources/bytecodes_wstcref.xml"/>
+            </folder>
+            <folder name="explorer">
+                <file name="classes.wstcref" url="resources/classes_wstcref.xml"/>
+                <file name="sources.wstcref" url="resources/sources_wstcref.xml"/>
+                <file name="threads.wstcref" url="resources/threads_wstcref.xml"/>
+            </folder>
+            <folder name="navigator">
+                <file name="stack.wstcref" url="resources/stack_wstcref.xml"/>
+            </folder>
+        </folder>
+
+        <folder name="Groups">
+            <file name="debugger.wsgrp" url="resources/debugger_wsgrp.xml"/>
+            <folder name="debugger">
+                <file name="breakpoints.wstcgrp" url="resources/breakpoints_wstcgrp.xml"/>
+                <file name="bytecodes.wstcgrp" url="resources/bytecodes_wstcgrp.xml"/>
+                <file name="classes.wstcgrp" url="resources/classes_wstcgrp.xml"/>
+                <file name="evaluator.wstcgrp" url="resources/evaluator_wstcgrp.xml"/>
+                <file name="sessions.wstcgrp" url="resources/sessions_wstcgrp.xml"/>
+                <file name="sources.wstcgrp" url="resources/sources_wstcgrp.xml"/>
+                <file name="stack.wstcgrp" url="resources/stack_wstcgrp.xml"/>
+                <file name="threads.wstcgrp" url="resources/threads_wstcgrp.xml"/>
+                <file name="variables.wstcgrp" url="resources/variables_wstcgrp.xml"/>
+                <file name="watches.wstcgrp" url="resources/watches_wstcgrp.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

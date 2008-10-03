@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.bluemarsh.jswat.ui/1
+OpenIDE-Module-Install: com/bluemarsh/jswat/ui/InterfaceInstall.class
+OpenIDE-Module-Java-Dependencies: Java > 1.6
+OpenIDE-Module-Layer: com/bluemarsh/jswat/ui/layer.xml
+OpenIDE-Module-Localizing-Bundle: com/bluemarsh/jswat/ui/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

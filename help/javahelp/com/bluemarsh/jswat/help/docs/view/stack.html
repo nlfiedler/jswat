@@ -1,0 +1,102 @@
+<html>
+<!--
+  The contents of this file are subject to the terms of the Common Development
+  and Distribution License (the License). You may not use this file except in
+  compliance with the License.
+
+  You can obtain a copy of the License at http://www.netbeans.org/cddl.html
+  or http://www.netbeans.org/cddl.txt.
+
+  When distributing Covered Code, include this CDDL Header Notice in each file
+  and include the License file at http://www.netbeans.org/cddl.txt.
+  If applicable, add the following below the CDDL Header, with the fields
+  enclosed by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+
+  The Original Software is JSwat. The Initial Developer of the Original
+  Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: stack.html 6 2007-05-16 07:14:24Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Stack</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Call Stack</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The <strong>Call Stack</strong> view shows the stack frames of the
+  current thread, in order from most recent entry to the oldest entry
+  (usually <code>Thread.run()</code> or the <code>main</code>
+  method).</p>
+
+  <p>The <strong>current</strong> stack frame is indicated by an icon
+  with a bold outline. Setting the current stack frame controls which
+  frame the <strong>Variables</strong> view will show. This is done by
+  double-clicking on the frame entry, or by selecting <em>Set
+  Current</em> from the context menu.</p>
+
+  <p>The <em>Set Breakpoint</em> context menu item will create a
+  breakpoint at the exact location of the stack frame. Because this type
+  of breakpoint does not make use of the source file name and line
+  number information (which may not be available depending on how the
+  class containing that location was compiled), it can only be used
+  during the active debugging session. Once the debugger is disconnected
+  from the debuggee, the breakpoint will self-destruct.</p>
+
+  <p>The <em>Show Source</em> context menu item will display the source
+  code for the selected call stack entry. This requires that the
+  sourcepath be set to include the corresponding source file.</p>
+
+  <h3>Popping Frames</h3>
+
+  <p>When the debuggee is suspended due to a debugging event, it is
+  possible to use the <strong>Pop Frames</strong> action to pop frames
+  from the top of the call stack. All frames up to and including the
+  selected frame will be popped of the stack. There are a number of
+  conditions which apply when frames are popped, as listed below.</p>
+
+  <ul>
+    <li>After frames are popped, the thread will be suspended at the
+    invoke instruction of the method that created the popped
+    frame.</li>
+
+    <li>Changes made within that method to its arguments will remain
+    intact.</li>
+
+    <li>Locks acquired by a popped frame are released when it is
+    popped.</li>
+
+    <li>Finally blocks are not executed.</li>
+
+    <li>The values of fields are unchanged, as are external resources
+    such as I/O streams.</li>
+
+    <li>The debuggee might be placed in a state that is impossible to
+    reproduce with normal program flow; for example, order of lock
+    acquisition might be perturbed. Thus the debuggee may proceed
+    differently than the developer would expect.</li>
+  </ul>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="variables.html">Viewing Variables</a></li>
+
+    <li><a href="../session/properties.html">Setting the
+    Sourcepath</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

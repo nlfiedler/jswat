@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: compile.html 38 2008-08-20 19:06:06Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
+
+  <title>JSwat - How to Compile, Run, and Debug JSwat</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>How to Compile, Run, and Debug JSwat</h2>
+
+  <p>The following is an abbreviated set of steps for building JSwat
+  from source code. If you encounter complications at any point, please
+  refer to the detailed steps given in the following sections.</p>
+
+  <ol>
+    <li><a href="http://java.sun.com/javase/">JDK 1.6</a> must be
+    installed to compile JSwat.</li>
+
+    <li><a href="http://www.netbeans.org/">NetBeans IDE 6.1</a> must be
+    installed, as JSwat is based on the NetBeans Platform, with some
+    additional IDE modules.</li>
+
+    <li>Start the NetBeans IDE and open the JSwat project; this needs
+    to be done just one time, in order to create a build properties
+    file.</li>
+
+    <li>Make the build: <kbd>ant build</kbd></li>
+
+    <li>Run the debugger: <kbd>ant run</kbd></li>
+  </ol>
+
+  <p>If that worked for you, then you are on your way to developing
+  JSwat. However, if there was a problem, continue reading the
+  following sections for detailed information.</p>
+
+  <h3>Installing Required Software</h3>
+
+  <h4>Java Development Kit</h4>
+
+  <p>JSwat is written in the Java language, version 6.0. Visit the
+  <a href="http://java.sun.com/javase/">Java SE</a> page and download
+  the release appropriate for your system. <em>It is possible, though
+  not recommended, to use compatible software from other vendors. In
+  this case, make sure that software includes the <a href=
+  "http://java.sun.com/products/jpda/">Java Platform Debugger
+  Architecture</a> (JPDA) library.</em></p>
+
+  <h4>Apache Ant</h4>
+
+  <p>Building JSwat requires the use of Apache <a href=
+  "http://ant.apache.org/">Ant</a>, a build tool written in Java. In
+  general you should use the latest stable release, but you may find
+  that a slightly older release will work as well. Chances are you will
+  have to set the <code>JAVA_HOME</code> environment variable to point
+  to the JDK installation, and possibly also <code>ANT_HOME</code>,
+  which points to the Ant installation directory.</p>
+
+  <p><em>Alternatively, you can just rely on the Ant version that is
+  bundled with the NetBeans IDE, rather than installing a separate
+  version.</em></p>
+
+  <h4>NetBeans IDE</h4>
+
+  <p>JSwat is based on the NetBeans Platform 6.1, and utilizes some of
+  the modules provided in the NetBeans IDE. Thus, to build JSwat you
+  will need to install the <a href=
+  "http://www.netbeans.org/products/ide/">NetBeans IDE</a> version 6.1.
+  Developing JSwat within the NetBeans IDE is highly recommended, as it
+  makes many of the mundane tasks much easier.</p>
+
+  <p>You may also want to download the NetBeans IDE source code and API
+  documentation, which can be found at the URL given above.</p>
+
+  <h3>Building JSwat</h3>
+
+  <p>Once the JDK and NetBeans are installed, you are ready to build
+  JSwat. Prior to building JSwat for the first time, it is necessary to
+  start the NetBeans IDE and open the JSwat module suite project. This
+  will create the necessary build properties files, allowing the
+  application to be built from the command-line. Of course, once the
+  IDE is started and the projects opened, you may as well build from
+  within the IDE.</p>
+
+  <p>To build the application from the command-line, invoke the
+  <em>build</em> target on the <code>build.xml</code> in the root of
+  the source tree. This will compile all of the modules and produce the
+  JSwat modules.</p>
+  <pre>
+ant build
+</pre>
+
+  <h3>Running JSwat</h3>
+
+  <p>Invoke the <em>run</em> target of the top-level
+  <code>build.xml</code> file. You should soon see the JSwat splash
+  screen followed by the main window.</p>
+  <pre>
+ant run
+</pre>
+
+  <h3>Debugging JSwat</h3>
+
+  <p>Select the <strong>Debug Main Project</strong> menu item from the
+  <strong>Run</strong> menu. The application will start in debug mode
+  and the IDE debugger will be connected to it automatically.</p>
+
+  <h4>Outside of the IDE</h4>
+
+  <p>To debug JSwat outside of the NetBeans IDE (e.g. debug JSwat with
+  JSwat itself), try the following. First, start your debugger that
+  will be used to debug JSwat. You can use JSwat itself, but it must be
+  started with a different userdir, like so:</p>
+  <pre>
+ant -Dtest.user.dir=/tmp/jswatdir run
+</pre>
+
+  <p>Next, you need to start JSwat in debug mode, which is done like
+  so:</p>
+  <pre>
+ant -Drun.args=&quot;-J-agentlib:jdwp=transport=dt_socket,suspend=n,server=y,address=6868&quot; run
+</pre>
+
+  <p>You can choose a different port, if needed. Just make a note of it
+  since you need to enter this value into the debugger when attaching
+  to JSwat.</p>
+
+  <p>JSwat is now running with the JPDA debugging mode enabled. You can
+  attach the debugger to the JSwat process and debug as usual.</p>
+
+  <h3>Using Alternate NetBeans IDE</h3>
+
+  <p>If you wish to develop JSwat using a version of the NetBeans IDE
+  other than the one required to build JSwat, you can do so by
+  following a couple of basic steps. Note that you must still have the
+  appropriate version installed, but you can run a different version
+  for editing the JSwat source code.</p>
+
+  <ol>
+    <li>Define a NetBeans Platform (via <strong>Tools</strong> menu)
+    that points to the NetBeans 6.1 installation, giving it the name
+    <em>NetBeans 6.1</em>.</li>
+
+    <li>Add the following line to the
+    <code>nbproject/private/platform-private.properties</code> file:
+      <pre>
+<nbplatform.active=NetBeans_6.1
+</pre>
+    </li>
+
+    <li>Clean and build the project to use the active platform.</li>
+  </ol>
+
+  <h3>Using Alternate Java Version</h3>
+
+  <p>If you wish to develop JSwat using a version of the Java Platform
+  other than SE 6, you can do so by following a few basic steps. Note
+  that this is most likely only necessary if your default JDK is
+  different than the one needed to build and run JSwat.</p>
+
+  <ol>
+    <li>Define a Java Platform (via <strong>Tools</strong> menu) that
+    points to the Java SE 6 installation, giving it the name <em>Java
+    1.6</em>.</li>
+
+    <li>Add the following line to the
+    <code>nbproject/private/platform-private.properties</code> file:
+      <pre>
+nbjdk.active=JDK_1.6
+</pre>
+    </li>
+  </ol>
+</body>
+</html>
