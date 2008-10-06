@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: package.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org" />
+
+  <title>keeps HTML tidy happy</title>
+</head>
+
+<body>
+  <p>Defines the evaluator of Java-like expressions. The evaluator can
+  parse and execute most of the typical Java statements. Below are the
+  Java language features this evaluator does <em>not</em> process (it
+  will throw appropriate exceptions in such cases).</p>
+
+  <ul>
+    <li><strong>new</strong> - this keyword is not supported.</li>
+
+    <li><strong>?:</strong> - the ternary operator is not
+    supported.</li>
+
+    <li><strong>super</strong> - this keyword is not supported.</li>
+
+    <li><strong>Class.this.member</strong> - member access of the outer
+    class from inside a static inner class is not supported.</li>
+  </ul>
+
+  <p>The <code>Evaluator</code> class is the facade to this package. It
+  provides the necessary methods to evaluate an expression and return
+  the result. This should be the only class which clients need to call
+  upon to evaluate expressions.</p>
+</body>
+</html>
