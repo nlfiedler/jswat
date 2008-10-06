@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+        Copyright (C) 2002-2003 Nathan Fiedler
+
+  Use Apache Ant to process this build file and create a build of JSwat.
+
+  $Id: build.xml 14 2007-06-02 23:50:55Z nfiedler $
+-->
+
+<project name="JSwat Tests" default="compile" basedir=".">
+
+  <property file="../build.properties"/>
+  <property name="compile.source" value="1.4"/>
+  <property name="compile.target" value="1.4"/>
+
+  <target name="prepare">
+    <mkdir dir="build/classes"/>
+  </target>
+
+  <target name="clean" description="Removes the generated files.">
+    <delete dir="build"/>
+    <ant dir="junit" target="clean"/>
+  </target>
+
+  <!-- Compile the classes and copy the property files. -->
+  <target name="compile" depends="prepare" description=
+    "Compiles the test classes.">
+    <javac srcdir="classes" destdir="build/classes" debug="on"
+           source="${compile.source}" target="${compile.target}"/>
+    <ant dir="junit" target="compile"/>
+  </target>
+</project>

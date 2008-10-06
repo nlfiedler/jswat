@@ -1,0 +1,706 @@
+JSWAT REVISION HISTORY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ $Id: HISTORY.txt 14 2007-06-02 23:50:55Z nfiedler $
+
+2.39 - August 3, 2005
+- Corrected the fix for bug 925 to avoid using a method of DefaultCaret
+  found only in JDK 1.5.
+
+2.38 - July 30, 2005
+- Fixed bug 924: changes to default stratum take effect immediately.
+- Fixed bug 925: fix the text area scrolling problem when lots of text
+  is added to the text area over and over again.
+- Improved JDI event dispatcher exception handling.
+- Fixed all compiler warnings when compiling with Java 1.5 JDK.
+
+2.37 - July 10, 2005
+- Fixed bug 922: fixed source mapping code so finding source using a
+  method location will return the found source.
+
+2.36 - July 4, 2005
+- Fixed bug 919: corrected the support for debugging non-Java programming
+  languages, such as JSP; can now debug JSP pages directly.
+- Added 'source' command to display source-related data about a class,
+  useful for determining the appropriate sourcepath for non-Java source
+  such as JSP pages.
+
+2.35 - June 26, 2005
+- Fixed bug 907: trim leading and trailing whitespace from classpath
+  and sourcepath entries.
+
+2.34 - March 31, 2005
+- Laurent Martelli provided a French translation of some resources.
+- Daniel Bonniot implemented RFE 813: file open dialog source file
+  filter now includes .jsp and .nice files (in addition to .java).
+- Fixed bug 905: recent files menu and view command opening files
+  containing non-Java code meant that breakpoints did not work
+  properly (the package name was the absolute file path).
+- Fixed bug 910: treat lexer errors (e.g. @Deprecated) as warnings.
+
+2.33 - February 20, 2005
+- Fixed bug 904: breakpoints in non-Java code did not resolve.
+- Changed default stratum to blank; if the value is left blank by
+  the user, the VM default stratum will be used while debugging.
+
+2.32 - February 5, 2005
+- Implemented 831: sort the properties in About dialog.
+- Fixed bug 882: several bugs fixed in expression evaluator.
+- Fixed bug 902: breakpoints in non-Java code resolved very slowly.
+  This also impacted Java code using Java 5.0 features.
+
+2.31 - January 19, 2005
+- Fixed bug 900: a line breakpoint created via the source view, in
+  a non-public class, whose bytecode is not accessible to JSwat, can
+  now be shown in the source view after the view had been closed.
+
+2.30 - December 10, 2004
+- Toshiaki Nozawa contributed corrections for the menu layout for
+  the Japanese locale.
+
+2.29 - November 14, 2004
+- Fixed bug 848: batch files and shell scripts are now executable.
+
+2.28 - October 16, 2004
+- Hari Krishna Dara: Ctrl-c while the source view has the focus will
+  copy the selected text to the system clipboard.
+- Hari Krishna Dara: the expanded state of the breakpoint groups in
+  the breakpoints panel is preserved indefinitely.
+- Hari Krishna Dara: added copy menu item to locals panel popup.
+- Fixed bug 885: removing a breakpoint group containing breakpoints
+  resulted in an exception.
+- Fixed bug 893: check target JVM version before invoking JDI 1.4
+  methods (resulted in a crash of the target while connecting).
+
+2.27 - September 21, 2004
+- Corrections to the behavior of the combobox in the evaluate dialog.
+- Fixed bug 865: added stratum value to allow JSwat to debug classes
+  generated from other languages, such as Java Server Pages.
+
+2.26 - September 17, 2004
+- Hari Krishna Dara: replaced evaluate dialog's text field with a
+  combobox that retains the history of expressions evaluated.
+- Fixed bug 872: corrected loop index management in classes panel which
+  led to an infinite loop in some situations.
+
+2.25 - August 16, 2004
+- Implemented RFE 811: added a close-all-but-this menu item to the
+  tabbed views popup menu to close all but the selected source view.
+- Fixed bug 853: catch and ignore exceptions caused by asynchronous
+  activity in the thread panel during a session deactivation.
+- Fixed bug 874: source view popup method submenu now remains correct
+  even after option changes.
+
+2.24 - May 9, 2004
+- Fixed bug 866: now able to set the values of elements in arrays.
+- Fixed bug 867: close the input stream after hotswap operation so that
+  class file is not left open indefinitely.
+
+2.23 - April 29, 2004
+- Fixed bug 862: check for null in breakpoints tooltip display to
+  avoid exception when Java parsing had previously failed.
+- Fixed bug 863: check for null in breakpoints code to avoid an
+  exception when logging is enabled during startup.
+
+2.22 - February 27, 2004
+- Implemented RFE 496: new copysession, loadsession, and rmsession
+  commands for managing the sets of session settings.
+- Implemented RFE 846: added 'capture' command to control output of
+  JSwat messages to alternative locations.
+- Implemented RFE 847: added 'logging' command to enable and disable
+  internal logging by category name.
+- Implemented RFE 850: try to read the SourceFile attribute from the
+  .class file when looking for the source code (and the source file
+  name could not be determined otherwise).
+- Fixed bug 675: wait for VM start event before allowing VM to be
+  resumed -- fixes problem that seemed to only occur on Mac OS X.
+- Fixed bug 821: special menus had "MISSING STRING:" tooltips.
+- Fixed bug 844: better explain the class name field in the set
+  breakpoint dialog.
+- Fixed bug 849: about dialog version is once again set properly.
+
+2.21 - February 16, 2004
+- Fixed bug 826: handle missing source file gracefully in console mode.
+- Fixed bug 828: disallow any attempt at setting breakpoints outside
+  of the class definition.
+- Fixed bug 829: removed extra brackets from array arguments in class
+  panel method nodes.
+- Fixed bug 835: Dirk Moebius fixed the class panel popup hotswap menu
+  item to avoid an exception when the class file was not found.
+- Made the necessary changes so source will compile under JDK 1.5.
+- Moved tutorial to built-in help.
+
+2.20 - January 22, 2004
+- Implemented RFE 816: added scripts to launch JSwat under Unix-like
+  systems and Microsoft Windows.
+- Fixed bug 819: source view popup menu's Methods submenu now shortens
+  names of classes to keep the overall width smaller.
+- Fixed bug 820: session open and copy dialogs now copy the selected
+  list item name to the text field; the name in the field is used
+  over anything selected in the list.
+- Fixed bug 824: use generic breakpoint support for setting breakpoints
+  in source code that caused a parser error.
+- Fixed bug 825: display parser errors in source view using a red line
+  highlighter and a tooltip to show the cause of the error.
+
+2.19 - December 5, 2003
+- Renamed the startup file from .jswatrc to jswat.init as that makes
+  more sense. Also, the file ~/.jswat/init takes the place of the
+  ~/.jswat/jswatrc file. Be sure to rename these files, if they exist.
+- Implemented RFE 463: add support for non-Java programming languages
+  via a modified form of Daniel Bonniot's patch. This support is very
+  generic and language-specific enhancements will be necessary to
+  achieve additional functionality.
+- Implemented RFE 551: added basic type casting support to the
+  expression evaluator, affecting 'print' and 'invoke' commands.
+- Fixed bug 537: command input prompt now changes appropriately.
+- Fixed bug 547: method invocation in the expression evaluator is now
+  finally working correctly, according to the JLS.
+- Fixed bug 548: rewrote all of the expression evaluator operator nodes
+  so they handle the numbers correctly according to the JLS.
+- Fixed bug 553: method invocation with null arguments now works as
+  would be expected (ambiguous matches require typecast).
+- Fixed bug 593: expression evaluator uses Integer by default for
+  integral literals.
+- Fixed bug 611: set command now fetches stack frame after evaluating
+  expression to avoid errors caused by method invocations.
+- Fixed bug 806: switching view desktop from tabbed to windowed or
+  vice versa would cause an exception and the change could not be
+  reversed thereafter until the program was restarted.
+- Fixed bug 807: switching look and feel with tabbed view mode and
+  no open views meant that new tabbed views used old look and feel.
+- Fixed bug 809: avoid concurrent modifications to the class tree
+  data structure when the session deactivates during an update.
+- Fixed bug 814: floating point literals suffixed with 'f' still
+  were of type double, but should have been of type float when
+  using the expression evaluator.
+- Fixed bug 817: characters are handled as integrals in numeric
+  operations within the expression evaluator.
+
+2.18 - November 10, 2003
+- Implemented RFE 514: new 'vminfo' command shows boot classpath.
+- Implemented RFE 569: permit '*' to match any argument type when setting
+  method breakpoints.
+- Implemented RFE 658: source view shows breakpoint details in tooltip
+  if mouse hovers over breakpoint indicator in source view gutter.
+- Implemented RFE 729: 'print' now displays byte and char arrays as
+  strings, where bytes are converted using the default encoding.
+- Implemented RFE 731: put attach dialog examples in text areas with
+  popup menu to select and copy the text.
+- Implemented RFE 782: 'vminfo' command can display debuggee memory
+  sizes for free, maximum, and total memory.
+- Implemented RFE 792: added 'support' command to show optional feature
+  support in the debuggee VM.
+- Fixed bug 713: added a reference to API docs for regex in the help
+  index page.
+- Fixed bug 719: classes panel tree does not collapse expanded branches
+  when classes load or unload, if possible.
+- Fixed bug 733: runto, stop commands have the ability to accept just
+  a line number, if the current location is set within a class.
+- Fixed bug 772: consistently use the single-threaded flag when invoking
+  methods through the class utilities code.
+- Fixed bug 774: locals panel tooltip would throw an exception if the
+  value was null.
+- Fixed bug 787: bytecodes command no longer uses regular expressions
+  for class and method names because the result was undesirable.
+- Fixed bug 788: bytecodes command now tries to use .class file data
+  in favor of just the method bytecode retrieved from JDI.
+- Fixed bug 789: method breakpoints can now be set on constructors.
+- Fixed bug 790: check for instance filter support in debuggee before
+  using them in watch panel and watchpoints.
+
+2.17 - May 21, 2003
+- Fixed bug 649: disallow quick-copy of selected text from a text
+  component to the text areas that are not editable.
+- Fixed bug 727: very long classpath would cause exceptions.
+- Fixed bug 745: shared memory radio button is now disabled in the
+  attach dialog when the connector is not available.
+- Fixed bug 766: source view would throw a null pointer exception for
+  a file stored inside a zip or jar.
+- Fixed bug 768: Michael M. submitted a patch to allow breakpoints to
+  resolve within inner classes defined inside interfaces.
+- Fixed bug 769: alias command needs to strip enclosing quotes because
+  command parser does not and thus multi-command aliases would fail.
+- Fixed bug 770: corrected bad alias example in command help.
+
+2.16 - April 28, 2003
+- Organized the widgets in the preferences dialog with titled borders.
+- Use bold text, rather than italic, in the stack panel.
+- Implemented RFE 599: source views may now be displayed in a tabbed
+  pane, instead of the internal frames.
+- Implemented RFE 331: underline static final fields in locals panel.
+- Implemented RFE 754: toolbar icons now show border on mouse hover.
+- Fixed bug 752: locals panel threw NPE for objects with no fields.
+- Fixed bug 753: source view popup menu confused over breakpoints.
+- Fixed bug 755: added keyboard mnemonic to the window menu.
+- Fixed bug 759: moving toolbar around the main window had problems.
+- Fixed bug 762: removing breakpoint group now properly deletes the
+  breakpoints contained in that group.
+- Fixed bug 764: show class names in the methods submenu of the source
+  view popup menu, so it is clear where they are defined.
+
+2.15 - April 9, 2003
+- Jay Gindin added the keyboard mnemonics for the top-level menus and
+  the command input field. He also added a few more keyboard shortcuts.
+  I added the menu item mnemonics for nearly all of the menu items.
+  You will want to remap some of your keyboard shortcuts since they
+  may conflict with the new menu mnemonics.
+- Neeraj Apte added the goto-line menu item, the short method
+  descriptions in source view popup menu option, and sorted the methods
+  in the source view popup menu.
+- Implemented RFE 709: added option to local variables panel to display
+  static final fields.
+- Implemented RFE 717: display tooltips for cells in the threads panel.
+- Implemented RFE 718: display tooltips for rows in the table in the
+  classpath and sourcepath dialog.
+- Implemented RFE 721: add a hotswap menu item to the class panel popup
+  menu, which hotswaps the class under the mouse pointer.
+- Implemented RFE 722: sort the methods in the class panel; also removed
+  the method return types as they are not remotely interesting.
+- Fixed bug 736: source view was inconsistent in handling breakpoints
+  that used wild-carded names.
+- Fixed bug 740: handle the missing file case gracefully in 'hotswap'.
+- Fixed bug 741: breakpoints panel Show Source button now uses the
+  resolved location of the breakpoint when available.
+- Fixed bug 744: exception occurred when connecting to a remote debuggee
+  through the listen command.
+- Fixed bug 746: removed method access modifiers and return type from
+  the method panel; sorted the rows by method name.
+- Fixed bug 749: byte code views kept opening for the same class, over
+  and over again.
+
+2.14 - March 13, 2003
+- Added a "hide zombie threads" item to the threads panel popup menu.
+- Removed ancient artifact, the vmlist command (and the related action
+  that has been hidden for some time now). It was an embarrassing
+  misunderstanding that spawned this useless little cretin and now it
+  is finally dead.
+- Fixed bug 694: added a brief sleep to the 'next' command unit test
+  to allow the debuggee to resume.
+- Fixed bug 704: user input to the debuggee is sent to the output text
+  area, to better simulate the input and output interaction.
+- Fixed bug 714: source view popup menu would throw exception when the
+  "Run to line" feature was invoked during an inactive session.
+- Fixed bug 715: check that the .zip or .jar entry is actually a file
+  when accessing it via the sourcepath setting. Otherwise treat it as
+  a directory entry.
+- Fixed bug 720: locals panel would display inappropriate error message
+  when the local variable information was missing for a class.
+- Fixed bug 723: make the threads panel auto-refresh an option, to
+  avoid problems with applications with a high thread turn-over rate.
+- Fixed bug 724: made the threads panel update efficiently, so now if
+  thread events happen frequently among a large set of threads, the
+  panel redraws very quickly.
+- Fixed bug 726: made breakpoint properties dialog class ID text field
+  not editable, instead of disabled, so it is scrollable.
+
+2.13 - January 29, 2003
+- Abolished the use of the Logger to report errors and warnings. Instead,
+  problems are dealt with more appropriately or are reported via the
+  messages text area.
+- Use bold for changed variables in the locals panel, as that is much
+  easier to notice while single-stepping.
+- Implemented RFE 42: classes panel now shows methods for the classes.
+  Double-clicking on a method node opens the source to that location.
+- Implemented RFE 707: indicate breakpoint resolution in the breakpoint
+  properties dialog.
+- Fixed bug 660: do not let a failed resolution for one class stop
+  the scanning loop from finding another that might work.
+- Fixed bug 676: the log was using an unreliable method for stopping
+  the flusher thread. Only the unit tests seemed to be calling this
+  method, which is why the bug was filed as a unit test bug.
+- Fixed bug 702: methods panel was not properly deactivating.
+- Fixed bug 703: stack and methods panel allowed useless selection.
+- Fixed bug 706: use verbose error messages in the display panels.
+- Fixed bug 708: display appropriate message in stack panel when call
+  stack is empty.
+
+2.12 - December 30, 2002
+- Implemented RFE 8: added a most-recently-opened files submenu.
+- Implemented RFE 268: added locals panel popup menu item to display
+  source code for the type of the selected variable.
+- Implemented RFE 506: certain actions are disabled when the debuggee
+  is running, or when it is not running.
+- Implemented RFE 529: watch breakpoints now support object instance
+  filters, so events occur only for specific objects, if desired.
+- Implemented RFE 539: added option to hide line numbers in source views.
+- Implemented RFE 559: use expression evaluator for disablegc, dump,
+  enablegc, and locks commands.
+- Implemented RFE 618: assigned F1 key to help index action.
+- Implemented RFE 626: exception breakpoints can now be told to stop
+  only for caught or uncaught exceptions, rather than always stopping
+  in either case.
+- Implemented RFE 628: uncaught exceptions breakpoint may now stop for
+  both uncaught and caught exceptions (or neither).
+- Implemented RFE 664: allow copying the properties in the about dialog.
+- Implemented RFE 665: show shortcut key in toolbar button tooltip.
+- Implemented RFE 695: added option to use small buttons for the toolbar.
+- Implemented RFE 701: added tooltips to nearly every menu item.
+- Fixed bug 563: disabling and re-enabling breakpoints after hotswapping
+  will cause the breakpoints to resolve successfully.
+- Fixed bug 565: added refresh command to clear cached views from the
+  console adapter.
+- Fixed bug 566: replaced the ugly breakpoint panel icons with font
+  styles. Resolved breakpoints are bold, while disabled are italicized.
+- Fixed bug 576: added configurable timeouts for toString() invocation.
+- Fixed bug 583: some classes were caching JDI objects that may become
+  stale after a hotswap operation.
+- Fixed bug 653: enable the display of hidden files and directories
+  in the file selectors.
+- Fixed bug 671: lines command takes optional class loader identifier
+  argument, to display lines of class loaded by that class loader.
+- Fixed bug 682: use italic font to indicate state rather than color,
+  in the locals and stack panels.
+- Fixed bug 683: popup menus now change look and feel appropriately.
+- Fixed bug 684: custom tree cell renderers did not get look and feel
+  change events.
+- Fixed bug 685: threads and threadgroups commands now indicate the
+  parent thread groups.
+- Fixed bug 686: disable node selection in the threads, classes, and
+  locals panels. It is useless and looks untidy.
+- Fixed bug 687: removed the useless "LOCALS" and "CLASSES" nodes from
+  the local variables and classes panels.
+- Fixed bug 688: display an appropriate message in the stack panel when
+  the thread is not in a compatible state (for displaying the stack).
+- Fixed bug 690: added configurable timeouts for method invocation.
+- Fixed bug 693: clicking in source view acquires keyboard focus.
+- Fixed bug 700: make the watch panel useful by making the name column
+  cells editable again.
+
+2.11 - December 2, 2002
+- Implemented RFE 66: display threads and threadgroups in the threads
+  panel, using a tree-table component.
+- Implemented RFE 75: remember the widths of the columns in the panels
+  which use table displays (methods, threads, stack, watches).
+- Implemented RFE 441: added a simple breakpoint condition editor.
+- Implemented RFE 442: added a simple breakpoint monitor editor.
+- Implemented RFE 504: remember the order of the columns in the panels
+  which use table displays (methods, threads, stack, watches).
+- Implemented RFE 662: source view popup menu can launch external source
+  editor, passing filename and line number to any program. See the
+  source view help page for the details.
+- Fixed bug 657: re-select the previous look and feel menu item if an
+  error occurs while changing to a new look and feel.
+- Fixed bug 663: added close buttons to about, evaluate, and window
+  list dialogs. Removed breakpoints dialog because it was redundant.
+- Fixed bug 666: added additional notes to the remote debugging help
+  file concerning when it should be used instead of launched debugging.
+- Fixed bug 668: setting breakpoints in nested inner classes usually
+  failed to work in one way or another.
+- Fixed bug 678: help search feature was throwing null pointer.
+- Fixed bug 680: uncaught exception breakpoint would always suspend the
+  debuggee, despite changing the suspend policy.
+
+2.10 - November 10, 2002
+- Significantly improved installation instructions in README.
+- Renamed "Session" menu to "VM" as that makes more sense.
+- Implemented RFE 508: source view line highlighter color is now
+  customizable via the preferences dialog.
+- Fixed bug 621: explained in "Classes" help section about multiple
+  instances of the same class in the class tree.
+- Fixed bug 622: changing the classpath or sourcepath will force the
+  debugger to find source files in their new location the next time
+  they are requested using a class name.
+- Fixed bug 625: editing the classpath and sourcepath elements is now
+  easier with a new Modify button and a dialog for editing the path
+  entry. Additionally, the classpath editing dialog is now accessible
+  while the session is active (although editing is still disallowed).
+- Fixed bug 637: scroll the source view horizontally if needed to
+  show matching text when searching.
+- Fixed bug 638: documented slash escape sequences in the command
+  parser; useful for treating special characters as normal.
+- Fixed bug 643: locals panel would blink for each single-step event.
+- Fixed bug 650: source view threw index out of bounds exception
+  when evaluating text under mouse.
+- Fixed bug 655: renamed the "session" menu items in the File menu
+  so their purpose is more obvious.
+- Fixed bug 659: changed upgrading message to say "2.x" instead of
+  "2.0" since an upgrade could be directly from 1.x to 2.x.
+- Fixed bug 661: source views are reloaded when the refresh action is
+  invoked, useful when code may be changed during debugging.
+
+2.9 - October 6, 2002
+- Japanese translation of most (if not all) user-visible strings
+  provided by Kenji Nakamura. This does not include the help files.
+- Implemented RFE 619: added remote attach button to toolbar.
+- Implemented RFE 631: added remote detach button to toolbar.
+- Fixed bug 615: uncaught exception breakpoint no longer halts when a
+  thread is told to stop (which generates a ThreadDeath Error).
+- Fixed bug 616: made uncaught exception breakpoint visible and
+  manageable. By default it is created when JSwat starts, if it does
+  not already exist.
+- Fixed bug 627: local variables always showed as changed (red color).
+- Fixed bug 630: if there are no field variables and the debug info is
+  not available, then display "no debugging info" instead of "none" in
+  the local variables panel.
+- Fixed bug 632: classpath property is now set automatically only during
+  the startup of JSwat. Connecting to a remote VM will no longer overwrite
+  the classpath setting.
+- Fixed bug 635: static field variables in static methods were not shown
+  in the locals panel when "hide under 'this'" option was enabled.
+- Fixed bug 640: locals panel was showing default node icons rather than
+  the informative variable-type icons.
+- Fixed bug 642: locals panel expanded nodes kept collapsing with each
+  single-step event.
+
+2.8 - August 11, 2002
+- Added new help file describing how to use the Start VM dialog.
+- Implemented RFE 43: added a tooltip to the locals panel to display
+  detailed information about the variable under the mouse.
+- Implemented RFE 428: added a means of easily setting the system property
+  values that are passed to the debuggee when launched. The feature is
+  accessible in the Start VM dialog via a button.
+- Implemented RFE 455: added vertical whitespace to the command help.
+- Implemented RFE 462: added search feature to the help viewer.
+- Implemented RFE 545: added see-also references to the command help.
+- Implemented RFE 557: option to set breakpoint in main(String[]) method
+  of the "main" class when launching the debuggee.
+- Implemented RFE 561: expression evaluator now supports 'length'
+  references on arrays.
+- Implemented RFE 570: can now set method breakpoints without giving the
+  method arguments, including the parentheses.
+- Implemented RFE 587: added 'bytecodes' command to display bytecodes for
+  methods with detailed opcode information, if available.
+- Implemented RFE 605: 'threadbrk' supports on-death and on-start
+  conditions to control when the breakpoint is considered hit.
+- Fixed bug 586: made the implicit "*." on breakpoints optional, with
+  the default being off (because it was causing me problems).
+- Fixed bug 588: method breakpoint without arguments eventually caused
+  a null pointer exception when persisting the breakpoint.
+- Fixed bug 589: mouse released events in the source view gutter will
+  no longer affect the breakpoint defined at that line when the popup
+  menu is still visible.
+- Fixed bug 590: make sure breakpoint properties dialog does not slip
+  behind the main window when an error message appears.
+- Fixed bug 591: make sure the -jar option is supported when launching
+  the debuggee from either the Start VM dialog or the load command.
+- Fixed bug 592: made the tutorial reference in the help index page
+  to not be a link; avoids proxy errors for users behind a firewall.
+- Fixed bug 594: made the README.html notes about preferences errors
+  a little more generic to cover more problem cases.
+- Fixed bug 595: 'class' and 'field' commands failed to check if the
+  session was active, causing a null pointer exception.
+- Fixed bug 596: class and thread breakpoints were not notifying the
+  session listeners that the debuggee had suspended.
+- Fixed bug 598: invoking 'filter del ...' on breakpoint with no
+  filters would throw a null pointer exception.
+- Fixed bug 600: fixed 'classbrk' and 'watch' commands to handle missing
+  arguments more gracefully.
+- Fixed bug 602: thread filters on some types of breakpoints were
+  throwing exceptions.
+- Fixed bug 604: single-stepping actions did not properly notify the
+  session listeners, which would have eventually led to problems.
+- Fixed bug 606: changing a thread breakpoint from "on start" to
+  "on death" made the breakpoint not stop at all.
+- Fixed bug 607: the 'set' command was failing to up-cast values to
+  greater precision types (e.g. byte to int, or short to long).
+- Fixed bug 613: file selection dialogs default to wrong directory on
+  their initial appearance (should be current working directory).
+
+2.7 - July 15, 2002
+- Implemented RFE 267: added popup menu to threads panel for suspending,
+  resuming, and interrupting the threads.
+- Implemented RFE 303: highlight changed variables in the locals panel.
+- Implemented RFE 430: added regular expression support to the following
+  commands: apropos, class, classes, fields, threads.
+- Implemented RFE 581: allow source view popup menu to manage breakpoints
+  even when session is inactive.
+- Fixed bug 546: avoid NPE in GraphicalAdapter by not setting fields
+  to null. Just can't do the right thing in this case...
+- Fixed bug 568: brkinfo command now shows breakpoints list; clear,
+  disable, enable, and stop now require arguments.
+- Fixed bug 572: unresolved breakpoints can now be deleted via the
+  source view popup menu.
+- Fixed bug 573: add message confirming that some VM connectors
+  may be without a port number in the VM connector list.
+- Fixed bug 574: keyboard shortcuts now default correctly.
+- Fixed bug 575: can clear classpath and sourcepath without exception.
+- Fixed bug 580: do not resolve disabled breakpoints.
+- Fixed bug 582: avoid Windows registry error/warning message by
+  checking for session property before trying to delete it.
+- Fixed bug 584: VM start dialog now uses accurate argument defaults
+  and displays the actual values used when launching.
+
+2.6 - June 17, 2002
+- Implemented RFE 21: renamed monitor command to brkmon. Added new
+  monitor and unmonitor commands, to create and delete monitors that
+  are not associated with any breakpoint.
+- Implemented RFE 118: new 'elements' command to display elements of
+  collections, maps, and arrays.
+- Implemented RFE 265: prepend implicit "*." to unqualified classnames
+  when setting breakpoints.
+- Implemented RFE 437: new 'hotswap' command to redefine loaded classes.
+- Implemented RFE 443: use the toString() of objects in the source view
+  tooltip variable display feature.
+- Fixed bug 555: expression evaluator now properly parses numbers
+  with a type suffix (D, d, F, f, L, or l).
+- Fixed bug 558: breakpoints that fail to resolve for any reason
+  are automatically deleted.
+
+2.5 - June 12, 2002
+- Implemented RFE 61: basic Java expression evaluation added. See the
+  print command help and the new "Expression Evaluation" help file.
+- Implemented RFE 486: command history size limit can be changed.
+  Now defaults to 50; previously had no size limit.
+- Implemented RFE 542: new 'props' command to modify session properties.
+- Implemented RFE 549: breakpoint conditions now use the expression
+  evaluator. Use == and other boolean operators instead of just =.
+- Fixed bug 538: breakpoints dialog showed nothing but "junk".
+- Fixed bug 540: made the panel status messages a little clearer.
+- Fixed bug 541: give indication of what is happening when clicking
+  on a thread in the Threads panel.
+- Fixed numerous little grammatical mistakes in the help files.
+
+2.4 - May 22, 2002
+- Added label at bottom of window to show notices and warnings.
+- Fixed bug 531: classpath and sourcepath were not consistently
+  canonicalized.
+- Fixed bug 532: command completion was broken in revision 229.
+- Fixed bug 535: applied change suggested by Takeo M. regarding the
+  illegal connector argument problem first reported in April by
+  Takuhiro N.
+
+2.3 - May 10, 2002
+- Implemented RFE 25: added watch command (uses field breakpoints).
+- Implemented RFE 39: breakpoints on thread start and death.
+- Implemented RFE 40: breakpoints on class prepare and unload.
+- Implemented RFE 41: breakpoints on field access and modify.
+- Implemented RFE 67: display system properties in about dialog.
+- Implemented RFE 470: added regular expression support to search view
+  feature. Updated the source view help file.
+- Fixed bug 526: Java parser was setting first class line to zero
+  when class appeared to contain no executable code.
+- Fixed bug 527: commands utilizing the peek function of the new
+  command arguments support would fail to work correctly.
+- Fixed bug 528: some breakpoints were still acting as listeners
+  after being removed, causing problems.
+- Fixed bug 530: load command with -cp option with spaces in path
+  was misinterpreted as multiple arguments.
+
+2.2.1 - May 7, 2002
+- Fixed bug 525: alias command was losing quotes around arguments,
+  which could lead to unexpected interpretation of semicolons.
+- Changed read, methods, and lock commands to read just the next
+  argument, rather than all of the arguments as one. They only take
+  one argument anyway.
+- Changed stderr, stdin, and stdout to read their arguments as-is.
+
+2.2 - May 6, 2002
+- All commands may have their arguments enclosed in quotes, either
+  single or double quotes.
+- Aliases may contain multiple commands, separated by semicolons.
+- Removed macro support now that aliases can run multiple commands.
+- Implemented RFE 429: option to disable the automatic refresh of the
+  classes tree panel. See the updated "Classes" help for details.
+- Implemented RFE 524: option (default is on) to hide the core classes
+  in the classes tree panel. See the updated help for details.
+- Unfixed bug 480: took away fix for bug 480 because it was causing
+  more problems than it solved.
+- Fixed bug 520: attach command was not checking for null or empty
+  port number and share name values.
+- Fixed bug 521: fixed Java parser wrapper so it finds the correct
+  line of code for the beginning of classes.
+- Fixed bug 522: log was missing notifications and occasionally
+  not displaying messages to the messages panel.
+
+2.1.1 - May 3, 2002
+- Fixed bug 516: sourcepath now handles quotes around argument.
+- Fixed bug 518: program failed to start if Java preferences files
+  did not already exist.
+
+2.1 - May 2, 2002
+- Now uses smaller icons in the menus than in the toolbar.
+- Implemented RFE 466: persist command aliases indefinitely.
+- Implemented RFE 467: persist macro definitions indefinitely.
+- Implemented RFE 469: replaced the help window buttons with a proper
+  toolbar and iconic buttons.
+- Implemented RFE 495: multiple commands on a single line separated by
+  semicolons are now allowed.
+- Implemented RFE 505: locals panel provides option (on by default) to
+  hide fields of "this" under a tree node called 'this'.
+- Implemented RFE 507: optionally bring the debugger window forward
+  when an event occurs, such as hitting a breakpoint.
+- Implemented RFE 510: repeated clicking in the source view gutter will
+  create a breakpoint, disable the breakpoint, and finally remove it.
+- Fixed bug 477: breakpoint conditionals now throw exceptions rather
+  than printing errors to the console. Appropriate messages are now
+  printed to the messages panel instead.
+- Fixed bug 479: added note to breakpoints help about thread filters
+  that cannot be applied because chosen thread does not exist.
+- Fixed bug 480: setting line breakpoint at non-code line will try
+  to advance to next available code line, up to 100 lines.
+- Fixed bug 509: window menu now shows up to 10 open windows. An
+  available dialog displays a list of all the windows.
+- Fixed bug 511: duplicate source views kept opening with the same
+  file each time the session was started.
+- Fixed bug 512: source view was reading Unicode escapes in strings
+  incorrectly and colorizing too little of the string.
+
+2.0 - April 26, 2002
+- Fixed bug 461: breakpoint properties dialog now properly centered
+  when activated via the source view popup menu.
+- Fixed bug 464: opened source file was kept 'open' and other Windows
+  programs saw the file as being locked by another process.
+- Fixed bug 471: validate input field values in VM attach dialog.
+- Fixed bug 472: disallow creating a breakpoint with no class name
+  when the current location cannot be determined.
+- Fixed bug 473: added note to "Troubleshooting" section of README
+  about XML parsers and the JSwat preferences.
+- Fixed bug 474: print brief messages about lexer/parser errors
+  when opening a source view of a non-Java file.
+- Fixed bug 475: breakpoints dialog was initially too narrow.
+- Fixed bug 476: methods submenu kept getting added to source view
+  popup menu, over and over again.
+- Fixed bug 481: value condition no longer spews exceptions, and
+  treats null variable value appropriately.
+- Fixed bug 482: invoking 'unalias' printed both a 'deleted' and a
+  'removed' message.
+- Fixed bug 485: down, frame, up now handle case of current thread
+  not being set.
+- Fixed bug 487: invoke command now deals with some errors properly.
+- Fixed bug 488: empty classpath values are treated as undefined
+  and the fall-back values are used (java.class.path or the current
+  working directory).
+- Fixed bug 489: removed optional argument from 'kill' command; it
+  could never work anyway.
+- Fixed bug 490: the java.source.path System property is only used
+  at startup, not every time the sourcepath value is queried.
+- Fixed bug 491: new option to disable the parsing of the contents
+  of source views.
+- Fixed bug 492: more appropriate 'set' error message.
+- Fixed bug 493: removed redundant 'wherei' command and put the
+  pc information into the 'where' command by default.
+- Fixed bug 494: help command now shows alias and macro definitions.
+
+2.0-beta - April 24, 2002
+- Implemented RFE 119: source view popup menu lists methods and scrolls
+  to method when the matching menu item is selected.
+- Implemented RFE 304: source view font family can be chosen from any
+  of the available fonts. Thanks to Ohba for making this possible.
+- Implemented RFE 418: changed set breakpoint action to allow either a
+  line or method specification.
+- Implemented RFE 424: added ability to edit the entries in the dialogs
+  for setting the classpath and sourcepath.
+- Implemented RFE 434: handle multiple sets of session properties more
+  naturally by using java.util.prefs.Preferences instead of files.
+- Implemented RFE 435: persist breakpoints to java.util.prefs.Preferences
+  instead of using serialization to a file.
+- Implemented RFE 436: replaced the JConfigure library with hand-crafted
+  user preferences dialog and two menus of checkboxes. Settings are
+  stored in java.util.prefs.Preferences nodes.
+- Implemented RFE 456: added help screens.
+- Removed the generated Java parser source files and replaced them
+  with a single jar file containing the compiled classes. This should
+  not change how you invoke JSwat, fortunately.
+
+2.0-alpha - April 16, 2002
+- Implemented RFE 295: moved the console adapter class to a new package.
+- Implemented RFE 433: applied Masaru Ohba's implementation for
+  proportional font support in the source view text area.
+- Reorganized the source code layout to be a bit more logical.
+- Added JSwat test classes under the 'test' directory.
+- Removed the report package in favor of java.util.logging classes.
+- Removed AppSettings class in favor of java.util.prefs.Preferences
+  class. Existing ~/.jswat/settings file will be deleted and old
+  settings will be lost. Sorry for the inconvenience.
+- Removed code to work around JPDA bug 4331522 since this is fixed
+  in JDK 1.4.

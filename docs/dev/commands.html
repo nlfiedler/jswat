@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>Command Interface</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>Command Interface</h2>
+
+    <h3>Why Command Interface?</h3>
+
+    <p>Why implement a command interface to a graphical debugger, you
+    ask? That&#39;s easy, because it takes a lot less time to write a
+    text parser than it does to put together a good looking graphical
+    interface. I realized soon after starting this project that the
+    coding needed to bring this graphical debugger from idea to reality
+    was going to take a long time and a lot of effort. In the meantime
+    I still would not have a satisfactory debugger. So, I have taken a
+    sidetrack and implemented a command interface to this debugger, in
+    addition to the graphical interface.</p>
+
+    <p>The command interface described here is not to be confused with
+    the console mode of JSwat. The command interface is available in
+    both the console and graphical modes of JSwat.</p>
+
+    <h3>Basic Design</h3>
+
+    <p>The basic design of the command interface is simple. There is a
+    means of receiving commands from the user and a class that
+    interprets them. This interpreter is the
+    <code>CommandManager</code> class. This class is responsible for
+    parsing the text commands and taking the appropriate action. Since
+    one of my many goals for this project is extensibility and
+    flexibility, I have taken a simple approach to implementing the
+    commands. Each command is actually handled by a specialized class.
+    All command classes subclass from <code>JSwatCommand</code>, which
+    provides some basic functionality for all commands. The
+    <code>CommandManager</code> calls upon the command classes by their
+    name. For instance, the &quot;suspend&quot; command is implemented
+    by the <code>suspendCommand</code> class. Thus the
+    <code>CommandManager</code> has an easy time finding the command
+    class to handle the user&#39;s input.</p>
+
+    <h4>Help</h4>
+
+    <p>Each command class knows how to perform its task, given a list
+    of arguments. The arguments are handled uniquely by each command
+    class. Some do not take arguments and perform a simple task. The
+    <code>JSwatCommand</code> class knows how to print help information
+    about all of the commands. This is meant to assist the user in
+    understanding the basic syntax and use for a command. There is no
+    limit on the amount of help information a command can have. The
+    <code>JSwatCommand</code> class also supports the display of a
+    short description of each command, useful in generated the
+    &#39;<code>help commands</code>&#39; output.</p>
+
+    <h4>Aliases</h4>
+
+    <p>The <code>CommandManager</code> class supports command aliases.
+    That is, a new name can be given to a command, possibly with
+    default arguments. For instance, the user might be able to alias
+    &#39;<code>where all</code>&#39; to &#39;<code>wa</code>&#39;, thus
+    saving several keystrokes. These aliases are simply strings that
+    are substituted into any commands with the matching alias name.</p>
+
+    <h4>Macros</h4>
+
+    <p>The <code>MacroManager</code> class supports command macros.
+    That is, a name can be given to group of commands which are then
+    executed each time the macro is invoked. For instance, the user
+    might be able to create a macro that sets the classpath and then
+    invokes &#39;<code>view</code>&#39; on a class, thus saving
+    numerous keystrokes. These macros are simply a set of strings that
+    are processed whenever the macro name is used.</p>
+
+    <h4>Command History</h4>
+
+    <p>The <code>CommandManager</code> class supports a command history
+    chain. That is, as each command is input by the user it is saved in
+    a list. Later the user can use &quot;!!&quot; or
+    &quot;!&lt;prefix&gt;&quot; to run previously entered commands,
+    much like many Unix shell programs. Typing the command
+    &quot;history&quot; will display the command history. In the
+    graphical mode of JSwat, the command input field allows the use of
+    <code>Ctrl-p</code> or <code>Ctrl-n</code> (or the up/down cursor
+    keys) to navigate through the command history.</p>
+
+    <h4>Unique Prefixes</h4>
+
+    <p>The <code>CommandManager</code> class supports the concept of
+    unique command prefixes. That is, if the user types a command name
+    that does not match any of the known commands, the
+    <code>CommandManager</code> will search for commands that have a
+    matching name prefix. For instance, if the user types
+    &#39;<code>att</code>&#39; that will uniquely match
+    &#39;<code>attach</code>&#39;. If instead the user types
+    &#39;<code>al</code>&#39;, that will result in an ambiguous match
+    with the commands &#39;<code>alias</code>&#39; and
+    &#39;<code>aliases</code>&#39; (and possibly other commands, as
+    well). The <code>CommandManager</code> will list any ambiguous
+    matches and expect the user to reenter the command using a unique
+    prefix, or possibly the full command name.</p>
+  </body>
+</html>
+

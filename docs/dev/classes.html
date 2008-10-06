@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>Important Classes</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>Important Classes</h2>
+
+    <h3>Important JSwat Classes</h3>
+
+    <p>The following are descriptions of the important classes in JSwat
+    and what they are used for. Whenever you write new code for JSwat,
+    or modify existing code, you will need to know what these classes
+    do and how to make use of them.</p>
+
+    <dl>
+      <dt><strong>BreakpointManager</strong></dt>
+
+      <dd>The <code>BreakpointManager</code> class is responsible for
+      creating new breakpoints, deleting existing breakpoints, and
+      notifying listeners whenever breakpoints have been disabled,
+      enabled, added, or deleted. This is used by classes like
+      <code>SourceView</code> to indicate graphically where breakpoints
+      exist and their current state.</dd>
+
+      <dt><strong>ContextManager</strong></dt>
+
+      <dd>The <code>ContextManager</code> class is responsible for
+      holding the context of the debugger and notifying listeners
+      whenever the debugger context has changed. Context includes the
+      current thread the user is examining, the current stack frame,
+      and the current line the user is stepping through.</dd>
+
+      <dt><strong>JSwatAction</strong></dt>
+
+      <dd>The <code>JSwatAction</code> class is responsible for
+      implementing the basic features of a JSwat action class. All
+      JSwat actions must subclass from this abstract class.</dd>
+
+      <dt><strong>JSwatCommand</strong></dt>
+
+      <dd>The <code>JSwatCommand</code> class is responsible for
+      implementing the basic features of a JSwat command class. All
+      JSwat commands must subclass from this abstract class.</dd>
+
+      <dt><strong>Panel</strong></dt>
+
+      <dd>The <code>Panel</code> interface defines the methods that
+      must be implemented by the display areas in JSwat. The base
+      class, <code>BasicPanel</code> provides the basic functionality
+      for all panels.</dd>
+
+      <dt><strong>UIAdapter</strong></dt>
+
+      <dd>The <code>UIAdapter</code> concrete implementations are
+      responsible for constructing the user interface. In the graphical
+      mode, this includes the menubar, toolbar and display panels.</dd>
+
+      <dt><strong>Session</strong></dt>
+
+      <dd>The <code>Session</code> class is responsible for holding
+      everything together. This class is the facade to numerous other
+      classes in the debugger. It is used to create a new debugging
+      session, deactivate a session, and access the various important
+      objects in the debugger.</dd>
+
+      <dt><strong>PathManager</strong></dt>
+
+      <dd>The <code>PathManager</code> class is responsible for mapping
+      code locations to source files. It provides convenient methods
+      for accessing the classpath and sourcepath settings in
+      JSwat.</dd>
+
+      <dt><strong>VMEventManager</strong></dt>
+
+      <dd>The <code>VMEventManager</code> class is responsible for
+      receiving events from the debuggee VM and delegating them to the
+      appropriate listeners. This class efficiently holds the lists of
+      listeners based on the VM events they are registered for, and
+      keeps them in sorted order by priority. This allows classes like
+      <code>Session</code> to receive the events before other objects
+      in JSwat.</dd>
+
+      <dt><strong>View</strong></dt>
+
+      <dd>The <code>View</code> interface defines the methods that must
+      be implemented by the source view area in JSwat. The base class,
+      <code>BasicView</code> provides the basic functionality for all
+      views that display textual information, such as source code.</dd>
+    </dl>
+  </body>
+</html>
+

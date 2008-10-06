@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1st August 2004), see www.w3.org" />
+
+  <title>Classpath and Sourcepath</title>
+</head>
+
+<body>
+  <h3>Classpath and Sourcepath</h3>
+
+  <h4>Classpath</h4>
+
+  <p>The classpath setting in JSwat is passed to the debuggee VM when
+  it is launched. The way in which JSwat handles the classpath is quite
+  simple. When JSwat is started, it checks if the classpath session
+  property (see <a href="help_sessions.html">Sessions</a>) has been
+  defined. If it is empty, then the value of the System property
+  <code>java.class.path</code> is used as the classpath.</p>
+
+  <p>When JSwat launches a debuggee VM, it sets the classpath of the
+  debuggee VM to the classpath session property. When JSwat is
+  connecting to a remote debuggee VM then the classpath in JSwat
+  becomes the classpath of the remote VM. This is only temporary during
+  the active remote session. Thus you will probably see a different
+  classpath value depending on whether a remote debugging session is
+  active or not.</p>
+
+  <p>When using either the <code>load</code> command or the &quot;Start
+  VM&quot; dialog, you may provide an alternate value for the
+  classpath. You do this with the &quot;<code>-cp</code>&quot; Java VM
+  option. This will overwrite the classpath session property.</p>
+
+  <p>See the help for the <code>classpath</code> JSwat command to learn
+  how to view and set the classpath used by JSwat. An easier way to
+  modify the classpath is through the &quot;Set Classpath&quot; menu
+  item in the &quot;Options&quot; menu.</p>
+
+  <p><strong>Overriding the classpath at startup:</strong> If you wish
+  to override the classpath session property when starting JSwat, you
+  have only one option: invoke the <code>classpath</code> command.
+  JSwat allows invoking an arbitrary command at startup, so simply
+  invoke JSwat like so:</p>
+  <pre>
+% java com.bluemarsh.jswat.Main classpath &lt;CLASSPATH&gt;
+ or
+% java -jar jswat2.jar classpath &lt;CLASSPATH&gt;
+</pre>
+
+  <p>You may want to run another command as well, such as launching a
+  debuggee VM. See the <a href="help_commands.html">commands help</a>
+  for how to invoke multiple commands at one time.</p>
+
+  <h4>Sourcepath</h4>
+
+  <p>The sourcepath in JSwat looks just like a classpath setting. It is
+  used for finding source files when the classpath does not refer to
+  the locations of source files. The sourcepath is simply another means
+  of finding the source file for a class. If a sourcepath is not set,
+  JSwat will use the classpath to find the source files.</p>
+
+  <p>The format of the sourcepath is the same as the classpath. That
+  is, if your source code is in <code>/java/source/stuff</code> and
+  your classes are in <code>/java/classes/stuff</code> and the name of
+  your class is <code>stuff.Test</code>, then the sourcepath should be
+  set to <code>/java/source</code>, just as the classpath is set to
+  <code>/java/classes</code>. You may also add Zip or Jar files to your
+  sourcepath, and JSwat will find the source files inside of the named
+  archives. Just as with the directories, the paths of the files in the
+  archives must match the fully-qualified names of the classes (e.g.
+  &quot;<code>java/lang/String.java</code>&quot; for
+  &quot;<code>java.lang.String</code>&quot;).</p>
+
+  <p>The sourcepath can be set one of two ways in JSwat. First, it can
+  be passed when launching JSwat using the <code>-D</code> argument to
+  the JVM, like so:</p>
+  <pre>
+% java -Djava.source.path=/usr/java/src -jar jswat.jar
+</pre>
+
+  <p>This value will override any previous sourcepath setting in JSwat.
+  This is unlike the classpath, which defaults to the setting in JSwat
+  rather than the <code>java.class.path</code> property setting.</p>
+
+  <p>The second way to set the sourcepath is with the
+  <code>sourcepath</code> command. This works just like the
+  <code>classpath</code> command and takes a set of directory paths and
+  Zip/Jar files as an argument. On Windows the directory paths are
+  separated with &#39;<code>;</code>&#39; characters, while on Unix
+  systems it is the &#39;<code>:</code>&#39; character. An easier way
+  to modify the sourcepath is through the &quot;Set Sourcepath&quot;
+  menu item in the &quot;Options&quot; menu.</p>
+
+  <h4>How JSwat Finds Source Files</h4>
+
+  <p>JSwat uses the classpath and sourcepath to locate source files.
+  Source files are those that end with the &quot;Default
+  extension&quot;, set in the preferences dialog. This defaults to
+  <code>.java</code>. An example is perhaps the easiest way to describe
+  the process.</p>
+
+  <p>Take for instance the class <code>java.lang.String</code>. Assume
+  the source file is called <code>String.java</code> and is located in
+  the directory <code>/usr/java/src/java/lang</code>. Additionally,
+  assume that the classpath is set to
+  <code>/usr/java/jre/lib/rt.jar</code>. In this case, JSwat is not
+  able to find the source file for <code>java.lang.String</code> since
+  it has not been given the location of the source code.</p>
+
+  <p>This is why the sourcepath is useful. With the classpath set to
+  <code>/usr/java/jre/lib/rt.jar</code>, JSwat only sees class files in
+  that jar file. If we set the sourcepath to be
+  <code>/usr/java/src</code> then JSwat will look for the file named
+  <code>/usr/java/src/java/lang/String.java</code> -- the source file
+  for the <code>java.lang.String</code> class.</p>
+
+  <h5>Source Stratum</h5>
+
+  <p>As with the default file extension, the source stratum helps JSwat
+  find source files for each class. The default source stratum for
+  JSwat is set to &quot;Java&quot; because that is the stratum for the
+  Java programming language. Generally you do not want to change this.
+  However, if you are going to change the default file extension, then
+  you should also change the default stratum. The stratum value can be
+  changed in the preferences dialog.</p>
+</body>
+</html>

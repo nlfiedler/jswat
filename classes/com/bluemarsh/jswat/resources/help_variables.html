@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator"
+  content="HTML Tidy for Linux/x86 (vers 1st April 2003), see www.w3.org" />
+
+  <title>Variables</title>
+</head>
+
+<body>
+  <h3>Variables</h3>
+
+  <h4>Locals Panel</h4>
+
+  <p>The values of variables are displayed in the local variables
+  panel. The values in that panel are updated as you single-step
+  through your program. The panel is displayed using a tree, so objects
+  show their field variable values as child nodes. You can expand the
+  nodes to examine the complex fields.</p>
+
+  <p>Objects are shown using the tilted box icon. The type of the
+  object is shown in parentheses. The number following the type
+  indicates the unique identifier used to identify this object in the
+  debuggee VM. This is not the hash code of the object, and the value
+  will change from one instance of the VM to another.</p>
+
+  <p>Nodes in the tree that are shown with a circular arrow indicate
+  that the variable is an object reference that refers back to an
+  object already shown higher up the variable tree hierarchy. It
+  indicates a loop in the object references, which would generally be
+  confusing if not clearly indicated.</p>
+
+  <p>Arrays are indicated with an icon that looks like a bulleted list
+  of three lines. The type of the array is shown in parentheses and the
+  size of the array is shown in brackets. Entries in the array are
+  shown as child nodes of the array. The number in brackets is the
+  array index and the type is shown in parentheses. The value for the
+  entry is shown following the colon. Double-clicking on the
+  &quot;...&quot; array entry will expand the entire array, showing all
+  of the array elements. This is not advisable for large arrays.</p>
+
+  <p>By default the field variables of the &#39;<code>this</code>&#39;
+  object are placed within a tree node with the name &quot;this&quot;.
+  If instead you would prefer the field variables be displayed under
+  the root tree node, use the locals panel popup menu to toggle the
+  option. A drawback of showing the field variables at the top level is
+  that local variables of the same name will hide the field
+  variables.</p>
+
+  <h5>Viewing source for type</h5>
+
+  <p>The locals panel popup menu has an item for viewing the source
+  code for the type of the variable under the mouse pointer. This works
+  perfectly well for variables with a non-null value. For null
+  variables, the type will be the declared type and not the actual
+  type. This may not be what you would expect. Additionally, there is
+  no source code for the primitives types, so a warning will be
+  displayed in the status bar indicating that the source for the type
+  could not be located.</p>
+
+  <h4>Watch Panel</h4>
+
+  <p>Another way of watching the values of field variables as they
+  change is with the watch panel. This panel allows you to watch any
+  field variable of any object as well as local variables. To watch a
+  variable, first suspend the debuggee VM using a breakpoint. Set the
+  breakpoint in a method that is within the scope of the variable to be
+  watched. When the debuggee VM stops, type the name of the variable
+  into the watch panel&#39;s empty &quot;name&quot; cell, then press
+  Enter. The watch panel will then display the changing value of the
+  variable as you single step through code.</p>
+
+  <p>The <code>this</code> keyword can be used to distinguish field
+  variables from like-named local variables. Objects are shown as the
+  string returned from their <code>toString()</code> method, if
+  possible. Otherwise they are shown as the string representation of
+  the JDI object.</p>
+
+  <p>To stop watching a variable, simply erase the name and press
+  Enter. The table row will be removed and the watch point will be
+  deleted. A popup menu for the panel allows you to remove all of the
+  watchpoints at once.</p>
+
+  <p>If the debuggee VM does not support instance filters, any watched
+  field will be for all object instances. This is not terribly useful
+  in which case you should avoid using the watch panel. See the
+  <code>support</code> command to determine which features the debuggee
+  supports.</p>
+
+  <h4>Other Views of Variables</h4>
+
+  <p>Local variables can be displayed with the <code>locals</code>
+  command, which will display all the visible variables and their
+  values. However, this will not show field values of objects. Instead,
+  use the <code>dump</code> command described below.</p>
+
+  <p>To view the value of a single variable, use the <code>print</code>
+  command. This takes the name of a variable and prints its value to
+  the message window. The <code>print</code> command can even take the
+  name of an object with a reference to a field variable. For example,
+  if a local variable called &quot;date&quot; is a Date object and you
+  want to print the &quot;hourField&quot; field variable of that
+  object, you would type &#39;<code>print date.hourField</code>&#39; at
+  the command prompt.</p>
+
+  <p>The <code>dump</code> command operates much like
+  <code>print</code> except that it shows all the field variables and
+  their values for the named object.</p>
+
+  <h4>Setting Variables</h4>
+
+  <p>Variable values can be modified using the <code>set</code>
+  command. See the command help for the syntax. The type of the value
+  on the right of the equals sign is ascertained by the type of the
+  variable referenced on the left side of the equals sign. That is, if
+  the variable being set is an Integer or int type, then the value is
+  interpreted as an integer.</p>
+
+  <p>Note that it is currently possible to set values that are meant to
+  be constants.</p>
+</body>
+</html>

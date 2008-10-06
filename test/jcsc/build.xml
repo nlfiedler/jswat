@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+        Copyright (C) 2003 Nathan Fiedler
+
+  Use Apache Ant to process this build file which runs JCSC on the project
+  source files. JCSC, the Java Coding Standard Checker, is available from
+  http://jcsc.sourceforge.net/
+
+  $Id: build.xml 14 2007-06-02 23:50:55Z nfiedler $
+-->
+
+<project name="JSwat" default="check" basedir=".">
+  <taskdef name="jcsc" classname="rj.tools.jcsc.ant.JCSCTask"/>
+
+  <!-- Set all the build properties. -->
+  <target name="init">
+    <property name="source" value="../../classes"/>
+    <property name="destdir" value="${basedir}/build"/>
+    <property name="xmldir" value="${basedir}/xml"/>
+  </target>
+
+  <target name="prepare" depends="init">
+    <mkdir dir="${destdir}"/>
+  </target>
+
+  <target name="clean" depends="init" description=
+    "Removes the generated files.">
+    <delete dir="build"/>
+  </target>
+
+  <!-- Perform the standards check. -->
+  <target name="check" depends="prepare" description="Performs the checks.">
+    <copy todir="${destdir}">
+      <fileset dir="${xmldir}"/>
+    </copy>
+    <jcsc destdir="${destdir}" rules="jswat.jcsc.xml">
+      <fileset dir="${source}" includes="**/*.java"/>
+    </jcsc>
+  </target>
+</project>

@@ -1,0 +1,68 @@
+JSWAT BUGS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ $Id: BUGS.txt 14 2007-06-02 23:50:55Z nfiedler $
+
+
+See http://www.bluemarsh.com/bugzilla/ for access to the bug database.
+
+
+Known problems in JDK
+----------------------------------------------------------------------
+- Locals panel code may sometimes report an InconsistentDebugInfoException
+  which is caused by the javac compiler (compiler bug #4349534).
+- Cannot catch java.lang.reflect.InvocationTargetException (jdi bug
+  #4505697).
+
+
+JPDA Issues in JDK1.4.0_02 (courtesy of the JPDA folks)
+----------------------------------------------------------------------
+
+The RedefineClasses feature of JPDA had several problems in jdk1.4.0.
+Most of these problems will be fixed in jdk1.4.0_02. This note points
+out some bugs that are not fixed in 1.4.0_02, and also has some other
+information on the RedefineClasses feature.
+
+- JDI method ThreadReference.PopFrames has a bug that can be triggered when
+  full speed debugging is in effect.  The bug can occur in cases where the
+  frame that is to be popped, or the frame that is to be popped to
+  has been compiled and some of its callee's have been inlined by the compiler.
+
+  A workaround for this is to suppress full speed debugging by running the
+  debuggee with -Xint (which turn off Hotspot compilation and  will make the
+  debuggee run more slowly).
+
+  This is bug
+       4647643 SEGV or SIGBUS in JVM with PopAsynchronousTest.
+
+  It will be fixed in JDK 1.4.1.
+
+- It appears that problems can occur if breakpoints are set and later cleared
+  in methods that have been redefined.  We are still looking into this.
+  This is bug:
+     4705330: Netbeans Fix and Continue crashes JVM
+
+  The problem seems to occur with breakpoints in methods that are in the
+  redefined class, but are _not_ changed by the redefine operation (see the
+  discussion of 'equivalent' methods in the RedefineClasses section of
+  the JVMDI spec.)  We hope to fix this in JDK 1.4.1.
+
+- Step operations in an existing activation of a redefined method behave
+  differently due to the lack of line number information.
+  Step requests with these sizes / depths will behave as shown here:
+
+    STEP_LINE / STEP_INTO  -> does STEP_MIN / STEP_INTO
+   *STEP_LINE / STEP_OVER  -> does STEP_MIN / STEP_OUT
+    STEP_LINE / STEP_OUT   -> works as expected
+
+    STEP_MIN / STEP_INTO   -> works as expected
+    STEP_MIN / STEP_OVER   -> works as expected
+    STEP_MIN / STEP_OUT    -> works as expected
+
+   *This is bug:
+      4689395 "step over" after a class is redefined acts like "step out"
+
+- JDI method StackFrame.thisObject() currently throws a
+  com.sun.jdi.InternalException ("Unexpected JDWP Error: 23") if the
+  StackFrame object is for the activation of a method that has been
+  redefined. This is bug: 4660477: After a redefineClasses,
+  StackFrame.thisObject() gets JDWP Error 23

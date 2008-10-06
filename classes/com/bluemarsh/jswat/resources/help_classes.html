@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>Classes</title>
+  </head>
+
+  <body>
+    <h3>Classes</h3>
+
+    <p>The loaded classes of the debuggee are displayed in the
+    &quot;Classes&quot; panel. The classes are shown in the form of a
+    tree, starting with the top-level package names (e.g.
+    &quot;com&quot;, &quot;java&quot;, &quot;org&quot;).
+    Double-clicking on a class will cause the tree node to be expanded
+    to show the methods defined in that class. Double-clicking on one
+    of those method nodes will open a source view for the class,
+    scrolling to the location of the method. An error will occur if
+    JSwat cannot find the source file. This is generally caused by a
+    missing or incorrect sourcepath setting. See the section on <a
+    href="help_paths.html">Classpath and Sourcepath</a> for more
+    information. Additionally, the location of native methods and
+    interface methods are not known, so the view will be opened but not
+    scrolled.</p>
+
+    <h4>Class Loader</h4>
+
+    <p>The class tree display may include a number in parentheses
+    behind some of the class names. This number indicates the unique
+    object identifier of the class loader that loaded the class. This
+    is helpful when writing custom class loaders. <em>Note: the number
+    will be different each time the debuggee is started.</em></p>
+
+    <p>Since there may be multiple class loaders, you may see the same
+    class in the class tree multiple times. Each instance will have a
+    different class loader ID number. With regards to setting
+    breakpoints, or viewing the source code for the class, it does not
+    matter which instance of the class you select. They are in fact the
+    same class, just different instances of it.</p>
+
+    <h3>Options</h3>
+
+    <h4>Hide core classes</h4>
+
+    <p>The Classes panel offers an option to hide the core Java
+    classes. By default this is turned on. The panel has a popup menu
+    to toggle this option. The core classes are those under the
+    <code>com.sun</code>, <code>java</code>, <code>javax</code>, and
+    <code>sun</code> packages. Also hidden are all array types.</p>
+
+    <h4>Auto refresh contents</h4>
+
+    <p>The Classes panel offers an option to automatically refresh the
+    contents of the panel as classes are loaded and unloaded in the
+    debuggee. By default this is turned on. Turning off the automatic
+    refresh can significantly improve the startup time of the debuggee.
+    When auto refresh is turned off, you can manually refresh the
+    Classes panel by clicking on the &quot;Refresh Panels&quot; item in
+    the &quot;View&quot; menu, or by clicking on the
+    &quot;Refresh&quot; toolbar button.</p>
+  </body>
+</html>
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Testing</title>
+  </head>
+
+  <body>
+    <h2>Testing JSwat</h2>
+
+    <p>This document describes a series of tests that validate the
+    proper operation of JSwat. When major releases of JSwat are made
+    this checklist should be performed to ensure JSwat maintains a high
+    level of quality. The tests described here are performed manually
+    by developers. However, there is an extensive collection of
+    automated unit tests, as well. See <a href="unit.html">this
+    page</a> to learn more about those tests.</p>
+
+    <h3>Actions</h3>
+
+    <p>The Actions in JSwat are simply those features that are
+    activated by either a menu item or a toolbar button. JSwat
+    distinguishes them from the commands which have similar
+    functionality but are invoked by typing commands into a text field.
+    Use this <a href="actions.html">checklist</a> to test the
+    actions.</p>
+
+    <h3>Breakpoints</h3>
+
+    <p>Breakpoints in JSwat are one of the most important features and
+    require some of the most rigorous testing. Use this <a
+    href="breakpoints.html">checklist</a> to test the breakpoints.</p>
+
+    <h3>Commands</h3>
+
+    <p>The Commands in JSwat are similar to the actions except that
+    they are invoked by typing the commands at the command input
+    prompt. This is most useful when running JSwat in console mode or
+    when a similar action does not exist. The commands are tested
+    primarily with <a href="http://www.junit.org/">JUnit</a>. See the
+    test classes in the <code>test/junit</code> directory of the source
+    distribution. Some commands cannot easily be tested automatically.
+    Use this <a href="commands.html">checklist</a> to test those
+    commands.</p>
+
+    <h3>Console Mode</h3>
+
+    <p>The console interface of JSwat is vastly different from the
+    default, graphical interface, primarily because the panels and
+    other status indicators are not available. This makes it especially
+    important that the JSwat commands are verbose and that the program
+    status is clearly indicated whenever it changes. Use this <a
+    href="console.html">checklist</a> to test the console
+    interface.</p>
+
+    <h3>Panels</h3>
+
+    <p>The panels in JSwat display information about the debuggee VM
+    being debugged. Use this <a href="panels.html">checklist</a> to
+    test the panels.</p>
+
+    <h3>Paths</h3>
+
+    <p>JSwat handles the classpath and sourcepath in a very particular
+    way. Use this <a href="paths.html">checklist</a> to ensure that the
+    paths are being handled correctly.</p>
+
+    <h3>Preferences</h3>
+
+    <p>The preferences in JSwat allow the user to configure how the
+    program looks and behaves. Use this <a
+    href="preferences.html">checklist</a> to test the preferences.</p>
+
+    <h3>Shortcuts</h3>
+
+    <p>Keyboard shortcuts are key combinations used to invoke certain
+    actions in JSwat. These key combinations are often defined in the
+    Preferences dialog of JSwat, in the &quot;Shortcuts&quot; category.
+    Use this <a href="shortcuts.html">checklist</a> to test the
+    keyboard shortcuts.</p>
+
+    <h3>Starting</h3>
+
+    <p>Starting JSwat is a category of its own due to the options
+    available when launching the program. Use this <a
+    href="starting.html">checklist</a> to test launching the
+    program.</p>
+
+    <h3>Views</h3>
+
+    <p>The source view feature of JSwat is what makes single-stepping
+    as productive as it is. Seeing the code while stepping through it
+    is extremely valuable, and this feature needs as much attention to
+    testing as any other. Use this <a href="view.html">checklist</a> to
+    test the source view.</p>
+  </body>
+</html>
+

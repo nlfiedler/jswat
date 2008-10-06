@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>How Breakpoints Work</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>How Breakpoints Work</h2>
+
+    <h3>Class Diagram</h3>
+
+    <p>For an overview of the classes involved, see the
+    <code>breakpoints.dia</code> file. This is a diagram created with
+    GNU Dia, a GNOME Linux application.</p>
+
+    <h3>Breakpoint Groups</h3>
+
+    <p>Breakpoint groups are collections of breakpoints. They can be
+    modified as a whole, which is convenient for users setting lots of
+    breakpoints.</p>
+
+    <ul>
+      <li>Disabling a breakpoint group will mean that the breakpoints
+      in the group can not truly be enabled. Their state may be enabled
+      but they will remain effectively disabled so long as the parent
+      group is disabled.</li>
+
+      <li>There will be a &quot;Default&quot; breakpoint group into
+      which all new breakpoints are placed. This group will always be
+      enabled when a new session starts.</li>
+
+      <li>The breakpoint manager will hold the list of breakpoint
+      groups, inside which all of the breakpoints will reside.</li>
+
+      <li>Breakpoint groups can be inside other breakpoint groups.</li>
+    </ul>
+
+    <h3>Breakpoints</h3>
+
+    <p>Breakpoints are those objects that cause execution to halt in
+    the debuggee process. They can be set in any class at any line of
+    executable code.</p>
+
+    <ul>
+      <li>Breakpoints have several states: unresolved, disabled,
+      expired, skipping</li>
+
+      <li>The &#39;stop&#39; command will still work, but creates only
+      a simple breakpoint. More complex options must be configured
+      through breakpoint dialog.</li>
+
+      <li>Breakpoints will support more than one conditional. For the
+      breakpoint to halt execution, all of the conditionals must be
+      satisfied.</li>
+
+      <li>Breakpoints will keep track of how many times they were
+      hit.</li>
+
+      <li>Breakpoints should probably have colors associated with their
+      states, so various UI components are consistent overall. Make a
+      method for getting the breakpoint&#39;s &quot;color&quot;, so
+      other classes are easier to write.</li>
+
+      <li>Breakpoints will support more than one monitor. A monitor is
+      an action that will be performed whenever the breakpoint should
+      stop.</li>
+
+      <li>Breakpoints define a shouldResume() method that tells whether
+      or not the execution of the debuggee VM should remain halted.
+      This is called when a BreakpointEvent has occurred in the
+      debuggee VM. This method will first check if the breakpoint has
+      expired or not. Then it will check the set of conditionals to see
+      if the conditions are satisfied.</li>
+
+      <li>The breakpoint has a shouldResume() method that returns true
+      if the conditions are not satisfactory for the breakpoint to
+      cause the debuggee VM to stop executing.</li>
+
+      <li>The breakpoint defines a performStop() method should be
+      called when the breakpoint has been &quot;hit&quot; so that
+      monitors are executed.</li>
+
+      <li>Breakpoints need a reset() method to reset all the counts to
+      zero and return it to unresolved state. This will not affect the
+      enabled state.</li>
+
+      <li>When the session deactivates, the breakpoints are all
+      reset.</li>
+
+      <li>When the same session begins again, the breakpoints need to
+      prepare to resolve themselves.</li>
+
+      <li>Breakpoint manager needs to re-enable itself when the session
+      activates.</li>
+    </ul>
+
+    <h3>How to set a breakpoint</h3>
+
+    <ul>
+      <li>UI layer gets a breakpoint setting request, such as an
+      invocation of the &#39;set&#39; command or the SetBreakAction.
+      This calls on the BreakpointManager to create the appropriate
+      breakpoint.</li>
+
+      <li>The breakpoint is created and inserted into the list of
+      breakpoints in the breakpoint manager&#39;s &quot;default&quot;
+      breakpoint group.</li>
+
+      <li>Breakpoint manager will attempt to resolve the breakpoint
+      immediately.</li>
+
+      <li>The breakpoint classes are responsible for dealing with the
+      mechanics of resolving themselves.</li>
+    </ul>
+
+    <h3>How breakpoints are resolved</h3>
+
+    <ul>
+      <li>BreakpointManager listens for class prepare events whenever
+      necessary. If there are no breakpoints, it will not listen. When
+      a new breakpoint is created during an active session, the manager
+      must start listening.</li>
+
+      <li>
+        Types of breakpoints and what they need to resolve. 
+
+        <ul>
+          <li>watchpoint: Field, ReferenceType, optional class/thread
+          filters</li>
+
+          <li>breakpoint: Location, ReferenceType, optional thread
+          filter</li>
+
+          <li>exception: ReferenceType, optional class/thread
+          filters</li>
+
+          <li>class prepare/unload: none, optional class filter</li>
+
+          <li>method entry/exit: none, optional class/thread
+          filters</li>
+
+          <li>thread start/death: none, optional thread filter</li>
+        </ul>
+      </li>
+
+      <li>ResolvableBreakpoint is an abstract subclass of
+      DefaultBreakpoint, which resolves itself against a
+      ReferenceType.</li>
+
+      <li>When a new breakpoint is created, it will be asked to try to
+      resolve immediately. If it is unsuccessful, an appropriate event
+      request is created. The event request will contain a property
+      called &quot;breakpoint&quot; that refers to the breakpoint that
+      created it. This is used by the breakpoint manager to look up the
+      breakpoint that created the request.</li>
+
+      <li>The breakpoint manager listens for class prepare events. When
+      one occurs it will look up the &quot;breakpoint&quot; that
+      requested the event. If one exists, it will be asked to
+      resolve.</li>
+    </ul>
+
+    <h3>What happens when an event occurs</h3>
+
+    <ul>
+      <li>VMEventManager gets the event and sends it off to the event
+      listeners.</li>
+
+      <li>Each breakpoint class must listen for the events it is
+      interested in. This is easier than having a single class listen
+      for all types of events.</li>
+
+      <li>Breakpoint receives the event notification and compares the
+      value of the &quot;breakpoint&quot; property of the EventRequest
+      that generated this event. If it matches, the shouldResume()
+      method is called to determine whether to continue the debuggee VM
+      or not.</li>
+
+      <li>If the breakpoint should stop, the performStop() method
+      should be called so it will increment the stopped counter and run
+      any registered monitors.</li>
+    </ul>
+
+    <h3>How breakpoints are customized</h3>
+
+    <ul>
+      <li>Breakpoint dialog iterates breakpoint groups and shows a tree
+      of breakpoints in the dialog. For each breakpoint group, a group
+      node is created. For each breakpoint, a breakpoint (leaf) node is
+      created.</li>
+
+      <li>
+        Buttons on the side of the breakpoints dialog allow the user to
+        modify the breakpoints. The buttons will include: 
+
+        <ul>
+          <li>&quot;Properties...&quot;</li>
+
+          <li>&quot;Show Source&quot;</li>
+
+          <li>&quot;Disable&quot;</li>
+
+          <li>&quot;Enable&quot;</li>
+
+          <li>&quot;Remove&quot;</li>
+
+          <li>&quot;New Breakpoint...&quot;</li>
+
+          <li>&quot;New Group...&quot;</li>
+        </ul>
+      </li>
+
+      <li>The create button will bring up the SetBreak action, for
+      now.</li>
+
+      <li>Someday the create button will need to have clones that
+      create other types of breakpoints (i.e. &quot;create watch&quot;,
+      &quot;create catch&quot;).</li>
+
+      <li>The tree uses custom node objects to keep a reference from
+      the tree node to the breakpoint group or breakpoint.</li>
+
+      <li>The tree nodes must have custom renderers to show the
+      breakpoint or group status (resolved, disabled, etc.).</li>
+
+      <li>Each breakpoint subclass must provide an accessor method,
+      getUIAdapter(), that returns an appropriate user interface
+      adapter (which implements the UIAdapter interface).</li>
+
+      <li>The UI adapter will have a JComponent widget that contains
+      the user interface widget(s). The UI adapter will have a commit()
+      method to save the widget values to the breakpoint, condition, or
+      monitor.</li>
+
+      <li>The breakpoint manager dialog builds a breakpoint editor
+      dialog and stuffs the breakpoint&#39;s UI into this editor
+      dialog, including any monitors and conditions for the
+      breakpoint.</li>
+
+      <li>After changes are accepted, the editor dialog calls the UI
+      adapters and tells them to save their values to their respective
+      objects (breakpoints, conditions, and monitors).</li>
+    </ul>
+
+    <h3>How Conditions work</h3>
+
+    <ul>
+      <li>Must be given Session instance to retrieve information in
+      order to evaluate the condition.</li>
+
+      <li>Returns true if the condition is satisfied.</li>
+
+      <li>EditorDialog shows a list of defined Conditions.</li>
+
+      <li>ConditionUI provides a String descriptor for the
+      condition.</li>
+
+      <li>EditorDialog provides &quot;add condition&quot; and
+      &quot;remove condition&quot; buttons.</li>
+    </ul>
+
+    <h3>How breakpoints are persisted</h3>
+
+    <ul>
+      <li>The breakpoint groups, breakpoints, conditions, and monitors
+      are all stored in nodes of type
+      <code>java.util.prefs.Preferences</code>, the class provided in
+      JDK 1.4 and later.</li>
+
+      <li>Serialization begins with the default breakpoint and
+      traverses down the tree until everything has been saved.</li>
+
+      <li>Breakpoint manager handles [de]serialization of the
+      breakpoints.</li>
+    </ul>
+
+    <h3>How breakpoints link up with source code</h3>
+
+    <ul>
+      <li>Have a &quot;LocatableBreakpoint&quot; interface that certain
+      breakpoint classes will implement.</li>
+
+      <li>A resolved locatable breakpoint will have a Location for the
+      breakpoint.</li>
+
+      <li>A resolved locatable breakpoint can determine if it belongs
+      to a certain source file or not (uses the locatable event
+      request&#39;s location).</li>
+
+      <li>An unresolved locatable breakpoint can make a guess as to
+      whether it belongs to a certain source file or not (uses the
+      class name pattern to match the filename).</li>
+
+      <li>How will unresolved method breakpoints know which line they
+      are set at?</li>
+
+      <li>If classname of locatable breakpoint is not wild-carded, can
+      use it to map to the source file.</li>
+    </ul>
+  </body>
+</html>
+

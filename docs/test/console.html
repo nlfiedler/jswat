@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Testing Console Mode</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>Testing Console Mode</h2>
+
+    <p>The console interface of JSwat is one of several possible modes
+    in which the program can be run. This mode is useful when the test
+    environment lacks a graphical component set based on JFC (Swing).
+    In this case, JSwat must be launched with the
+    &#39;<code>-console</code>&#39; switch. This switch must be the
+    first one following the JSwat &quot;Main&quot; class name. See <a
+    href="starting.html">this checklist</a> for a description of
+    starting JSwat in console mode.</p>
+
+    <p>The console mode lacks the panels, dialogs, toolbar, menubar,
+    and source views, so testing these is impossible in this mode.
+    Because all of these features are missing, it is especially
+    important that JSwat alerts the user whenever the program status
+    changes or events occur in the debuggee VM. So, testing the console
+    interface consists primarily of testing the JSwat <a
+    href="commands.html">commands</a>.</p>
+
+    <h3>Command Input Prompt</h3>
+
+    <p>The command input prompt (<code>&gt;</code>) is what prompts the
+    user for input. Without this prompt the user will not soon realize
+    that the program is waiting for input. Because of this, it is very
+    important that the prompt always be printed after any command is
+    invoked.</p>
+
+    <p>With that said, it is necessary to realize that printing the
+    prompt at exactly the right times is extremely difficult. It is
+    made difficult by the fact that JSwat often prints out status
+    messages and event alerts at random times. When this happens, it is
+    impossible for the console adapter to know if there is more output
+    to come or not. Instead, the console adapter does nothing in this
+    case and relies on the close observance on the user&#39;s part to
+    notice that the command input prompt is separated from the input
+    cursor by events that where printed to the console. Fortunately,
+    many Unix shell users are quite familiar with this problem. Most,
+    if not all, xterm implementations have this very same problem.</p>
+  </body>
+</html>
+

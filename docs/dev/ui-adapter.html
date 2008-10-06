@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator"
+  content="HTML Tidy for Linux/x86 (vers 1st February 2003), see www.w3.org" />
+
+  <title>JSwat - How to Write a UI Adapter</title>
+</head>
+
+<body style="background-color: #fff">
+  <h2>How to Write a UI Adapter</h2>
+
+  <h3>Initialization</h3>
+
+  <p>JSwat must be prepared in a very particular fashion, otherwise it
+  is quite likely that something will go wrong later on. Fortunately,
+  this is achieved in a very simple manner. Below is a code snippet to
+  initailize JSwat and prepare it for use.</p>
+  <pre>
+Main.init();
+Main.setUIAdapter(YourUIAdapter.class);
+Session session = Main.newSession();
+</pre>
+
+  <p>The <code>Main</code> class referenced in the code snippet above
+  is none other than <code>com.bluemarsh.jswat.Main</code>, which is
+  used to start up and tear down JSwat.</p>
+
+  <h4><code>initComplete()</code></h4>
+
+  <p>When this method is called in your UI adapter, you should take the
+  following actions:</p>
+
+  <ol>
+    <li>If any JSwat <code>Panel</code>s are being displayed, they must
+    have their <code>refreshLater()</code> methods called (the same as
+    might be done in the <code>refreshDisplay()</code> method).</li>
+
+    <li>If the <code>CommandManager</code> is to be used to interpret
+    user input, you should invoke <code>runRCFiles()</code> in the
+    <code>com.bluemarsh.jswat.ui.StartupRunner</code> class.</li>
+  </ol>
+
+  <h3>Terminating</h3>
+
+  <p>As with initialization, terminating JSwat properly is rather
+  important. Again, the code for properly closing JSwat is extremely
+  simple.</p>
+  <pre>
+// Using the Session instance returned from Main.newSession()...
+Main.endSession(session, false);
+</pre>
+
+  <p>If the second argument to <code>endSession()</code> is
+  <code>true</code>, <code>Main</code> will invoke the
+  <code>exit()</code> method on the UI adapter associated with the
+  Session. The <code>exit()</code> method of your UI adapter can do
+  whatever is sensible for the environment. Typically this means
+  calling <code>System.exit()</code>. If, however, your UI adapter is a
+  plugin to another application, it would probably do nothing when this
+  method is invoked.</p>
+</body>
+</html>

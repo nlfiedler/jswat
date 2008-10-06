@@ -1,0 +1,833 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Testing Actions</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h1>Testing Actions</h1>
+
+    <h2>File menu</h2>
+
+    <h3>Open File...</h3>
+
+    <p>File open dialog appears.</p>
+
+    <ul>
+      <li>Should open to current working directory the first time.</li>
+
+      <li>Should open to last visited directory subsequent times.</li>
+
+      <li>Filters for &quot;Source Files&quot; (typically ending in
+      <code>.java</code>).</li>
+
+      <li>Open a source file.</li>
+
+      <li>Open some other file type. Should print brief message that
+      the Java parser/scanner did not understand the file.</li>
+
+      <li>Open button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Open Session...</h3>
+
+    <p>Session open dialog appears.</p>
+
+    <ul>
+      <li>Will indicate the current session at the top.</li>
+
+      <li>Ok without selecting anything from the list. Will error with
+      message &quot;You must select a name.&quot;</li>
+
+      <li>Ok with selection. Should switch to selected session. Verify
+      by looking at the &quot;Start VM&quot; dialog.</li>
+
+      <li>Ok with text entered in text field for new session name.
+      Should create new session with default properties. Verify by
+      looking at the &quot;Start VM&quot; dialog.</li>
+
+      <li>Ok button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Copy Session...</h3>
+
+    <p>Session copy dialog appears.</p>
+
+    <ul>
+      <li>Will indicate the current session at the top.</li>
+
+      <li>Ok without selecting anything from the list. Will error with
+      message &quot;You must select a name.&quot;</li>
+
+      <li>Ok with selection. Should copy the current session&#39;s
+      settings to the selected session, and switch to the selected
+      session. Verify by looking at the &quot;Start VM&quot;
+      dialog.</li>
+
+      <li>Ok with text entered in text field for new session name.
+      Should create new session with the current session&#39;s
+      properties. Verify by looking at the &quot;Start VM&quot;
+      dialog.</li>
+
+      <li>Ok button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Delete Session...</h3>
+
+    <p>Session delete dialog appears.</p>
+
+    <ul>
+      <li>Will indicate the current session at the top.</li>
+
+      <li>Delete without selecting anything from the list. Will do
+      nothing at all.</li>
+
+      <li>Delete with selection. Should remove the selected entry from
+      the list.</li>
+
+      <li>Delete the current session, then click Done. New current
+      session should be &quot;default&quot;.</li>
+
+      <li>Delete the &quot;default&quot; session, then click Done.
+      Should have created a new &quot;default&quot; session with
+      default properties.</li>
+
+      <li>Delete button.</li>
+
+      <li>Done button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Exit</h3>
+
+    <p>When selected, the window should close and the program may
+    exit.</p>
+
+    <ul>
+      <li>If this was the last open JSwat window, the program should
+      exit.</li>
+
+      <li>If a debuggee VM was launched from JSwat, it should
+      terminate.</li>
+    </ul>
+
+    <h2>View menu</h2>
+
+    <h3>Refresh</h3>
+
+    <p>Causes panels to update their contents.</p>
+
+    <ul>
+      <li>Will appear to do nothing when session is inactive.</li>
+
+      <li>Threads panel will likely resort the threads when session is
+      active.</li>
+
+      <li>Invoke when debuggee VM is running.</li>
+
+      <li>Invoke when debuggee VM is suspended.</li>
+    </ul>
+
+    <h3>Search Source...</h3>
+
+    <p>Displays dialog asking for term to look for in currently
+    selected source file. Option to perform case insensitive
+    comparison.</p>
+
+    <ul>
+      <li>If no source view opened, complains about no selected source
+      view.</li>
+
+      <li>Search for string with case sensitivity on.</li>
+
+      <li>Search for string with case sensitivity off.</li>
+
+      <li>Ok button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Search Again</h3>
+
+    <p>Attempts to repeat the last search performed by the &quot;Search
+    Source...&quot; action. If no previous search was made, displays
+    the dialog described above.</p>
+
+    <ul>
+      <li>If no source view opened, complains about no selected source
+      view.</li>
+
+      <li>Invoking this should perform the previous search again.</li>
+    </ul>
+
+    <h2>Session menu</h2>
+
+    <h3>List Connectors</h3>
+
+    <p>Prints a list of available JVM connectors to the message
+    log.</p>
+
+    <ul>
+      <li>Will always print at least one entry, usually for
+      <code>com.sun.jdi.SocketAttach</code>.</li>
+    </ul>
+
+    <h3>Attach to remote...</h3>
+
+    <p>Shows dialog for inputting host name/port or a shared memory
+    name of the debuggee VM to attach to.</p>
+
+    <ul>
+      <li>Press Ok when fields are empty. Should complain that the port
+      number or shared memory name is invalid.</li>
+
+      <li>Select &quot;socket&quot;, enter only a host name.</li>
+
+      <li>Select &quot;socket&quot;, enter an invalid port number (such
+      as &quot;abc123&quot;).</li>
+
+      <li>Select &quot;socket&quot;, enter valid data to attach to a
+      debuggee VM.</li>
+
+      <li>Select &quot;shared memory&quot; on a Unix system that does
+      not support the <code>dt_shmem</code> connector. Should
+      complain.</li>
+
+      <li>Select &quot;shared memory&quot; on a Windows system, enter
+      valid data to attach to a debuggee VM.</li>
+
+      <li>Attach button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Start VM...</h3>
+
+    <p>Shows a dialog asking for class name and arguments, with
+    optional debuggee VM options. In addition, the &quot;Java
+    Home&quot; and &quot;JVM Executable&quot; fields are available and
+    populated with default values.</p>
+
+    <ul>
+      <li>Ok with no class name. Should complain about missing
+      name.</li>
+
+      <li>Ok with invalid JVM executable. Should report that the VM
+      load failed.</li>
+
+      <li>Ok with invalid Java Home directory. Should report that the
+      VM load failed.</li>
+
+      <li>Ok with -classic or -hotspot in debuggee VM options. With JDK
+      1.4 and later, the -classic option should generate a warning to
+      the debuggee output.</li>
+
+      <li>Some debuggee VM options are automatically generated by
+      JSwat, such as the &quot;-classic&quot; and &quot;-cp&quot;
+      arguments. These should not appear in the &quot;VM Options&quot;
+      field, however.</li>
+
+      <li>If &quot;Use -classic&quot; is selected in the options menu,
+      the <code>-classic</code> option should be added automatically to
+      the debuggee VM options.</li>
+
+      <li>Ok with debuggee VM option containing an incorrect classpath,
+      i.e. one that points to the wrong directory. When debuggee VM is
+      resumed, should stop with <code>ClassNotFoundException</code>
+      thrown and reported to the messages area.</li>
+
+      <li>Ok with debuggee VM option containing <code>-cp &quot;class
+      path</code> (note the missing closing quote). Should attempt to
+      launch debuggee VM but will fail. The options printed to the Log
+      should show &quot;[malformed classpath]&quot; at the point where
+      the quote is missing.</li>
+
+      <li>Ok with debuggee VM option containing <code>-cp &quot; class
+      path&quot;</code> (note the initial space). This regresses bug
+      365. Of course, having a space as the first character is
+      generally not a valid path and will generate a class not found
+      error.</li>
+
+      <li>Ok with non-options in the debuggee VM options field. The
+      non-options will be passed to the JVM executable which should
+      stop and report an error (shown in the messages area).</li>
+
+      <li>Any argument to <code>-cp</code> or <code>-classpath</code>
+      will be saved as the classpath in the session properties.</li>
+
+      <li>Ok button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>End session</h3>
+
+    <p>Deactivates the current session.</p>
+
+    <ul>
+      <li>If attached to a remote VM, the remote VM will remain
+      running.</li>
+
+      <li>If debuggee VM launched, will be terminated.</li>
+
+      <li>Disabled when session is inactive.</li>
+    </ul>
+
+    <h3>Terminate VM</h3>
+
+    <p>Deactivates the current session, terminating debuggee VM.</p>
+
+    <ul>
+      <li>If attached to a remote VM, the remote VM will be
+      terminated.</li>
+
+      <li>If debuggee VM launched, will be terminated.</li>
+
+      <li>Disabled when session is inactive.</li>
+    </ul>
+
+    <h3>Suspend</h3>
+
+    <p>Suspends the debuggee VM.</p>
+
+    <ul>
+      <li>If active, debuggee VM will be suspended.</li>
+
+      <li>Suspend actions are not cumulative. Repeatedly suspending a
+      debuggee VM will make no difference.</li>
+
+      <li>Disabled when session is inactive.</li>
+    </ul>
+
+    <h3>Resume</h3>
+
+    <p>Resumes the suspended debuggee VM.</p>
+
+    <ul>
+      <li>If active, debuggee VM will be resumed.</li>
+
+      <li>Disabled when session is inactive.</li>
+    </ul>
+
+    <h2>Breakpoints menu</h2>
+
+    <h3>List Breakpoints...</h3>
+
+    <p>Shows dialog containing all defined breakpoints, along with
+    buttons for managing those breakpoints. See <a
+    href="breakpoints.html">breakpoints checklist</a> for more
+    information. At a minimum, there are the following test cases.</p>
+
+    <ul>
+      <li>Dialog close button.</li>
+    </ul>
+    <a id="setBreak" name="setBreak"></a> 
+
+    <h3>New Breakpoint...</h3>
+
+    <p>Shows dialog asking for class name and location at which to set
+    breakpoint.</p>
+
+    <ul>
+      <li>Ok with empty fields - should complain about empty
+      location.</li>
+
+      <li>Ok with just location - should attempt to set a breakpoint in
+      the current class. If the current location is not set, complains
+      about no class name.</li>
+
+      <li>Ok with just class name - should complain about empty
+      location.</li>
+
+      <li>Ok with invalid location (&quot;abc123&quot;) - should
+      complain about missing method arguments.</li>
+
+      <li>Ok with valid data - should set a breakpoint.</li>
+
+      <li>Ok button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Trace Method...</h3>
+
+    <p>Shows dialog asking for class and thread filters to control the
+    method entry and exit events.</p>
+
+    <ul>
+      <li>Ok with empty fields - creates trace of all methods.</li>
+
+      <li>Ok with class filter - creates trace for matching classes
+      only.</li>
+
+      <li>Ok with thread filter - creates trace for the matching
+      threads (name or number allowed).</li>
+
+      <li>Ok with class and thread filter - creates trace for the
+      matching classes and threads (name or number allowed).</li>
+
+      <li>Ok button</li>
+
+      <li>Cancel button</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Catch Exception...</h3>
+
+    <p>Shows dialog asking for name of the exception to catch.</p>
+
+    <ul>
+      <li>Ok with empty name - should complain.</li>
+
+      <li>Ok with bogus name - should create an exception breakpoint
+      that will never be hit.</li>
+
+      <li>Ok with expected exception - should create the breakpoint and
+      eventually hit it when the exception is thrown.</li>
+
+      <li>Ok button</li>
+
+      <li>Cancel button</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Thread Breakpoint...</h3>
+
+    <p>Shows dialog asking for name of the thread.</p>
+
+    <ul>
+      <li>Ok with empty name - should complain.</li>
+
+      <li>Ok with bogus name - should create a thread breakpoint that
+      will never be hit.</li>
+
+      <li>Ok with valid name - should create the breakpoint and
+      eventually hit it when the thread is started and dies.</li>
+
+      <li>Ok with valid name, and checkboxes changed - should create
+      the breakpoint with the appropriate properties disabled.</li>
+
+      <li>Ok button</li>
+
+      <li>Cancel button</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Class Breakpoint...</h3>
+
+    <p>Shows dialog asking for class filters.</p>
+
+    <ul>
+      <li>Ok with empty name - should create a class breakpoint that
+      will stop when any class is prepared.</li>
+
+      <li>Ok with bogus name - should create a class breakpoint that
+      will never be hit.</li>
+
+      <li>Ok with valid name - should create the breakpoint and
+      eventually hit it when the class is prepared and unloaded.</li>
+
+      <li>Ok with valid name, and checkboxes changed - should create
+      the breakpoint with the appropriate properties disabled.</li>
+
+      <li>Ok button</li>
+
+      <li>Cancel button</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Watch Variable...</h3>
+
+    <p>Shows dialog asking for the name of the field to watch.</p>
+
+    <ul>
+      <li>Ok with empty name - should complain about missing field
+      name.</li>
+
+      <li>Ok with bogus name - should complain about one of: no current
+      thread or field not defined. Or, if the session is inactive,
+      simply disables the watchpoint.</li>
+
+      <li>Ok with valid name - should create the watchpoint. Will be
+      disabled until it can be resolved. If session is active, current
+      location is set, and field is visible, resolves immediately.</li>
+
+      <li>Ok with valid name, and checkboxes changed - should create
+      the watchpoint with the appropriate properties disabled.</li>
+
+      <li>Ok button</li>
+
+      <li>Cancel button</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h2>Step menu</h2>
+
+    <h3>Step Line</h3>
+
+    <p>Single-steps a source line; steps into method calls.</p>
+
+    <ul>
+      <li>If debuggee VM stopped at a breakpoint, steps as
+      described.</li>
+
+      <li>If debuggee VM running, prints message about no current
+      thread.</li>
+
+      <li>Disabled if session inactive.</li>
+    </ul>
+
+    <h3>Step Instruction</h3>
+
+    <p>Single-steps an instruction; steps into method calls.</p>
+
+    <ul>
+      <li>If debuggee VM stopped at a breakpoint, steps as
+      described.</li>
+
+      <li>If debuggee VM running, prints message about no current
+      thread.</li>
+
+      <li>Disabled if session inactive.</li>
+    </ul>
+
+    <h3>Next Line</h3>
+
+    <p>Single-steps a source line; steps over method calls.</p>
+
+    <ul>
+      <li>If debuggee VM stopped at a breakpoint, steps as
+      described.</li>
+
+      <li>If debuggee VM running, prints message about no current
+      thread.</li>
+
+      <li>Disabled if session inactive.</li>
+    </ul>
+
+    <h3>Next Instruction</h3>
+
+    <p>Single-steps an instruction; steps over method calls.</p>
+
+    <ul>
+      <li>If debuggee VM stopped at a breakpoint, steps as
+      described.</li>
+
+      <li>If debuggee VM running, prints message about no current
+      thread.</li>
+
+      <li>Disabled if session inactive.</li>
+    </ul>
+
+    <h3>Finish Method</h3>
+
+    <p>Finishes the current method and returns to the line following
+    the one that called this method.</p>
+
+    <ul>
+      <li>If debuggee VM stopped at a breakpoint, steps as
+      described.</li>
+
+      <li>If debuggee VM running, prints message about no current
+      thread.</li>
+
+      <li>Disabled if session inactive.</li>
+    </ul>
+
+    <h2>Options menu</h2>
+
+    <h3>Set Classpath...</h3>
+
+    <p>Displays dialog allowing the user to modify the classpath. The
+    dialog contains a list in which each entry is a part of the
+    classpath. The list entries and be moved forward and backward in
+    the overall classpath. List entries can be edited in place, though
+    the focus and cursor don&#39;t always seem to work correctly.</p>
+
+    <ul>
+      <li>Test with no classpath defined. There will <em>always</em> be
+      some kind of classpath, even if it&#39;s just the current working
+      directory.</li>
+
+      <li>Test with one classpath entry.</li>
+
+      <li>Test with multiple classpath entries.</li>
+
+      <li>Clear all of the entries and press Ok.</li>
+
+      <li>Add more than one entry.</li>
+
+      <li>Select the first entry. &quot;Move Up&quot; is disabled and
+      &quot;Move Down&quot; is enabled.</li>
+
+      <li>Select the last entry. &quot;Move Down&quot; is disabled and
+      &quot;Move Up&quot; is enabled.</li>
+
+      <li>Select an entry: &quot;Remove Path&quot; is enabled.</li>
+
+      <li>Move Up - moves selected entry up one.</li>
+
+      <li>Move down - moves selected entry down one.</li>
+
+      <li>Remove Path - removes the selected entry.</li>
+
+      <li>Ok - ensure classpath is set appropriately by looking at the
+      output from the <code>classpath</code> command.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Set Sourcepath...</h3>
+
+    <p>This is exactly like the classpath dialog except that it can be
+    completely empty. Verify the results using the
+    <code>sourcepath</code> command.</p>
+
+    <h3>Evaluate...</h3>
+
+    <p>Displays dialog allowing the user to evaluate a Java-like
+    expression. See the <a href="eval.html">Testing Expressions</a>
+    page for details.</p>
+
+    <h3>Capture Messages...</h3>
+
+    <p>Displays dialog asking user where to capture messages to.
+    Options include sending messages to &quot;stdout&quot; and/or to a
+    named file.</p>
+
+    <ul>
+      <li>Ok with nothing selected - disappears silently.</li>
+
+      <li>Ok with &quot;stdout&quot; chosen - new messages appear on
+      console.</li>
+
+      <li>Ok with &quot;file&quot; chosen, but no file name - complains
+      &quot;file not found&quot;.</li>
+
+      <li>Ok with &quot;file&quot; and name of read-only file -
+      complains about file not being writable.</li>
+
+      <li>Ok with both &quot;stdout&quot; and &quot;file&quot;
+      selected.</li>
+
+      <li>Ok button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Preferences...</h3>
+
+    <p>Shows a dialog with numerous options that can be enabled and
+    values that can be set for the program. Use the following <a
+    href="preferences.html">preferences checklist</a> to test this
+    dialog. At a minimum, there are the following test cases.</p>
+
+    <ul>
+      <li>Ok button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Options</h3>
+
+    <p>Displays submenu of checkboxes to control sundry options. Use
+    the following <a href="preferences.html">preferences checklist</a>
+    to test these.</p>
+
+    <h3>Look &amp; Feel</h3>
+
+    <p>Displays submenu of available JFC &quot;look &amp; feel&quot;
+    options.</p>
+
+    <ul>
+      <li>Choosing a look and feel should immediately change the
+      interface to the new look and feel. Only the window frame is
+      unaffected.</li>
+
+      <li>Choosing &quot;Windows&quot; on a non-Windows system will
+      report a message to the console and disable the
+      &quot;Windows&quot; option.</li>
+
+      <li>Choosing &quot;MacOS&quot; on a non-Macintosh system will
+      report a message to the console and disable the &quot;MacOS&quot;
+      option.</li>
+
+      <li>The setting is remembered from one invocation of JSwat to the
+      next.</li>
+    </ul>
+
+    <h3>Logging</h3>
+
+    <p>Displays a submenu of checkboxes to control the various logging
+    categories. Test them by turning them all on and running the
+    program through its paces. Bunches of messages should appear in the
+    console that started JSwat.</p>
+
+    <h2>Windows menu</h2>
+
+    <h3>Minimize All</h3>
+
+    <p>Causes all of the opened source view windows to become iconified
+    (i.e. minimized). When no source windows are opened, does
+    nothing.</p>
+
+    <ul>
+      <li>Select when no windows opened - nothing happens.</li>
+
+      <li>Select when windows are opened - observe iconification.</li>
+    </ul>
+
+    <h3>Maximize All</h3>
+
+    <p>Causes all of the opened source view windows to become
+    deiconified (i.e. maximized). When no source windows are opened,
+    does nothing.</p>
+
+    <ul>
+      <li>Select when no windows opened - nothing happens.</li>
+
+      <li>Select when windows are opened - observe
+      deiconification.</li>
+    </ul>
+
+    <h3>Window list</h3>
+
+    <p>This is not a menu item per se but rather a special feature of
+    the Windows menu. As source views are opened their name is added to
+    the Windows menu. When source views are closed, their entry in the
+    menu is subsequently removed.</p>
+
+    <ul>
+      <li>Make sure list is initially empty.</li>
+
+      <li>Watch list grow as windows are opened.</li>
+
+      <li>Watch list shrink as windows are closed.</li>
+
+      <li>Select a window from the menu and it will be brought
+      forward.</li>
+
+      <li>Select an iconified window from the menu and it will be
+      deiconified and brought forward.</li>
+    </ul>
+
+    <h2>Help menu</h2>
+
+    <h3>Help Index...</h3>
+
+    <p>Displays a frame (as opposed to a dialog) displaying the help
+    index.</p>
+
+    <ul>
+      <li>Back and Forward buttons are initially disabled since there
+      is no browser history.</li>
+
+      <li>Refresh button reloads current page.</li>
+
+      <li>Top button goes to index as a new page (adds to
+      history).</li>
+
+      <li>Copy button selects all text and copies to clipboard. If text
+      is already selected, copies selected text to clipboard.</li>
+
+      <li>Clicking on a hyperlink will navigate to the new page. Back
+      button becomes enabled. If later history existed, it is
+      erased.</li>
+
+      <li>Back button will go to previous page. Forward button becomes
+      enabled. Back button becomes disabled when first page is
+      reached.</li>
+
+      <li>Forward button will go to next page in history. Becomes
+      disabled when last page is reached.</li>
+
+      <li>Back button.</li>
+
+      <li>Forward button.</li>
+
+      <li>Refresh button.</li>
+
+      <li>Top button.</li>
+
+      <li>Copy button.</li>
+
+      <li>Close button.</li>
+
+      <li>Window close button.</li>
+    </ul>
+
+    <h3>Getting Help...</h3>
+
+    <p>Displays a frame (as opposed to a dialog) displaying the help
+    screen for getting further help. Otherwise same as help index.</p>
+
+    <h3>Report a bug...</h3>
+
+    <p>Displays a frame (as opposed to a dialog) displaying the help
+    screen for reporting a bug. Otherwise same as help index.</p>
+
+    <h3>About...</h3>
+
+    <p>About dialog appears.</p>
+
+    <ul>
+      <li>
+        Should show the following information: 
+
+        <ul>
+          <li>application name and version</li>
+
+          <li>copyright message</li>
+
+          <li>creation date</li>
+
+          <li>web site URL</li>
+
+          <li>warranty information.</li>
+        </ul>
+      </li>
+
+      <li>Ok button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+  </body>
+</html>
+

@@ -1,0 +1,9 @@
+RESOURCES README  (-*- text -*-)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$Author: nfiedler $ $Date: 2002-07-18 17:47:43 -0700 (Thu, 18 Jul 2002) $ $Rev: 443 $
+
+Adding Help Files:
+
+    If you ever add help files to this directory, be sure to add the
+    name to the 'helpFiles' property in the ../ui/Bundle.properties
+    file.

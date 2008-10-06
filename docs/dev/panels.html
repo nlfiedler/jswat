@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>Panels and Views</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>Panels and Views</h2>
+
+    <h3>Panels</h3>
+
+    <p>Most of the display areas in JSwat are implemented as
+    &quot;panels&quot;. The panels have an interface made up of JFC
+    components, and they hold the model that contains data to be
+    displayed. In the case of a debugger front-end like JSwat, the data
+    is usually maintained by the debugger back-end. The JSwat panels
+    interface with the JPDA to acquire the necessary data.</p>
+
+    <p>Presently, panels will display the threads, classes, local
+    variables, data members, error messages, and the like. Each panel
+    is specialized for the type of information it will display. In most
+    panels, either a JList, JTree, or JTable is used to display the
+    debugging information. The panels are kept up-to-date via the
+    <code>refresh()</code> method. This is invoked by the
+    <code>Session</code>, via the <code>UIAdapter</code>, whenever an
+    appropriate event has occurred.</p>
+
+    <p>Panels may also listen for JPDA events on their own and update
+    the panel as necessary.</p>
+
+    <h3>Views</h3>
+
+    <p>So far, the only type of data that is not displayed in a panel
+    is a source code file. This is displayed in a &quot;view&quot;. In
+    the case of a view, the data does not come from the debugger
+    back-end. Instead, it may come from the local hard drive or another
+    resource, such as a bytecode stream.</p>
+
+    <p>Views may also listen for JPDA events on their own and update
+    the view as necessary.</p>
+  </body>
+</html>
+

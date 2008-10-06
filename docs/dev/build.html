@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 June 2005), see www.w3.org" />
+
+  <title>JSwat - How to Build JSwat</title>
+</head>
+
+<body style="background-color: #fff">
+  <h2>How to Build JSwat</h2>
+
+  <h3>Requirements</h3>
+
+  <p>You will need the the latest version of the <a href=
+  "http://ant.apache.org/">Apache Ant</a> tool. This Java tool makes
+  building a JSwat distribution very easy. Download and install Ant
+  before continuing.</p>
+
+  <h3>Making the Build</h3>
+
+  <p>Building a JSwat binary or source package with Ant is very
+  straight-forward. First, download and install Ant, which is really
+  quite easy. Next, invoke &#39;<kbd>ant dist</kbd>&#39; in a command
+  shell from the directory containing the JSwat <code>build.xml</code>
+  file. This will make the source and binary packages, which are packed
+  in <code>.zip</code> files.</p>
+
+  <h3>Testing the Build</h3>
+
+  <p>Testing the build is pretty straightforward. Extract the files
+  from the archive created during the build process described above,
+  then start JSwat as described in the <code>README.html</code> file.
+  The general idea is to make sure the JSwat jar file contains all the
+  necessary classes and resource bundles. If any errors occur you may
+  want to check that the <code>build.xml</code> includes all of the
+  necessary files for JSwat to run properly.</p>
+
+  <p>Some ideas for what to test:</p>
+
+  <ul>
+    <li>Access the help files. Search the help for a keyword, like
+    &quot;session&quot;.</li>
+
+    <li>Access the command help. Search for a keyword using
+    &#39;<code>apropos</code>&#39;.</li>
+
+    <li>Set the language to French or Japanese to test the
+    translation.</li>
+
+    <li>Open a Java source file, ensuring that the Java parser is
+    activated, to confirm that the Java parser library is
+    included.</li>
+  </ul>
+
+  <h3>Releasing the Build</h3>
+
+  <p>Both of the <code>.zip</code> files should now be uploaded to the
+  SourceForge <a href=
+  "http://sourceforge.net/projects/jswat/">project</a> site. If you do
+  not know how this is done, see the <a href=
+  "http://sourceforge.net/">SourceForge</a> documentation. Be sure to
+  notify the people watching the project so they know of the new
+  release. Once this is done, visit the Freshmeat <a href=
+  "http://freshmeat.net/projects/jswat/">project</a> page and add a new
+  release there. And finally, send out an email to the <a href=
+  "http://www.bluemarsh.com/java/jswat/mail-lists.html">jswat-announce</a>
+  mailing list with the list of changes in this release.</p>
+</body>
+</html>

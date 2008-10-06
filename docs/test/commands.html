@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Testing the Commands</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h1>Testing the Commands</h1>
+
+    <h2>Basics</h2>
+
+    <p>Much of the supported functionality of JSwat is available via
+    typed commands. The following are basic test cases for evaluating
+    the robustness of the command interpreter. Following that are the
+    individual command test cases.</p>
+
+    <ul>
+      <li>[blank]</li>
+
+      <li><code>;;;</code></li>
+
+      <li><code>stdout ; stdout ; stdout</code></li>
+
+      <li><code>stdout &quot;string&quot;</code></li>
+
+      <li><code>stdout \&quot;string\&quot;</code></li>
+
+      <li><code>stdout \\&quot;string\\&quot;</code></li>
+
+      <li><code>stdout \\ \ blah</code></li>
+
+      <li><code>stdout &#39;string&#39;</code></li>
+
+      <li><code>stdout \&#39;string\&#39;</code></li>
+
+      <li><code>stdout \\&#39;string\\&#39;</code></li>
+
+      <li><code>stdout;stdout;stdout</code></li>
+
+      <li><code>stdout &quot;;&quot; ; stdout &quot;a&quot; ; stdout
+      &quot;\&quot;&quot;</code></li>
+
+      <li><code>stdout &quot;a&quot; ; stdout &quot;b&quot; ; stdout
+      &quot;\&quot;c&quot;</code></li>
+
+      <li><code>stdout &quot;a;b&quot; ; stdout &#39;c&quot;&#39; ;
+      stdout &#39;\&#39;d&#39;</code></li>
+
+      <li><code>stdout &quot;a;b&quot;</code></li>
+    </ul>
+
+    <h2>Commands</h2>
+
+    <h3>attach</h3>
+
+    <p>Attach remotely to a running VM.</p>
+
+    <ul>
+      <li><code>attach</code> - attempts to reconnect using previous
+      values.</li>
+
+      <li><code>attach &lt;port&gt;</code> - connects to the running VM
+      using the socket connector.</li>
+
+      <li><code>attach &lt;host:port&gt;</code> - connects to the
+      running VM using the socket connector.</li>
+
+      <li><code>attach &lt;name&gt;</code> - connects to the running VM
+      using the shared memory connector. May complain if system does
+      not support shared memory.</li>
+
+      <li><code>help attach</code></li>
+    </ul>
+
+    <h3>classpath</h3>
+
+    <p>Displays or sets the classpath of the debuggee VM.</p>
+
+    <ul>
+      <li><code>classpath</code> - displays classpath.</li>
+
+      <li><code>classpath &lt;path&gt;</code> - if active, complains
+      that classpath cannot be set while session is active.</li>
+
+      <li><code>classpath &lt;path&gt;</code> - changes classpath to
+      that given.</li>
+
+      <li><code>classpath &quot;C:\My Files\java\classes&quot;</code> -
+      test for proper argument parsing; changes classpath to that
+      given.</li>
+
+      <li><code>classpath &quot;&lt;path space&gt;&quot;</code> -
+      changes classpath to that given in quotes (with a space in the
+      path).</li>
+
+      <li><code>help classpath</code></li>
+    </ul>
+
+    <h3>exit</h3>
+
+    <p>Closes the active debugging session, and exits JSwat if there
+    are no more sessions.</p>
+
+    <ul>
+      <li><code>exit</code> - terminates the session and exits the
+      program if no other sessions exist.</li>
+
+      <li><code>help exit</code></li>
+    </ul>
+
+    <h3>help</h3>
+
+    <p>Explains how to use JSwat commands.</p>
+
+    <ul>
+      <li><code>help</code> - enters interactive help mode. Test the
+      navigation of the help categories.</li>
+
+      <li><code>help nothere</code> - complains about unknown
+      command.</li>
+
+      <li><code>help commands</code> - shows all command descriptions,
+      and defined aliases.</li>
+
+      <li><code>help &lt;alias&gt;</code> - explains that the named
+      alias is an alias.</li>
+
+      <li><code>help threads</code> - enters interactive help mode
+      starting with the threads help category.</li>
+
+      <li><code>help help</code></li>
+    </ul>
+
+    <h3>kill</h3>
+
+    <p>Terminate one or all threads in the debuggee VM.</p>
+
+    <ul>
+      <li><code>kill</code> - if not active, complains about inactive
+      session.</li>
+
+      <li><code>kill</code> - if active, terminates running VM.</li>
+
+      <li><code>help kill</code></li>
+    </ul>
+
+    <h3>listen</h3>
+
+    <p>Listens for a connection from a debuggee VM.</p>
+
+    <ul>
+      <li><code>listen</code> - starts listening at the displayed
+      address.</li>
+
+      <li><code>listen &lt;name&gt;</code> - listens using shared
+      memory connector with given name, or complains if system does not
+      support <code>dt_shmem</code>.</li>
+
+      <li><code>listen &lt;port&gt;</code> - starts listening at the
+      given port number.</li>
+
+      <li><code>help listen</code></li>
+    </ul>
+
+    <h3>read</h3>
+
+    <p>Executes the commands in the given command file.</p>
+
+    <ul>
+      <li><code>read</code> - complains of missing arguments.</li>
+
+      <li><code>read &lt;bad-name&gt;</code> - complains that file was
+      not found (same if file not readable).</li>
+
+      <li>
+        <code>read &lt;name&gt;</code> - reads file and parses commands
+        contained therein. 
+
+        <ul>
+          <li>Lines beginning with <code>#</code> are skipped as
+          comments.</li>
+
+          <li>Lines starting with <code>!</code> generate a
+          warning.</li>
+        </ul>
+      </li>
+
+      <li><code>help read</code></li>
+    </ul>
+
+    <h3>sourcepath</h3>
+
+    <p>Displays or sets the source path.</p>
+
+    <ul>
+      <li><code>sourcepath</code> - displays sourcepath.</li>
+
+      <li><code>sourcepath &lt;path&gt;</code> - changes sourcepath to
+      that given.</li>
+
+      <li><code>sourcepath &quot;C:\My Files\java\source&quot;</code> -
+      test for proper argument parsing; changes sourcepath to that
+      given.</li>
+
+      <li><code>help sourcepath</code></li>
+    </ul>
+
+    <h3>stdin</h3>
+
+    <p>Sends text to the debuggee VM&#39;s standard input stream.</p>
+
+    <ul>
+      <li><code>stdin</code> - if not active, complains about inactive
+      session.</li>
+
+      <li><code>stdin &lt;input&gt;</code> - if active and remote
+      debuggee, complains about remote debuggee.</li>
+
+      <li><code>stdin &lt;input&gt;</code> - if active and launched
+      debuggee, sends input to debuggee VM&#39;s standard input
+      stream.</li>
+
+      <li><code>help stdin</code></li>
+    </ul>
+  </body>
+</html>
+

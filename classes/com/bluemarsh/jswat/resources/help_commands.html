@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>Commands</title>
+  </head>
+
+  <body>
+    <h3>Commands</h3>
+
+    <p>Much of the functionality of JSwat lies in two places: the
+    graphical user interface and the command interface. The command
+    interface is accessible both in JSwat&#39;s &quot;console&quot;
+    mode and in its default graphical mode. In graphical mode, the
+    command interface is made up of the &quot;Messages&quot; text area
+    and the &quot;Command&quot; text field. Commands are entered in the
+    text field and the results are displayed in the messages area.</p>
+
+    <p>To get familiar with the many JSwat commands, I recommend
+    running the <code>help</code> command after starting JSwat. This
+    will present you with various categories of commands and let you
+    browse through the categories. You can learn what commands are used
+    for manipulating breakpoints, single-stepping, and many other
+    debugging-related operations.</p>
+
+    <h4>Arguments</h4>
+
+    <p>Many commands take one or more arguments. The command arguments
+    follow the name of the command, separated by spaces. Multiple
+    spaces are irrelevant. Arguments may be enclosed in single or
+    double quotes (<code>&#39;</code> or <code>&quot;</code>). Quoting
+    the arguments is useful when passing arguments that contain spaces.
+    Some commands have exceptions to their acceptance of quoted
+    arguments, and they are clearly indicated in the command help.</p>
+
+    <h4>History</h4>
+
+    <p>Commands are stored in a &quot;history chain&quot; and can be
+    invoked using the <code>!&lt;prefix&gt;</code> and <code>!!</code>
+    operators. Earlier commands can be recalled using the up and down
+    cursor keys (or Ctrl-p and Ctrl-n keys) to move backward and
+    forward through the command history. (Note, this feature is not
+    available in console mode.)</p>
+
+    <h4>Aliases</h4>
+
+    <p>Commands can be aliased to other names, offering you the ability
+    to make the interface more convenient. Both a command and its
+    arguments can be stored as an alias. The alias is invoked by the
+    alias name, and may include additional arguments to the original
+    command. Use the <code>alias</code> and <code>unalias</code>
+    commands to manage aliases.</p>
+
+    <p>Aliases can be used as a form of &quot;macro&quot;. That is, an
+    alias can be made up of multiple commands, separated by semicolons.
+    Invoking multiple commands is described below.</p>
+
+    <h4>Invoking Multiple Commands</h4>
+
+    <p>The JSwat command interpreter understands using the semicolon
+    (<code>;</code>) character to separate multiple commands on a
+    single command line. For instance, the following input string would
+    be interpreted as two separate commands, executed in series.</p>
+<pre>
+classpath &quot;c:\classes&quot; ; sourcepath &quot;c:\source&quot;
+</pre>
+
+    <p>Because of this special separator character, you must be careful
+    to quote any command arguments that contain the separator. For
+    instance, the following would be misinterpreted as two
+    commands.</p>
+<pre>
+classpath c:\classes;d:\stuff.jar
+</pre>
+
+    <p>The proper way to run that command would be to enclose the
+    classpath argument in quotes, like so:</p>
+<pre>
+classpath &quot;c:\classes;d:\stuff.jar&quot;
+</pre>
+
+    <p>Note that the backslash (<code>\</code>) character causes the
+    subsequent character to be treated as a normal character. That is,
+    if the sequence &quot;<code>\;</code>&quot; is parsed, the
+    semicolon will have no special significance. This can be useful if
+    you need to escape a quote character or perhaps a backslash.</p>
+
+    <h4>Startup File</h4>
+
+    <p>JSwat processes what is often called a startup file. That is,
+    when JSwat is started, it looks for a file with a particular name
+    and processes it. This file may contain JSwat commands to be
+    executed when JSwat starts. The file is called
+    <code>.jswat/init</code> and lives in your home directory. JSwat
+    also looks for a file named <code>jswat.init</code> in the current
+    directory, and each parent directory until it reaches of the root
+    of the file system, processing the files in the order they are
+    found.</p>
+
+    <p>Here is an example of a startup file.</p>
+
+    <blockquote>
+<pre>
+#
+# Lines starting with the # character are ignored.
+#
+
+# Create some useful command aliases.
+alias   go              resume
+alias   cont            resume
+alias   quit            exit
+alias   finish          step out
+
+# Set the path where jswat looks for source files.
+sourcepath /usr/java/src
+</pre>
+    </blockquote>
+  </body>
+</html>
+

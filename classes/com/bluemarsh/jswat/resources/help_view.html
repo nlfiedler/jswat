@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator"
+  content="HTML Tidy for Linux/x86 (vers 1st April 2003), see www.w3.org" />
+
+  <title>Source View</title>
+</head>
+
+<body>
+  <h3>Source View</h3>
+
+  <p>The source view displays Java source code in a scrollable text
+  area. The source views are opened automatically when a breakpoint is
+  hit and while single-stepping through code, such that the current
+  point of execution is displayed. Source views can be opened manually
+  using the &quot;Open File&quot; menu item in the &quot;File&quot;
+  menu, which presents a file open dialog for locating and selecting a
+  source file to display. Additionally, the classes panel may be used
+  to view source for a particular class. Simply double-click on the
+  desired method under the name of the class you want to view.</p>
+
+  <h4>Parser Errors</h4>
+
+  <p>If the source view attempted to parse the source code as Java
+  language code and encountered an error, the error line is highlighted
+  in red. Moving the mouse pointer over the line should show a tooltip
+  that contains the parser error message. The message may be preceded
+  by a pair of numbers. The first value is the line number and the
+  second is the column number (both one-based) where the error was
+  found.</p>
+
+  <h4><a id="gutter" name="gutter"></a>The Gutter</h4>
+
+  <p>The gutter is the place where the line numbers are shown, on the
+  left side of the source view. The background color is used to
+  indicate the location of breakpoints. The default light gray
+  indicates that line does not have a breakpoint. The other colors are
+  defined as follows:</p>
+
+  <dl>
+    <dt><strong>Red</strong></dt>
+
+    <dd>Expired; hit count reached &#39;expire count&#39;.</dd>
+
+    <dt><strong>Gray</strong></dt>
+
+    <dd>Disabled by user.</dd>
+
+    <dt><strong>Blue</strong></dt>
+
+    <dd>Unresolved; waiting for class to load.</dd>
+
+    <dt><strong>Yellow</strong></dt>
+
+    <dd>Skipping hits until &#39;skip count&#39; is reached.</dd>
+
+    <dt><strong>Green</strong></dt>
+
+    <dd>Ready to be hit.</dd>
+  </dl>
+
+  <p>In addition to indicating breakpoint status, the gutter may be
+  used to set breakpoints. By clicking the mouse in the gutter during
+  an active session (<a href="help_sessions.html">Sessions</a>), you
+  can create a breakpoint where one does not exist, disable it if one
+  does exist, or remove it if it is already disabled. That is to say,
+  clicking on the same line three times will: create the breakpoint,
+  disable the breakpoint, and finally remove the breakpoint.</p>
+
+  <h4>Current Location</h4>
+
+  <p>The current location is like the current thread (see
+  <a href="help_threads.html">Threads, Call Stack</a>). It is set
+  whenever a breakpoint is hit and indicates the line about to be
+  executed in the debuggee. The line is indicated in the source view
+  using a blue highlight across that line. Changing the current thread
+  or stack frame will move the highlight to the corresponding line of
+  the appropriate source view.</p>
+
+  <h4>Refreshing</h4>
+
+  <p>The source views are automatically refreshed whenever a debugging
+  session is started (either by attaching to a remote debuggee or
+  launching a debuggee). Additionally, the views may be manually
+  refreshed using the &quot;Refresh&quot; button in the toolbar, or the
+  &quot;Refresh Display&quot; menu item in the &quot;View&quot;
+  menu.</p>
+
+  <h4>Searching</h4>
+
+  <p>You can search for words and phrases in the source view by using
+  the &quot;Search Source&quot; menu item in the &quot;View&quot; menu
+  (or the toolbar button with the binoculars). In the Find dialog,
+  simply enter the word or phrase you are looking for, then click Ok.
+  To ignore letter casing, select the checkbox provided. The search
+  phrase is actually a regular expression, although any simple word or
+  phrase will work. See the JDK documentation for the
+  <code>java.util.regex.Pattern</code> class to learn about the
+  supported features.</p>
+
+  <h4>Options</h4>
+
+  <p>There are a number of options affecting the view, which include
+  the following. They are specified in the &quot;Options&quot; submenu
+  of the &quot;Options&quot; menu.</p>
+
+  <dl>
+    <dt><strong>Colorize</strong></dt>
+
+    <dd>This enables or disables the use of a Java lexical analyzer to
+    determine the locations of all of the tokens in the source file.
+    This information, when enabled, is used to colorize the source
+    code. You may want to disable this if you usually view files that
+    are not Java source code.</dd>
+
+    <dt><strong>Parse as Java</strong></dt>
+
+    <dd>This enables or disables the use of a Java language parser to
+    determine the locations of all of the classes and methods in the
+    source file. This information, when enabled, is used to set
+    breakpoints and scroll to method definitions. You may want to
+    disable this if you usually view files that are not Java source
+    code.</dd>
+
+    <dt><strong>Maximize</strong></dt>
+
+    <dd>When enabled, the source view windows will be maximized when
+    they are first opened.</dd>
+  </dl>
+
+  <h4>Launching External Editor</h4>
+
+  <p>The source view popup menu contains an item labeled &quot;Open in
+  editor&quot;. When this item is selected, the program specified in
+  the &quot;External source editor&quot; field of the &quot;Source
+  View&quot; user preferences category is launched. The &quot;%f&quot;
+  in the command string is replaced with the full path of the source
+  file. The &quot;%l&quot; is replaced with the line number on which
+  the source view popup was invoked.</p>
+
+  <p>The external editor is executed via the
+  <code>Runtime.exec()</code> method. If the Java VM cannot find the
+  editor as specified, you must either set your program path
+  appropriately, or specify the full path to the editor executable.</p>
+</body>
+</html>

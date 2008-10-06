@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: README.html 14 2007-06-02 23:50:55Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 12 April 2005), see www.w3.org" />
+
+  <title>JSwat README</title>
+<style type="text/css">
+  /*<![CDATA[*/
+  h2 {
+    font-weight: bold;
+    border: 2px solid #ccc;
+    border-width: 0px 0px 2px 0px;
+  }
+  /*]]>*/
+</style>
+</head>
+
+<body>
+  <h1 style="text-align: center">JSwat README</h1>
+
+  <h2>What is it?</h2>
+
+  <p>JSwat is a graphical Java debugger front-end, written for the Java
+  2 platform, utilizing the <a href=
+  "http://java.sun.com/products/jpda/">Java Platform Debugger
+  Architecture</a> (JPDA). The source code is licensed under the
+  <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public
+  License</a>. This version of the software has entered maintenace
+  mode. Generally only bug fixes are being made to this line of the
+  code. See the <a href="http://www.bluemarsh.com/java/jswat/">web
+  site</a> for the latest version of the debugger.</p>
+
+  <h2>Requirements</h2>
+
+  <h3>J2SE</h3>
+
+  <p>JSwat requires the <a href="http://java.sun.com/j2se/">Java 2
+  Standard Edition</a>, version 1.4 or higher. Compatible software from
+  other vendors may be used, if so desired.</p>
+
+  <h3>JPDA</h3>
+
+  <p>The Java Platform Debugger Architecture (JPDA) software, which is
+  included in most releases of the J2SE, is utilized by JSwat to carry
+  out its debugging activities. The required classes are typically
+  found in the <code>&lt;jdk&gt;\lib\tools.jar</code> file, and begin
+  with the prefix <code>com.sun.jdi</code> (where JDI stands for Java
+  Debug Interface).</p>
+
+  <h3>Other Libraries</h3>
+
+  <p>JSwat includes additional jar files containing libraries that are
+  utilized by the program. They are referenced by the manifest of the
+  JSwat jar file and must be kept in the same directory as the JSwat
+  jar file. The jar files do not have to be in your classpath, though
+  it would not hurt if they were.</p>
+
+  <h3>Debug Info</h3>
+
+  <p>JSwat, like most Java debuggers, requires that the classes to be
+  debugged be compiled using the <kbd>-g</kbd> flag. In addition, do
+  not compile the classes with the optimization flags, as that may
+  hinder debugging. If you are using <a href=
+  "http://ant.apache.org/">Ant</a> to build your application, include
+  <code>debug=&quot;on&quot;</code> in the <code>javac</code> task,
+  which will generate the debug info during compilation.</p>
+
+  <h2>Starting JSwat</h2>
+
+  <p>There are basically two ways to start JSwat: easy and not so easy.
+  If you are running Microsoft Windows then you can use the
+  <strong><code>jswat.bat</code></strong> batch file. If you are
+  running a Unix-like system then you can use the
+  <strong><code>jswat</code></strong> shell script. Otherwise, you can
+  start JSwat <strong>manually</strong>, as shown below.</p>
+
+  <p style="margin: 0 2em 1em"><kbd>java
+  -Djava.ext.dirs=&lt;JAVA_HOME&gt;\lib -jar
+  &lt;JSWAT_HOME&gt;\jswat.jar</kbd></p>
+
+  <p style="margin: 0 2em 0"><em>Unix users must replace <kbd>\</kbd>
+  with <kbd>/</kbd> in the line above.</em></p>
+
+  <p style="margin: 0 2em 0"><em>Mac OS X users can leave out the -D
+  option entirely.</em></p>
+
+  <p>Note that <code>JAVA_HOME</code> is the path to the JDK, while
+  <code>JSWAT_HOME</code> is the path to the <code>jswat.jar</code>
+  file. The <code>&lt;JAVA_HOME&gt;\lib</code> directory must contain
+  the <code>tools.jar</code> file in order for JSwat to start. This
+  file contains the JPDA classes (<code>com.sun.jdi</code>) used by
+  JSwat. If the file containing these classes is located elsewhere in
+  your system, you must make the appropriate change to the command used
+  to invoke JSwat.</p>
+
+  <h3>Passing Arguments</h3>
+
+  <p>JSwat can accept a string of commands to be executed as soon as it
+  has completed its startup. These commands are passed at the end of
+  the command line used to start the program. Here are some
+  examples:</p>
+
+  <ul>
+    <li><kbd>java ... jswat.jar load -client MyClass arg1
+    arg2</kbd></li>
+
+    <li><kbd>java ... jswat.jar attach mymachine:1234</kbd></li>
+
+    <li style="list-style: none"><kbd>java ... jswat.jar &quot;load
+    MyClass; stop MyClass:120; resume&quot;</kbd></li>
+
+    <li><kbd>java ... jswat.jar \&quot;classpath
+    cp1;cp2;cp3\&quot;</kbd></li>
+  </ul>
+
+  <p>Read the help section titled &quot;Commands&quot; to learn more
+  about using JSwat commands. Note that the last example uses slashes
+  to escape the quotes used on the command line. See the appropriate
+  documentation for your command shell to learn more.</p>
+
+  <h3>Other Ways to Start JSwat</h3>
+
+  <ol>
+    <li>
+      <div>
+        As an alternative to using the Java Extensions Mechanism, you
+        may append to the boot classpath, like so:
+      </div>
+      <pre>
+java -Xbootclasspath/a:&lt;JAVA_HOME&gt;\lib\tools.jar -jar &lt;JSWAT_HOME&gt;\jswat.jar
+</pre>
+    </li>
+
+    <li>
+      <div>
+        For a shorter invocation, list the aforementioned
+        <code>tools.jar</code> file and the JSwat jar files in your
+        classpath and invoke the program with this simple command:
+      </div>
+      <pre>
+java com.bluemarsh.jswat.Main
+</pre>
+    </li>
+
+    <li>
+      <div>
+        Another short invocation can be accomplished by copying the
+        <code>tools.jar</code> file to the
+        <code>&lt;JAVA_HOME&gt;\jre\lib\ext</code> directory, then
+        starting JSwat like so:
+      </div>
+      <pre>
+java -jar &lt;JSWAT_HOME&gt;\jswat.jar
+</pre>
+
+      <p>Note that the <kbd>-jar</kbd> option causes the classpath
+      setting to be ignored. This includes the path following the
+      <kbd>-cp</kbd> or <kbd>-classpath</kbd> options, as well as the
+      <code>CLASSPATH</code> environment variable.</p>
+    </li>
+  </ol>
+
+  <h2>Documentation</h2>
+
+  <p>The JSwat documentation is made up primarily of the built-in help.
+  Help on JSwat commands is accessed using the &quot;help&quot;
+  command. General help topics are available from the &quot;Help&quot;
+  menu in JSwat. Additionally, there are several &quot;how to&quot;
+  documents on the <a href=
+  "http://www.bluemarsh.com/java/jswat/docs/">web site</a>.</p>
+
+  <h2>Stopping JSwat</h2>
+
+  <p>The correct way to exit JSwat is with either the window close
+  button, the <kbd>exit</kbd> command, or the Exit item in the File
+  menu. Using Ctrl-c to exit JSwat will likely cause problems and
+  should be avoided. It must <em>only</em> be used in cases where the
+  JVM hosting JSwat has frozen.</p>
+
+  <h2>Removing JSwat</h2>
+
+  <p>Removing JSwat from your system is generally pretty simple. Find
+  the files, wherever it is that you originally put them, and delete
+  them. If, on the other hand, you used one of the packaged versions
+  such as RPM or DEB, you will need to remove the package using the
+  appropriate system tool.</p>
+
+  <p>To remove all traces of JSwat from your system, you will need to
+  look in only one place. If you are using Microsoft Windows, look in
+  the registry under the
+  <code>HKEY_CURRENT_USER\Software\JavaSoft\Prefs\com\bluemarsh\jswat</code>
+  key. Users of Unix-like systems will find the JSwat settings stored
+  in the <code>~/.java/.userPrefs/com/bluemarsh/jswat/</code>
+  directory. You may also have created a <code>jswat.init</code> file,
+  so be sure to look for that as well.</p>
+
+  <h2>Platform particulars</h2>
+
+  <p>Below are notes concerning particular platforms and what must be
+  done to make JSwat work correctly on them.</p>
+
+  <h3>Mac OS X</h3>
+
+  <p>JSwat is known to work on Mac OS X 10.3 with JDK 1.4.1.</p>
+
+  <p>David Cok reports that on OS X 10.1.5 he was unable to launch the
+  debuggee from JSwat, although he could remotely attach to a running
+  debuggee. But as he points out, this is true for all of the Java
+  debuggers he tested on this platform.</p>
+
+  <p>Marc Hadley, using OS X 10.1.5, says it was necessary for him to
+  add the hostname of his machine to the <code>netinfo</code> file.
+  Otherwise he got an error about <code>gethostbyname</code> when
+  launching the debuggee from within JSwat.</p>
+
+  <h3>Windows</h3>
+
+  <p>The JRE, often installed with the JDK, seems to cause more
+  problems than it solves. If JSwat tells you that the JPDA cannot be
+  found and you are certain you followed the instructions above
+  correctly, then chances are the JRE is getting in the way. Be sure
+  that you refer to the <code>java.exe</code> located in the JDK
+  <code>bin</code> directory. Otherwise you may inadvertently invoke
+  the JRE which is not suitable for debugging.</p>
+
+  <h3>Windows NT and JDK 1.4</h3>
+
+  <p>There seems to be a problem with using JDK 1.4 on Windows NT 4.0,
+  relating to the DirectX features. The errors occur in the method
+  <code>sun.awt.windows.Win32DDRenderer.doFillRectDD</code>. The
+  solution appears to be quite simple, just add the following option
+  after <kbd>java</kbd> when starting JSwat:
+  <kbd>-Dsun.java2d.noddraw=true</kbd></p>
+
+  <h3>Windows 2000/XP and JDK 1.4</h3>
+
+  <p>There seems to be a problem with using JDK 1.4.1 on Windows 2000
+  and XP relating to certain video cards. Basically, when the Java
+  application exits, the operating system hangs. The relevant bug
+  report is on the <a href=
+  "http://developer.java.sun.com/developer/bugParade/bugs/4713003.html">
+  developer services</a> site, which you may want to read for further
+  information. There is a work-around that seems to work for some users
+  and is worth trying. Add the following option after <kbd>java</kbd>
+  when starting JSwat: <kbd>-Dsun.java2d.d3d=false</kbd></p>
+
+  <p>A problem related to the one described above is that the JSwat
+  application seems to hang on startup. Try installing the DirectX
+  support in your system to avoid the issue. If that does not work, try
+  the option mentioned above, or replace your video card per the bug
+  report mentioned above.</p>
+
+  <h2>Troubleshooting</h2>
+
+  <p>Below are problems you might run into while using JSwat. Each
+  offers a solution for either resolving or working around the
+  issue.</p>
+
+  <h3>Unable to find JPDA</h3>
+
+  <p>See instructions above and be sure to follow them carefully. Check
+  for any relevant information in the &quot;Platform Particulars&quot;
+  section.</p>
+
+  <h3>prefs BackingStoreException</h3>
+
+  <p>See the &quot;Preferences Do Not Persist&quot; item.</p>
+
+  <h3>Upgrading to 2.0 message keeps appearing</h3>
+
+  <p>See the &quot;Preferences Do Not Persist&quot; item.</p>
+
+  <h3>Preferences Do Not Persist</h3>
+
+  <p>If the preferences in JSwat are not persisting, you may see one of
+  the following symptoms:</p>
+
+  <ul>
+    <li>&quot;Updating to 2.0&quot; dialog always displays at
+    startup.</li>
+
+    <li><code>java.util.prefs.BackingStoreException</code> occurs,
+    maybe mentioning something about an XML parser, such as
+    xerces.</li>
+  </ul>
+
+  <p>The cause of the problem seems to be that an alternate XML parser
+  is in the classpath. This XML parser does not understand how to
+  handle the JavaSoft Preferences DTD and thus fails to read or write
+  the Preferences data.</p>
+
+  <p>The solution is to run JSwat using the <kbd>-jar</kbd> option to
+  provide a clean environment in which to run JSwat.</p>
+
+  <p>Simon Hill pointed out that the 2.1 version of the xerces parser
+  no longer has the problem described above. If you are using an older
+  version of this parser, you may want to upgrade.</p>
+
+  <h2>Getting help</h2>
+
+  <p>Write an email to the <a href=
+  "mailto:nfiedler@bluemarsh.com">author</a>, or join the
+  <code>jswat-user</code> <a href=
+  "http://www.bluemarsh.com/java/jswat/mail-lists.html">mailing
+  list</a> and post your question there.</p>
+
+  <div style="text-align: center">
+    <small>JSwat and related documentation are Copyright &copy;
+    1999-2005</small>
+  </div>
+</body>
+</html>

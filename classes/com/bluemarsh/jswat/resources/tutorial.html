@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator"
+  content="HTML Tidy for Linux/x86 (vers 1st April 2003), see www.w3.org" />
+
+  <title>Tutorial</title>
+</head>
+
+<body>
+  <h3>Tutorial</h3>
+
+  <h4>Tutorial Program</h4>
+
+  <p>In order to get started with the tutorial, you will need to create
+  a sample program to debug. One has already been written, it simply
+  needs to be saved to a file. Follow this
+  <a href="tutorial.java">link</a> to the example code, select the
+  program text and press the &quot;Copy&quot; button in the help viewer
+  toolbar; then paste the text into a text editor and save it to a file
+  named <code>tutorial.java</code>. We will be using this example to
+  learn more about JSwat&#39;s features and how to use them.</p>
+
+  <p>Compile the file you just created using <kbd>javac -g</kbd>, which
+  will compile the class with local variable and line number
+  information. This information is needed when you plan on debugging
+  your code. Without it, the debugger cannot debug the class.</p>
+
+  <h4>Setting the Classpath</h4>
+
+  <p>Assuming you are an experienced Java developer, you know what the
+  classpath is and how it is used, so that will not be covered here.
+  For an explanation on how JSwat uses the classpath setting, see the
+  &quot;Classpath&quot; related help page, accessible from the built-in
+  help.</p>
+
+  <p>Start JSwat and select the &quot;Set Classpath&quot; item from the
+  &quot;Options&quot; menu. In the dialog that appears, clear out all
+  of the entries already found there, as chances are they have more to
+  do with running JSwat than debugging the tutorial sample. Do this
+  with the &quot;Remove Path&quot; button at the bottom of the dialog.
+  Once all of the classpath entries are removed, enter a new path entry
+  by pressing the &quot;Add Path&quot; button. Use the file selector
+  dialog that appears to select the directory containing the
+  <code>tutorial.class</code> file. Once that is done, accept the new
+  classpath setting by selecting the &quot;OK&quot; button.</p>
+
+  <h4>Setting the Sourcepath</h4>
+
+  <p>If you placed the <code>tutorial.java</code> and
+  <code>tutorial.class</code> files in different directories, you will
+  need to set the JSwat sourcepath setting. The sourcepath is similar
+  to the classpath except that it tells JSwat where to find source code
+  rather than class files. The sourcepath is set in the same manner as
+  the classpath, except that it is done by selecting &quot;Set
+  Sourcepath&quot; from the &quot;Options&quot; menu. The purpose is to
+  select the directory where the <code>tutorial.java</code> file is
+  located, which allows JSwat to find it when all that is known is the
+  name of the class.</p>
+
+  <h4>Loading the Class</h4>
+
+  <p>Now that the classpath is set, start the debugging session by
+  selecting &quot;Start VM&quot; from the &quot;VM&quot; menu. A dialog
+  will appear asking you for the name of the class to be debugged,
+  along with some other information that has already been filled in for
+  you. Enter &quot;tutorial&quot; in the &quot;Class name&quot; field.
+  Make sure the &quot;suspended&quot; checkbox is checked so the
+  session will not resume until you tell it to. Now press the Ok button
+  and you should see a message that looks something like this:</p>
+  <pre>
+VM loading with following options, class name, and class arguments.
+/jdk/bin/java -cp /java/samples
+tutorial
+VM loaded
+</pre>
+
+  <p>This indicates that the debuggee VM was successfully created. At
+  this point the debuggee VM has not attempted to locate the class in
+  question. That is, you could use the start dialog to load the
+  &quot;<code>noclass</code>&quot; class and the debuggee VM will load
+  without an error. Only when you click on the &quot;Play&quot; button
+  in the toolbar does the debuggee VM start and try to locate the main
+  class. In fact, do this now to start the tutorial debuggee VM.</p>
+
+  <p>The tutorial class will start and create a window with a single
+  button. Now the tutorial program is waiting for you to do something.
+  This gives us an opportunity to take a closer look at the JSwat
+  window.</p>
+
+  <h4>JSwat Window</h4>
+
+  <p>Now that JSwat and the tutorial sample are running, you should
+  notice that the JSwat window is made up of various panels that
+  display information related to the debuggee. There is a panel called
+  &quot;Threads&quot; which shows the threads in the debuggee VM. A
+  panel showing the messages from JSwat is also visible, with a command
+  input field below that. To the right is where source files are
+  shown.</p>
+
+  <p>You will notice that above the threads panel are a set of labeled
+  tabs. When pressed these tabs bring other panels forward. They
+  include a panel called &quot;Classes&quot; which shows the currently
+  loaded classes in a hierarchal tree; &quot;Locals&quot; displays the
+  local variables while single-stepping through code; and
+  &quot;Watches&quot; which allows viewing field and local variables
+  during program execution.</p>
+
+  <p>If you have looked at the <code>tutorial.java</code> file you will
+  notice that the first line of the <code>main()</code> method prints a
+  message to the <code>System.out</code> output stream. The output from
+  the debuggee VM is captured by JSwat into one of its panels. Click on
+  the &quot;Output&quot; tab above the messages panel and you will see
+  the message from the tutorial class. The &quot;Input:&quot; field
+  below the output display is for entering text input to the debuggee
+  VM on its <code>System.in</code> input stream.</p>
+
+  <h4>Setting Breakpoints</h4>
+
+  <p>We are now ready to try setting breakpoints with JSwat. We can do
+  this through the source code viewer. The <code>tutorial.java</code>
+  file should be visible already on the right side of the JSwat window.
+  If it is not, go to the &quot;Classes&quot; panel and expand the
+  &quot;tutorial&quot; node; double-click on the
+  &quot;main(String[])&quot; node and the <code>tutorial.java</code>
+  source file should open.</p>
+
+  <p>With the tutorial source view open, click in the source view
+  gutter area at line 12 of the source code. The gutter area is the
+  part of the source view that shows the line numbers and has a gray
+  background. The line number will now have a green background color.
+  This indicates that a breakpoint is set at that line.</p>
+
+  <p>Now switch to the tutorial program&#39;s window and click on the
+  &quot;Push me&quot; button. Immediately JSwat signals that the
+  debuggee VM has hit a breakpoint by raising its window above all
+  others. The line of code that is about to be executed will be
+  highlighted in blue in the source view. Additionally, JSwat will show
+  the current location in the messages panel; the name of the thread is
+  in square brackets, followed by the name of the class and method,
+  which is in turn followed by the name of the source file and the line
+  number where execution has stopped.</p>
+
+  <p>By the way, when a breakpoint is hit at a certain line number (in
+  this example, line 12), the debuggee VM has not yet executed that
+  line of code. In this example, the <code>pushCount</code> field
+  variable has not yet been incremented.</p>
+
+  <h4>Single-Stepping</h4>
+
+  <p>Now you are ready to learn about single stepping through the
+  source code. Stepping one line of code at a time can be done by
+  pressing the shortcut key for the &quot;Next Line&quot; menu item
+  under the &quot;Step&quot; menu. The default shortcut key for this is
+  the <kbd>F12</kbd> function key.</p>
+
+  <p>Before you start single-stepping, click on the &quot;Locals&quot;
+  tab above the class tree panel. This will bring the local variables
+  panel forward and show the currently visible local variables. At line
+  12 of the tutorial class, only &quot;e&quot; (method argument), and
+  &quot;this&quot; (reference to the current object) are visible.
+  Expand the &quot;this&quot; node to see the &quot;pushCount&quot;
+  field.</p>
+
+  <p>Press the <kbd>F12</kbd> key several times now and observe how the
+  source line highlighter moves along through the source view. As you
+  step through the code, you will also notice that the local variables
+  panel is updated to show the latest visible variables and their
+  values.</p>
+
+  <p>To resume execution of the debuggee VM, press the &quot;Play&quot;
+  button on the toolbar. The tutorial window will now have changed the
+  button label to say &quot;Pushed 1 times&quot;.</p>
+
+  <h4>Restarting the Session</h4>
+
+  <p>Say that we want to reload the tutorial class after we have made a
+  change to the source code and recompiled. An easy way to do this is
+  to press the &quot;<code>New</code>&quot; button on the toolbar. This
+  brings up the &quot;Start VM&quot; dialog that you saw at the
+  beginning of the tutorial. Notice that the dialog contains the values
+  you entered earlier. That is because JSwat remembers the values from
+  the last time we started the debuggee VM.</p>
+
+  <p>When you click the Ok button in the Start VM dialog, it will
+  terminate the current debugging session and start a new one.</p>
+
+  <h4>Exiting the Session</h4>
+
+  <p>Exiting JSwat is easy -- just press on the window close button.
+  JSwat will close the debuggee VM and then exit.</p>
+
+  <p>If you exit JSwat while debugging a remote debuggee, JSwat will
+  merely detach from the remote VM without terminating it.</p>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator"
+  content="HTML Tidy for Linux/x86 (vers 1st April 2003), see www.w3.org" />
+
+  <title>Unit Tests</title>
+</head>
+
+<body>
+  <h2>JSwat Unit Testing</h2>
+
+  <h3>Unit Tests Defined</h3>
+
+  <p>Unit tests are basically bits of code that exercise functions
+  within a project. If each test cases passes, there is a good chance
+  the system is in proper working order. That is by no means
+  guaranteed, and verifying this falls into the realm of integration
+  testing, and which is performed manually.</p>
+
+  <p>The JSwat unit tests are written to use the
+  <a href="http://www.junit.org/">JUnit</a> framework. This provides
+  the classes for automating the execution of the tests, making it very
+  easy to run the tests over and over again.</p>
+
+  <h3>Running the Tests</h3>
+
+  <p>To run the test suite you will need the latest version of the
+  <a href="http://ant.apache.org/">Apache Ant</a> tool. While the
+  process could be accomplished without Ant, it would take longer to
+  explain than it does to install this extraordinarily useful tool.
+  After installing Ant, you will need to copy the
+  <code>junit.jar</code> file (which you get from the JUnit
+  <a href="http://www.junit.org/">website</a>) to the <code>lib</code>
+  directory in the Ant installation directory. In this way, Ant can
+  easily run JUnit tests using the <code>junit</code> tag.</p>
+
+  <p>With Ant installed and JSwat
+  <a href="../dev/compile.html">compiled</a>, running the unit tests is
+  a simple process. Open a command shell window and change to the
+  top-level JSwat directory (where the <code>README.html</code> file is
+  found). From there, invoke Ant with the &quot;test&quot; target, like
+  so: <code>ant test</code></p>
+
+  <p>Soon after invoking this command you will see the JSwat window
+  appear and start reacting to the test code. Wait until the window
+  closes and Ant has finished running the tests.</p>
+
+  <p>It is important that the tests are performed in the top-level
+  directory. Otherwise many of the tests will fail to work correctly.
+  In particular, the classpath and sourcepath are set using relative
+  paths, and the Java parser test uses a relative file path to load one
+  of the test files.</p>
+
+  <h3>Writing New Tests</h3>
+
+  <p>The best way to learn about writing test cases is to look at the
+  existing test code. It is generally very simple and straight-forward
+  code. Bear in mind that any new test cases must be added to the
+  appropriate collection (e.g. <code>AllTests</code>,
+  <code>ActiveTests</code>, etc.) within the particular Java package.
+  Otherwise they will not be run when the test suite is executed.</p>
+</body>
+</html>

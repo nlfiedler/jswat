@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>Sessions</title>
+  </head>
+
+  <body>
+    <h3>Sessions</h3>
+
+    <h4>What is a Session?</h4>
+
+    <p>A JSwat Session is the object that manages the debuggee VM. It
+    launches a debuggee or connects to a remote debuggee. A Session can
+    suspend and resume the debuggee. The Session also keeps a variety
+    of persistent settings called properties.</p>
+
+    <h4>Session Properties</h4>
+
+    <p>The properties of a Session include the classpath, sourcepath,
+    list of single-step exclusions, last-used search phrase,
+    watchpoints, main debuggee class, remote host and port, JVM options
+    and so on. All of these properties are initially empty until they
+    are defined during normal interaction with JSwat. The properties
+    are automatically saved to persistent storage for subsequent
+    reuse.</p>
+
+    <p>JSwat has support for multiple sets of Session properties. Only
+    one set can be loaded at any given time. The &quot;File&quot; menu
+    has items for opening, copying, and deleting sessions. By default
+    there is a session with the name &quot;default&quot;. You can
+    delete this and it will be remade with empty properties.</p>
+
+    <h4>Active versus Inactive</h4>
+
+    <p>At startup the session is inactive. This is discernible by the
+    fact that numerous menu items and toolbar buttons are disabled
+    during an inactive session (such as the single-step buttons). To
+    activate the session, click the &quot;New&quot; icon on the toolbar
+    or select &quot;Start VM&quot; from the &quot;VM&quot; menu. Once
+    the session has activated, the full set of menu items and toolbar
+    buttons becomes enabled and ready for use.</p>
+  </body>
+</html>
+

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator"
+  content="HTML Tidy for Linux/x86 (vers 1st February 2003), see www.w3.org" />
+
+  <title>JSwat Development Documentation</title>
+</head>
+
+<body>
+  <h2>JSwat Development Documentation</h2>
+
+  <h3>Development Table of Contents</h3>
+
+  <ul>
+    <li><a href="compile.html">Compile and Run JSwat</a></li>
+
+    <li><a href="build.html">Building JSwat</a></li>
+
+    <li><a href="shortcuts.html">Adding Keyboard Shortcuts</a></li>
+
+    <li><a href="newcommands.html">Writing New Commands</a></li>
+
+    <li><a href="ui-adapter.html">Writing a UI Adapter</a></li>
+
+    <li><a href="localize.html">Localizing JSwat</a></li>
+  </ul>
+
+  <h3>Design Table of Contents</h3>
+
+  <ul>
+    <li><a href="arch.html">JSwat Architecture</a></li>
+
+    <li><a href="breakpoints.html">How Breakpoints Work</a></li>
+
+    <li><a href="commands.html">Command Interface</a></li>
+
+    <li><a href="panels.html">Panels &amp; Views</a></li>
+
+    <li><a href="classes.html">Important Classes</a></li>
+
+    <li><a href="refactoring.html">The Great Refactoring</a></li>
+  </ul>
+
+  <h3>General Design Goals</h3>
+
+  <dl>
+    <dt><strong>Flexibility</strong></dt>
+
+    <dd>In general, JSwat will be designed with flexibility as one of
+    the most important considerations. This program will grow and
+    improve over some time to come, so decisions made now must not
+    limit future opportunities.</dd>
+
+    <dt><strong>Extensibility</strong></dt>
+
+    <dd>JSwat is a very extensible program. New debugger commands can
+    be written and added to the debugger without having to change the
+    existing code. Additionally, new actions and interface adapters can
+    also be easily written.</dd>
+
+    <dt><strong>Loose-Coupling</strong></dt>
+
+    <dd>The term &quot;loose-coupling&quot; refers to the manner in
+    which the various parts of a system connect with one another.
+    Classes that are tightly-coupled will refer to each other directly,
+    by name. This generally leads to inflexible designs that are hard
+    to extend to future needs. Loose-coupling is achieved by using
+    design patterns like Observer, Bridge, Strategy, Mediator, and so
+    on (see <span style="text-decoration: underline">Design Patterns -
+    Elements of Reusable Object-Oriented Software</span> by Gamma,
+    Helm, Johnson, Vlissides).</dd>
+  </dl>
+
+  <h3>Output</h3>
+
+  <p>Output from JSwat is generally displayed using the graphical
+  interface, via dialogs, panels, or the messages text area. This is
+  the normal means by which the program transmits messages to the user.
+  Output to the console is forbidden for all but a handful of reasons,
+  outlined below.</p>
+
+  <ol>
+    <li>User invokes the <code>stdout</code> or <code>stderr</code>
+    command.</li>
+
+    <li>Program is running in console mode.</li>
+
+    <li>Messages are being directed to standard output via the
+    &quot;Capture Messages&quot; action.</li>
+
+    <li>An error occurred that could not be displayed by any other
+    means. This is limited to the <code>Main</code> class, which has no
+    elegant way of reporting errors, and the <code>Log</code> class,
+    which sends output to the console when none of the registered
+    output streams are functioning.</li>
+  </ol>
+
+  <h3>Logging</h3>
+
+  <p>The use of the <code>java.util.logging.Logger</code> class to
+  report errors or warnings is forbidden. Instead, use the
+  <code>UIAdapter.showMessage()</code> method to report any problems.
+  The interface adapter is reachable from a <code>Session</code>
+  instance.</p>
+</body>
+</html>

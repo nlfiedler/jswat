@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 June 2005), see www.w3.org" />
+
+  <title>JSwat - How to Write JSwat Commands</title>
+</head>
+
+<body style="background-color: #fff">
+  <h2>How to Write JSwat Commands</h2>
+
+  <h3>How to Write New Commands</h3>
+
+  <p>Commands are the invokable objects in JSwat that perform some kind
+  of operation. Some example commands are: attach, stop, step,
+  disablegc, print, and threads. Below is a brief discussion of how to
+  write new commands for JSwat, including what features are available
+  to commands.</p>
+
+  <p>All commands must subclass the <code>JSwatCommand</code> class,
+  defined in the <code>com.bluemarsh.jswat.command</code> package.
+  <code>JSwatCommand</code> provides some basic functionality needed
+  for all JSwat commands. Each JSwat command class is named using the
+  name of the command as the prefix, followed by the
+  &quot;Command&quot; suffix. For example, the new
+  &#39;<code>friday</code>&#39; command class must be named
+  &quot;<code>fridayCommand</code>&quot; and placed in the
+  <code>com.bluemarsh.jswat.command</code> package. When the user
+  invokes &#39;friday&#39; at the JSwat command prompt, the
+  <code>CommandManager</code> class will find the
+  <code>fridayCommand</code> class, create an instance of it, and call
+  its &quot;<code>perform</code>&quot; method.</p>
+
+  <p>One instance of each command is created per instance of a JSwat
+  session.</p>
+
+  <p>JSwat commands can do just about anything any ordinary Java code
+  can do. All of the work of a JSwat command is carried out in its
+  <code>perform</code> method. This method is given several parameters
+  which enable the command to perform its task. The first parameter is
+  the Session object running the command. The <code>Session</code>
+  provides access to most everything the command could ever want,
+  including threads, context manager, event handler,
+  <code>CommandManager</code>, etc. The second argument is a
+  <code>CommandArguments</code> which provides the command arguments.
+  For instance, if the <code>friday</code> command took two arguments,
+  a thread ID and an object reference, those would be passed in the
+  <code>args</code> parameter. It is up to the <code>friday</code>
+  command to parse the strings and resolve the arguments. The third and
+  final argument to the <code>perform</code> method is the
+  <code>Log</code> instance to which the command may write messages.
+  This is the same log as the one returned from
+  <code>Session.getStatusLog()</code>.</p>
+
+  <h4>Connecting the command</h4>
+
+  <p>To make the new command available to users, edit the file
+  <code>classes/com/bluemarsh/jswat/command/Bundle.properties</code> as
+  described below.</p>
+
+  <ul>
+    <li>Add command name to <code>commandList</code> property.</li>
+
+    <li>Add a &quot;&lt;name&gt;Desc&quot; entry.</li>
+
+    <li>Add a &quot;&lt;name&gt;Help&quot; entry.</li>
+  </ul>
+
+  <p>Insert your new entries in alphabetical order so they are easy to
+  locate.</p>
+
+  <p>To connect the new command into the interactive help system, add
+  entries to the <code>help.properties</code> file in the command
+  package.</p>
+
+  <h4>Testing the command</h4>
+
+  <p>When the new command is ready for general use, write a unit test
+  case for it. If the command requires an active session and/or
+  arguments, add the test case to the appropriate test case suites. See
+  the examples in the
+  <code>test/junit/classes/com/bluemarsh/jswat/command</code>
+  directory.</p>
+</body>
+</html>

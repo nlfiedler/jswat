@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org">
+
+    <title>Catching Exceptions</title>
+  </head>
+
+  <body>
+    <h3>Catching Exceptions</h3>
+
+    <p>JSwat supports catching exceptions as if they were breakpoints.
+    This includes exceptions that are caught in the Java code running
+    in the debuggee VM and exceptions that are not caught.</p>
+
+    <p>The <code>catch</code> command can be used to create an
+    exception catch. There is also a like-named item in the
+    &quot;Breakpoints&quot; menu. Catching an exception requires the
+    name of the exception to be caught. This must either be a
+    fully-qualified class name or a wild-carded class name (i.e. has a
+    &#39;*&#39; either at the beginning or end of the name).</p>
+
+    <p>Exception breakpoints can have both class and thread filters.
+    See the <a href="help_breakpoints.html">breakpoints help</a> for
+    the section on setting up filters. The class filters apply to the
+    class that is throwing the exception.</p>
+
+    <p>A single exception may be thrown multiple times. JSwat does not
+    distinguish this case and so it may appear that more than one
+    exception is being caught when in fact it is one exception that has
+    been re-thrown.</p>
+
+    <p>JSwat always creates an invisible exception breakpoint for all
+    uncaught exceptions. This breakpoint cannot be removed or modified
+    as it is not visible to the user.</p>
+  </body>
+</html>
+

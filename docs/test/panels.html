@@ -1,0 +1,404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Testing Panels</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h1>Testing Panels</h1>
+
+    <h2>Threads panel</h2>
+
+    <p>This panel displays the live threads in the debuggee VM. As
+    threads are created and destroyed, entries in this table will
+    appear and disappear. The thread currently being examined by JSwat
+    will be rendered in red. Simply clicking on a row in the table will
+    change JSwat&#39;s notion of the current thread. The rows are not
+    sorted in any particular order.</p>
+
+    <ul>
+      <li>Initially the table is empty.</li>
+
+      <li>After launching a debuggee VM, several new rows should
+      appear. The threads will likely be called: Finalizer, Reference
+      Handler, Signal dispatcher, and main.</li>
+
+      <li>Hitting a breakpoint should set a thread as the current one,
+      which paints the corresponding row in this panel as red.</li>
+
+      <li>Using the &#39;<code>thrdtest</code>&#39; test program should
+      cause several threads to be created and eventually to die.</li>
+    </ul>
+
+    <h2>Classes panel</h2>
+
+    <p>This panel displays the loaded classes in the debuggee VM. As
+    classes are loaded and unloaded, entries in this tree will appear
+    and disappear. Double-clicking on a class in the tree should
+    display the corresponding source file. The entries tend to be
+    sorted in alphabetical order, but that is not guaranteed.</p>
+
+    <ul>
+      <li>Initially the tree is empty, with a single node whose label
+      is &quot;CLASSES&quot;.</li>
+
+      <li>After launching a debuggee VM, numerous new nodes should
+      appear.</li>
+
+      <li>When a debuggee VM starts running, this tree should rebuild
+      itself several times as new classes are loaded into the debuggee
+      VM. It is normal for the expanded branches of the tree to
+      collapse as the tree is rebuilt.</li>
+
+      <li>Expanding a node and hovering the mouse over a class should
+      display a tooltip with the class&#39; fully-qualified name.</li>
+
+      <li>Hovering the mouse over empty space should show a tooltip
+      with the phrase &quot;class tree&quot; (or some translation
+      thereof).</li>
+    </ul>
+
+    <h2>Locals panel</h2>
+
+    <p>This panel displays the local variables in the current stack
+    frame of the debuggee VM, when the debuggee VM is suspended. The
+    tree rebuilds itself as the frame, thread, or location changes in
+    the debuggee VM. Expanded nodes in the tree will remain expanded
+    even when the tree is rebuilt (unless, of course, the variable goes
+    out of scope).</p>
+
+    <ul>
+      <li>Initially the tree is empty, with a single node whose label
+      is &quot;LOCALS&quot;.</li>
+
+      <li>While the debuggee VM is running, the locals panel will
+      likely display &quot;(thread not set)&quot; to indicate that the
+      current thread is not set.</li>
+
+      <li>When the debuggee VM is suspended and a current thread is set
+      (possibly by using the Threads panel), the locals panel should
+      display the visible variables at the current location.</li>
+
+      <li>Variables in the tree have this basic format: <code>name
+      (type): value</code>. The type may be a primitive Java type or a
+      Java class name. Class names may be fully-qualified depending on
+      the &quot;Trim package names&quot; option set in the
+      Preferences.</li>
+
+      <li>Objects are shown using a diamond-shaped box icon.</li>
+
+      <li>Java objects will have their fields displayed as child nodes
+      in the tree.</li>
+
+      <li>Object fields that refer back to the containing object,
+      either directly or indirectly, will be shown with a circular
+      icon. These nodes cannot be expanded.</li>
+
+      <li>Arrays will be shown with an icon that resembles a table with
+      three rows. The value of the array is the size of the array in
+      square brackets.</li>
+
+      <li>Arrays longer than six elements will have a special
+      &quot;...&quot; node. Double-clicking on this node will display
+      all of the elements in the array.</li>
+
+      <li>Recently changed variables will be colored in red.</li>
+
+      <li>Test all of this behavior rigorously with the
+      &#39;<code>locals</code>&#39; test application.</li>
+    </ul>
+
+    <h2>Watches panel</h2>
+
+    <p>This panel displays any defined watches. Watches are variables
+    in the debuggee VM that JSwat is presently tracking for changes. As
+    a variable is changed, the value displayed in this panel will be
+    updated.</p>
+
+    <ul>
+      <li>Initially the table is empty.</li>
+
+      <li>After the debuggee VM is loaded, the table will contain an
+      empty row.</li>
+
+      <li>If any watches had been previously defined, they will be
+      shown.</li>
+
+      <li>An empty row will exist at all times.</li>
+
+      <li>Typing the name of a visible variable into the
+      &quot;Name&quot; column of the empty row will add that variable
+      as a watch.</li>
+
+      <li>Typing the name of a local or field variable while stopped in
+      a static method should work. Previously this did not.</li>
+
+      <li>The keyword &quot;<code>this</code>&quot; may be used to
+      refer to field variables of the &#39;this&#39; object in the
+      current stack frame. This is only useful if a local variable of
+      the same name is present in the stack frame.</li>
+
+      <li>Variable values are displayed simply as the
+      <code>toString()</code> of the object.</li>
+
+      <li>Clearing the name field of a row will delete the watch.</li>
+
+      <li>While the debuggee VM is running, the locals panel will
+      likely display &quot;(no thread)&quot; to indicate that the
+      current thread is not set.</li>
+
+      <li>If no variable information is available (because the classes
+      were not compiled using &quot;javac -g&quot;) then the panel will
+      display &quot;(no debugging info)&quot;.</li>
+    </ul>
+
+    <h2>Messages panel</h2>
+
+    <p>This panel displays the messages generated by JSwat during the
+    program&#39;s current run. Right-clicking on the panel will display
+    a popup menu allowing the user to copy the selected text in the
+    display.</p>
+
+    <ul>
+      <li>Initially the panel will display a few startup messages.</li>
+
+      <li>As the program goes through its normal operating procedures,
+      messages will be relayed to this panel.</li>
+
+      <li>As messages are displayed to this panel, it should
+      automatically scroll down to the new messages.</li>
+
+      <li>Commands entered into the command input field will be echoed
+      in this panel (prefixed with a <code>&gt;</code>).</li>
+
+      <li>Select some text from this display and right-click. A popup
+      menu should appear with three items - Clear, Copy, and Select
+      All. Test the Copy item by selecting it and pasting the text from
+      the clipboard into a text editor.</li>
+
+      <li>Deselect the text in the panel and right-click. The popup
+      menu described above will appear. The Copy item will be
+      disabled.</li>
+    </ul>
+
+    <h2>Command text field</h2>
+
+    <p>This text field appears below the Messages panel and allows the
+    user to enter JSwat commands. Pressing the Enter key should send
+    the typed input to JSwat for processing.</p>
+
+    <ul>
+      <li>Initially this field is empty.</li>
+
+      <li>Typing into this field should echo all typed characters.</li>
+
+      <li>Pressing Enter will send the typed input to the command
+      interpreter. This should also clear the input field of all
+      text.</li>
+
+      <li>Right-clicking in the input field should display a popup menu
+      with two items - Copy, Paste.</li>
+
+      <li>Right-click in the input field when no text is selected. A
+      popup menu will appear containing a &quot;Copy&quot; entry that
+      is disabled.</li>
+
+      <li>Right-click in the input field when text is selected. A popup
+      menu will appear containing an enabled &quot;Copy&quot; entry.
+      Select this to send the selected text to the system
+      clipboard.</li>
+
+      <li>Right-click in the input field after having copied text to
+      the system clipboard. The &quot;Paste&quot; menu item should be
+      enabled. Select it to paste the text to the input field.</li>
+
+      <li>Using cursor up and down keys should scroll through the
+      command history.</li>
+
+      <li>Using Ctrl-p and Ctrl-n keys should scroll through the
+      command history.</li>
+
+      <li>Cursoring up to the top of the command history will generate
+      a beep sound.</li>
+
+      <li>Cursoring down to the bottom of the command history will
+      restore whatever &quot;in-progress&quot; text was there
+      initially.</li>
+    </ul>
+
+    <h2>Output panel</h2>
+
+    <p>This panel displays the output generated by debuggee VM during
+    the program&#39;s run. Right-clicking on the panel will display a
+    popup menu allowing the user to copy the selected text in the
+    display.</p>
+
+    <ul>
+      <li>Initially the panel will be empty.</li>
+
+      <li>Each time a debuggee VM is loaded, this panel will be
+      cleared.</li>
+
+      <li>As the debuggee VM generates output (both to
+      <code>stdout</code> and to <code>stderr</code>), that output will
+      be relayed to this panel.</li>
+
+      <li>As output is generated, this panel should automatically
+      scroll down to the new output.</li>
+
+      <li>Select some text from this display and right-click. A popup
+      menu should appear with three items - Clear, Copy, and Select
+      All. Test the Copy item by selecting it and pasting the text from
+      the clipboard into a text editor.</li>
+
+      <li>Deselect the text in the panel and right-click. The popup
+      menu described above will appear. The Copy item will be
+      disabled.</li>
+    </ul>
+
+    <h2>Input text field</h2>
+
+    <p>This text field appears below the Output panel and allows the
+    user to enter input to the debuggee VM. Pressing the Enter key
+    should send the typed input to the debuggee VM&#39;s
+    <code>stdin</code> stream.</p>
+
+    <ul>
+      <li>Initially this field is empty.</li>
+
+      <li>Typing into this field should echo all typed characters.</li>
+
+      <li>Pressing Enter will send the typed input to the debuggee
+      VM&#39;s <code>stdin</code> stream. This should also clear the
+      input field of all text.</li>
+
+      <li>Right-clicking in the input field should display a popup menu
+      with two items - Copy, Paste.</li>
+
+      <li>Right-click in the input field when no text is selected. A
+      popup menu will appear containing a &quot;Copy&quot; entry that
+      is disabled.</li>
+
+      <li>Right-click in the input field when text is selected. A popup
+      menu will appear containing an enabled &quot;Copy&quot; entry.
+      Select this to send the selected text to the system
+      clipboard.</li>
+
+      <li>Right-click in the input field after having copied text to
+      the system clipboard. The &quot;Paste&quot; menu item should be
+      enabled. Select it to paste the text to the input field.</li>
+    </ul>
+
+    <h2>Breakpoints panel</h2>
+
+    <p>The breakpoints panel is identical to the breakpoints dialog
+    (accept, of course, that it cannot be closed). See the breakpoints
+    <a href="breakpoints.html">checklist</a> for testing the features
+    of the breakpoints panel.</p>
+
+    <h2>Stack panel</h2>
+
+    <p>This panel displays the stack frame at the current location in
+    the debuggee VM.</p>
+
+    <ul>
+      <li>Initially this panel is empty.</li>
+
+      <li>
+        After the debuggee VM is loaded, this panel may display one of
+        the following messages: 
+
+        <ul>
+          <li>(no frame) = current stack frame is empty.</li>
+
+          <li>(no thread) = no current thread set.</li>
+        </ul>
+      </li>
+
+      <li>The rows in the table will be numbered in ascending order
+      starting from one. These numbers will appear in the &quot;#&quot;
+      column.</li>
+
+      <li>Native methods in the stack frame will show &quot;native
+      method&quot; in the &quot;Source&quot; column.</li>
+
+      <li>The row colored in red indicates which frame is the current
+      one. This is usually the frame numbered &#39;1&#39;.</li>
+
+      <li>Double-clicking on a row in the table will set the current
+      stack frame and show the corresponding source file, if available,
+      as well as scroll to the point in the source file that defines
+      that location.</li>
+
+      <li>Double-clicking on a row in the table for which the method is
+      &quot;native&quot; will display the corresponding source file,
+      but not scroll to the appropriate location, since it is not
+      known.</li>
+
+      <li>Double-clicking on a row in the table for which a source file
+      could not be found will display an appropriate error
+      message.</li>
+    </ul>
+
+    <h2>Methods panel</h2>
+
+    <p>This panel displays the defined methods of the class that
+    defines the method at the current location. Each row of the table
+    corresponds to a method in the class.</p>
+
+    <ul>
+      <li>Initially this panel is empty.</li>
+
+      <li>
+        After the debuggee VM is loaded, this panel may display one of
+        the following messages: 
+
+        <ul>
+          <li>(no frame) = current stack frame is empty.</li>
+
+          <li>(no thread) = no current thread set.</li>
+
+          <li>(bad thread state) = thread is not suspended</li>
+
+          <li>(native) = current method is native and no stack frame is
+          available</li>
+        </ul>
+      </li>
+
+      <li>The line number in the source file where the method is
+      defined is shown in the &quot;Line&quot; column.</li>
+
+      <li>If the method location is not defined, the line number will
+      be shown as &quot;??&quot; in the &quot;Line&quot; column.</li>
+
+      <li>If the method is native, the line number will be shown as
+      &quot;-1&quot; in the &quot;Line&quot; column.</li>
+
+      <li>The method modifiers, return type, name, and argument list
+      are shown in the &quot;Method&quot; column.</li>
+
+      <li>As the current location is changed, the contents of this
+      panel will change to reflect the methods defined in the class
+      containing the current location.</li>
+
+      <li>Double-clicking on a row in the table will show the
+      corresponding source file, if available, and scroll to make that
+      method visible in the source view.</li>
+
+      <li>Double-clicking on a row in the table for which the method is
+      &quot;native&quot; will display the corresponding source file,
+      but not scroll to the appropriate location, since it is not
+      known.</li>
+
+      <li>Double-clicking on a row in the table for which a source file
+      could not be found will display an appropriate error
+      message.</li>
+    </ul>
+  </body>
+</html>
+

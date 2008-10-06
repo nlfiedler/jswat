@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+        Copyright (C) 2002-2003 Nathan Fiedler
+
+  Use Apache Ant to run the unit tests for JSwat.
+  See the docs/test/unit.html page to learn more about unit testing.
+
+  $Id: build.xml 14 2007-06-02 23:50:55Z nfiedler $
+-->
+
+<project name="JSwat" default="test" basedir=".">
+  <property file="../../build.properties"/>
+  <property name="compile.source" value="1.4"/>
+  <property name="compile.target" value="1.4"/>
+  <property name="testname" value="com.bluemarsh.jswat.AllTests"/>
+
+  <path id="class.path">
+    <pathelement location="${java.home}/../lib/tools.jar"/>
+    <pathelement location="${basedir}/../../build/classes"/>
+    <pathelement location="${basedir}/../build"/>
+    <fileset dir="${basedir}/../../classes/ext">
+      <include name="*.jar"/>
+    </fileset>
+    <pathelement location="build/classes"/>
+  </path>
+
+  <target name="prepare">
+    <available classname="junit.textui.TestRunner" property="haveJUnit"/>
+    <mkdir dir="build/classes"/>
+  </target>
+
+  <target name="clean" description="Removes the generated files.">
+    <delete dir="build"/>
+  </target>
+
+  <target name="compile" depends="prepare" description=
+    "Compile the unit tests." if="haveJUnit">
+    <!-- Compile the tests, if JUnit is available. -->
+    <javac srcdir="classes" destdir="build/classes" debug="on"
+           source="${compile.source}" target="${compile.target}">
+      <classpath refid="class.path"/>
+    </javac>
+  </target>
+
+  <target name="test" depends="compile" description="Run the unit tests."
+    if="haveJUnit">
+    <junit haltonfailure="yes">
+      <classpath refid="class.path"/>
+      <formatter type="plain" usefile="false"/>
+      <test name="${testname}"/>
+    </junit>
+  </target>
+
+  <target name="testPerf" depends="compile" description=
+    "Run the unit tests with profiling information." if="haveJUnit">
+    <junit haltonfailure="yes" fork="yes">
+      <jvmarg value="-Xrunhprof:cpu=times"/>
+      <classpath refid="class.path"/>
+      <formatter type="plain" usefile="false"/>
+      <test name="${testname}"/>
+    </junit>
+  </target>
+</project>

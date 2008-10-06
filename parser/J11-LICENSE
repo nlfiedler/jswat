@@ -1,0 +1,45 @@
+J11, Java-1.1, Java 1.1 grammar (with strictfp support which makes it Java2 compliant).
+Copyright (C) 1997-2001 Etienne M. Gagnon, M.Sc. <egagnon@j-meg.com>.
+All rights reserved.
+
+This work is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+This work is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this work in the file "COPYING-LESSER"; if not,
+write to the Free Software Foundation, Inc., 59 Temple Place, Suite
+330, Boston, MA 02111-1307  USA
+
+If you have any question, send an electronic message to
+Etienne M. Gagnon, M.Sc. <egagnon@j-meg.com>, or write to:
+
+Etienne M. Gagnon
+J-Meg inc.
+11348 Brunet
+Montreal-Nord (Quebec)
+H1G 5G1  Canada
+
+If you you want to submit a bug report, or a patch, please visit the
+SableCC Grammars web site:
+
+  http://sablecc.sourceforge.net/
+
+If you want to discuss this grammar, please subscribe to the
+SableCC mailing list.  You can find all the necessary information
+on the SableCC web site at:
+
+  http://www.sable.mcgill.ca/sablecc/
+
+
+
+THANK YOU for help, contribution and efforts to
+maintain and keep the Java grammar up to the specs:
+
+ Thomas Leonhardt <leonhardt@informatik.tu-darmstadt.de>

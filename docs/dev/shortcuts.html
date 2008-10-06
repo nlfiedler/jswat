@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - How to Add Shortcuts</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>How to Add Shortcuts</h2>
+
+    <h3>Adding Shortcuts</h3>
+
+    <p>Adding keyboard shortcuts to JSwat actions is simple. Find out
+    what the name of the action is by looking at the action source
+    code. Say the action is the exit action, which amazingly enough, is
+    called &#39;exit&#39;. To add a keyboard shortcut, or accelerator,
+    to this action we simply add a new default to the
+    <code>Defaults.java</code> file in the <code>jswat</code>
+    package.</p>
+
+    <p>The other part is a little more involved. The
+    <code>PreferencesAction</code> class must be updated to allow
+    customizing the new keyboard shortcut. I will leave this to the
+    astute developer to figure out (it is pretty obvious).</p>
+
+    <h3>Shortcut Values</h3>
+
+    <p>The allowable values for keyboard shortcuts are defined by the
+    <code>javax.swing.KeyStroke().getKeyStroke(String)</code> method.
+    That information is reprinted here for your convenience.</p>
+
+    <p>The keystroke string has the following syntax:</p>
+<pre>
+     &lt;modifiers&gt;* (&lt;typedID&gt; | &lt;pressedReleasedID&gt;)
+     modifiers := shift | control | meta | alt | button1 | button2 | button3
+     typedID := typed &lt;typedKey&gt;
+     typedKey := string of length 1 giving Unicode character.
+     pressedReleasedID := (pressed | released)? key
+     key := KeyEvent keycode name, i.e. the name following &quot;VK_&quot;.
+</pre>
+
+    <p>If typed, pressed or released is not specified, pressed is
+    assumed. The button1, button2, and button3 modifiers refer to the
+    respective mouse buttons. Here are some examples:</p>
+<pre>
+     &quot;INSERT&quot;
+     &quot;control DELETE&quot;
+     &quot;alt shift X&quot;
+     &quot;alt shift released X&quot;
+     &quot;typed a&quot;
+</pre>
+  </body>
+</html>
+

@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Starting JSwat</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>Starting JSwat</h2>
+
+    <h3>Startup Options</h3>
+
+    <p>There are several options available when starting the program.
+    Most notable is that JSwat can execute an arbitrary command when
+    given appropriate arguments on the command line.</p>
+
+    <dl>
+      <dt><code>java com.bluemarsh.jswat.Main</code></dt>
+
+      <dd>Program should launch as usual.</dd>
+
+      <dt><code>java -Djava.source.path=/usr/java/src
+      com.bluemarsh.jswat.Main</code></dt>
+
+      <dd>Program should launch with sourcepath pre-defined. Test this
+      by invoking the &#39;<code>sourcepath</code>&#39; command and
+      verifying that the output contains
+      <code>/usr/java/src</code>.</dd>
+
+      <dt><code>java com.bluemarsh.jswat.Main &lt;command&gt;
+      [&lt;arguments&gt;]</code></dt>
+
+      <dd>Program will start and execute the given command with any
+      arguments provided.</dd>
+    </dl>
+
+    <h4>Console Mode</h4>
+
+    <p>JSwat supports more than one interface mode. At present the
+    program defaults to running with a graphical interface based on the
+    JFC component set. In addition, the program can be made to run
+    within a console, without any graphical interface at all. This mode
+    is invoked with the <code>-console</code> option. It must be the
+    first option following the JSwat &quot;Main&quot; class name. Use
+    the following test cases to test the console-only mode of the
+    program.</p>
+
+    <dl>
+      <dt><code>java com.bluemarsh.jswat.Main -console</code></dt>
+
+      <dd>Program should launch into console mode.</dd>
+
+      <dt><code>java -Djava.source.path=/usr/java/src
+      com.bluemarsh.jswat.Main -console</code></dt>
+
+      <dd>Program should launch with sourcepath pre-defined. Test this
+      by invoking the &#39;<code>sourcepath</code>&#39; command and
+      verifying that the output contains
+      <code>/usr/java/src</code>.</dd>
+
+      <dt><code>java com.bluemarsh.jswat.Main -console &lt;command&gt;
+      [&lt;arguments&gt;]</code></dt>
+
+      <dd>Program will start and execute the given command with any
+      arguments provided.</dd>
+    </dl>
+
+    <h3>Startup Files</h3>
+
+    <p>Upon starting, JSwat looks for a file named
+    <code>jswat.init</code> in the current directory. If it finds it, it
+    reads each line as if it were a JSwat command. Lines beginning with
+    <code>#</code> are ignored.</p>
+
+    <h4>Unreadable</h4>
+
+    <p>For this test, make an unreadable <code>jswat.init</code> file.
+    This is easily done by changing the owner and/or permissions on the
+    file using normal file commands (e.g. &quot;chmod&quot;). Start
+    JSwat in this directory and ensure that it does not read the
+    contents of the file.</p>
+
+    <h4>Parent Directories</h4>
+
+    <p>JSwat not only reads the <code>jswat.init</code> file in the
+    current directory but also all parent directories. Test this by
+    putting a file in each parent directory, each with a unique
+    command. Start JSwat and ensure that each command was run in
+    turn.</p>
+  </body>
+</html>
+

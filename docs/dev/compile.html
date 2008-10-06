@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 June 2005), see www.w3.org" />
+
+  <title>JSwat - How to Compile and Run JSwat</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+  <h2>How to Compile and Run JSwat</h2>
+
+  <h3>Requirements</h3>
+
+  <p>JSwat depends on the Java Platform Debugger Architecture (JPDA).
+  See the <a href="http://java.sun.com/products/jpda/">JPDA website</a>
+  for more information. The required classes are generally found in a
+  file called <code>tools.jar</code> which is located in the
+  <code>lib</code> directory of your JDK. Fortunately, the JSwat build
+  files automatically include this file in the classpath, so you do not
+  have to take any action at this time.</p>
+
+  <h3>Compiling JSwat</h3>
+
+  <p>To compile JSwat you will need the latest version of the <a href=
+  "http://ant.apache.org/">Apache Ant</a> tool. Download and install
+  this tool before continuing. Granted, you could compile JSwat without
+  Ant, but it would take longer to explain than it would for you to
+  install Ant.</p>
+
+  <p>Compile JSwat by invoking &#39;<code>ant build</code>&#39; on the
+  command line.</p>
+
+  <h3>Running JSwat</h3>
+
+  <p>To run JSwat, use the command &#39;<code>ant run</code>&#39; and
+  it will start after a few seconds. As with compiling, you could run
+  JSwat without Ant, but you would not want to once you knew how.</p>
+</body>
+</html>

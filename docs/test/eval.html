@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Testing Expressions</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>Testing Expressions</h2>
+
+    <h3>Introduction</h3>
+
+    <p>JSwat supports the evaluation of Java-like expressions. See the
+    built-in &quot;Expression Evaluation&quot; help screen to learn
+    more about them. In short, most of the expressions defined in the
+    JLS are supported.</p>
+
+    <h3>Test Cases</h3>
+
+    <table border="1" summary="expressions">
+      <tr>
+        <th>Expression</th>
+
+        <th>Result</th>
+
+        <th>Notes</th>
+      </tr>
+
+      <tr>
+        <td><code>123</code></td>
+
+        <td><code>123</code></td>
+
+        <td>numeric literals are returned as-is</td>
+      </tr>
+
+      <tr>
+        <td><code>true</code></td>
+
+        <td><code>true</code></td>
+
+        <td>boolean literals are returned as-is</td>
+      </tr>
+
+      <tr>
+        <td><code>null</code></td>
+
+        <td><code>null</code></td>
+
+        <td>null is returned as-is</td>
+      </tr>
+
+      <tr>
+        <td><code>&quot;abc&quot;</code></td>
+
+        <td><code>abc</code></td>
+
+        <td>string literals have their quotes removed</td>
+      </tr>
+
+      <tr>
+        <td><code>var</code></td>
+
+        <td>var&#39;s value</td>
+
+        <td>variable references are replaced with the variable
+        value</td>
+      </tr>
+
+      <tr>
+        <td><code>1 + 1</code></td>
+
+        <td><code>2</code></td>
+
+        <td>simple arithmetic expressions are evaluated</td>
+      </tr>
+
+      <tr>
+        <td><code>1 == 1</code></td>
+
+        <td><code>true</code></td>
+
+        <td>equality expression</td>
+      </tr>
+
+      <tr>
+        <td><code>i == 1</code></td>
+
+        <td><code>true</code> if i is one</td>
+
+        <td>variable and literal equality expression</td>
+      </tr>
+
+      <tr>
+        <td><code>1 != 1</code></td>
+
+        <td><code>false</code></td>
+
+        <td>equality expression</td>
+      </tr>
+
+      <tr>
+        <td><code>i != 1</code></td>
+
+        <td><code>true</code> if i is not one</td>
+
+        <td>variable and literal equality expression</td>
+      </tr>
+
+      <tr>
+        <td><code>2 &gt; 1</code></td>
+
+        <td><code>true</code></td>
+
+        <td>relational expression</td>
+      </tr>
+
+      <tr>
+        <td><code>i &gt; 1</code></td>
+
+        <td><code>true</code> if i is greater than one</td>
+
+        <td>variable to literal relational expression</td>
+      </tr>
+
+      <tr>
+        <td><code>2.2 &gt;= 2.2</code></td>
+
+        <td><code>true</code></td>
+
+        <td>relational expression (with floating point operands)</td>
+      </tr>
+
+      <tr>
+        <td><code>1 + 2 * 3</code></td>
+
+        <td><code>7</code></td>
+
+        <td>operator precedence follows JLS</td>
+      </tr>
+
+      <tr>
+        <td><code>(1 + 2) * 3</code></td>
+
+        <td><code>9</code></td>
+
+        <td>parentheses override operator precedence</td>
+      </tr>
+
+      <tr>
+        <td><code>arr[1 + 1]</code></td>
+
+        <td>value of third element of arr (an array)</td>
+
+        <td>expressions as array indices</td>
+      </tr>
+
+      <tr>
+        <td><code>arr[meth(2 + 2)]</code></td>
+
+        <td>value of nth element of arr (an array)</td>
+
+        <td>method invocation as array index</td>
+      </tr>
+
+      <tr>
+        <td><code>meth(true, 2 * 3, null)</code></td>
+
+        <td>method return value</td>
+
+        <td>expressions as method arguments</td>
+      </tr>
+
+      <tr>
+        <td><code>meth(2 * (3 + 1), a == b, 255 &amp; 32)</code></td>
+
+        <td>method return value</td>
+
+        <td>more complex method invocation</td>
+      </tr>
+
+      <tr>
+        <td><code>meth(a == b, meth2(123), 255 &amp; 32)</code></td>
+
+        <td>method return value</td>
+
+        <td>nested method invocation</td>
+      </tr>
+    </table>
+  </body>
+</html>
+

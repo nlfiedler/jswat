@@ -1,0 +1,110 @@
+#!/bin/sh
+######################################################################
+#   Copyright (c) 2003 Nathan Fiedler
+#
+# $Id: jswat 1099 2003-12-10 03:44:48Z nfiedler $
+######################################################################
+
+# Some operating systems require special handling.
+CYGWIN=false;
+case "`uname`" in
+    CYGWIN*) CYGWIN=true ;;
+    Darwin*) if [ -z "$JAVA_HOME" ] ; then
+        JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
+        fi
+        ;;
+esac
+
+if [ -z "$JSWAT_HOME" ] ; then
+    # Try to find the JSwat directory.
+    PRG="$0"
+    CWD=`pwd`
+
+    # Need this in case there are relative symbolic links.
+    cd `dirname "$PRG"`
+
+    # Resolve symbolic links, if any.
+    while [ -h "$PRG" ] ; do
+        LS=`ls -ld "$PRG"`
+        LINK=`expr "$LS" : '.*-> \(.*\)$'`
+        if expr "$LINK" : '/.*' > /dev/null; then
+            PRG="$LINK"
+        else
+            PRG=`dirname "$PRG"`"/$LINK"
+        fi
+    done
+
+    # Canonicalize the path.
+    JSWAT_HOME=`dirname "$PRG"`
+    cd "$CWD"
+    JSWAT_HOME=`cd "$JSWAT_HOME" && pwd`
+fi
+
+if $CYGWIN; then
+    # Change paths to Unix format for now.
+    if [ -n "$JSWAT_HOME" ]; then
+        JSWAT_HOME=`cygpath --unix "$JSWAT_HOME"`
+    fi
+    if [ -n "$JAVA_HOME" ]; then
+        JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+    fi
+    if [ -n "$CLASSPATH" ]; then
+        CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+    fi
+fi
+
+if [ -z "$JAVACMD" ] ; then
+    if [ -n "$JAVA_HOME"  ] ; then
+        if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+            # IBM JDK on AIX has 'java' in different location.
+            JAVACMD="$JAVA_HOME/jre/sh/java"
+        else
+            JAVACMD="$JAVA_HOME/bin/java"
+        fi
+    else
+        JAVACMD=`which java 2> /dev/null`
+        if [ -z "$JAVACMD" ] ; then
+            JAVACMD=java
+        fi
+    fi
+fi
+
+if [ ! -x "$JAVACMD" ] ; then
+    echo "Error: Cannot execute $JAVACMD; set JAVA_HOME."
+    exit 1
+fi
+
+if [ -n "$CLASSPATH" ] ; then
+    LOCALCLASSPATH="$CLASSPATH"
+fi
+
+# Add JSwat's jar files to the local classpath.
+for i in "${JSWAT_HOME}"/*.jar
+  do
+  if [ -f "$i" ] ; then
+      if [ -z "$LOCALCLASSPATH" ] ; then
+          LOCALCLASSPATH="$i"
+      else
+          LOCALCLASSPATH="$i":"$LOCALCLASSPATH"
+      fi
+  fi
+done
+
+if [ -n "$JAVA_HOME" ] ; then
+    if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
+        LOCALCLASSPATH="$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar"
+    fi
+    # Mac OS X does not have a tools.jar, but the JPDA classes are in
+    # the core classes archive.
+else
+    echo "Warning: JAVA_HOME environment variable is not set; JSwat may fail"
+    echo "  to find the JPDA classes, in which case you should set JAVA_HOME"
+    echo "  to the installation directory of the JDK."
+fi
+
+if $CYGWIN; then
+    # Switch classpath back to Windows format.
+    LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
+fi
+
+"$JAVACMD" -classpath "$LOCALCLASSPATH" com.bluemarsh.jswat.Main "$@"

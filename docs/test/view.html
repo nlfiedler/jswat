@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Testing Views</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>Testing Views</h2>
+
+    <p>The &quot;views&quot; are presently only the source view window.
+    This window displays the Java source code being debugged. It has
+    the option of syntax highlighting the code to make it easier to
+    read. Here are some test cases to ensure the view is working
+    correctly.</p>
+
+    <h3>Reading</h3>
+
+    <p>The source view window reads and interprets the Java source file
+    to provide two important features. First, it parses the Java code
+    to determine: 1) the package name, 2) the line number range of the
+    class definitions, and 3) the locations of the method definitions.
+    This information is used by the source view popup menu in setting
+    breakpoints and scrolling to methods. Second, the Java code is
+    scanned lexically to identify elements to be colorized.</p>
+
+    <p>Because of these two operations, the Java code must be
+    well-formed. If there are any parser errors, the source view popup
+    menu will not be able to set any breakpoints in that Java code. By
+    the same token, if the lexical analyzer throws an exception, the
+    view will not be colorized.</p>
+
+    <h4>Tabs</h4>
+
+    <p>Make sure the source view handles the tab characters correctly.
+    In particular, they should be converted to the appropriate number
+    of spaces. This works around a shortcoming in the text view in
+    which tabs throw off the text component&#39;s width calculations.
+    The tab width is determined in the user preferences under the
+    &quot;View&quot; category. Try changing this value and ensure open
+    views reflect the new value.</p>
+
+    <h3>Tooltips</h3>
+
+    <p>Whenever the debugging context is set (that is, the current
+    thread, stack frame, and location are known) the source view will
+    display the values of variables defined by the string under the
+    mouse pointer. That is, if the mouse pointer hovers over the name
+    of a variable in the Java code, a tooltip will appear, giving the
+    value of that variable in the current stack frame.</p>
+
+    <p>A couple of things to try.</p>
+
+    <ul>
+      <li>Move the mouse over a non-variable. There should be no
+      tooltip.</li>
+
+      <li>Move the mouse past the end of the line. There should be no
+      tooltip.</li>
+
+      <li>Move the mouse to the start of the line. There should be no
+      tooltip.</li>
+
+      <li>Move the mouse to the gutter area. There should be no
+      tooltip.</li>
+
+      <li>Move the mouse over a variable whose values is null. Should
+      should &quot;null&quot; as the value.</li>
+    </ul>
+
+    <h3>Font</h3>
+
+    <p>The source view uses the font and size defined in the user
+    preferences. Make sure that changing this value actually changes
+    the source view.</p>
+
+    <h3>Colorizing</h3>
+
+    <p>The source view will colorize the view contents according to a
+    set of simple rules of the Java programming language. It can
+    colorize anything, including non-Java code. Ensure that this
+    colorization is happening, and that it can be turned off via the
+    option in the user preferences.</p>
+
+    <h3>Popup menu</h3>
+
+    <p>A Java language parser is employed to enable the source view
+    popup menu to know where classes are defined. With this
+    information, the popup will show one of the following:</p>
+
+    <ul>
+      <li>&quot;Java parser error&quot; - if the Java parser had a
+      problem.</li>
+
+      <li>&quot;No class here&quot; - if there is no class at this
+      line.</li>
+
+      <li>One or more of: &quot;Add breakpoint&quot;, &quot;Run to this
+      line&quot;, &quot;Disable breakpoint&quot;, &quot;Enable
+      breakpoint&quot;, &quot;Breakpoint properties...&quot;</li>
+    </ul>
+
+    <p>Ensure that the appropriate popup menu messages are shown.</p>
+
+    <p>In addition, the popup menu will contain a &quot;Methods&quot;
+    submenu if the Java code was parsed successfully. This menu
+    contains method descriptors of no more than 80 characters. When an
+    item is selected, the view scrolls to the corresponding location in
+    the source.</p>
+
+    <h3>Single-stepping</h3>
+
+    <p>While single-stepping through Java code, the source view window
+    should be visible and the stepping line should be indicated by a
+    blue highlight. Ensure that this is working by setting a breakpoint
+    and stepping for a few lines.</p>
+
+    <h3>Breakpoints</h3>
+
+    <p>The source view indicates the position of breakpoints by
+    coloring the area behind the line numbers. The line numbers are
+    visible at the left of the source view area. The colors are as
+    follows:</p>
+
+    <ul>
+      <li>Red - expired</li>
+
+      <li>Gray - disabled</li>
+
+      <li>Blue - unresolved</li>
+
+      <li>Yellow - skipping</li>
+
+      <li>Green - ready</li>
+    </ul>
+  </body>
+</html>
+

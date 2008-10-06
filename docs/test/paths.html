@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Path Testing</title>
+  </head>
+
+  <body>
+    <h1>Testing Paths</h1>
+
+    <h2>Introduction</h2>
+
+    <p>Path testing is nothing more than ensuring that JSwat handles
+    the classpath and sourcepath correctly. This document serves a dual
+    purpose: it documents how the paths should be handled, and it
+    describes how to verify that JSwat is working as expected.</p>
+
+    <p>Both the classpath and sourcepath are maintained by the
+    <code>PathManager</code> class. It stores the paths in session
+    properties.</p>
+
+    <h2>How it should work</h2>
+
+    <h3>Classpath</h3>
+
+    <p>The classpath session property can be modified under two
+    conditions:</p>
+
+    <ol>
+      <li>The user specifically sets the path using either the
+      <code>classpath</code> command or the &quot;Set Classpath&quot;
+      dialog.</li>
+
+      <li>The classpath session property is empty when JSwat starts. It
+      is automatically set to the value of the
+      <code>java.class.path</code> system property.</li>
+    </ol>
+
+    <p>While the JSwat session is active, the classpath will appear to
+    be that of the debuggee VM. After the session is deactivated, the
+    classpath will return to the value before the session was
+    activated.</p>
+
+    <h3>Sourcepath</h3>
+
+    <p>The sourcepath session property can be modified under two
+    conditions:</p>
+
+    <ol>
+      <li>The user specifically sets the path using either the
+      <code>sourcepath</code> command or the &quot;Set Sourcepath&quot;
+      dialog.</li>
+
+      <li>The <code>java.source.path</code> system property is set when
+      JSwat starts, in which case this value will overwrite the
+      sourcepath session property .</li>
+    </ol>
+
+    <h2>How to test</h2>
+
+    <h3>Remote Debuggee</h3>
+
+    <p>Ensure that the classpath session property is not overwritten by
+    simply connecting to a remote debuggee. This is accomplished using
+    the following steps:</p>
+
+    <ol>
+      <li>Set the classpath to something memorable.</li>
+
+      <li>Attach to a remote debuggee that has a different classpath
+      than the one used in the previous step.</li>
+
+      <li>Check that the classpath is indeed different.</li>
+
+      <li>Disconnect from the remote debuggee.</li>
+
+      <li>Verify that the classpath is the original value.</li>
+    </ol>
+
+    <h3>Setting the Paths</h3>
+
+    <p>See the appropriate command and dialog test cases to learn how
+    to test setting the classpath and sourcepath.</p>
+  </body>
+</html>
+

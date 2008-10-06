@@ -1,0 +1,18 @@
+JSWAT CLASS EXTENSIONS README  (-*- text -*-)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$Id: README 611 2002-10-20 06:54:25Z nfiedler $
+
+
+parser.jar:
+
+    Contains the generated Java language parser, created from the
+    SableCC Java grammar in the 'parser' directory. See the readme file
+    in that directory for more information. It is used in setting
+    breakpoints, colorizing the source view, and expression evaluation.
+
+
+jclasslib.jar (v 1.2):
+
+    Available from http://jclasslib.sourceforge.net/ this software is
+    licensed under the GNU General Public License. It is used to display
+    Java bytecodes in a humanly-readable fashion.

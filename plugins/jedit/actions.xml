@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<!-- $Id: actions.xml 14 2007-06-02 23:50:55Z nfiedler $ -->
+
+<!DOCTYPE ACTIONS SYSTEM "actions.dtd">
+
+<ACTIONS>
+  <ACTION NAME="jswatplugin.vmStart">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().vmStart(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.vmAttach">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().vmAttach(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.vmDetach">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().vmDetach(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.toggleBreakpoint">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().toggleBreakpoint(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.runUntil">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().runUntil(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.vmResume">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().vmResume(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.stepInto">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().stepInto(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.stepOver">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().stepOver(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.stepOut">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().stepOut(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.vmSuspend">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().vmSuspend(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.vmStop">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().vmStop(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.hotswapClass">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().hotswapClass(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.showOptions">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().showOptions(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.helpIndex">
+    <CODE>
+      com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.getInstance().helpIndex(view);
+    </CODE>
+  </ACTION>
+
+  <ACTION NAME="jswatplugin.toggle-dockable">
+    <CODE>
+      view.getDockableWindowManager().toggleDockableWindow(
+          com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.NAME);
+    </CODE>
+    <IS_SELECTED>
+      return view.getDockableWindowManager().isDockableWindowVisible(
+          com.bluemarsh.jswat.plugins.jedit.JSwatPlugin.NAME);
+    </IS_SELECTED>
+  </ACTION>
+</ACTIONS>

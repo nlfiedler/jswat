@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>Starting the Debuggee</title>
+  </head>
+
+  <body>
+    <h3>Starting the Debuggee</h3>
+
+    <p>The very first thing you are likely to do with JSwat is start
+    debugging your Java code. This is done through one of several
+    means.</p>
+
+    <ul>
+      <li>Using the &quot;Start VM&quot; item in the &quot;VM&quot;
+      menu, or the &quot;new document&quot; icon in the toolbar.</li>
+
+      <li>Using the <code>load</code> command. See the command
+      documentation using <code>help load</code> at the command
+      prompt.</li>
+
+      <li>Connecting to the remote debuggee. See the help on <a
+      href="help_remote.html">remote debugging</a> for more
+      information.</li>
+    </ul>
+
+    <p>The first option is typically the most popular since it involves
+    the least amount of typing and offers the most visual cues for the
+    required information. The rest of this help file will discuss this
+    option exclusively.</p>
+
+    <h4>The Fields</h4>
+
+    <p>The input fields of the Start VM dialog are described as
+    follows.</p>
+
+    <dl>
+      <dt><em>Java Home</em></dt>
+
+      <dd>This is the directory containing the Java runtime. Typically
+      this is filled in with a default value and does not need to be
+      adjusted. If at some point the location has changed, simply clear
+      the field to have JSwat rediscover the new location automatically
+      (after pressing OK to this dialog). If this fails for any reason,
+      you will need to enter the path to the &quot;jre&quot; directory
+      manually.</dd>
+
+      <dt><em>JVM Executable</em></dt>
+
+      <dd>This is the name of the <code>java</code> executable. The
+      default should be acceptable in nearly all cases, but should your
+      case differ, you can change the name to whatever is appropriate
+      for the Java runtime being used.</dd>
+
+      <dt><em>Debuggee VM Options</em></dt>
+
+      <dd>These are options to the debuggee JVM, such as
+      <code>-X<em>xxx</em></code>, <code>-hotspot</code>,
+      <code>-cp</code>, <code>-jar</code>, and <code>-D</code>. When
+      using the <code>-jar</code> option, you may put the name of the
+      jar file in this field or the Class name field described below.
+      However, the next time the Start VM dialog appears, the jar file
+      name will be in the Class name field.</dd>
+
+      <dt><em>Set -D Properties</em></dt>
+
+      <dd>This button presents a dialog for conveniently setting the
+      system properties for the debuggee VM. These are the properties
+      defined using the <code>-D<em>name</em>=<em>value</em></code>
+      option. Initially the dialog is populated with any
+      <code>-D</code> properties found in the VM Options field
+      described above. The properties set in this dialog will then
+      appear in the VM Options field after clicking OK in the
+      properties dialog.</dd>
+
+      <dt><em>Class name and arguments</em></dt>
+
+      <dd>Like the label says, this is the name of the class to be
+      debugged, along with any arguments expected by that class. If the
+      <code>-jar</code> option is used, this field holds the name of
+      the jar file rather than the name of the class. The jar file must
+      have the <strong>Main-Class</strong> property set in the manifest
+      for the <code>-jar</code> option to work.</dd>
+    </dl>
+
+    <h4>Canonicalized Options</h4>
+
+    <p>You may recall the option in the &quot;Options&quot; menu for
+    enabling the Classic VM support in the debuggee. With this feature
+    enabled, the <code>-classic</code> option will automatically be
+    used in launching the debuggee. However, the option will
+    <em>not</em> appear in the Start VM dialog&#39;s VM Options field.
+    The same is true for the classpath definition. You can define the
+    classpath using the <code>classpath</code> command or the &quot;Set
+    Classpath&quot; dialog, accessible from the &quot;Options&quot;
+    menu, and that will be passed to the debuggee automatically.</p>
+
+    <p>Both of these options are automatically added to the set of JVM
+    options given in the Start VM dialog during the launching process,
+    but only under certain conditions. For the Classic VM option, if
+    <code>-client</code>, <code>-hotspot</code>, <code>-server</code>,
+    or <code>-classic</code> option appears in the JVM options field,
+    then the Classic VM feature is silently ignored.</p>
+
+    <p>Similarly, if the JVM Options field contains the
+    <code>-cp</code> or <code>-classpath</code> option, the classpath
+    defined via the <code>classpath</code> command or the &quot;Set
+    Classpath&quot; dialog is ignored. Instead, the argument to the
+    <code>-cp</code> or <code>-classpath</code> option is used.</p>
+
+    <h4>Now What?</h4>
+
+    <p>After filling in the fields in the Start VM dialog, press the OK
+    button and wait a few seconds. You should soon see the debuggee JVM
+    start up and invoke the <code>main</code> method of the class named
+    in the dialog. Assuming your program does not exit immediately, you
+    are ready to begin debugging.</p>
+
+    <p>Now go back to the help index and read more about JSwat under
+    the General Topics section.</p>
+  </body>
+</html>
+

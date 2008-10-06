@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org" />
+
+    <title>JSwat - Testing Breakpoints</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h1>Testing Breakpoints</h1>
+
+    <h2>Breakpoints Manager Dialog</h2>
+
+    <p>Start these tests by bringing up the breakpoints manager dialog,
+    which is found under the &quot;Breakpoints&quot; menu as the menu
+    item &quot;List Breakpoints...&quot;. These are also found in the
+    &quot;Breakpoints&quot; panel.</p>
+
+    <h3>Breakpoints list</h3>
+
+    <p>This dialog/panel shows a list of the defined breakpoints. Its
+    contents should be the same as the output from the
+    &quot;<code>stop</code>&quot; command. Double-clicking on a
+    breakpoint in the list should present the breakpoint properties
+    dialog.</p>
+
+    <h3>New Breakpoint...</h3>
+
+    <p>Presents an identical dialog to that described <a
+    href="actions.html#setBreak">here</a>. Use that test case to test
+    this dialog. After adding a breakpoint, it should appear in the
+    &quot;Default&quot; breakpoint group in the manager dialog.</p>
+
+    <h3>New Group...</h3>
+
+    <p>Presents a dialog asking the user for a breakpoint group name
+    and a select box to choose the group&#39;s parent group.</p>
+
+    <ul>
+      <li>Ok with empty fields - complains about missing name.</li>
+
+      <li>Ok with group name - creates new breakpoint group.</li>
+
+      <li>Ok with name and non-default group parent - creates group
+      under the selected parent group.</li>
+
+      <li>Ok button.</li>
+
+      <li>Cancel button.</li>
+
+      <li>Dialog close button.</li>
+    </ul>
+
+    <h3>Properties...</h3>
+
+    <p>Presents a dialog showing the selected breakpoints
+    properties.</p>
+
+    <ul>
+      <li>Invoke with no breakpoint selected - does nothing</li>
+
+      <li>Invoke with only a breakpoint group selected - does
+      nothing.</li>
+
+      <li>Invoke with a breakpoint selected, dialog will then
+      appear.</li>
+
+      <li style="list-style: none">
+        <ul>
+          <li>Attempt to type non-digits in numeric fields - input will
+          be ignored.</li>
+
+          <li>Toggle the enabled checkbox and select Ok to observe
+          change in breakpoint state.</li>
+
+          <li>Change the breakpoint&#39;s group and select Ok to
+          observe as it moves to the new group in the breakpoint tree
+          display.</li>
+
+          <li>Ok button.</li>
+
+          <li>Cancel button.</li>
+
+          <li>Dialog close button.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Disable</h3>
+
+    <p>Disables the selected breakpoint or breakpoint group.</p>
+
+    <ul>
+      <li>Invoke with nothing selected - nothing happens.</li>
+
+      <li>Invoke with breakpoint group selected - group and all
+      contained breakoints and groups are disabled.</li>
+
+      <li>Invoke with breakpoint selected - becomes disabled.</li>
+    </ul>
+
+    <h3>Enable</h3>
+
+    <p>Enables the selected breakpoint or breakpoint group.</p>
+
+    <ul>
+      <li>Invoke with nothing selected - nothing happens.</li>
+
+      <li>Invoke with breakpoint group selected - group and all
+      contained breakoints and groups are enabled.</li>
+
+      <li>Invoke with breakpoint selected - becomes enabled.</li>
+    </ul>
+
+    <h3>Remove</h3>
+
+    <p>Removes the selected breakpoint or breakpoint group.</p>
+
+    <ul>
+      <li>Invoke with nothing selected - nothing happens.</li>
+
+      <li>Invoke with breakpoint group selected - group and all
+      contained breakoints and groups are removed.</li>
+
+      <li>Invoke with breakpoint selected - breakpoint is removed.</li>
+
+      <li>Note, cannot remove the &quot;Default&quot; breakpoint
+      group.</li>
+    </ul>
+
+    <h2>Setting Breakpoints</h2>
+
+    <p>This section is to confirm that breakpoints can be set in a
+    class and will cause execution to halt at that point.</p>
+
+    <h3>When to Set</h3>
+
+    <p>Create a breakpoint before starting VM and see that it resolves
+    correctly. Create a breakpoint after starting VM and see that it
+    resolves immediately (at least it typically will). Change
+    breakpoint settings during an active session and ensure they take
+    effect. Disable the breakpoint and re-enable; it should resolve
+    again.</p>
+
+    <h3>Non-code lines</h3>
+
+    <p>Set a line breakpoint at a line with no executable code. If
+    session inactive, start the session and breakpoint resolution error
+    will be displayed (the VM will stop). If the session is active, an
+    error message should indicate that the line was not found.</p>
+
+    <h3>Suspend policy</h3>
+
+    <p>Breakpoints support a suspend policy in which all threads, the
+    event thread, or no threads will be suspended when the breakpoint
+    is hit. Try the three options to make sure they work.</p>
+
+    <h3>Skipping</h3>
+
+    <p>Start by setting a breakpoint at a point in the test code that
+    will be executed many times. Now change the breakpoint to have a
+    skip count greater than zero. Observe as the breakpoint is not hit
+    the first skip-count times. This test should be done with code that
+    prints something to the screen each time the code is executed, so
+    that the skip test can be easily confirmed (<em>iotest, for
+    loop</em>).</p>
+
+    <h3>Expiration</h3>
+
+    <p>Start by setting a breakpoint at a point in the test code that
+    will be executed many times. Now change the breakpoint to have an
+    expire count greater than zero. Observe as the breakpoint stops
+    halting execution after expire-count times. This test should be
+    done with code that prints something to the screen each time the
+    code is executed, so that the expire test can be easily confirmed
+    (<em>iotest, for loop</em>).</p>
+
+    <h3>Disabled</h3>
+
+    <p>Create a breakpoint at a point in the test code that will be
+    executed several times. Have the breakpoint halt execution at least
+    once to confirm that it works. Then change the breakpoint to be
+    disabled and ensure that the code is not halted since the
+    breakpoint is now disabled.</p>
+
+    <h3>Disabled by group</h3>
+
+    <p>Create a breakpoint at a point in the test code that will be
+    executed several times. Have the breakpoint halt execution at least
+    once to confirm that it works. Then change the breakpoint&#39;s
+    parent group to be disabled and ensure that the code is not halted
+    since the breakpoint is now effectively disabled.</p>
+
+    <h3>Default group auto-enables</h3>
+
+    <p>The &quot;Default&quot; breakpoint is special in a number of
+    ways. First, it can never be removed. Second, it is automatically
+    disabled when the session is started. Confirm this by starting a
+    session, disabling the default group, finishing the session, and
+    then starting the same session over again. The default group should
+    be renabled again.</p>
+
+    <h2>Conditions</h2>
+
+    <p>Breakpoints support simple conditionals based on the value of
+    variables. Test this by setting a breakpoint inside a
+    <code>for</code> loop. Set the condition to be a value of the index
+    variable. Ensure that execution stops just the one time through the
+    loop when the index variable equals the condition value.</p>
+
+    <p>Other things to try:</p>
+
+    <ul>
+      <li>Compare to a &#39;null&#39; value.</li>
+
+      <li>Compare a numeric value.</li>
+
+      <li>Compare a string value.</li>
+    </ul>
+
+    <h2>Monitors</h2>
+
+    <p>Breakpoints support basic monitors, which are simply commands.
+    Each time the breakpoint stops, the command is executed just as if
+    the user entered it. Test this by supplying a monitor of
+    &quot;stdout hello&quot; when a certain breakpoint is hit. Ensure
+    that the output from the <code>stdout</code> command is displayed
+    when the breakpoint is hit.</p>
+
+    <p>Other things to try:</p>
+
+    <ul>
+      <li>Run a command.</li>
+
+      <li>Run an aliased command.</li>
+    </ul>
+
+    <h2>Saving Breakpoints</h2>
+
+    <p>JSwat automatically saves the defined breakpoints and breakpoint
+    groups between invocations of the program. Use the following test
+    scenario to confirm the proper saving of the breakpoints.</p>
+
+    <ol>
+      <li>Set some breakpoints in the debuggee VM, putting them in
+      multiple breakpoint groups.</li>
+
+      <li>Close the debuggee VM and close JSwat.</li>
+
+      <li>Restart JSwat and confirm the breakpoints are still
+      there.</li>
+    </ol>
+  </body>
+</html>
+

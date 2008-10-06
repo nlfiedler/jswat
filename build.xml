@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!--
+        Copyright (C) 2001-2005 Nathan Fiedler
+
+  Use Apache Ant to process this build file and create a build of JSwat.
+  See the docs/dev/build.html page to learn more about making builds.
+
+  $Id: build.xml 14 2007-06-02 23:50:55Z nfiedler $
+-->
+
+<project name="JSwat" default="build" basedir=".">
+
+  <!-- Set all the build properties. -->
+  <property file="build.properties"/>
+  <property name="source" value="classes"/>
+  <property name="ext.dir" value="classes/ext"/>
+  <property name="build.dir" value="build"/>
+  <property name="classes" value="${build.dir}/classes"/>
+  <property name="bindist" value="${build.dir}/dist"/>
+  <property name="pkgpath" value="com/bluemarsh/jswat"/>
+  <property name="compile.source" value="1.4"/>
+  <property name="compile.target" value="1.4"/>
+  <property name="compile.debug" value="on"/>
+
+  <!-- Set the classpath. -->
+  <path id="class.path">
+    <pathelement location="${java.home}/../lib/tools.jar"/>
+    <pathelement location="${build.dir}/classes"/>
+    <fileset dir="classes/ext">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="prepare">
+    <mkdir dir="${classes}"/>
+    <mkdir dir="${bindist}"/>
+  </target>
+
+  <target name="all" depends="clean,build" description="Clean and build."/>
+
+  <target name="clean" description="Removes build artifacts.">
+    <delete dir="${classes}"/>
+    <delete dir="${bindist}"/>
+    <delete>
+      <fileset dir="." includes="*.zip"/>
+    </delete>
+    <ant dir="test" target="clean"/>
+    <ant dir="plugins/jedit" target="cleaner"/>
+  </target>
+
+  <target name="build" depends="prepare" description="Compiles the project.">
+    <javac srcdir="${source}" destdir="${classes}" debug="${compile.debug}"
+           classpathref="class.path" source="${compile.source}"
+           target="${compile.target}" excludes="${pkgpath}/resources/**"/>
+    <copy todir="${classes}/${pkgpath}/resources">
+      <fileset dir="${source}/${pkgpath}/resources"/>
+    </copy>
+    <copy todir="${classes}/${pkgpath}/panel/resources">
+      <fileset dir="${source}/${pkgpath}/panel/resources"/>
+    </copy>
+    <copy todir="${classes}/${pkgpath}/ui/resources">
+      <fileset dir="${source}/${pkgpath}/ui/resources"/>
+    </copy>
+    <!-- Make sure to get all of the properties files. -->
+    <copy todir="${classes}">
+      <fileset dir="${source}" includes="com/**/*.properties"/>
+    </copy>
+
+    <!-- Compile the tests. -->
+    <ant dir="test" target="compile"/>
+  </target>
+
+  <target name="binjar" depends="build" description="Jars the build.">
+    <!-- This is used by the plugins that require JSwat. -->
+    <mkdir dir="${bindist}"/>
+    <jar jarfile="${bindist}/jswat.jar" basedir="${classes}">
+      <exclude name="**/test/**"/>
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Class-Path" value="parser.jar jclasslib.jar"/>
+        <attribute name="Main-Class" value="com.bluemarsh.jswat.Main"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run" depends="build" description="Run the project.">
+    <java classname="com.bluemarsh.jswat.Main" fork="yes"
+          classpathref="class.path"/>
+  </target>
+
+  <target name="debug" depends="build" description="Debug the project.">
+    <java classname="com.bluemarsh.jswat.Main" fork="yes"
+          classpathref="class.path">
+      <jvmarg value="-Xdebug"/>
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5858"/>
+    </java>
+  </target>
+
+  <target name="test" depends="build" description="Runs the unit tests.">
+    <ant dir="test/junit"/>
+  </target>
+
+  <!-- Get the release version number from the builder. -->
+  <target name="version" depends="build">
+    <!-- Newer Ant releases only ask if 'version' is not set. -->
+    <input message="Enter JSwat version number (x.y[.z]):"
+           addproperty="version"/>
+    <!-- Update the version.properties file for this build. -->
+    <propertyfile file="${classes}/${pkgpath}/util/version.properties">
+      <entry key="version" value="${version}"/>
+    </propertyfile>
+  </target>
+
+  <target name="dist" depends="version" description="Produces the release.">
+    <!-- Make the binary bundle again, now that the version is set. -->
+    <antcall target="binjar"/>
+    <zip destfile="jswat-${version}.zip">
+      <zipfileset dir="." prefix="jswat-${version}">
+        <include name="*.txt"/>
+        <include name="*.html"/>
+      </zipfileset>
+      <zipfileset file="${bindist}/jswat.jar" prefix="jswat-${version}"/>
+      <zipfileset dir="${ext.dir}" includes="*.jar" prefix="jswat-${version}"/>
+      <zipfileset dir="bin" filemode="755" prefix="jswat-${version}"/>
+    </zip>
+
+    <!-- Make the source distribution. -->
+    <zip destfile="jswat-src-${version}.zip">
+      <zipfileset dir="." prefix="jswat-${version}">
+        <exclude name="plugins/jedit/build/**"/>
+        <exclude name="plugins/jedit/lib/**"/>
+        <exclude name="*.zip"/>
+        <exclude name="${build.dir}/**"/>
+        <exclude name="build.properties"/>
+        <exclude name="nbproject/**"/>
+      </zipfileset>
+    </zip>
+
+    <!-- Calculate the file checksums. -->
+    <checksum file="jswat-${version}.zip" algorithm="SHA" property="sum"/>
+    <echo level="info">${sum}  jswat-${version}.zip</echo>
+    <!-- Work-around apparent checksum bug by using a different property. -->
+    <checksum file="jswat-src-${version}.zip" algorithm="SHA" property="sum2"/>
+    <echo level="info">${sum2}  jswat-src-${version}.zip</echo>
+  </target>
+</project>

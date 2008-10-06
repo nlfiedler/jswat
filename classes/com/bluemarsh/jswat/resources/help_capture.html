@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org">
+
+    <title>Capturing Messages</title>
+  </head>
+
+  <body>
+    <h3>Capturing Messages</h3>
+
+    <h4>Debugger Messages</h4>
+
+    <p>Debugger messages are those messages seen in the JSwat
+    &quot;Messages&quot; panel of the main window whenever a command or
+    action is performed. Each time a breakpoint is hit or a single step
+    is performed, a message is printed to the panel. This text area
+    contains up to a defined maximum number of lines. This maximum is
+    set in the program preferences, accessed by a menu item in the
+    &quot;Options&quot; menu. A scroll bar on the side of the text area
+    allows you to scroll up to see earlier messages. The text area also
+    has a popup menu that allows copying selected text to the system
+    clipboard.</p>
+
+    <h4>Capturing Messages</h4>
+
+    <p>JSwat provides a means for capturing the messages. Using the
+    &quot;Capture Messages&quot; action found in the
+    &quot;Options&quot; menu you can send the messages to JSwat&#39;s
+    standard output stream (the console that started JSwat), to a named
+    file, or both. In the dialog that appears after selecting
+    &quot;Capture Messages&quot; you may check the &quot;Capture to
+    stdout&quot; or &quot;Capture to file&quot; options. If you select
+    the &quot;Capture to file&quot;, be sure to enter a filename in the
+    text field at the bottom of the dialog.</p>
+
+    <p>To turn off the message capturing, simply bring up the same
+    &quot;Capture Messages&quot; dialog and uncheck the checked
+    options. If you only wish to change the name of the file which is
+    catching the messages, you may simply type a new name into the
+    dialog and press okay. The previous file will be closed and the new
+    file will be created. Make sure the &quot;Capture to file&quot;
+    option is checked before you press Ok.</p>
+
+    <p>Note that when capturing to file the messages do not flush to
+    the file immediately. Turning off the file capture will cause the
+    buffers to be flushed to disk. <em>(I would have preferred the
+    contents be flushed immediately but it does not seem to
+    work.)</em></p>
+  </body>
+</html>
+

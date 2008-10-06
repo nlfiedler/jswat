@@ -1,0 +1,31 @@
+<html>
+
+<!-- $Id: upgrade20.html 14 2007-06-02 23:50:55Z nfiedler $ -->
+
+<body>
+
+<h2>Upgrading to JSwat 2.x</h2>
+
+<p>It appears that you are running JSwat 2.x for the first time, after
+having run an earlier version of the program. This message provides
+information pertaining to your personalized settings.</p>
+
+<p>JSwat 2.x now stores all of your personalized settings inside nodes
+of type <code>java.util.prefs.Preferences</code>. The old settings are
+completely ignored. You may want to remove the old files. They are
+stored in a directory called <code>.jswat</code> in your home directory.
+The files that are no longer used are: <code>breakpoints</code>,
+<code>preferences</code>, <code>session</code>, and
+<code>settings</code>.</p>
+
+<p>This change was brought about for a number of reasons, one of which
+was to reduce the overall code size of JSwat. The other was to simplify
+the manner in which the settings were managed. However, this means you
+will now have to reset all of your preferences. I apologize for the
+inconvenience.</p>
+
+<p><em>Nathan Fiedler</em></p>
+
+</body>
+
+</html>
