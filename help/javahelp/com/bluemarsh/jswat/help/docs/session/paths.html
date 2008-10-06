@@ -1,0 +1,151 @@
+<html>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat Help module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: paths.html 15 2007-06-03 00:01:17Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Classpath and Sourcepath</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Classpath and Sourcepath</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <h3>Classpath</h3>
+
+  <p>The classpath setting in JSwat is simply the classpath setting for
+  the debuggee. If you are launching the debuggee from within JSwat,
+  then the classpath must be set in the <a
+  href="../action/launch-debuggee.html">Launch dialog</a>. If the
+  debuggee was launched outside of JSwat and you are connecting the
+  debugger to it, then the classpath has already been set.</p>
+
+  <h3>Sourcepath</h3>
+
+  <p>The sourcepath is like the classpath but rather than pointing to
+  compiled classes, it points to source files. The sourcepath is used to
+  locate the source code for a class or method whenever a locatable
+  event occurs in the debuggee. If a sourcepath is not set, JSwat will
+  use the classpath to find the source files, assuming that the source
+  code and classes are stored in the same directory tree.</p>
+
+  <p>The sourcepath is defined in the <a href="properties.html">Session
+  Settings</a> dialog, activated via the <strong>Settings</strong> item
+  in the <strong>Session</strong> menu.</p>
+
+  <p>The sourcepath has the same structure as the classpath, except it
+  refers to the location of source code, rather than the location of
+  class files. Thus, if you have a classpath that looks like
+  <code>/home/me/java/build</code>, which contains <code>.class</code>
+  files such as <code>org/mine/Widget.class</code>, and your source code
+  is similarly located in a directory such as
+  <code>/home/me/project/src</code>, which contains <code>.java</code>
+  files such as <code>org/mine/Widget.java</code>, then the sourcepath
+  would be set to <code>/home/me/project/src</code>. Note that the
+  sourcepath can contain directories as well as archives, such as
+  <code>.jar</code> and <code>.zip</code> files.</p>
+
+  <p>For users of Microsoft Windows, the following example may be easier
+  to translate to your own environment. Say you have a classpath that
+  looks like <code>C:\java\project\build</code>, which contains
+  <code>.class</code> files such as <code>org\mine\Widget.class</code>,
+  and your source code is similarly located in a directory such as
+  <code>C:\java\project\src</code>, which contains <code>.java</code>
+  files such as <code>org\mine\Widget.java</code>, then the sourcepath
+  would be set to <code>C:\java\project\src</code>.</p>
+
+  <h3>How JSwat Finds Source Code</h3>
+
+  <p>JSwat uses both the classpath and sourcepath to locate source
+  files, checking the sourcepath before the classpath. The names of
+  source files are determined from the class or method in which a
+  locatable event occurred within the debuggee. In most cases, the
+  bytecode contains a source file name attribute (and sometimes even a
+  leading path), which allows the debugger to easily locate the source
+  files. Otherwise, the debugger must guess at the name of the source
+  file, assuming that the filename extension is <code>.java</code> and
+  the name of the file will be the same as the name of the class (e.g.
+  <code>Foobar.java</code> for <code>Foobar</code> class).</p>
+
+  <p>Because JSwat considers the package name of the class to imply the
+  path that leads to the source file, it will first attempt to convert
+  the package name into a file path. For example, the class name
+  <code>java.lang.String</code> would become the path and file
+  <code>java/lang/String.java</code>. If JSwat does not find the source
+  file, then it will ignore the package name and simply look for a file
+  with the appropriate name at the root of each source path (e.g.
+  <code>String.java</code>).</p>
+
+  <p>Whenever a locatable event occurs, JSwat attempts to locate and
+  display the source code for that location. This occurs whenever a
+  breakpoint is hit, and while single-stepping through code. If this
+  does not appear to work, check the Troubleshooting section below.</p>
+
+  <h3>Troubleshooting</h3>
+
+  <p>If it seems that JSwat is not able to locate your source code and
+  display it, then there are a few steps you can take to resolve the
+  issue.</p>
+
+  <p>First, did you set the sourcepath in the <a
+  href="properties.html">Session Settings</a> dialog? Open that dialog
+  and look for the Sources section of the settings. Make sure it points
+  to the root of your source tree, as explained above.</p>
+
+  <p>Second, is your source code written in the Java language? If not,
+  then the filename extension is probably not <code>.java</code>, in
+  which case you need to modify the <strong>Source Extension</strong>
+  setting in the <strong>Options</strong> dialog (found in the
+  <strong>Tools</strong> menu).</p>
+
+  <p>A tool for getting more information about the class you are
+  debugging and its source-related attributes is the <code>source</code>
+  command. Open the <strong>Commands</strong> view via the
+  <strong>Window</strong> menu and type in <kbd>source
+  name.of.class</kbd> where <code>name.of.class</code> is the
+  fully-qualified name of the class for which JSwat is unable to locate
+  the source code. The output of this command will display the value of
+  the source file attribute from the class bytecode, as well as the
+  leading "source paths", if any. These source paths are not to be
+  confused with the JSwat sourcepath setting, as they pertain to this
+  particular class only. However, this information can be used to
+  understand how the sourcepath setting should be set. For instance,
+  with the <code>java.lang.String</code> class, the "source paths" value
+  is <code>java/lang/String.java</code> which indicates that the
+  sourcepath setting should include the directory which contains the
+  <code>java</code> directory of the source code tree. In this case,
+  however, it is actually the <code>src.zip</code> file that should be
+  entered into the sourcepath setting.</p>
+
+  <p>By the way, the source code for the JDK core classes is discovered
+  and automatically added to the sourcepath setting. For more
+  information on how to manage this, see the <a
+  href="../action/runtime-manager.html">Runtime Manager</a> dialog.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="properties.html">Session Settings</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

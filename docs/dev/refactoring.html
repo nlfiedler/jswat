@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: refactoring.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org" />
+
+  <title>The Great Refactoring of 2001</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>The Great Refactoring of 2001</h2>
+
+  <h3>Why The Change?</h3>
+
+  <p>What was so wrong with JSwat that brought on this big redesign?
+  Basically everything. The program was written under the assumption
+  that there would always be a graphical interface. Thus, many
+  shortcuts were taken in the design and implementation. In particular,
+  there was a lot of dependence on a class called
+  <code>MainWindow</code>. This was referenced by the
+  <code>Session</code>, most of the actions, and even some
+  commands.</p>
+
+  <p>The change was really brought about when a user named Jack
+  suggested to me that JSwat should support a console-only mode. This
+  intrigued me since I fancied the notion that JSwat was so well
+  designed that this sort of feature should be easy. Ha! It took three
+  weeks (well, really two) to change all of the classes to support an
+  arbitrary interface. The rest of this page outlines what was done to
+  make this possible.</p>
+
+  <h3>What Had To Go</h3>
+
+  <p>First, the <code>UIBuilder</code> class had to be replaced by
+  something more generalized for building any type of interface.
+  Second, the <code>MainWindow</code> references had to be replaced
+  with references to the new generalized class. The
+  <code>CommandManager</code> class had to stop managing its own
+  interface components, namely the text input field and key press
+  listener. The <code>Session</code> had to sever its ties with the
+  <code>UiBuilder</code> and <code>MainWindow</code> classes, as well
+  as all of the panels.</p>
+
+  <h3>How That Was Done</h3>
+
+  <p>All of these goals were achieved by the introduction of the
+  &quot;interface adapter&quot; class. This class would be responsible
+  for building and managing the entire user interface. That meant
+  building the main window, menu bar, tool bar, panels, and handling
+  source view windows. A new interface was written to provide the basic
+  API for the rest of the program to interact with the user. This is
+  called the <code>UIAdapter</code> and it has two implementations
+  provided with the JSwat source code.</p>
+
+  <h4>GraphicalAdapter</h4>
+
+  <p>The <code>GraphicalAdapter</code> class builds out the usual
+  graphical interface that most JSwat users are accustomed to. It makes
+  the main window, menu bar, tool bar, and panels, as well as handling
+  the source view windows. It provides the mediators for displaying
+  JSwat messages, taking command input, displaying the debuggee output,
+  and entering debuggee input.</p>
+
+  <h4>ConsoleAdapter</h4>
+
+  <p>The <code>ConsoleAdapter</code> class constructs a very simple
+  interface. It receives typed input from the user via the
+  <code>System.in</code> input stream and displays messages to the
+  <code>System.out</code> output stream. It is a purely console-based
+  interface, much like the well-loved <code>jdb</code> debugger that
+  comes with the JDK. There are no panels, no dialogs, no toolbars, and
+  no source views. JSwat messages and debuggee output are both printed
+  to the same place as that is the only place to do so. Sending input
+  to the debuggee is made possible via the <code>stdin</code> command,
+  which sends its arguments to the debuggee&#39;s
+  <code>System.in</code> input stream.</p>
+
+  <h3>How This Has Helped</h3>
+
+  <p>Granted, most people are not going to rush out and use the console
+  mode of JSwat, but it has brought about necessary changes in the
+  program&#39;s design. The classes were too tightly-coupled and
+  inflexible for there to be any chance of future expansion. In
+  addition, it has made David Taylor&#39;s task of writing a plugin for
+  <a href="http://www.jedit.org/">jEdit</a> much easier. This, I am
+  sure, is something that at least some JSwat users can appreciate. In
+  the future, it will be much easier to write other interfaces to
+  JSwat, allowing for more widespread use and acceptance.</p>
+</body>
+</html>

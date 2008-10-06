@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat Help module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: layer.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+<!DOCTYPE filesystem
+  PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN"
+         "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Services">
+        <folder name="JavaHelp">
+            <file name="com-bluemarsh-jswat-help-resources-helpset.xml" url="resources/helpset.xml"/>
+            <attr name="org-netbeans-modules-usersguide-above-regular.txt/com-bluemarsh-jswat-help-resources-helpset.xml" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-help-resources-helpset.xml/org-netbeans-modules-usersguide-below-regular.txt" boolvalue="true"/>
+        </folder>
+    </folder>
+
+    <folder name="Menu">
+        <folder name="Help">
+            <file name="master-help.xml_hidden"/>
+            <file name="quick-start.url_hidden"/>
+            <file name="using-netbeans.url_hidden"/>
+            <file name="com-bluemarsh-jswat-help-resources-master.xml" url="resources/master.xml">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.help.Bundle"/>
+            </file>
+            <file name="com-bluemarsh-jswat-help-resources-help.xml" url="resources/getting-help.xml">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.help.Bundle"/>
+            </file>
+            <file name="com-bluemarsh-jswat-help-resources-bugs.xml" url="resources/reporting-bugs.xml">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.help.Bundle"/>
+            </file>
+            <attr name="master.xml/com-bluemarsh-jswat-help-resources-help.xml" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-help-resources-help.xml/com-bluemarsh-jswat-help-resources-bugs.xml" boolvalue="true"/>
+        </folder>
+    </folder>
+</filesystem>

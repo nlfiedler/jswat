@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: stack.wstcref 1901 2005-08-13 07:30:24Z nfiedler $
+-->
+<!DOCTYPE tc-ref
+  PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN"
+         "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+
+<tc-ref version="2.1">
+  <tc-id id="stack"/>
+  <state opened="true"/>
+</tc-ref>

@@ -1,0 +1,65 @@
+<html>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat Help module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: monitors.html 15 2007-06-03 00:01:17Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Breakpoint Monitors</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Breakpoint Monitors</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>Breakpoint monitors are actions that occur whenever the breakpoint
+  is considered to be hit, even if the suspend policy of the breakpoint
+  does not cause the debuggee to suspend. Listed below are the available
+  monitors for all types of breakpoints.</p>
+
+  <h4>Beep</h4>
+
+  <p>The beep monitor emits a beep sound when the breakpoint is hit.
+  This is represented using a checkbox in the breakpoint customizer.
+  <em>Note that the <code>java.awt.Toolkit.beep()</code> method does
+  not always produce a sound, and depends entirely on your system
+  configuration.</em></p>
+
+  <h4>Expression</h4>
+
+  <p>The expression monitor evaluates a Java-like expression each time
+  the breakpoint is hit. This is represented using a checkbox and text
+  field in the breakpoint customizer.</p>
+
+  <h4>Stack trace</h4>
+
+  <p>The stack trace monitor dumps the event thread call stack to the
+  <strong>Output</strong> window when the breakpoint is hit. This is
+  represented using a checkbox in the breakpoint customizer.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="edit.html">Editing Breakpoints</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

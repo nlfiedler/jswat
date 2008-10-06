@@ -1,0 +1,342 @@
+/*
+ *                     Sun Public License Notice.
+ *
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
+ *
+ * The Original Code is the JSwat Core Module. The Initial Developer of the
+ * Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+ * are Copyright (C) 2001-2005. All Rights Reserved.
+ *
+ * Contributor(s): Nathan L. Fiedler.
+ *
+ * $Id: Classes.java 15 2007-06-03 00:01:17Z nfiedler $
+ */
+
+package com.bluemarsh.jswat.core.util;
+
+import com.bluemarsh.jswat.core.CoreSettings;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointGroup;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
+import com.bluemarsh.jswat.core.session.Session;
+import com.bluemarsh.jswat.core.session.SessionProvider;
+import com.sun.jdi.ClassType;
+import com.sun.jdi.InvalidTypeException;
+import com.sun.jdi.Method;
+import com.sun.jdi.ObjectReference;
+import com.sun.jdi.ReferenceType;
+import com.sun.jdi.ThreadReference;
+import com.sun.jdi.Type;
+import com.sun.jdi.Value;
+import com.sun.jdi.VirtualMachine;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+/**
+ * Class Classes provides a set of utility functions for dealing with
+ * classes and their members.
+ *
+ * @author  Nathan Fiedler
+ */
+public class Classes {
+
+    /**
+     * Return a list of classes and interfaces whose names match the given
+     * pattern. The pattern syntax is a fully-qualified class name in which
+     * the first part or last part may optionally be a "*" character, to
+     * match any sequence of characters.
+     *
+     * @param  vm       debuggee virtual machine.
+     * @param  pattern  Classname pattern, optionally prefixed or
+     *                  suffixed with "*" to match anything.
+     * @return  List of ReferenceType objects.
+     */
+    public static List<ReferenceType> findClasses(
+            VirtualMachine vm, String pattern) {
+
+        List<ReferenceType> result = new ArrayList<ReferenceType>();
+        if (pattern.indexOf('*') == -1) {
+            // It's just a class name, try to find it.
+            return vm.classesByName(pattern);
+        } else {
+            // Wild card exists, have to search manually.
+            boolean head = true;
+            if (pattern.startsWith("*")) {
+                pattern = pattern.substring(1);
+            } else if (pattern.endsWith("*")) {
+                pattern = pattern.substring(0, pattern.length() - 1);
+                head = false;
+            }
+            List<ReferenceType> classes = vm.allClasses();
+            for (ReferenceType type : classes) {
+                if (head && type.name().endsWith(pattern)) {
+                    result.add(type);
+                } else if (!head && type.name().startsWith(pattern)) {
+                    result.add(type);
+                }
+            }
+            return result;
+        }
+    }
+
+    /**
+     * Attempt an unambiguous match of the method name and argument
+     * specification to a method. If no arguments are specified, the
+     * method must not be overloaded. Otherwise, the argument types must
+     * match exactly.
+     *
+     * @param  clazz          class in which to find method.
+     * @param  methodName     name of method to find.
+     * @param  argumentTypes  list of method argument types in JNI form.
+     * @param  fuzzySearch    true to allow widening numbers to find a
+     *                        match, and to equate wrapper classes with
+     *                        equivalent primitive types.
+     * @return  desired method, or null if not found.
+     * @throws  AmbiguousMethodException
+     *          if the method is overloaded.
+     * @throws  InvalidTypeException
+     *          if an argument type was not recognized.
+     * @throws  NoSuchMethodException
+     *          if the method could not be found.
+     */
+    public static Method findMethod(ReferenceType clazz, String methodName,
+                                    List argumentTypes, boolean fuzzySearch)
+        throws AmbiguousMethodException,
+               InvalidTypeException,
+               NoSuchMethodException {
+
+        VirtualMachine vm = clazz.virtualMachine();
+        List methods = clazz.methodsByName(methodName);
+        // The 'best' matching method found (and how many).
+        Method bestMethod = null;
+        int bestScore = -1;
+        int bestCount = 0;
+        Iterator iter = methods.iterator();
+        while (iter.hasNext()) {
+            Method candidate = (Method) iter.next();
+            List<String> candidateTypes = candidate.argumentTypeNames();
+            if (candidateTypes.size() != argumentTypes.size()) {
+                continue;
+            }
+            int score = 0;
+            for (int ii = 0; ii < candidateTypes.size(); ii++) {
+                String givenSig = (String) argumentTypes.get(ii);
+                if (givenSig.equals("*")) {
+                    // Allow '*' to match any argument type for breakpoints.
+                    score += 5;
+                    continue;
+                }
+                String expectedType = candidateTypes.get(ii);
+                String expectedSig = Types.typeNameToJNI(expectedType);
+                if (expectedSig != null && expectedSig.charAt(0) == 'L'
+                    && givenSig.equals("<null>")) {
+                    // Allow null to match any class.
+                    score += 1;
+                    continue;
+                }
+
+                // Compare the argument types for similarity.
+                Type givenType = Types.signatureToType(givenSig, vm);
+                if (givenType == null) {
+                    throw new InvalidTypeException(givenSig);
+                }
+                String primSig = Types.wrapperToPrimitive(givenSig);
+                if (givenSig.equals(expectedSig)) {
+                    score += 5;
+                } else if (fuzzySearch && primSig.equals(expectedSig)) {
+                    score += 4;
+                } else if (givenType instanceof ReferenceType
+                           && Types.isCompatible(
+                               expectedSig, (ReferenceType) givenType)) {
+                    score += 3;
+                } else if (fuzzySearch
+                           && Types.canWiden(expectedSig, givenType)) {
+                    score += 2;
+                } else {
+                    // They don't match at all, skip this method.
+                    score = Integer.MIN_VALUE;
+                    break;
+                }
+            }
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestMethod = candidate;
+                bestCount = 1;
+            } else if (score == bestScore) {
+                bestCount++;
+            }
+        }
+
+        if (bestCount == 1) {
+            return bestMethod;
+        } else if (bestCount > 1) {
+            throw new AmbiguousMethodException(methodName);
+        } else {
+            throw new NoSuchMethodException(methodName);
+        }
+    }
+
+    /**
+     * Perform the hotswap operation on the given class. If anything
+     * goes wrong, it will be reported as an exception.
+     *
+     * @param  clazz  the class to be hotswapped.
+     * @param  code   the bytecode to replace the class.
+     * @param  vm     virtual machine.
+     * @throws  ClassCircularityError
+     *          if the class dependencies are circular.
+     * @throws  ClassFormatError
+     *          if the class format is wrong.
+     * @throws  IOException
+     *          if there was an error reading the input stream.
+     * @throws  NoClassDefFoundError
+     *          if the class definition was not found.
+     * @throws  UnsupportedClassVersionError
+     *          if the class is the wrong version.
+     * @throws  UnsupportedOperationException
+     *          if the hotswap operation is not supported.
+     * @throws  VerifyError
+     *          if the bytecode verfication failed.
+     */
+    public static void hotswap(ReferenceType clazz, InputStream code,
+                               VirtualMachine vm)
+        throws ClassCircularityError,
+               ClassFormatError,
+               IOException,
+               NoClassDefFoundError,
+               UnsupportedClassVersionError,
+               UnsupportedOperationException,
+               VerifyError {
+
+        // Load the byte-code from the class file.
+        byte[] byteCode = new byte[1024];
+        int totalBytesRead = 0;
+        int length = byteCode.length;
+        while (true) {
+            int bytesRead = code.read(byteCode, totalBytesRead, length);
+            if (bytesRead == -1) {
+                break;
+            }
+
+            totalBytesRead += bytesRead;
+            if (totalBytesRead >= byteCode.length) {
+                byte[] temp = new byte[totalBytesRead * 2];
+                System.arraycopy(byteCode, 0, temp, 0, byteCode.length);
+                byteCode = temp;
+            }
+            length = byteCode.length - totalBytesRead;
+        }
+        byte[] temp = new byte[totalBytesRead];
+        System.arraycopy(byteCode, 0, temp, 0, temp.length);
+        byteCode = temp;
+
+        // Do the actual hotswap operation.
+        Map<ReferenceType, byte[]> map = new HashMap<ReferenceType, byte[]>();
+        map.put(clazz, byteCode);
+        vm.redefineClasses(map);
+    }
+
+    /**
+     * Invokes a method and returns its value.
+     *
+     * @param  object     the object on which to invoke the method, or null
+     *                    if the method is static.
+     * @param  clazz      the class on which to invoke the method, may be
+     *                    null if the object parameter is non-null.
+     * @param  thread     the thread on which to invoke the method.
+     * @param  method     the method to invoke.
+     * @param  arguments  the method parameters.
+     * @throws  ExecutionException
+     *          if a runtime exception occurs.
+     * @throws  InterruptedException
+     *          if the debugger thread making the call is interrupted.
+     * @throws  TimeoutException
+     *          if the invocation has timed out (defaults to 5 seconds).
+     */
+    public static Value invokeMethod(ObjectReference object, ClassType clazz,
+            ThreadReference thread, Method method, List<Value> arguments)
+            throws ExecutionException, InterruptedException, TimeoutException {
+
+        Invoker invoker = new Invoker(object, clazz, thread, method, arguments);
+        CoreSettings cs = CoreSettings.getDefault();
+        int timeout = cs.getInvocationTimeout();
+        Future<Value> future = Threads.getThreadPool().submit(invoker);
+        Value v = null;
+        // Disable all of the breakpoints to avoid hitting them while
+        // invoking the target method.
+        Session session = SessionProvider.getCurrentSession();
+        BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
+        BreakpointGroup bg = bm.getDefaultGroup();
+        boolean enabled = bg.isEnabled();
+        bg.setEnabled(false);
+        try {
+            v = future.get(timeout, TimeUnit.MILLISECONDS);
+        } finally {
+            // Re-enable all of the breakpoints, regardless if an
+            // exception has occurred or not.
+            bg.setEnabled(enabled);
+        }
+        return v;
+    }
+
+    /**
+     * Invokes a method and returns the result.
+     *
+     * @author  Nathan Fiedler
+     */
+    private static class Invoker implements Callable<Value> {
+        /** Object reference, if non-static method. */
+        private ObjectReference object;
+        /** Reference type, if static method. */
+        private ClassType clazz;
+        /** Thread on which to invoke method. */
+        private ThreadReference thread;
+        /** Method to be invoked. */
+        private Method method;
+        /** Arguments to the method. */
+        private List<Value> arguments;
+
+        /**
+         * Constructs an Invoker to invoke the given method.
+         *
+         * @param  object     object reference, if non-static method.
+         * @param  clazz      reference type, if static method.
+         * @param  thread     thread on which to invoke method.
+         * @param  method     method to be invoked.
+         * @param  arguments  arguments to the method.
+         */
+        public Invoker(ObjectReference object, ClassType clazz,
+                       ThreadReference thread, Method method,
+                       List<Value> arguments) {
+            this.object = object;
+            this.clazz = clazz;
+            this.thread = thread;
+            this.method = method;
+            this.arguments = arguments;
+        }
+
+        public Value call() throws Exception {
+            // It is not safe to invoke methods with the single-threaded
+            // bit flag, so let JDI resume all of the threads normally.
+            if (object == null) {
+                return clazz.invokeMethod(thread, method, arguments, 0);
+            } else {
+                return object.invokeMethod(thread, method, arguments, 0);
+            }
+        }
+    }
+}

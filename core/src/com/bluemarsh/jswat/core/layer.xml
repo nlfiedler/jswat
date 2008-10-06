@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat Core module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: layer.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+<!DOCTYPE filesystem
+  PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN"
+         "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+
+<filesystem>
+    <folder name="Services">
+        <file name="com-bluemarsh-jswat-core-CoreSettings.settings" url="resources/CoreSettings.settings">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.core.Bundle"/>
+            <attr name="SystemFileSystem.icon" urlvalue="nbres:/com/bluemarsh/jswat/core/resources/CoreSettings.gif"/>
+        </file>
+    </folder>
+
+    <folder name="UI">
+        <folder name="Services">
+            <folder name="Debugging">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.core.Bundle"/>
+                <file name="com-bluemarsh-jswat-core-CoreSettings.shadow">
+                    <attr name="originalFile" stringvalue="Services/com-bluemarsh-jswat-core-CoreSettings.settings"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

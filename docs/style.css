@@ -1,0 +1,20 @@
+/*
+ * $Id: style.css 1667 2005-04-29 07:43:49Z nfiedler $
+ */
+
+dl {
+    margin: 1em;
+}
+
+h3 {
+    font-weight: bold;
+    border: 2px solid #ccc;
+    border-width: 0px 0px 2px 0px;
+}
+
+pre {
+    border: 1px solid #aaa;
+    padding: 1em;
+    margin: 1em;
+    overflow: auto;
+}

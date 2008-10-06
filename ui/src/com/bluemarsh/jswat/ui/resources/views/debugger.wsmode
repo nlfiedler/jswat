@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+ 
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+ 
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2005. All Rights Reserved.
+ 
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: debugger.wsmode 2370 2006-03-22 07:49:54Z nfiedler $
+-->
+<!DOCTYPE mode
+  PUBLIC "-//NetBeans//DTD Mode Properties 2.0//EN"
+         "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.1">
+  <name unique="debugger"/>
+  <kind type="view"/>
+  <state type="joined"/>
+  <constraints>
+    <!-- Would like to have this appear below the editor and above the
+         output mode, but it is not working. For now, use the values that
+         NetBeans debugger uses for its mode.
+    <path orientation="vertical" number="20" weight="0.7"/>
+    <path orientation="horizontal" number="40" weight="0.55"/>
+    <path orientation="vertical" number="1" weight="0.25"/> -->
+    <path orientation="vertical" number="40" weight="0.3"/>
+    <path orientation="horizontal" number="40" weight="0.5"/>
+  </constraints>
+  <bounds x="0" y="0" width="0" height="0"/>
+  <active-tc id="breakpoints"/>
+  <empty-behavior permanent="true"/>
+</mode>

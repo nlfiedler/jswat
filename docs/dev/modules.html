@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: modules.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
+
+  <title>JSwat - Writing New Modules</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>Writing New Modules</h2>
+
+  <p>Writing new modules for JSwat is as easy as writing new modules
+  for the NetBeans Platform. You can use the NetBeans IDE 5.0 or later
+  to conveniently set up a module project. If you do so, be sure to add
+  the copy of the NetBeans Platform used for JSwat to the
+  <strong>Platform Manager</strong> in the IDE. Alternatively, you may
+  just want to start by copying files from one of the JSwat modules,
+  which are developed without the aid of the API support features of
+  the NetBeans IDE.</p>
+
+  <p>See the instructions on <a href="compile.html">compiling</a> JSwat
+  to get your build environment set up correctly before proceeding.</p>
+
+  <h3>File Layout</h3>
+
+  <p>Please use the following directory structure when creating new
+  modules for JSwat. This is basically the standard layout for any
+  NetBeans module.</p>
+  <pre>
+  [module-name]/
+     build.xml
+     manifest.mf
+     src/
+        com/bluemarsh/jswat/**/*.java
+        com/bluemarsh/jswat/**/Bundle.properties
+        com/bluemarsh/jswat/**/mf-layer.xml
+        com/bluemarsh/jswat/**/package.html
+     test/
+        unit/
+           src/
+              com/bluemarsh/jswat/**/*Test.java
+</pre>
+
+  <h3>Dependencies</h3>
+
+  <p>Add the following line to your module <code>manifest.mf</code>
+  file; this will prevent automatic dependencies on NetBeans modules
+  that you probably do not need. In fact, if you do not have this
+  dependency, then your module will be disabled automatically by the
+  Platform.</p>
+
+  <blockquote>
+    <code>OpenIDE-Module-IDE-Dependencies: IDE/1 &gt; 6.0</code>
+  </blockquote>
+</body>
+</html>

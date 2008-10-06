@@ -1,0 +1,116 @@
+/*
+ *                     Sun Public License Notice.
+
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
+ 
+ * The Original Code is the JSwat Help module. The Initial Developer of the
+ * Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+ * are Copyright (C) 2004-2006. All Rights Reserved.
+ 
+ * Contributor(s): Nathan L. Fiedler.
+
+ * $Id: help.css 2303 2006-02-09 10:14:57Z nfiedler $
+
+ * Made to look identical to the NetBeans help style.
+ */
+
+body {
+  font-size: small;
+  font-family: SansSerif, Arial, Helvetica, sans-serif;
+  margin-left: 5;
+  margin-right: 5;
+  color: black;
+  background-color: white;
+}
+
+p {
+  font-size: small;
+  margin-top: 5;
+  margin-bottom: 5;
+}
+
+small {
+  font-size: x-small;
+}
+
+h2 {
+  font-size: large;
+  font-weight: bold;
+  margin-top: 10;
+  margin-bottom: 5;
+}
+
+h3 {
+  font-size: medium;
+  font-weight: bold;
+  margin-top: 10;
+  margin-bottom: 5;
+}
+
+h4 {
+  font-size: small;
+  font-weight: bold;
+  margin-top: 10;
+  margin-bottom: 5;
+}
+
+/* 
+ * Use the h6 tag for the term in a glossary popup topic.
+ * The term being defined is the heading for the topic.
+ */
+h6 {
+  font-size: small;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 10;
+}
+
+ol {
+  margin-top: 5;
+  margin-bottom: 0;
+  margin-left: 14;
+}
+
+ul {
+  margin-top: 5;
+  margin-bottom: 0;
+  margin-left: 14;
+}
+
+li {
+  margin-top: 0;
+  margin-bottom: 5;
+}
+        
+li p {
+  margin-top: 5;
+  margin-bottom: 0;
+}
+        
+table {
+  border-style: solid;
+  border-color: silver;
+  margin-top: 5;
+  margin-bottom: 5;
+}
+
+td {
+  border-style: solid;
+  border-color: silver;
+  padding-left: 1;
+  padding-right: 1;
+  padding-top: 1;
+  padding-bottom: 1;
+}
+
+th {
+  border-style: solid;
+  border-color: silver;
+  padding-left: 1;
+  padding-right: 1;
+  padding-top: 1;
+  padding-bottom: 1;
+}

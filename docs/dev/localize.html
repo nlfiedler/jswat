@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: localize.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 12 April 2005), see www.w3.org" />
+
+  <title>JSwat - How to Localize</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>How to Localize</h2>
+
+  <h3>Localizing to Other Locales</h3>
+
+  <p>Localizing JSwat to other locales should be quite simple. Nearly
+  all of the user-readable strings in JSwat are stored in files called
+  <code>Bundle.properties</code> in the various directories. These
+  files define the strings for the default language, English. Strings
+  for other locales must be defined in separate files, using a file
+  naming convention as described in the documentation for the
+  <code>java.util.ResourceBundle</code> class. That information is
+  reprinted here for convenience.</p>
+
+  <blockquote>
+    <p>Resource bundles belong to families whose members share a common
+    base name, but whose names also have additional components that
+    identify their locales. For example, the base name of a family of
+    resource bundles might be &quot;MyResources&quot;. The family
+    should have a default resource bundle which simply has the same
+    name as its family - &quot;MyResources&quot; - and will be used as
+    the bundle of last resort if a specific locale is not supported.
+    The family can then provide as many locale-specific members as
+    needed, for example a German one named
+    &quot;MyResources_de&quot;.</p>
+
+    <p>Each resource bundle in a family contains the same items, but
+    the items have been translated for the locale represented by that
+    resource bundle. For example, both &quot;MyResources&quot; and
+    &quot;MyResources_de&quot; may have a String that&#39;s used on a
+    button for canceling operations. In &quot;MyResources&quot; the
+    String may contain &quot;Cancel&quot; and in
+    &quot;MyResources_de&quot; it may contain
+    &quot;Abbrechen&quot;.</p>
+
+    <p>If there are different resources for different countries, you
+    can make specializations: for example,
+    &quot;MyResources_de_CH&quot; contains objects for the German
+    language (de) in Switzerland (CH). If you want to only modify some
+    of the resources in the specialization, you can do so.</p>
+  </blockquote>
+
+  <p>The steps for localizing JSwat to another locale should be rather
+  straightforward. Start by copying each <code>Bundle.properties</code>
+  file to a new name, as described above, and modifying the strings
+  after the equals sign (=) on each of the lines in the file.</p>
+
+  <h4>Using NetBeans IDE</h4>
+
+  <p>By far the best way to create and maintain localized resource
+  bundles is using the <a href="http://www.netbeans.org/">NetBeans
+  IDE</a>. This IDE provides a very nice facility for viewing and
+  editing resources.</p>
+
+  <p>To use NetBeans to localize JSwat, you must first follow the
+  instructions for <a href="compile.html">building</a> JSwat and
+  setting up the <a href="nbproject.html">project</a>. Once the project
+  is set up in the IDE, use the <strong>Projects</strong> window to
+  locate the <code>Bundle.properties</code> files in each of the source
+  packages. Right-click on one of the bundle files and select <em>Add
+  Locale...</em> from the popup menu. The dialog that appears provides
+  a very convenient means of identifying your language and the
+  corresponding locale codes. Select the language, and country code and
+  variant if necessary, and click <strong>Ok</strong> to create the new
+  resource bundle. This will copy the default bundle to a new file with
+  the appropriate name. Once the bundle is created, right-click on the
+  bundle file again and select <em>Open</em>, which will open the
+  resource bundles in a special editor in the IDE.</p>
+
+  <h4>Testing</h4>
+
+  <p>After you have created new <code>Bundle.properties</code> files,
+  you must rebuild JSwat using the instructions provided <a href=
+  "compile.html">here</a>. Then launch JSwat on a platform that
+  implements the desired locale, which is likely the machine you are
+  using to perform the translation. The Java Virtual Machine should
+  detect the native locale and display the translated strings.</p>
+
+  <h4>File Format</h4>
+
+  <p>If you are not familiar with Java resource bundles, the file
+  format goes something like this:</p>
+  <pre>
+# A comment line starts with an octothorpe
+key1 = value1
+
+key2 = value2 \
+on multiple \
+lines.
+
+key3 = value3 \n with \t character escapes.
+
+key4 = Today&#39;s date is {0}
+</pre>
+
+  <p>As you can see, the strings are referenced by a name (e.g.
+  &quot;key1&quot;, &quot;key2&quot;), followed an equals sign (=) and
+  the localizable string. The string may contain slash-escapes. When a
+  line ends with a slash, it means the next line is also a part of the
+  value. Values that contain numbers inside curly braces (e.g. {0}) are
+  parameterized. That is, additional text will replace the curly-braced
+  number. Generally comments for the resources will describe what those
+  values are going to be.</p>
+</body>
+</html>

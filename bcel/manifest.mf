@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.bluemarsh.jswat.bcel/1
+OpenIDE-Module-Localizing-Bundle: com/bluemarsh/jswat/bcel/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: layer.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+<!DOCTYPE filesystem
+  PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN"
+         "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Actions">
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.ui.Bundle"/>
+        <folder name="Debug">
+            <file name="com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-FinishSessionAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-LaunchDebuggeeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ManageRuntimesAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-NewBreakpointAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-NewSessionAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-RunToCursorAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-SessionPropertiesAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepIntoAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOutAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOverAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOverCodeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-toolbar-SessionStatusAction.instance"/>
+        </folder>
+        <folder name="Window">
+            <file name="com-bluemarsh-jswat-ui-actions-BreakpointsViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ByteCodesViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ClassesViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-EvaluatorViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-SessionsViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-SourcesViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StackViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ThreadsViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-VariablesViewAction.instance"/>
+            <file name="com-bluemarsh-jswat-ui-actions-WatchesViewAction.instance"/>
+        </folder>
+    </folder>
+
+    <folder name="Editors">
+        <!-- For every type of file, we need to allow setting breakpoints. -->
+        <folder name="text">
+            <folder name="base">
+                <folder name="GlyphGutterActions">
+                    <file name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.instance"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="x-java">
+                <folder name="Popup">
+                    <!-- Hide the actions that may cause trouble for our users. -->
+                    <file name="format_hidden"/>
+                    <file name="fix-imports_hidden"/>
+                    <file name="try-catch_hidden"/>
+                </folder>
+                <folder name="ToolTips">
+                    <!-- Does not seem to work under text/base, nor directly under Editors. -->
+                    <file name="com-bluemarsh-jswat-ui-editor-ToolTipAnnotation.instance"/>
+                </folder>
+            </folder>
+        </folder>
+        <!-- Popup folder was under text/base prior to NB 5.0. -->
+        <folder name="Popup">
+            <file name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-RunToCursorAction.instance"/>
+            </file>
+            <attr name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.shadow/com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow/org-netbeans-modules-editor-NbSelectInPopupAction.instance" boolvalue="true"/>
+        </folder>
+        <folder name="AnnotationTypes">
+            <file name="Breakpoint.xml" url="resources/editor/Breakpoint.xml"/>
+            <file name="DisabledBreakpoint.xml" url="resources/editor/DisabledBreakpoint.xml"/>
+            <file name="CurrentPC.xml" url="resources/editor/CurrentPC.xml"/>
+            <!-- The following are combination annotations. -->
+            <file name="BreakpointPC.xml" url="resources/editor/Breakpoint+PC.xml"/>
+            <file name="DisabledBreakpointPC.xml" url="resources/editor/DisabledBreakpoint+PC.xml"/>
+        </folder>
+    </folder>
+
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="breakpoints.settings" url="resources/views/breakpoints.settings"/>
+            <file name="bytecodes.settings" url="resources/views/bytecodes.settings"/>
+            <file name="classes.settings" url="resources/views/classes.settings"/>
+            <file name="evaluator.settings" url="resources/views/evaluator.settings"/>
+            <file name="sessions.settings" url="resources/views/sessions.settings"/>
+            <file name="sources.settings" url="resources/views/sources.settings"/>
+            <file name="stack.settings" url="resources/views/stack.settings"/>
+            <file name="threads.settings" url="resources/views/threads.settings"/>
+            <file name="variables.settings" url="resources/views/variables.settings"/>
+            <file name="watches.settings" url="resources/views/watches.settings"/>
+        </folder>
+
+        <!-- Note that without Modes, the windows would not remember their
+        open status when the application restarts. -->
+        <folder name="Modes">
+            <file name="debugger.wsmode" url="resources/views/debugger.wsmode"/>
+            <folder name="debugger">
+                <file name="breakpoints.wstcref" url="resources/views/breakpoints.wstcref"/>
+                <file name="evaluator.wstcref" url="resources/views/evaluator.wstcref"/>
+                <file name="sessions.wstcref" url="resources/views/sessions.wstcref"/>
+                <file name="variables.wstcref" url="resources/views/variables.wstcref"/>
+                <file name="watches.wstcref" url="resources/views/watches.wstcref"/>
+            </folder>
+            <folder name="editor">
+                <file name="bytecodes.wstcref" url="resources/views/bytecodes.wstcref"/>
+            </folder>
+            <folder name="explorer">
+                <file name="classes.wstcref" url="resources/views/classes.wstcref"/>
+                <file name="sources.wstcref" url="resources/views/sources.wstcref"/>
+                <file name="threads.wstcref" url="resources/views/threads.wstcref"/>
+            </folder>
+            <folder name="navigator">
+                <file name="stack.wstcref" url="resources/views/stack.wstcref"/>
+            </folder>
+        </folder>
+
+        <folder name="Groups">
+            <file name="debugger.wsgrp" url="resources/views/debugger.wsgrp"/>
+            <folder name="debugger">
+                <file name="breakpoints.wstcgrp" url="resources/views/breakpoints.wstcgrp"/>
+                <file name="bytecodes.wstcgrp" url="resources/views/bytecodes.wstcgrp"/>
+                <file name="classes.wstcgrp" url="resources/views/classes.wstcgrp"/>
+                <file name="evaluator.wstcgrp" url="resources/views/evaluator.wstcgrp"/>
+                <file name="sessions.wstcgrp" url="resources/views/sessions.wstcgrp"/>
+                <file name="sources.wstcgrp" url="resources/views/sources.wstcgrp"/>
+                <file name="stack.wstcgrp" url="resources/views/stack.wstcgrp"/>
+                <file name="threads.wstcgrp" url="resources/views/threads.wstcgrp"/>
+                <file name="variables.wstcgrp" url="resources/views/variables.wstcgrp"/>
+                <file name="watches.wstcgrp" url="resources/views/watches.wstcgrp"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

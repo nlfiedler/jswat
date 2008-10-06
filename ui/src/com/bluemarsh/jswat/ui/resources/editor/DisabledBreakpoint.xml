@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: DisabledBreakpoint.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+
+<!DOCTYPE type
+  PUBLIC "-//NetBeans//DTD annotation type 1.0//EN"
+         "http://www.netbeans.org/dtds/annotation-type-1_0.dtd">
+
+<type name='DisabledBreakpoint'
+      description_key='HINT_DISABLED_BREAKPOINT'
+      localizing_bundle='com.bluemarsh.jswat.ui.editor.Bundle'
+      visible='true' 
+      glyph='nbresloc:/com/bluemarsh/jswat/ui/resources/editor/DisabledBreakpoint.gif'
+      highlight='0xDCDCD8' 
+      type='line'/>

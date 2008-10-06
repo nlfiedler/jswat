@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat Core module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: build.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+<!--
+   You may freely edit this file. See harness/README in the NetBeans platform
+   for some information on what you could do (e.g. targets to override).
+   If you delete this file and reopen the project it will be recreated.
+-->
+<project name="com.bluemarsh.jswat.core" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project com.bluemarsh.jswat.core.</description>
+    <property file="../build.properties"/>
+    <import file="nbproject/build-impl.xml"/>
+    <!-- These locations need to be resolved relative to the build file
+         location, so set the properties here using 'location' rather
+         than in the project.properties file. -->
+    <property name="test-unit-sys-prop.test.src.dir" location="test/unit/src"/>
+    <property name="test-unit-sys-prop.test.build.dir" location="build/test/unit/classes"/>
+    <property name="test-unit-sys-prop.netbeans.user" location="build/testunitdir"/>
+    <property name="test-unit-sys-prop.netbeans.home" location="${netbeans.dest.dir}"/>
+
+    <target name="testuserdir-delete">
+        <!-- Do nothing in the hopes that our userdir will stick around. -->
+    </target>
+
+    <target name="-pre-clean">
+        <ant dir="test/integration" target="clean"/>
+    </target>
+    <target name="clean" depends="-pre-clean,projectized-common.clean"/>
+
+    <target name="-pre-build">
+        <ant dir="test/integration" target="compile"/>
+    </target>
+    <target name="compile" depends="-pre-build,projectized-common.compile"/>
+</project>

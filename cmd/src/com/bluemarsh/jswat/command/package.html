@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: package.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 June 2005), see www.w3.org" />
+
+  <title>keeps HTML tidy happy</title>
+</head>
+
+<body>
+  <p>Contains the basic command infrastructure, including the default
+  implementations of the CommandParser and several InputProcessors.</p>
+
+  <h3>Writing New Commands</h3>
+
+  <p>Writing commands for the debugger is actually very easy.</p>
+
+  <p>The first step is to create the initial version of the class that
+  will implement the <code>Command</code> interface. This is most
+  easily done by extending the <code>AbstractCommand</code> abstract
+  class and providing the implementation for the abstract methods. Note
+  that you may name this class whatever is suitable for you, as the
+  name of the command and the name of the implementing class are not at
+  all related.</p>
+
+  <p>Next, add the fully-qualified name of the class to a plain text
+  file called <code>com.bluemarsh.jswat.command.Command</code>, which
+  should be located in <code>META-INF/services</code> in your module
+  <code>.jar</code> file. See the NetBeans OpenAPIs documentation under
+  &quot;Services &amp; Lookup&quot; for more information on services
+  and how to define them.</p>
+
+  <p>The final step is to add properties to the
+  <code>Bundle.properties</code> file in the package containing your
+  command class. These two properties must be named
+  <code>&lt;name&gt;_Description</code> and
+  <code>&lt;name&gt;_Help</code>, where &lt;name&gt; is the string
+  returned from the <code>getName()</code> method of your command
+  class.</p>
+
+  <h3>Writing Input Processors</h3>
+
+  <p>As with commands, writing input processors is quite easy.</p>
+
+  <p>First, create the initial version of the class that will implement
+  the <code>InputProcessor</code> interface.</p>
+
+  <p>Next, add the fully-qualified name of the class to a plain text
+  file called <code>com.bluemarsh.jswat.command.InputProcessor</code>,
+  which should be located in <code>META-INF/services</code> in your
+  module <code>.jar</code> file. See the NetBeans OpenAPIs
+  documentation under &quot;Services &amp; Lookup&quot; for more
+  information on services and how to define them.</p>
+
+  <p>Note that the ordering of the <code>InputProcessor</code>
+  implementations listed in the above file is important. The order that
+  the input processors are listed is the order in which they are
+  executed by the command parser. NetBeans allows changing the order of
+  service entries, which you can read about in the &quot;Services &amp;
+  Lookup&quot; section of the OpenAPI documentation.</p>
+
+  <h3>Writing a New Command Parser</h3>
+
+  <p>While this is possible, it is quite unlikely that you will want to
+  write your own command parser, as there is little value in doing so.
+  Nonetheless, below is an explanation of how to go about doing
+  this.</p>
+
+  <p>Start by creating the initial version of the class that will
+  implement the <code>CommandParser</code> interface. This is most
+  easily done by extending the <code>AbstractCommandParser</code>
+  abstract class and providing the implementation for the abstract
+  methods.</p>
+
+  <p>Next, add the fully-qualified name of the class to a plain text
+  file called <code>com.bluemarsh.jswat.command.CommandParser</code>,
+  which should be located in <code>META-INF/services</code> in your
+  module <code>.jar</code> file. See the NetBeans OpenAPIs
+  documentation under &quot;Services &amp; Lookup&quot; for more
+  information on services and how to define them.</p>
+
+  <p>Note that in order to replace the implementation that is included
+  in the debugger, you will need to &quot;remove&quot; it from the list
+  of services. See the API documentation mentioned above for an example
+  of how this is done.</p>
+</body>
+</html>

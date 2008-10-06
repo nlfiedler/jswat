@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: README.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
+
+  <title>JSwat Debugger - README</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h1>README</h1>
+
+  <h2>JSwat Debugger</h2>
+
+  <p><a href="http://www.bluemarsh.com/java/jswat/">JSwat</a> is a
+  graphical Java debugger front-end, written for the <a href=
+  "http://java.sun.com/javase/">Java 2 Platform</a>, utilizing the
+  <a href="http://java.sun.com/products/jpda/">Java Platform Debugger
+  Architecture</a> (JPDA), and the <a href=
+  "http://www.netbeans.org/products/platform/">NetBeans Platform</a>.
+  The source code is licensed under the <a href=
+  "http://java.sun.com/spl.html">Sun Public License</a>.</p>
+
+  <h2>Requirements</h2>
+
+  <h3>J2SE with JPDA</h3>
+
+  <p>JSwat requires the <a href="http://java.sun.com/javase/">Java 2
+  Platform, Standard Edition</a>, version 5.0 or higher. It is
+  possible, although not necessarily recommended, to use compatible
+  software from other vendors. In any case, the selected J2SE must
+  contain the JPDA software. The required classes, defined in the
+  <code>com.sun.jdi</code> package, are typically found in a file
+  called <code>tools.jar</code>.</p>
+
+  <p><em>Note that the Java Runtime Environment does not contain the
+  JPDA and therefore will not run JSwat properly. You must use the JDK
+  to run JSwat.</em></p>
+
+  <h3>Compile for debugging</h3>
+
+  <p>When debugging Java code, it is necessary to compile the classes
+  using the <kbd>-g</kbd> option to <code>javac</code>. Additionally,
+  do not compile the classes with the optimization flags, as that may
+  hinder debugging. If you use <a href="http://ant.apache.org/">Apache
+  Ant</a> to compile your application, set the <code>debug</code> value
+  of the <code>javac</code> task to <em>on</em> and either leave the
+  <code>debuglevel</code> value undefined, or use the value
+  <em>vars,lines,source</em> so as to generate all of the necessary
+  debugging information in the compiled classes.</p>
+
+  <h2>Starting JSwat</h2>
+
+  <p>Starting the debugger amounts to invoking a small launcher. There
+  are two possibilities at the moment, depending on your system.</p>
+
+  <h4>Microsoft Windows</h4>
+
+  <p>If you are using Microsoft Windows, you can double-click on the
+  <strong><code>jswat.exe</code></strong> launcher in the
+  <code>bin</code> directory, or invoke it from the command line.</p>
+
+  <h4>Unix-like systems</h4>
+
+  <p>On Unix-like systems such as Linux or Solaris, simply invoke the
+  shell script <strong><code>jswat</code></strong> in the
+  <code>bin</code> directory.</p>
+
+  <h3>Startup options</h3>
+
+  <p>The JSwat launcher is basically a renamed version of the NetBeans
+  Platform launcher, thus it supports the same command-line options.
+  For a list of these options and a brief explanation, invoke the
+  launcher with the <code>--help</code> switch.</p>
+
+  <h2>Documentation</h2>
+
+  <p>The JSwat documentation consists of a <a href=
+  "UsersGuide.html">User&#39;s Guide</a>, the built-in help found in
+  the <strong>Help</strong> menu in the main program window, and in
+  several &quot;how to&quot; documents on the <a href=
+  "http://www.bluemarsh.com/java/jswat/docs/">web site</a>.</p>
+
+  <h2>Stopping JSwat</h2>
+
+  <p>The correct way to exit JSwat is with either the window close
+  button or the <strong>Exit</strong> item in the <strong>File</strong>
+  menu. Using <kbd>Ctrl-c</kbd> to kill JSwat will likely cause
+  problems and should be avoided. It must <em>only</em> be used in
+  cases where the JVM hosting JSwat has frozen. If the JSwat interface
+  appears frozen, chances are that terminating the debuggee, via the
+  appropriate system operation, will allow JSwat to return to
+  normal.</p>
+
+  <h2>Removing JSwat</h2>
+
+  <p>Removing JSwat from your system is generally pretty simple. Find
+  the files, wherever it is that you originally put them, and delete
+  them. If you used one of the packaged versions you should remove the
+  package using the appropriate system command. In addition to the
+  program files, there are user settings stored in a directory named
+  <code>.jswat</code> in your home directory.</p>
+
+  <h2>Upgrading from earlier versions</h2>
+
+  <p>The settings from the 2.x versions of JSwat may be safely removed
+  &mdash; in other words, they are ignored by version 3.0 and later.
+  These resided in one of two places, depending on which operating
+  system you are using.</p>
+
+  <ul>
+    <li>Under <code>.java/.userPrefs/com/bluemarsh/jswat/</code> in
+    your Unix home directory.</li>
+
+    <li>Under
+    <code>HKEY_CURRENT_USER/Software/JavaSoft/Prefs/com/bluemarsh/jswat</code>
+    in the Windows registry.</li>
+  </ul>
+
+  <p>The 1.x versions of JSwat stored their settings in a directory
+  called <code>.jswat</code> in your home directory. However, the 3.x
+  versions of JSwat also store their settings in this directory, so you
+  should <em>not</em> simply delete this directory. Instead, you can
+  remove the 1.x files only, leaving the rest intact. They are named
+  <code>breakpoints</code>, <code>session</code>, and
+  <code>settings</code> and can be safely removed.</p>
+
+  <h2>Upgrading the JDK</h2>
+
+  <p>If at some point you replace your current JDK installation with a
+  different version, you will need to update the JSwat configuration
+  file. This is done by opening the <code>etc/jswat.conf</code> file in
+  a text editor and changing the <code>netbeans_jdkhome</code> value to
+  point to the new JDK installation directory. An alternative to
+  editing the configuration file is to pass the <code>--jdkhome</code>
+  option when starting JSwat. This option takes a single argument,
+  which is the path to the JDK installation.</p>
+
+  <h2>Getting source code</h2>
+
+  <p>The source code for each release of JSwat is distributed via the
+  same web site as the binary download. On a nightly basis, the source
+  code is zipped and made available on the <a href=
+  "http://www.bluemarsh.com/java/jswat/downloads.html">downloads</a>
+  page on the web site. To get the very latest source code you must use
+  a <a href="http://subversion.tigris.org/">Subversion</a> client to
+  access the source repository. See the <a href=
+  "http://www.bluemarsh.com/java/jswat/contrib.html">contributing</a>
+  page on the web site for more information about using the Subversion
+  client to access the repository.</p>
+
+  <h2>Troubleshooting</h2>
+
+  <h3>Slow Performance on Linux</h3>
+
+  <p>Due to a change in Linux kernel 2.6.15, the Sun JPDA
+  implementation is adversely affected in terms of network performance.
+  This causes all Java debuggers based on JPDA to perform very, very
+  slowly. There are a few possible solutions to this problem.</p>
+
+  <ul>
+    <li>Downgrade to kernel 2.6.14 or lower</li>
+
+    <li>Upgrade to JDK 1.5.0_08 or higher</li>
+
+    <li>Upgrade to JDK 6.0 build 79 or higher</li>
+
+    <li>Invoke <code>sudo sysctl -w net.ipv4.tcp_abc=0</code> to
+    effectively reverse the change made in the Linux kernel. <em>Note
+    that this may incur a security risk; speak with your system
+    administrator if you are at all concerned.</em></li>
+  </ul>
+
+  <h3>Debugging Features Disappeared</h3>
+
+  <p>The JSwat modules require Java 5.0 or higher, and when the
+  debugger is launched using an earlier JDK, the JSwat modules will
+  automatically be disabled. To rectify the situation, you will need to
+  exit and start again using JDK 1.5.0 or higher (see section above
+  regarding upgrading the JDK), and then re-enable the JSwat modules.
+  This is done using the <strong>Module Manager</strong> which is found
+  in the <strong>Tools</strong> menu. Expand the <em>Debugging</em>
+  category and check the boxes to enable the modules. Everything should
+  be back to normal at that point, allowing you to debug using
+  JSwat.</p>
+
+  <h3>Bad Xalan Library</h3>
+
+  <p>If upon starting JSwat you see an error message about an
+  incompatible xalan library version, then chances are you are running
+  on the IBM JDK 1.5.0, which contains a version of xalan with a bug.
+  This bug prevents NetBeans from operating correctly, so all
+  applications based on the NetBeans Platform suffer from this issue.
+  The work-around is to modify the <code>jre/lib/xml.jar</code> file in
+  the IBM JDK to not contain the <code>org/apache/xalan</code> files.
+  The other option is to use a different JDK, such as the one from
+  <a href="http://java.sun.com/javase/">Sun</a>.</p>
+
+  <h2>Getting help</h2>
+
+  <p>For help on using JSwat, you can either write an email to the
+  <a href="mailto:nfiedler@bluemarsh.com">author</a>, or join the
+  <code>jswat-user</code> <a href=
+  "http://www.bluemarsh.com/java/jswat/mail-lists.html">mailing
+  list</a> and post your question there. I recommend the latter as then
+  others will benefit since the list is archived and made searchable on
+  the web site.</p>
+
+  <div style="text-align: center">
+    <small>JSwat and related documentation are Copyright &copy;
+    1999-2007</small>
+  </div>
+</body>
+</html>

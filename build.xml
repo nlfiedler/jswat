@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is JSwat. The Initial Developer of the Original
+  Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: build.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+<!--
+   You may freely edit this file. See harness/README in the NetBeans platform
+   for some information on what you could do (e.g. targets to override).
+   If you delete this file and reopen the project it will be recreated.
+-->
+<project name="jswat" default="dist" basedir=".">
+    <description>Builds the module suite jswat.</description>
+
+    <!-- Please read the build instructions, docs/dev/compile.html -->
+
+    <property file="build.properties"/>
+    <property name="version" value="3.x"/>
+    <property name="required.jdk.version" value="1.5"/>
+    <import file="nbproject/build-impl.xml"/>
+
+    <target name="testuserdir-delete">
+        <!-- Do nothing in the hopes that our userdir will stick around. -->
+    </target>
+
+    <target name="-pre-clean">
+        <delete>
+            <fileset dir="." includes="*.zip"/>
+            <fileset dir="." includes="*installer.jar"/>
+            <fileset dir="." includes="version.properties"/>
+        </delete>
+    </target>
+    <target name="clean" depends="-init,-pre-clean,suite.clean"/>
+
+    <!-- Fix the version number in the branding resources. -->
+    <target name="-pre-branding">
+        <!-- Put the application version into the resource file. -->
+        <filter token="version" value="${version}"/>
+        <!-- Have to copy everything to make the filtering work. -->
+        <copy todir="${branding.dir}" filtering="true">
+            <!-- Cannot filter images otherwise they get munged. -->
+            <fileset dir="branding" excludes="**/*.gif"/>
+        </copy>
+        <copy todir="${branding.dir}">
+            <fileset dir="branding" includes="**/*.gif"/>
+        </copy>
+    </target>
+    <!-- The branding only happens for the standalone build. -->
+    <target name="branding" unless="building.plugin">
+        <!-- Where branding files will be found by build harness.
+             Set this here so it is inherited by the following targets. -->
+        <property name="branding.dir" location="build/branding"/>
+        <antcall target="-pre-branding"/>
+        <antcall target="suite.branding"/>
+    </target>
+
+    <target name="dist" description="Make the distributables.">
+        <!-- Ensure we are using the correct JDK. -->
+        <condition property="supported.jdk">
+            <contains string="${java.version}" substring="${required.jdk.version}"/>
+        </condition>
+        <fail unless="supported.jdk" message="Must use JDK 1.5 to build JSwat."/>
+        <!-- Must clean first so the version number gets applied. -->
+        <antcall target="clean"/>
+        <!-- Get the version first, then build the modules. -->
+        <antcall target="version"/>
+        <antcall target="build"/>
+        <!-- Make the binary distribution. -->
+        <zip destfile="jswat.zip">
+            <zipfileset dir="build/cluster" prefix="jswat3">
+                <exclude name="**/*_hidden"/>
+            </zipfileset>
+            <zipfileset dir="docs/release"/>
+            <!-- Installer will have to make these files executable later. -->
+            <zipfileset dir="launcher/unix" prefix="bin"/>
+            <zipfileset dir="launcher/windows" prefix="bin">
+                <include name="*.cmd"/>
+                <include name="*.exe"/>
+            </zipfileset>
+            <zipfileset file="branding/core/core.jar/org/netbeans/core/startup/frame48.gif"
+                        fullpath="bin/jswat.gif"/>
+            <zipfileset dir="launcher" prefix="etc">
+                <include name="*.conf"/>
+            </zipfileset>
+            <zipfileset dir="${netbeans.dest.dir}/platform6" prefix="platform6"/>
+            <zipfileset dir="${netbeans.dest.dir}/ide7/modules/ext" prefix="ide7/modules/ext">
+                <include name="gjast.jar"/>
+                <include name="java-parser.jar"/>
+                <include name="jmi.jar"/>
+                <include name="jmiutils.jar"/>
+                <include name="mdr.jar"/>
+                <include name="mof.jar"/>
+            </zipfileset>
+            <zipfileset dir="${netbeans.dest.dir}/ide7/modules" prefix="ide7/modules">
+                <include name="javax-jmi-model.jar"/>
+                <include name="javax-jmi-reflect.jar"/>
+                <include name="org-netbeans-api-java.jar"/>
+                <include name="org-netbeans-api-mdr.jar"/>
+                <include name="org-netbeans-jmi-javamodel.jar"/>
+                <include name="org-netbeans-modules-classfile.jar"/>
+                <include name="org-netbeans-modules-editor-codetemplates.jar"/>
+                <include name="org-netbeans-modules-editor-completion.jar"/>
+                <include name="org-netbeans-modules-editor-errorstripe-api.jar"/>
+                <include name="org-netbeans-modules-editor-fold.jar"/>
+                <include name="org-netbeans-modules-editor.jar"/>
+                <include name="org-netbeans-modules-editor-lib.jar"/>
+                <include name="org-netbeans-modules-editor-mimelookup.jar"/>
+                <include name="org-netbeans-modules-editor-plain.jar"/>
+                <include name="org-netbeans-modules-editor-plain-lib.jar"/>
+                <include name="org-netbeans-modules-editor-settings.jar"/>
+                <include name="org-netbeans-modules-editor-util.jar"/>
+                <include name="org-netbeans-modules-javacore.jar"/>
+                <include name="org-netbeans-modules-java-editor.jar"/>
+                <include name="org-netbeans-modules-java-editor-lib.jar"/>
+                <include name="org-netbeans-modules-java-j2seplatform.jar"/>
+                <include name="org-netbeans-modules-java.jar"/>
+                <!-- For Java navigator to work we need j2seplatform module;
+                     and ensure that platform cluster has masterfs module. -->
+                <include name="org-netbeans-modules-java-navigation.jar"/>
+                <include name="org-netbeans-modules-java-platform.jar"/>
+                <include name="org-netbeans-modules-jmiutils.jar"/>
+                <include name="org-netbeans-modules-mdr.jar"/>
+                <include name="org-netbeans-modules-project-ant.jar"/>
+                <include name="org-netbeans-modules-projectapi.jar"/>
+                <include name="org-netbeans-modules-project-libraries.jar"/>
+                <include name="org-netbeans-modules-projectuiapi.jar"/>
+                <include name="org-netbeans-modules-utilities.jar"/>
+                <include name="org-netbeans-spi-navigator.jar"/>
+                <include name="org-openide-src.jar"/>
+                <include name="org-openidex-util.jar"/>
+            </zipfileset>
+            <zipfileset dir="${netbeans.dest.dir}/ide7/config/Modules" prefix="ide7/config/Modules">
+                <include name="javax-jmi-model.xml"/>
+                <include name="javax-jmi-reflect.xml"/>
+                <include name="org-netbeans-api-java.xml"/>
+                <include name="org-netbeans-api-mdr.xml"/>
+                <include name="org-netbeans-jmi-javamodel.xml"/>
+                <include name="org-netbeans-modules-classfile.xml"/>
+                <include name="org-netbeans-modules-editor-codetemplates.xml"/>
+                <include name="org-netbeans-modules-editor-completion.xml"/>
+                <include name="org-netbeans-modules-editor-errorstripe-api.xml"/>
+                <include name="org-netbeans-modules-editor-fold.xml"/>
+                <include name="org-netbeans-modules-editor.xml"/>
+                <include name="org-netbeans-modules-editor-lib.xml"/>
+                <include name="org-netbeans-modules-editor-mimelookup.xml"/>
+                <include name="org-netbeans-modules-editor-plain.xml"/>
+                <include name="org-netbeans-modules-editor-plain-lib.xml"/>
+                <include name="org-netbeans-modules-editor-settings.xml"/>
+                <include name="org-netbeans-modules-editor-util.xml"/>
+                <include name="org-netbeans-modules-javacore.xml"/>
+                <include name="org-netbeans-modules-java-editor.xml"/>
+                <include name="org-netbeans-modules-java-editor-lib.xml"/>
+                <include name="org-netbeans-modules-java-j2seplatform.xml"/>
+                <include name="org-netbeans-modules-java.xml"/>
+                <include name="org-netbeans-modules-java-navigation.xml"/>
+                <include name="org-netbeans-modules-java-platform.xml"/>
+                <include name="org-netbeans-modules-jmiutils.xml"/>
+                <include name="org-netbeans-modules-mdr.xml"/>
+                <include name="org-netbeans-modules-project-ant.xml"/>
+                <include name="org-netbeans-modules-projectapi.xml"/>
+                <include name="org-netbeans-modules-project-libraries.xml"/>
+                <include name="org-netbeans-modules-projectuiapi.xml"/>
+                <include name="org-netbeans-modules-utilities.xml"/>
+                <include name="org-netbeans-spi-navigator.xml"/>
+                <include name="org-openide-src.xml"/>
+                <include name="org-openidex-util.xml"/>
+            </zipfileset>
+        </zip>
+
+        <!-- Build the installer. -->
+        <ant dir="installer" target="clean"/>
+        <propertyfile file="version.properties">
+            <entry key="version" value="${version}"/>
+        </propertyfile>
+        <ant dir="installer" target="jar"/>
+        <move file="installer/dist/installer.jar" tofile="jswat-${version}-installer.jar"/>
+
+        <antcall target="dist-src"/>
+
+        <!-- Calculate the file checksums. -->
+        <antcall target="checksum">
+            <param name="file" value="jswat-${version}-installer.jar"/>
+        </antcall>
+        <antcall target="checksum">
+            <param name="file" value="jswat-src-${version}.zip"/>
+        </antcall>
+    </target>
+
+    <target name="dist-src">
+        <!-- Make the source distribution. -->
+        <zip destfile="jswat-src-${version}.zip">
+            <zipfileset dir="." prefix="jswat-src-${version}">
+                <exclude name="bcel/*.nbm"/>
+                <exclude name="bcel/build/**"/>
+                <exclude name="bcel/Info/**"/>
+                <exclude name="bcel/netbeans/**"/>
+
+                <exclude name="cmd/*.nbm"/>
+                <exclude name="cmd/build/**"/>
+                <exclude name="cmd/Info/**"/>
+                <exclude name="cmd/netbeans/**"/>
+                <exclude name="cmd/test/unit/build/**"/>
+
+                <exclude name="core/*.nbm"/>
+                <exclude name="core/build/**"/>
+                <exclude name="core/Info/**"/>
+                <exclude name="core/netbeans/**"/>
+                <exclude name="core/test/integration/build/**"/>
+                <exclude name="core/test/unit/build/**"/>
+
+                <exclude name="help/*.nbm"/>
+                <exclude name="help/build/**"/>
+                <exclude name="help/Info/**"/>
+                <exclude name="help/netbeans/**"/>
+                <exclude name="help/javahelp/com/bluemarsh/jswat/help/docs/SearchData/**"/>
+
+                <exclude name="installer/build/**"/>
+                <exclude name="installer/dist/**"/>
+
+                <exclude name="parser/*.nbm"/>
+                <exclude name="parser/build/**"/>
+                <exclude name="parser/Info/**"/>
+                <exclude name="parser/netbeans/**"/>
+
+                <exclude name="product/*.nbm"/>
+                <exclude name="product/build/**"/>
+                <exclude name="product/Info/**"/>
+                <exclude name="product/netbeans/**"/>
+
+                <exclude name="ui/*.nbm"/>
+                <exclude name="ui/build/**"/>
+                <exclude name="ui/Info/**"/>
+                <exclude name="ui/netbeans/**"/>
+
+                <exclude name="build/**"/>
+                <exclude name="*.zip"/>
+                <exclude name="*installer.jar"/>
+                <exclude name="**/build.properties"/>
+                <exclude name="version.properties"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <target name="version">
+        <input message="Enter JSwat version:" addproperty="version"/>
+    </target>
+
+    <target name="checksum">
+        <checksum file="${file}" algorithm="SHA" property="sum"/>
+        <echo level="info">${sum}  ${file}</echo>
+    </target>
+
+    <target name="test" description="Run all unit tests">
+        <!-- Used by Hudson as part of auto-build process. -->
+        <ant dir="cmd" target="test"/>
+        <ant dir="core" target="test"/>
+    </target>
+</project>

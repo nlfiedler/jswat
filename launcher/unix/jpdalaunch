@@ -1,0 +1,43 @@
+#!/bin/sh
+#                 Sun Public License Notice
+#
+# The contents of this file are subject to the Sun Public License
+# Version 1.0 (the "License"); you may not use this file except in
+# compliance with the License. A copy of the License is available at
+# http://www.sun.com/
+#
+# The Original Code is the JSwat launcher. The Initial Developer of the
+# Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+# are Copyright (C) 2005. All Rights Reserved.
+#
+# Contributor(s): Nathan L. Fiedler.
+#
+# $Id: jpdalaunch 2161 2005-12-01 09:01:01Z nfiedler $
+#
+
+#
+# This script is to be used as the argument for the 'launch' sub-option
+# in the JPDA connector arguments. For example:
+#
+# -agentlib:jdwp=transport=dt_socket,server=y,launch=/bin/jpdalaunch
+#
+# See the JPDA Connection and Invocation Details for more information.
+#
+
+# Determine our path.
+PRG=$0
+while [ -h "$PRG" ]; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+    if expr "$link" : '^/' 2> /dev/null >/dev/null; then
+	PRG="$link"
+    else
+	PRG="`dirname "$PRG"`/$link"
+    fi
+done
+progdir=`dirname "$PRG"`
+
+# Argument 1 is the transport (e.g. dt_socket)
+# Argument 2 is the address (e.g. localhost:5000)
+
+$progdir/jswat -J-Djswat.transport=$1 -J-Djswat.address=$2

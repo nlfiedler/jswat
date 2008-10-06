@@ -1,0 +1,279 @@
+/*
+ *                     Sun Public License Notice.
+ *
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
+ *
+ * The Original Code is JSwat. The Initial Developer of the Original
+ * Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+ * are Copyright (C) 2006. All Rights Reserved.
+ *
+ * Contributor(s): Nathan L. Fiedler.
+ *
+ * $Id: DefaultInstanceWatchBreakpoint.java 15 2007-06-03 00:01:17Z nfiedler $
+ */
+
+package com.bluemarsh.jswat.core.breakpoint;
+
+import com.bluemarsh.jswat.core.event.DispatcherListener;
+import com.bluemarsh.jswat.core.session.Session;
+import com.bluemarsh.jswat.core.session.SessionEvent;
+import com.bluemarsh.jswat.core.session.SessionListener;
+import com.bluemarsh.jswat.core.util.Threads;
+import com.sun.jdi.Field;
+import com.sun.jdi.ObjectReference;
+import com.sun.jdi.VirtualMachine;
+import com.sun.jdi.event.AccessWatchpointEvent;
+import com.sun.jdi.event.Event;
+import com.sun.jdi.event.ModificationWatchpointEvent;
+import com.sun.jdi.event.WatchpointEvent;
+import com.sun.jdi.request.AccessWatchpointRequest;
+import com.sun.jdi.request.EventRequestManager;
+import com.sun.jdi.request.ModificationWatchpointRequest;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.openide.util.NbBundle;
+
+/**
+ * Class DefaultInstanceWatchBreakpoint is a WatchBreakpoint that watches
+ * a particular field in a particular object reference. The field name
+ * property is unused, and this breakpoint does not need to resolve against
+ * any class, since it has the field and object already.
+ *
+ * @author  Nathan Fiedler
+ */
+public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
+        implements DispatcherListener, InstanceWatchBreakpoint, SessionListener {
+    /** The object reference filter. */
+    private ObjectReference objectRef;
+    /** Field we are watching. */
+    private Field watchField;
+    /** True to stop on field access. */
+    private boolean onAccess;
+    /** True to stop on field modification. */
+    private boolean onModify;
+    /** List of Class objects representing the JDI event types we
+     * are interested in listening for. */
+    private List<Class> jdiEventTypes;
+
+    /**
+     * Creates a new instance of DefaultInstanceWatchBreakpoint.
+     */
+    public DefaultInstanceWatchBreakpoint() {
+        jdiEventTypes = new ArrayList<Class>(5);
+        jdiEventTypes.add(AccessWatchpointEvent.class);
+        jdiEventTypes.add(ModificationWatchpointEvent.class);
+    }
+
+    public boolean canFilterClass() {
+        return true;
+    }
+
+    public boolean canFilterThread() {
+        return true;
+    }
+
+    public void closing(SessionEvent sevt) {
+    }
+
+    public void connected(SessionEvent sevt) {
+        if (isEnabled()) {
+            createRequests();
+        }
+    }
+
+    /**
+     * Create the access and/or modification watchpoint requests.
+     */
+    protected void createRequests() {
+        VirtualMachine vm = watchField.virtualMachine();
+        EventRequestManager erm = vm.eventRequestManager();
+
+        if (onAccess) {
+            if (vm.canWatchFieldAccess()) {
+                AccessWatchpointRequest accessRequest =
+                        erm.createAccessWatchpointRequest(watchField);
+                accessRequest.putProperty("breakpoint", this);
+                applySuspendPolicy(accessRequest);
+                String filter = getClassFilter();
+                if (filter != null) {
+                    accessRequest.addClassFilter(filter);
+                }
+                accessRequest.addInstanceFilter(objectRef);
+                accessRequest.setEnabled(isEnabled());
+            } else {
+                fireError(new ResolveException(NbBundle.getMessage(
+                        DefaultInstanceWatchBreakpoint.class,
+                        "Watch.cannotWatchAccess"),
+                        new UnsupportedOperationException()));
+            }
+        }
+
+        if (onModify) {
+            if (vm.canWatchFieldModification()) {
+                ModificationWatchpointRequest modifyRequest =
+                        erm.createModificationWatchpointRequest(watchField);
+                modifyRequest.putProperty("breakpoint", this);
+                applySuspendPolicy(modifyRequest);
+                String filter = getClassFilter();
+                if (filter != null) {
+                    modifyRequest.addClassFilter(filter);
+                }
+                modifyRequest.addInstanceFilter(objectRef);
+                modifyRequest.setEnabled(isEnabled());
+            } else {
+                fireError(new ResolveException(NbBundle.getMessage(
+                        DefaultInstanceWatchBreakpoint.class,
+                        "Watch.cannotWatchModify"),
+                        new UnsupportedOperationException()));
+            }
+        }
+    }
+
+    protected void deleteRequests() {
+    }
+
+    public String describe(Event e) {
+        String result = null;
+        if (e instanceof WatchpointEvent) {
+            result = Utilities.describeWatch((WatchpointEvent) e);
+        }
+        if (result == null) {
+            throw new IllegalArgumentException(
+                    "expected watchpoint event, but got " +
+                    e.getClass().getName());
+        }
+        return result;
+    }
+
+    public void disconnected(SessionEvent sevt) {
+        // Delete ourselves since our object reference will be stale,
+        // thus rendering us completely useless.
+        fireChange(BreakpointEvent.Type.REMOVED);
+    }
+
+    public Iterator<Class> eventTypes() {
+        return jdiEventTypes.iterator();
+    }
+
+    public String getClassName() {
+        return objectRef.referenceType().name();
+    }
+
+    public String getDescription() {
+        StringBuilder buf = new StringBuilder(80);
+        String type = "";
+        if (onAccess && onModify) {
+            type = NbBundle.getMessage(DefaultInstanceWatchBreakpoint.class,
+                    "Watch.description.both");
+        } else if (onAccess) {
+            type = NbBundle.getMessage(DefaultInstanceWatchBreakpoint.class,
+                    "Watch.description.access");
+        } else if (onModify) {
+            type = NbBundle.getMessage(DefaultInstanceWatchBreakpoint.class,
+                    "Watch.description.modify");
+        }
+        buf.append(NbBundle.getMessage(DefaultInstanceWatchBreakpoint.class,
+                "Watch.description", watchField.name(), type));
+
+        String filter = getClassFilter();
+        if (filter != null) {
+            buf.append(", class ");
+            buf.append(filter);
+        }
+        filter = getThreadFilter();
+        if (filter != null) {
+            buf.append(", thread ");
+            buf.append(filter);
+        }
+        return buf.toString();
+    }
+
+    public Field getField() {
+        return watchField;
+    }
+
+    public String getFieldName() {
+        return watchField.name();
+    }
+
+    public ObjectReference getObjectReference() {
+        return objectRef;
+    }
+
+    public boolean getStopOnAccess() {
+        return onAccess;
+    }
+
+    public boolean getStopOnModify() {
+        return onModify;
+    }
+
+    public boolean isResolved() {
+        return true;
+    }
+
+    public void opened(Session session) {
+    }
+
+    public void resuming(SessionEvent sevt) {
+    }
+
+    public void setClassFilter(String filter) {
+        // Delete so we can recreate them using changed settings.
+        deleteRequests();
+        super.setClassFilter(filter);
+        if (isEnabled()) {
+            createRequests();
+        }
+    }
+
+    public void setEnabled(boolean enabled) {
+        // Delete so we can recreate them using changed settings.
+        deleteRequests();
+        super.setEnabled(enabled);
+        if (isEnabled()) {
+            createRequests();
+        }
+    }
+
+    public void setFieldName(String name) throws MalformedMemberNameException {
+        // Do nothing since we already have the field.
+    }
+
+    public void setObjectReference(ObjectReference obj) {
+        objectRef = obj;
+    }
+
+    public void setStopOnAccess(boolean stop) {
+        // Delete so we can recreate them using changed settings.
+        deleteRequests();
+        boolean old = onAccess;
+        onAccess = stop;
+        propSupport.firePropertyChange(PROP_STOPONACCESS, old, stop);
+        if (isEnabled()) {
+            createRequests();
+        }
+    }
+
+    public void setStopOnModify(boolean stop) {
+        // Delete so we can recreate them using changed settings.
+        deleteRequests();
+        boolean old = onModify;
+        onModify = stop;
+        propSupport.firePropertyChange(PROP_STOPONMODIFY, old, stop);
+        if (isEnabled()) {
+            createRequests();
+        }
+    }
+
+    public void suspended(SessionEvent sevt) {
+    }
+
+    public void setField(Field field) {
+        watchField = field;
+    }
+}

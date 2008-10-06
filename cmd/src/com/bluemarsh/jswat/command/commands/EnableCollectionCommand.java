@@ -1,0 +1,109 @@
+/*
+ *                     Sun Public License Notice.
+ *
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
+ *
+ * The Original Code is the JSwat Command Module. The Initial Developer of the
+ * Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+ * are Copyright (C) 2005. All Rights Reserved.
+ *
+ * Contributor(s): Nathan L. Fiedler.
+ *
+ * $Id: EnableCollectionCommand.java 15 2007-06-03 00:01:17Z nfiedler $
+ */
+
+package com.bluemarsh.jswat.command.commands;
+
+import com.bluemarsh.jswat.command.AbstractCommand;
+import com.bluemarsh.jswat.command.CommandArguments;
+import com.bluemarsh.jswat.command.CommandContext;
+import com.bluemarsh.jswat.command.CommandException;
+import com.bluemarsh.jswat.command.MissingArgumentsException;
+import com.bluemarsh.jswat.core.context.ContextProvider;
+import com.bluemarsh.jswat.core.context.DebuggingContext;
+import com.bluemarsh.jswat.core.expr.EvaluationException;
+import com.bluemarsh.jswat.core.expr.Evaluator;
+import com.bluemarsh.jswat.core.session.Session;
+import com.sun.jdi.ClassNotPreparedException;
+import com.sun.jdi.InvalidStackFrameException;
+import com.sun.jdi.NativeMethodException;
+import com.sun.jdi.ObjectCollectedException;
+import com.sun.jdi.ObjectReference;
+import com.sun.jdi.ThreadReference;
+import java.io.PrintWriter;
+import org.openide.util.NbBundle;
+
+/**
+ * Enables garbage collection for the specified object.
+ *
+ * @author Nathan Fiedler
+ */
+public class EnableCollectionCommand extends AbstractCommand {
+
+    public String getName() {
+        return "enablegc";
+    }
+
+    public void perform(CommandContext context, CommandArguments arguments)
+            throws CommandException, MissingArgumentsException {
+
+        Session session = context.getSession();
+        DebuggingContext dc = ContextProvider.getContext(session);
+        ThreadReference thread = dc.getThread();
+        arguments.returnAsIs(true);
+        String expr = arguments.rest();
+        Evaluator eval = new Evaluator(expr);
+        try {
+            Object o = eval.evaluate(thread, dc.getFrame());
+            if (o instanceof ObjectReference) {
+                ObjectReference obj = (ObjectReference) o;
+                obj.enableCollection();
+                PrintWriter writer = context.getWriter();
+                writer.println(NbBundle.getMessage(getClass(),
+                        "CTL_enablegc_CollectionEnabled"));
+            } else {
+                throw new CommandException(NbBundle.getMessage(getClass(),
+                        "ERR_ExprNotAnObject"));
+            }
+        } catch (EvaluationException ee) {
+            Throwable t = ee.getCause();
+            if (t instanceof ClassNotPreparedException) {
+                throw new CommandException(NbBundle.getMessage(getClass(),
+                        "ERR_ClassNotPrepared"), t);
+            } else if (t instanceof IllegalThreadStateException) {
+                throw new CommandException(NbBundle.getMessage(getClass(),
+                        "ERR_ThreadNoStack"), t);
+            } else if (t instanceof IndexOutOfBoundsException) {
+                throw new CommandException(NbBundle.getMessage(getClass(),
+                        "ERR_InvalidStackFrame"), t);
+            } else if (t instanceof InvalidStackFrameException) {
+                throw new CommandException(NbBundle.getMessage(getClass(),
+                        "ERR_InvalidStackFrame"), t);
+            } else if (t instanceof NativeMethodException) {
+                throw new CommandException(NbBundle.getMessage(getClass(),
+                        "ERR_NativeMethod"), t);
+            } else if (t instanceof ObjectCollectedException) {
+                throw new CommandException(NbBundle.getMessage(getClass(),
+                        "ERR_ObjectCollected"), t);
+            } else {
+                throw new CommandException(NbBundle.getMessage(getClass(),
+                        "ERR_EvaluationError", ee.getMessage()), ee);
+            }
+        }
+    }
+
+    public boolean requiresArguments() {
+        return true;
+    }
+
+    public boolean requiresDebuggee() {
+        return true;
+    }
+
+    public boolean requiresThread() {
+        return true;
+    }
+}

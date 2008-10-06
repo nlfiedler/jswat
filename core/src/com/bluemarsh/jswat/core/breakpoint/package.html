@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: package.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org" />
+
+  <title>keeps HTML tidy happy</title>
+</head>
+
+<body>
+  <p>Provides one of the most important features of any debugger, the
+  breakpoints. Breakpoints are defined by the user and tell the
+  debuggee where and when to suspend execution of the debuggee.</p>
+
+  <p>The <code>BreakpointManager</code> implementations are accessed
+  via the <code>BreakpointProvider</code> static class. To provide
+  custom implementations of <code>BreakpointManager</code>, you must
+  install your implementation as a &quot;service&quot;. See the
+  NetBeans OpenAPIs documentation under &quot;Services &amp;
+  Lookup&quot; to learn how this is done.</p>
+
+  <p>Similarly, instances of <code>BreakpointFactory</code> are
+  acquired via the <code>BreakpointProvider</code> static class. To
+  provide custom implementations of <code>BreakpointFactory</code>, you
+  must install your implementation as a &quot;service&quot;.</p>
+
+  <h2>How Breakpoints Work</h2>
+
+  <h3>Breakpoint Groups</h3>
+
+  <p>Breakpoint groups are collections of breakpoints, as well as other
+  breakpoint groups. They can be modified as a whole, which allows
+  enabling and disabling an entire set of breakpoints at once.</p>
+
+  <ul>
+    <li>Disabling a breakpoint group means that the breakpoints in the
+    group will effectively be disabled. Their state may be enabled but
+    they will remain disabled so long as the parent group is
+    disabled.</li>
+
+    <li>A breakpoint group called &quot;Default&quot; is the root of
+    the breakpoint group tree. Initially all new breakpoints are placed
+    in this group. This group is always enabled when a new session
+    starts.</li>
+  </ul>
+
+  <h3>Breakpoints</h3>
+
+  <p>Breakpoints are those objects that cause execution to suspend in
+  the debuggee. There are various types of breakpoints, from method and
+  line breakpoints, to class, variable, and thread breakpoints.</p>
+
+  <ul>
+    <li>Breakpoints have several states: resolved, disabled, expired,
+    and skipping</li>
+
+    <li>Breakpoints support optional conditions. For the breakpoint to
+    suspend execution, its conditions must be satisfied.</li>
+
+    <li>Breakpoints keep track of how many times they were hit.</li>
+
+    <li>Breakpoints support optional monitors. A monitor is an action
+    that is performed whenever the breakpoint causes execution to
+    suspend.</li>
+
+    <li>Breakpoints will suspend execution when they have resolved, are
+    not being skipped, have not yet expired, and all of their
+    conditions are satisfied.</li>
+
+    <li>When the session disconnects, all of the breakpoints are reset
+    such that they are all unresolved and their hit counts are set to
+    zero. When this happens their skipping and expired state may
+    change.</li>
+  </ul>
+
+  <h3>How a breakpoint is set</h3>
+
+  <ul>
+    <li>The client will construct a breakpoint using an instance of the
+    BreakpointFactory. It provides numerous methods for creating
+    breakpoints of different types.</li>
+
+    <li>The client must then invoke the &quot;add&quot; operation on
+    the BreakpointManager so that the breakpoint can be maintained by
+    the manager from that point onward.</li>
+
+    <li>The BreakpointManager inserts the new breakpoint into the list
+    of breakpoints, adding it to the default breakpoint group.</li>
+
+    <li>If the breakpoint needs to be resolved, the BreakpointManager
+    will try to resolve it immediately. If that fails, it will try to
+    resolve it against each new class that loads during execution of
+    the debuggee.</li>
+
+    <li>The BreakpointManager will hook the breakpoint into the system,
+    ensuring it is registered with the appropriate services.</li>
+  </ul>
+
+  <h3>How breakpoints are resolved</h3>
+
+  <ul>
+    <li>Each breakpoint implementation listens for the appropriate JDI
+    events from the JDI event dispatcher.</li>
+
+    <li>ResolvableBreakpoint is an abstract subclass of
+    AbstractBreakpoint, which resolves itself against a
+    ReferenceType.</li>
+
+    <li>When a new breakpoint is created, the BreakpointManager will
+    ask the breakpoint to resolve itself immediately. If the breakpoint
+    is unsuccessful, an appropriate event request is created. The event
+    request will contain a property called &quot;breakpoint&quot; that
+    refers to the breakpoint that created it. This is used by the
+    breakpoint to respond to a particular JDI event, when it
+    occurs.</li>
+  </ul>
+
+  <h3>What happens when an event occurs</h3>
+
+  <ul>
+    <li>The Dispatcher gets the JDI event and passes it on to the
+    interested event listeners.</li>
+
+    <li>Each breakpoint class must listen for the events it is
+    interested in.</li>
+
+    <li>The breakpoint receives the event and compares the value of the
+    &quot;breakpoint&quot; property of the event request that generated
+    this event. If it matches, the breakpoint has been
+    &quot;hit&quot;.</li>
+
+    <li>If the breakpoint should suspend execution, the stopped counter
+    will be incremented and its monitors will be run.</li>
+  </ul>
+
+  <h3>How breakpoints are persisted</h3>
+
+  <ul>
+    <li>The breakpoint groups, breakpoints, conditions, and monitors
+    are all serialized to a file located in the user directory.</li>
+
+    <li>Serialization begins with the default breakpoint group and
+    traverses down the tree until everything has been saved.</li>
+
+    <li>The BreakpointManager handles de/serialization of the
+    breakpoints at the appropriate times.</li>
+  </ul>
+</body>
+</html>

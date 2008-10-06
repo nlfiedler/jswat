@@ -1,0 +1,54 @@
+<html>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: bytecodes.html 15 2007-06-03 00:01:17Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Byte Codes</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Viewing Method Byte Codes</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The <strong>Bytecodes</strong> view shows the interpreted byte
+  codes of the current method. Because the byte code interpreter must
+  have access to other class information, in addition to the method, it
+  is necessary for the <code>.class</code> file to be read directly in
+  order to gather all necessary information. For this reason, the
+  <code>.class</code> file must be accessible to the debugger and must
+  be on the classpath in order for it to be found.</p>
+
+  <p>While reading the codes from the <code>.class</code> file means the
+  byte codes are not read from the debuggee, JSwat does ensure that the
+  byte codes read from the class are the same as the byte codes for the
+  corresponding method in the debuggee. If those codes differ, the byte
+  codes view will display a warning icon.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="stack.html">Call Stack</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

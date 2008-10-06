@@ -1,0 +1,88 @@
+<html>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat Help module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: threads.html 15 2007-06-03 00:01:17Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Threads</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Multithread Debugging</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The following are tips for debugging multi-threading issues.</p>
+
+  <h3>Breakpoint Filters</h3>
+
+  <p>Some of the breakpoints support the application of thread filters.
+  A thread filter causes the breakpoint to halt execution of the
+  debuggee only when the breakpoint is hit from within the named thread.
+  This can be useful for controlling when the breakpoint stops your
+  program.</p>
+
+  <h3>Breakpoint Expiration</h3>
+
+  <p>An alternative to using a thread filter is to use a count filter.
+  This simply means that you set the breakpoint to stop the debuggee up
+  to a certain number of times. This can be used to allow the breakpoint
+  to be hit once (or twice, or more) but thereafter it will be
+  ignored.</p>
+
+  <p>To reset the breakpoint, simply change its expiration count.</p>
+
+  <h3>Breakpoints Instead of println</h3>
+
+  <p>Since each type of breakpoint displays a message in the Output
+  window whenever the breakpoint is hit, it acts similarly to a call to
+  <code>println</code>. The breakpoint hit message will always include
+  the thread name or unique identifier, so you can easily see which
+  threads are reaching a particular location. Just set the breakpoint
+  suspend policy to "none" so that the impact on the thread timing in
+  the debuggee will be minimal. This can be especially useful if you are
+  debugging code that you cannot modify.</p>
+
+  <p><em>Note that some breakpoint monitors cause the debuggee to
+  suspend momentarily, such as the expression and stack trace monitors.
+  This will possibly affect the thread timing in the debuggee, so avoid
+  using these monitors if the breakpoint suspend policy is
+  "none".</em></p>
+
+  <h3>Watching Field Changes</h3>
+
+  <p>To catch a thread that is changing a field of a particular object
+  instance, you can use a special type of variable breakpoint that is
+  set on a per-instance basis. This is done via the <a
+  href="../view/variables.html">Variables</a> view context menu. This
+  breakpoint will stop whenever the field of a specific instance of a
+  class is modified, which can be very useful if the field is changing
+  unexpectedly.</p>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="context.html">Current Context</a></li>
+    <li><a href="stepping.html">Stepping Through Your Program</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

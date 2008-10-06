@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+ 
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+ 
+  The Original Code is JSwat. The Initial Developer of the Original
+  Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2006. All Rights Reserved.
+ 
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: AutoupdateType.settings 2535 2006-06-29 08:08:09Z nfiedler $
+-->
+<!DOCTYPE settings
+  PUBLIC "-//NetBeans//DTD Session settings 1.0//EN"
+         "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+
+<settings version="1.0">
+    <module name="org.netbeans.modules.autoupdate/1"/>
+    <instanceof class="org.openide.ServiceType"/>
+    <instanceof class="org.netbeans.modules.autoupdate.AutoupdateType"/>
+    <instanceof class="org.netbeans.modules.autoupdate.XMLAutoupdateType"/>
+    <instance class="org.netbeans.modules.autoupdate.XMLAutoupdateType" method="createXMLAutoupdateType"/>
+</settings>

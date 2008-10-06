@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: package.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org" />
+
+  <title>keeps HTML tidy happy</title>
+</head>
+
+<body>
+  <p>Defines the &quot;session&quot; classes which control the
+  debuggee. Sessions are connected to a debuggee via a
+  <code>JvmConnection</code> and control the state of the debuggee.
+  Listeners of the session are notified of when the state in the
+  debuggee changes.</p>
+
+  <p>The <code>SessionManager</code> implementations are accessed via
+  the <code>SessionProvider</code> static class. To provide custom
+  implementations of <code>SessionManager</code>, you must install your
+  implementation as a &quot;service&quot;. See the NetBeans OpenAPIs
+  documentation under &quot;Services &amp; Lookup&quot; to learn how
+  this is done.</p>
+
+  <p>Similarly, instances of <code>SessionFactory</code> are acquired
+  via the <code>SessionProvider</code> static class. To provide custom
+  implementations of <code>SessionFactory</code>, you must install your
+  implementation as a &quot;service&quot;.</p>
+
+  <p>Implementations of <code>Session</code> must cause instances of
+  <code>DebuggingContext</code> and <code>BreakpointManager</code> to
+  be created, prior to the session being connected to a debuggee.
+  Ideally, this would be done in the <code>init()</code> method. See
+  the <code>BasicSession</code> implementation for an example.</p>
+</body>
+</html>

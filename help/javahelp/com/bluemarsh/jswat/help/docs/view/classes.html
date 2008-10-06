@@ -1,0 +1,101 @@
+<html>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: classes.html 15 2007-06-03 00:01:17Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Classes</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Viewing Loaded Classes</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>The <strong>Classes</strong> view shows the class loaders and all
+  of the classes that each class loader has loaded into the debuggee.
+  The list of classes are shown in sorted order by name within their
+  respective packages. The packages are shown in tree form to ease
+  navigation within the list of classes.</p>
+
+  <p>The view updates its contents when ever the session is suspended,
+  whether by hitting a breakpoint, or if the Pause action is invoked. To
+  cause the view to refresh while the debuggee is running, simply invoke
+  the <strong>Refresh</strong> item in the view context menu.</p>
+
+  <h3>Fix and Continue (hotswap)</h3>
+
+  <p>This view offers a <strong>hotswap</strong> function to replace the
+  bytecode of a class without having to restart the debuggee. This
+  attempts to locate the <code>.class</code> file for the corresponding
+  class in the classpath of the debuggee. This means the Java code that
+  you want to fix should be compiled prior to invoking this operation.
+  This requires that the class is available to the debugger on the file
+  system, as it cannot be retrieved over the network.</p>
+
+  <p>Breakpoints in a redefined class will be invalidated for the
+  remainder of the active session. As a work-around, disable and
+  re-enable the breakpoints.</p>
+
+  <h4>From the JDI documentation</h4>
+
+  <p>This function does not cause any initialization except that which
+  would occur under the customary JVM semantics. In other words,
+  redefining a class does not cause its initializers to be run. The
+  values of preexisting static variables will remain as they were prior
+  to the call. However, completely uninitialized (new) static variables
+  will be assigned their default value.</p>
+
+  <p>If a redefined class has instances then all those instances will
+  have the fields defined by the redefined class at the completion of
+  the call. Preexisting fields will retain their previous values. Any
+  new fields will have their default values; no instance initializers or
+  constructors are run.</p>
+
+  <p>If a method that gets modified by a redefineClasses operation has
+  current activations, those activations will continue to execute the
+  old version of the method. New calls will get the new version of the
+  method. In this case, all information about the old version of the
+  method (eg, its local variables, line numbers, ...) is lost and cannot
+  be recovered by the JDI client. All operations that return information
+  about the method will return information about the new version of the
+  method. Breakpoints that are set in the method will be set in the new
+  version, not the old version.</p>
+
+  <p>Some JVMs do not offer unrestricted class redefinition.
+  Restricted class redefinition disallows the following:</p>
+
+  <ul>
+    <li>Changing the schema (the fields)</li>
+    <li>Changing the hierarchy (subclasses, interfaces)</li>
+    <li>Deleting a method</li>
+    <li>Changing class modifiers</li>
+    <li>Changing method modifiers</li>
+  </ul>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="../session/properties.html">Setting the Classpath</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

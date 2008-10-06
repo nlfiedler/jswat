@@ -1,0 +1,135 @@
+<html>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: launch-debuggee.html 15 2007-06-03 00:01:17Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 July 2005), see www.w3.org">
+
+  <title>Launching the Debuggee</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Starting a Local Debuggee</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>Launching a new debuggee is performed by way of the launch dialog.
+  This dialog prompts you for several pieces of information, most of
+  which will have default values if the fields are left blank.</p>
+
+  <p>You can open the dialog box by choosing Session &gt; Start.</p>
+
+  <h3>Paramaters</h3>
+
+  <dl>
+    <dt><em>Java Runtime</em></dt>
+
+    <dd>Use the combo box to choose the runtime to launch the debuggee.
+    If the list is empty, click on the &quot;...&quot; button next to
+    the list to define a runtime. In most cases a default runtime will
+    be automatically discovered and added to the list.</dd>
+
+    <dt><em>JVM Arguments</em></dt>
+
+    <dd>These are options to the debuggee JVM, such as
+    <code>-X..</code>, <code>-hotspot</code>, <code>-ea</code>,
+    <code>-jar ..</code>, and <code>-D..</code>. When using the
+    <code>-jar</code> option, you should put the name of the jar file
+    in the Class Name field.</dd>
+
+    <dt><em>Class Name</em></dt>
+
+    <dd>This is the name of the class to be debugged, and this class
+    must define a <code>public static void main(String[] args)</code>
+    method in order for the debuggee JVM to start correctly. This is
+    typically the bootstrap class in your application. This field can
+    have the name of a JAR file instead of a class, in which case the
+    JAR file must have the <strong>Main-Class</strong> property set in
+    the manifest.</dd>
+
+    <dt><em>Class Arguments</em></dt>
+
+    <dd>These are the arguments to be passed to your main class. These
+    are the same as the arguments that come after your main class name
+    when launching your program from the command line.</dd>
+
+    <dt><em>Resume immediately</em></dt>
+
+    <dd>Checking this option causes the debuggee to start execution as
+    soon as the JVM has completed its startup process. Unchecked, the
+    debuggee will wait for you to instruct it to resume.</dd>
+  </dl>
+
+  <h3>Classpath</h3>
+
+  <p>Use the path editor to define the classpath for your application.
+  Add each of the .jar, .zip, and directories that your application
+  needs via the Add button. <em>You can add arbitrary values by simply
+  typing them into the file selector dialog&#39;s input field.</em></p>
+
+  <h3>What to do next</h3>
+
+  <p>After pressing the Launch button in the launch dialog, the new
+  debuggee process will start in a few seconds. The debuggee JVM then
+  invokes the <code>main</code> method of the class named in the
+  &quot;Class Name&quot; field. At this point you are ready to begin
+  debugging by setting breakpoints and stepping through your code.</p>
+
+  <h3>Troubleshooting</h3>
+
+  <h4>Class not found</h4>
+
+  <dl>
+    <dt><strong>Is the classpath set correctly?</strong></dt>
+
+    <dd>On Microsoft Windows you need to include the drive
+    specification (e.g. <code>C:</code>) and use backslash (\) as the
+    file separator.</dd>
+
+    <dt><strong>Did you enter a proper class name?</strong></dt>
+
+    <dd>Note that a class name is of the form
+    <code>java.lang.Object</code>, and is <em>not</em> the name of the
+    source file or the bytecode file (<code>.class</code>).</dd>
+
+    <dt><strong>Is the name of the class fully-qualified?</strong></dt>
+
+    <dd>If your class is defined in a package, you need to include that
+    as part of the class name (e.g. <code>java.lang.Object</code>). Be
+    sure <em>not</em> to include the <code>.class</code> extension of
+    the class file. The class name refers to the name of the class, not
+    the name of the file in which it is stored.</dd> </dl>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="resume-debuggee.html">Resuming the Debuggee</a></li>
+
+    <li><a href="suspend-debuggee.html">Suspending the
+    Debuggee</a></li>
+
+    <li><a href="finish-session.html">Finishing the Session</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

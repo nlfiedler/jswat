@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: Standard.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+
+<!DOCTYPE Configuration
+  PUBLIC "-//NetBeans IDE//DTD toolbar//EN"
+         "http://www.netbeans.org/dtds/toolbar.dtd">
+
+<Configuration>
+  <Row>
+    <Toolbar name="File"/>
+    <Toolbar name="Edit"/>
+    <Toolbar name="Session"/>
+    <Toolbar name="Stepping"/>
+    <Toolbar name="Status"/>
+    <Toolbar name="Memory" visible="false"/>
+  </Row>
+</Configuration>

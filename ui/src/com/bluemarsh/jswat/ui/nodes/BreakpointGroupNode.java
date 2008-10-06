@@ -1,0 +1,162 @@
+/*
+ *                     Sun Public License Notice.
+ *
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
+ *
+ * The Original Code is JSwat. The Initial Developer of the Original
+ * Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+ * are Copyright (C) 2004-2006. All Rights Reserved.
+ *
+ * Contributor(s): Nathan L. Fiedler.
+ *
+ * $Id: BreakpointGroupNode.java 15 2007-06-03 00:01:17Z nfiedler $
+ */
+
+package com.bluemarsh.jswat.ui.nodes;
+
+import com.bluemarsh.jswat.core.breakpoint.BreakpointGroup;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
+import com.bluemarsh.jswat.ui.breakpoint.GroupEditorPanel;
+import java.awt.Component;
+import java.awt.Image;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyDescriptor;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.MissingResourceException;
+import org.openide.ErrorManager;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node.Property;
+import org.openide.nodes.Sheet;
+import org.openide.nodes.Sheet.Set;
+import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
+import org.openide.util.datatransfer.NewType;
+
+/**
+ * Represents a group of breakpoints.
+ *
+ * @author  Nathan Fiedler
+ */
+public class BreakpointGroupNode extends BaseNode
+        implements PropertyChangeListener {
+    /** The breakpoint group we represent. */
+    private BreakpointGroup group;
+
+    /**
+     * Constructs a new instance of GroupNode.
+     *
+     * @param  kids   children heirarchy for this node.
+     * @param  group  breakpoint group we represent.
+     */
+    public BreakpointGroupNode(Children kids, BreakpointGroup group) {
+        super(kids);
+        this.group = group;
+        group.addPropertyChangeListener(this);
+    }
+
+    public boolean canDestroy() {
+        BreakpointManager bm = BreakpointProvider.getBreakpointManager(group);
+        BreakpointGroup defgrp = bm.getDefaultGroup();
+        // Disallow deleting the default group.
+        return !defgrp.equals(group);
+    }
+
+    protected Sheet createSheet() {
+        Sheet sheet = Sheet.createDefault();
+        Set set = sheet.get(Sheet.PROPERTIES);
+        try {
+            BeanInfo bi = Introspector.getBeanInfo(group.getClass());
+            PropertyDescriptor[] props = bi.getPropertyDescriptors();
+            for(PropertyDescriptor prop : props) {
+                String name = prop.getName();
+                if (name.equals("class") || name.equals("parent")) {
+                    // Ignore these useless properties.
+                    continue;
+                }
+                Class type = prop.getPropertyType();
+                Method getter = prop.getReadMethod();
+                Method setter = prop.getWriteMethod();
+                // Each node property needs its own name, and the display properties
+                // that were given to the corresponding table column.
+                Property node = new BeanPropertySupport(
+                        group, type, getter, setter);
+                node.setName(name);
+                node.setDisplayName(NbBundle.getMessage(BreakpointGroupNode.class,
+                        "CTL_BreakpointProperty_Name_" + name));
+                node.setShortDescription(NbBundle.getMessage(BreakpointGroupNode.class,
+                        "CTL_BreakpointProperty_Desc_" + name));
+                set.put(node);
+            }
+        }  catch (IntrospectionException ie) {
+            ErrorManager.getDefault().notify(ie);
+            set.put(new ExceptionProperty(ie));
+        }  catch (MissingResourceException mre) {
+            ErrorManager.getDefault().notify(mre);
+            set.put(new ExceptionProperty(mre));
+        }
+        return sheet;
+    }
+
+    public void destroy() throws IOException {
+        BreakpointManager bm = BreakpointProvider.getBreakpointManager(group);
+        bm.removeBreakpointGroup(group);
+        super.destroy();
+    }
+
+    public Component getCustomizer() {
+        GroupEditorPanel gep = new GroupEditorPanel();
+        gep.loadParameters(group);
+        return gep.createDialog();
+    }
+
+    public String getDisplayName() {
+        return group.getName();
+    }
+
+    public Image getIcon(int type) {
+        String url = NbBundle.getMessage(BreakpointGroupNode.class,
+                "IMG_GroupNode");
+        return Utilities.loadImage(url);
+    }
+
+    /**
+     * Returns the BreakpointGroup this node represents.
+     *
+     * @return  breakpoint group.
+     */
+    public BreakpointGroup getGroup() {
+        return group;
+    }
+
+    public NewType[] getNewTypes() {
+        NewType[] types = new NewType[] {
+            new BreakpointNewType(),
+            new BreakpointGroupNewType(group),
+        };
+        return types;
+    }
+
+    public Image getOpenedIcon(int type) {
+        return getIcon(type);
+    }
+
+    public boolean hasCustomizer() {
+        return true;
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        propertyChanged(evt.getPropertyName(), evt.getOldValue(),
+                evt.getNewValue());
+        // Only property of group is the name, so must update this.
+        displayNameChanged();
+    }
+}

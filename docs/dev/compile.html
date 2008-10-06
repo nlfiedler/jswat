@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: compile.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 1 September 2005), see www.w3.org" />
+
+  <title>JSwat - How to Compile, Run, and Debug JSwat</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>How to Compile, Run, and Debug JSwat</h2>
+
+  <p>The following is an abbreviated set of steps for building JSwat
+  from source code. If you encounter complications at any point, please
+  refer to the detailed steps given in the following sections.</p>
+
+  <ol>
+    <li><a href="http://java.sun.com/javase/">JDK 1.6</a> must be
+    installed to compile JSwat.</li>
+
+    <li><a href="http://www.netbeans.org/">NetBeans IDE 5.5</a> must be
+    installed, as JSwat is based on the NetBeans Platform, with some
+    additional IDE modules.</li>
+
+    <li>Make the build: <kbd>ant build</kbd></li>
+
+    <li>Run the debugger: <kbd>ant run</kbd></li>
+  </ol>
+
+  <p>If that worked for you, then you are on your way to developing
+  JSwat. However, if there was a problem, continue reading the
+  following sections for detailed information.</p>
+
+  <h3>Installing Required Software</h3>
+
+  <h4>Java Development Kit</h4>
+
+  <p>JSwat is written in the Java language, version 1.5. Visit the
+  <a href="http://java.sun.com/javase/">Java SE</a> page and download
+  the release appropriate for your system. <em>It is possible, though
+  not recommended, to use compatible software from other vendors. In
+  this case, make sure that software includes the <a href=
+  "http://java.sun.com/products/jpda/">Java Platform Debugger
+  Architecture</a> (JPDA) library.</em></p>
+
+  <p><em>Presently the IBM JDK 1.5 contains a flawed xalan
+  implementation in its boot classpath, so it is not possible to run
+  JSwat (and likewise, NetBeans) using this particular JDK. See the
+  <a href=
+  "http://wiki.java.net/bin/view/Netbeans/FaqXalanOnCP">NetBeans User
+  FAQ</a> for more information.</em></p>
+
+  <h4>NetBeans IDE</h4>
+
+  <p>JSwat is based on the NetBeans Platform 5.5, and utilizes some of
+  the modules provided in the NetBeans IDE. Thus, to build JSwat you
+  will need to install the <a href=
+  "http://www.netbeans.org/products/ide/">NetBeans IDE</a> version 5.5.
+  Developing JSwat within the NetBeans IDE is highly recommended, as it
+  makes many of the mundane tasks much easier.</p>
+
+  <p>You may also want to download the NetBeans IDE source code and API
+  documentation, which can be found at the URL given above.</p>
+
+  <h3>Building JSwat</h3>
+
+  <p>Once the JDK and NetBeans are installed, you are ready to build
+  JSwat. Prior to building JSwat for the first time, it is necessary to
+  start the NetBeans IDE and open the JSwat module suite project. This
+  will create the necessary build properties files, allowing the
+  application to be built from the command-line. Of course, once the
+  IDE is started and the projects opened, you may as well build from
+  within the IDE.</p>
+
+  <p>To build the application from the command-line, invoke the
+  <em>build</em> target on the <code>build.xml</code> in the root of
+  the source tree. This will compile all of the modules and produce the
+  JSwat modules.</p>
+  <pre>
+&gt; ant build
+</pre>
+
+  <h3>Running JSwat</h3>
+
+  <p>Invoke the <em>run</em> target of the top-level
+  <code>build.xml</code> file. You should soon see the JSwat splash
+  screen followed by the main window.</p>
+  <pre>
+&gt; ant run
+</pre>
+
+  <h3>Debugging JSwat</h3>
+
+  <p>Invoke the <em>debug</em> target of the top-level
+  <code>build.xml</code> file. The application will start in debug mode
+  and the IDE debugger will be connected to it automatically. <em>Note
+  that this target only works inside the NetBeans IDE.</em></p>
+  <pre>
+&gt; ant debug
+</pre>
+</body>
+</html>

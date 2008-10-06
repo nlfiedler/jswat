@@ -1,0 +1,116 @@
+<html>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat Help module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2005-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: stepping.html 15 2007-06-03 00:01:17Z nfiedler $
+
+  DO NOT USE HTML TIDY ON THIS FILE (it adds /> which confuses JavaHelp)
+-->
+
+<head>
+  <title>Single Stepping</title>
+  <link href="../help.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <h2>Stepping Through Your Program</h2>
+
+  <p><small><a href="#seealso">See Also</a></small></p>
+
+  <p>Once execution of your program is halted, you can step through your
+  lines of code using the following actions in the Stepping menu or
+  toolbar:</p>
+
+  <dl>
+    <dt><strong>Step Over (F8)</strong></dt>
+
+    <dd>Executes one source line. If the source line contains a call,
+    executes the entire method without stepping through the individual
+    lines.</dd>
+
+    <dt><strong>Step Instruction Over</strong></dt>
+
+    <dd>Executes one byte code instruction. If the code invokes a
+    method, executes the entire method without stepping through the
+    individual instructions.</dd>
+
+    <dt><strong>Step Into (F7)</strong></dt>
+
+    <dd>Executes one source line. If the source line contains a call,
+    the IDE stops just before executing the first statement of that
+    method.</dd>
+
+    <dt><strong>Step Instruction Into</strong></dt>
+
+    <dd>Executes one byte code instruction. If the code invokes a
+    method, the IDE stops just before executing the first code of
+    that method.</dd>
+
+    <dt><strong>Step Out (Alt-Shift-F7)</strong></dt>
+
+    <dd>Executes the remaining lines of the method and returns control
+    to the caller of the method.</dd>
+
+    <dt><strong>Run to Cursor</strong></dt>
+
+    <dd>Sets a temporary breakpoint at the line of code at which the
+    text cursor is currently positioned, and continues execution such
+    that the breakpoint will be hit. The breakpoint is then deleted
+    once it has been reached.</dd>
+  </dl>
+
+  <p>While stepping through your program, the current context will be
+  updated automatically. Subsequently various debugger windows will also
+  be updated to display the relevant information.</p>
+
+  <h3>Breakpoints</h3>
+
+  <p>While single-stepping over method calls, or stepping out of a
+  method call, breakpoints that are encountered by the debuggee will
+  still cause it to be suspended. That is, single-stepping does not
+  preclude hitting breakpoints.</p>
+
+  <h3>Exclusion Filters</h3>
+
+  <p>Normally when stepping through the code in the debuggee, you may
+  step into methods that are not a part of your application. To avoid
+  this, you can define a set of stepping exclusions. A stepping exclude
+  is a class name, or just a package name, for which you do not want to
+  step into code within that class or package.</p>
+
+  <p>The exclusion filters are defined in the <strong>Options</strong>
+  dialog, available from the Tools menu. The property is called
+  <em>Stepping Excludes</em> and is found under the Debugging/General
+  category.</p>
+
+  <p>Examples of exclusion filters would be:</p>
+
+  <ul>
+    <li><code>com.sun.*</code></li>
+    <li><code>javax.*</code></li>
+    <li><code>java.*</code></li>
+  </ul>
+
+  <p><strong><a name="seealso" id="seealso">See Also</a></strong></p>
+
+  <ul>
+    <li><a href="../action/attach-debuggee.html">Attaching to a Remote Debuggee</a></li>
+
+    <li><a href="../action/launch-debuggee.html">Starting a Local Debuggee</a></li>
+  </ul>
+  <hr>
+
+  <p><small><a href="../credits.html">Legal Notices</a></small></p>
+</body>
+</html>

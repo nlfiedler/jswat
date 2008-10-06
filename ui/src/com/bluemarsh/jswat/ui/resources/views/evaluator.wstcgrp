@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+ 
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+ 
+  The Original Code is the JSwat UI module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004. All Rights Reserved.
+ 
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: evaluator.wstcgrp 1837 2005-07-24 07:38:25Z nfiedler $
+-->
+<!DOCTYPE tc-group
+  PUBLIC "-//NetBeans//DTD Top Component in Group Properties 2.0//EN"
+         "http://www.netbeans.org/dtds/tc-group2_0.dtd">
+
+<tc-group version="2.0">
+  <module name="com.bluemarsh.jswat.ui/1" spec="1.0"/>
+  <tc-id id="evaluator"/>
+  <open-close-behavior open="false" close="true"/>
+</tc-group>

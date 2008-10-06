@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is the JSwat Parser module. The Initial Developer of the
+  Original Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2004-2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: build.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+<!--
+   You may freely edit this file. See harness/README in the NetBeans platform
+   for some information on what you could do (e.g. targets to override).
+   If you delete this file and reopen the project it will be recreated.
+-->
+<project name="com.bluemarsh.jswat.parser" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project com.bluemarsh.jswat.parser.</description>
+
+    <!-- Permit external customizations. -->
+    <property file="../build.properties"/>
+    <import file="nbproject/build-impl.xml"/>
+
+    <!-- Location of build generated files. -->
+    <property name="build.dir" value="build"/>
+    <!-- Location of parser generated files. -->
+    <property name="output.dir" value="output"/>
+    <!-- Path and filename of the SableCC jar file, required to generate parser.
+    This jar file should contain the sablecc ant task definition. -->
+    <property name="sablecc.jar" location="sablecc.jar"/>
+
+    <target name="testuserdir-delete">
+        <!-- Do nothing in the hopes that our userdir will stick around. -->
+    </target>
+
+    <target name="generate"
+            description="Creates the Java parser from the grammar file.">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${output.dir}"/>
+        <!-- Define the sablecc Ant task for generating the parser. -->
+        <taskdef name="sablecc" classpath="${sablecc.jar}"
+                 classname="org.sablecc.ant.taskdef.Sablecc"/>
+        <sablecc src="grammar" outputdirectory="${output.dir}" includes="j14.sablecc"/>
+        <javac srcdir="${output.dir}" destdir="${build.dir}" debug="off"/>
+        <jar jarfile="release/modules/ext/com-bluemarsh-jswat-parser.jar">
+            <fileset dir="${build.dir}"/>
+            <fileset dir="${output.dir}">
+                <include name="**/*.dat"/>
+            </fileset>
+        </jar>
+        <delete dir="${build.dir}"/>
+        <delete dir="${output.dir}"/>
+    </target>
+</project>

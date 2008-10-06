@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id: launchers.html 15 2007-06-03 00:01:17Z nfiedler $ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 12 April 2005), see www.w3.org" />
+
+  <title>OS-specific Launchers</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>OS-specific Launchers</h2>
+
+  <h3>Microsoft Windows</h3>
+
+  <p>Most of the users of JSwat are running some variant of Microsoft
+  Windows, most likely 2000 or XP. The launcher for this platform is
+  contained in the <code>launcher/windows</code> directory. This
+  includes the C++ source file for the launcher, the makefile to
+  compile it, an icon file, a resource descriptor file, and the
+  compiled executables.</p>
+
+  <p>If and when it is necessary to recompile the Windows launchers, it
+  must be done on a Windows system running <a href=
+  "http://sourceware.org/cygwin">Cygwin</a>, the Linux emulator for
+  Windows. Not only must the machine have the base Cygwin components,
+  it must also have the development tools, which includes
+  <code>make</code>, <code>gcc</code>, and MinGW.</p>
+
+  <p>To recompile the Windows launchers, start the Cygwin bash shell,
+  change to the <code>launcher/windows</code> directory, and invoke
+  <kbd>make</kbd>. This will completely rebuild the launchers from
+  source. Test them by copying the <code>.exe</code> files to the
+  <code>bin</code> directory under the NetBeans Platform installation,
+  and double-clicking one of them in the Windows Explorer. You should
+  see the JSwat splash screen appear shortly, followed by the main
+  window.</p>
+
+  <p><em>Note that the <code>jswat.exe</code> executable does not
+  display a command prompt, while the <code>jswatw.exe</code></em>
+  does. This is by design, and useful for debugging.</p>
+
+  <p>The launcher code is simply a modification of the NetBeans
+  launcher. The changes include the default clusters list, the branding
+  token, and the removal of a class import. In addition, the
+  <code>Makefile</code> has the patch from issue 53136 in the NetBeans
+  IssueZilla applied to it, with some extra cleanup and the addition of
+  the <code>-DWINMAIN</code> definition.</p>
+
+  <h3>Unix-like systems</h3>
+
+  <p>For most, if not all, of the Unix-like systems, the launcher of
+  choice is the Bourne shell script named <code>jswat</code> in the
+  directory <code>launcher/unix</code>. Modifying this file is trivial
+  and no recompilation is necessary. Test this file by copying it to
+  the <code>bin</code> directory under the NetBeans Platform
+  installation, and then invoking the script. You should see the JSwat
+  splash screen appear shortly, followed by the main window.</p>
+
+  <p>The launcher code is simply a modification of the NetBeans
+  launcher. The changes include the default clusters list, the branding
+  token, and the removal of a class import.</p>
+</body>
+</html>

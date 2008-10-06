@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                      Sun Public License Notice.
+
+  The contents of this file are subject to the Sun Public License
+  Version 1.0 (the "License"); you may not use this file except in
+  compliance with the License. A copy of the License is available at
+  http://www.sun.com/
+
+  The Original Code is JSwat. The Initial Developer of the Original
+  Code is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
+  are Copyright (C) 2006. All Rights Reserved.
+
+  Contributor(s): Nathan L. Fiedler.
+
+  $Id: layer.xml 15 2007-06-03 00:01:17Z nfiedler $
+-->
+<!DOCTYPE filesystem
+  PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN"
+         "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Menu">
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+        <attr name="View/Session" boolvalue="true"/>
+        <folder name="Session">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-FinishSessionAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-FinishSessionAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-LaunchDebuggeeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-LaunchDebuggeeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-SessionPropertiesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-SessionPropertiesAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-NewSessionAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-NewSessionAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-SessionsViewAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-SessionsViewAction.instance"/>
+            </file>
+            <attr name="com-bluemarsh-jswat-ui-actions-LaunchDebuggeeAction.shadow/com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.shadow/com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.shadow/com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.shadow/com-bluemarsh-jswat-ui-actions-FinishSessionAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-FinishSessionAction.shadow/com-bluemarsh-jswat-ui-actions-SessionPropertiesAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-SessionPropertiesAction.shadow/com-bluemarsh-jswat-ui-actions-NewSessionAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-NewSessionAction.shadow/com-bluemarsh-jswat-ui-actions-SessionsViewAction.shadow" boolvalue="true"/>
+        </folder>
+        <attr name="Session/Breakpoint" boolvalue="true"/>
+        <folder name="Breakpoint">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-NewBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-NewBreakpointAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-BreakpointsViewAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-BreakpointsViewAction.instance"/>
+            </file>
+            <attr name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.shadow/com-bluemarsh-jswat-ui-actions-NewBreakpointAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-NewBreakpointAction.shadow/com-bluemarsh-jswat-ui-actions-BreakpointsViewAction.shadow" boolvalue="true"/>
+        </folder>
+        <attr name="Breakpoint/Stepping" boolvalue="true"/>
+        <folder name="Stepping">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepIntoAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepIntoAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOverAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepOverAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOverCodeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepOverCodeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOutAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepOutAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-RunToCursorAction.instance"/>
+            </file>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepIntoAction.shadow/com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.shadow/com-bluemarsh-jswat-ui-actions-StepOverAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepOverAction.shadow/com-bluemarsh-jswat-ui-actions-StepOverCodeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepOverCodeAction.shadow/com-bluemarsh-jswat-ui-actions-StepOutAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepOutAction.shadow/com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow" boolvalue="true"/>
+        </folder>
+        <attr name="Stepping/Tools" boolvalue="true"/>
+        <folder name="Tools">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-ui-actions-ManageRuntimesAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ManageRuntimesAction.instance"/>
+            </file>
+            <file name="JavaPlatformsCustomizerAction.instance_hidden"/>
+            <file name="org-netbeans-core-actions-ConfigureShortcutsAction.instance_hidden"/>
+            <file name="LibrariesCustomizerAction.instance_hidden"/>
+            <file name="org-netbeans-modules-favorites-templates-TemplatesAction.instance_hidden"/>
+        </folder>
+        <folder name="Window">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-ui-actions-SourcesViewAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-SourcesViewAction.instance"/>
+            </file>
+            <attr name="com-bluemarsh-jswat-ui-actions-SourcesViewAction.shadow/org-netbeans-modules-favorites-View.shadow" boolvalue="true"/>
+            <folder name="Debugging">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:org/openide/resources/actions/empty.gif"/>
+                <file name="com-bluemarsh-jswat-ui-actions-BreakpointsViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-BreakpointsViewAction.instance"/>
+                </file>
+                <file name="com-bluemarsh-jswat-ui-actions-ByteCodesViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-ByteCodesViewAction.instance"/>
+                </file>
+                <file name="com-bluemarsh-jswat-ui-actions-ClassesViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-ClassesViewAction.instance"/>
+                </file>
+                <file name="com-bluemarsh-jswat-ui-actions-EvaluatorViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-EvaluatorViewAction.instance"/>
+                </file>
+                <file name="com-bluemarsh-jswat-ui-actions-SessionsViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-SessionsViewAction.instance"/>
+                </file>
+                <file name="com-bluemarsh-jswat-ui-actions-StackViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-StackViewAction.instance"/>
+                </file>
+                <file name="com-bluemarsh-jswat-ui-actions-ThreadsViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-ThreadsViewAction.instance"/>
+                </file>
+                <file name="com-bluemarsh-jswat-ui-actions-VariablesViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-VariablesViewAction.instance"/>
+                </file>
+                <file name="com-bluemarsh-jswat-ui-actions-WatchesViewAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-ui-actions-WatchesViewAction.instance"/>
+                </file>
+                <attr name="com-bluemarsh-jswat-ui-actions-VariablesViewAction.shadow/com-bluemarsh-jswat-ui-actions-WatchesViewAction.shadow" boolvalue="true"/>
+                <attr name="com-bluemarsh-jswat-ui-actions-WatchesViewAction.shadow/com-bluemarsh-jswat-ui-actions-StackViewAction.shadow" boolvalue="true"/>
+                <attr name="com-bluemarsh-jswat-ui-actions-StackViewAction.shadow/com-bluemarsh-jswat-ui-actions-ClassesViewAction.shadow" boolvalue="true"/>
+                <attr name="com-bluemarsh-jswat-ui-actions-ClassesViewAction.shadow/com-bluemarsh-jswat-ui-actions-BreakpointsViewAction.shadow" boolvalue="true"/>
+                <attr name="com-bluemarsh-jswat-ui-actions-BreakpointsViewAction.shadow/com-bluemarsh-jswat-ui-actions-SessionsViewAction.shadow" boolvalue="true"/>
+                <attr name="com-bluemarsh-jswat-ui-actions-SessionsViewAction.shadow/com-bluemarsh-jswat-ui-actions-ThreadsViewAction.shadow" boolvalue="true"/>
+                <attr name="com-bluemarsh-jswat-ui-actions-ThreadsViewAction.shadow/com-bluemarsh-jswat-ui-actions-EvaluatorViewAction.shadow" boolvalue="true"/>
+                <attr name="com-bluemarsh-jswat-ui-actions-EvaluatorViewAction.shadow/com-bluemarsh-jswat-ui-actions-ByteCodesViewAction.shadow" boolvalue="true"/>
+            </folder>
+        </folder>
+        <folder name="Help">
+            <file name="Tutorials_hidden"/>
+            <file name="shortcuts.xml_hidden"/>
+            <file name="netbeans-kb.url_hidden"/>
+            <file name="relnotes.url_hidden"/>
+            <attr name="master-help.xml/org-netbeans-core-actions-AboutAction.instance" boolvalue="true"/>
+        </folder>
+        <file name="BuildProject_hidden"/>
+        <file name="GoTo_hidden"/>
+        <file name="Source_hidden"/>
+    </folder>
+
+    <folder name="Toolbars">
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+        <file name="Standard.xml" url="Standard.xml"/>
+        <folder name="Session">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-ui-actions-LaunchDebuggeeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-LaunchDebuggeeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-FinishSessionAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-FinishSessionAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.instance"/>
+            </file>
+            <attr name="com-bluemarsh-jswat-ui-actions-LaunchDebuggeeAction.shadow/com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-AttachDebuggeeAction.shadow/com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-ResumeDebuggeeAction.shadow/com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-SuspendDebuggeeAction.shadow/com-bluemarsh-jswat-ui-actions-FinishSessionAction.shadow" boolvalue="true"/>
+        </folder>
+        <folder name="Stepping">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-ui-actions-StepIntoAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepIntoAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOverAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepOverAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOutAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepOutAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-RunToCursorAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.instance"/>
+            </file>
+            <file name="com-bluemarsh-jswat-ui-actions-StepOverCodeAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-StepOverCodeAction.instance"/>
+            </file>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepIntoAction.shadow/com-bluemarsh-jswat-ui-actions-StepOverAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepOverAction.shadow/com-bluemarsh-jswat-ui-actions-StepOutAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepOutAction.shadow/com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-RunToCursorAction.shadow/com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.shadow" boolvalue="true"/>
+            <attr name="com-bluemarsh-jswat-ui-actions-StepIntoCodeAction.shadow/com-bluemarsh-jswat-ui-actions-StepOverCodeAction.shadow" boolvalue="true"/>
+        </folder>
+        <folder name="Status">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+            <file name="com-bluemarsh-jswat-ui-toolbar-SessionStatusAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-toolbar-SessionStatusAction.instance"/>
+            </file>
+        </folder>
+        <file name="Build_hidden"/>
+        <file name="Debug_hidden"/>
+    </folder>
+
+    <folder name="Shortcuts">
+        <!-- Hide all of the projects keyboard shortcuts. -->
+        <file name="F12.shadow_hidden"/>
+        <file name="S-F12.shadow_hidden"/>
+        <!-- O = Alt, S = Shift, D = Ctrl (O and D work on PC or Mac, whereas
+        A and C are platform specific, i.e. they differ on PC and Mac) -->
+        <file name="D-1.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.SourcesViewAction"/>
+        </file>
+        <file name="D-F8.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.ToggleBreakpointAction"/>
+        </file>
+        <file name="DS-F8.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.NewBreakpointAction"/>
+        </file>
+        <file name="F4.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.RunToCursorAction"/>
+        </file>
+        <file name="F5.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.LaunchDebuggeeAction"/>
+        </file>
+        <file name="F7.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.StepIntoAction"/>
+        </file>
+        <file name="F8.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.StepOverAction"/>
+        </file>
+        <file name="OS-1.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.VariablesViewAction"/>
+        </file>
+        <file name="OS-2.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.WatchesViewAction"/>
+        </file>
+        <file name="OS-3.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.StackViewAction"/>
+        </file>
+        <file name="OS-4.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.ClassesViewAction"/>
+        </file>
+        <file name="OS-7.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.ThreadsViewAction"/>
+        </file>
+        <file name="OS-5.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.BreakpointsViewAction"/>
+        </file>
+        <file name="OS-6.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.SessionsViewAction"/>
+        </file>
+        <file name="OS-8.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.EvaluatorViewAction"/>
+        </file>
+        <file name="OS-F7.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.StepOutAction"/>
+        </file>
+    </folder>
+
+    <folder name="Services">
+        <folder name="AutoupdateType">
+            <file name="AutoupdateType.settings" url="AutoupdateType.settings">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/autoupdate/resources/updateAction.gif"/>
+                <attr name="url_key" stringvalue="Default_URL"/>
+                <attr name="enabled" boolvalue="true"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>
