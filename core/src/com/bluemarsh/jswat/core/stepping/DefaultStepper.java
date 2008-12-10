@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -57,6 +57,7 @@ public class DefaultStepper extends AbstractStepper implements DispatcherListene
     public DefaultStepper() {
     }
 
+    @Override
     public boolean eventOccurred(Event event) {
         VirtualMachine vm = event.virtualMachine();
         if (event instanceof StepEvent) {
@@ -99,6 +100,7 @@ public class DefaultStepper extends AbstractStepper implements DispatcherListene
         return false;
     }
 
+    @Override
     public StepRequest step(VirtualMachine vm, ThreadReference thread,
             int size, int depth) {
         try {
@@ -124,10 +126,10 @@ public class DefaultStepper extends AbstractStepper implements DispatcherListene
 
             // Add class exclusions set by the user.
             CoreSettings cs = CoreSettings.getDefault();
-            List excludes = cs.getSteppingExcludes();
-            Iterator iter = excludes.iterator();
+            List<String> excludes = cs.getSteppingExcludes();
+            Iterator<String> iter = excludes.iterator();
             while (iter.hasNext()) {
-                String excl = (String) iter.next();
+                String excl = iter.next();
                 request.addClassExclusionFilter(excl);
             }
 
