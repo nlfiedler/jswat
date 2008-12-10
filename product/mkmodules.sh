@@ -16,15 +16,17 @@ if [ -z "$1" ]; then
     echo "Missing required path for NetBeans module config files!"
     exit
 fi
-DIR=$1
+BASE=$1
 ALL=/tmp/all_modules.txt
 
 # Create the list of all modules found in NetBeans IDE clusters.
 # Note that sed does not understand +, so must use * instead.
-find "$DIR/ide9/config/Modules" "$DIR/java2/config/Modules" -name "*.xml" -print0 |\
-xargs -0 grep -h "module name" |\
-sed 's/^.*"\(.*\)">$/\1/' |\
-sort > $ALL
+IDE=$BASE/ide10/config/Modules
+JAVA=$BASE/java2/config/Modules
+find "$IDE" "$JAVA" -name "*.xml" -print0 |\
+    xargs -0 grep -h "module name" |\
+    sed 's/^.*"\(.*\)">$/\1/' |\
+    sort > $ALL
 
 # Now create the list of disabled modules.
 cat modules.txt $ALL |\
