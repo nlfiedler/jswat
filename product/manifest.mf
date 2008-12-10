@@ -3,7 +3,6 @@ OpenIDE-Module: com.bluemarsh.jswat.product/1
 OpenIDE-Module-Java-Dependencies: Java > 1.6
 OpenIDE-Module-Layer: com/bluemarsh/jswat/product/layer.xml
 OpenIDE-Module-Localizing-Bundle: com/bluemarsh/jswat/product/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Provides: org.netbeans.modules.project.uiapi.ActionsFactory,
   org.netbeans.modules.project.uiapi.OpenProjectsTrampoline,
   org.netbeans.modules.project.uiapi.ProjectChooserFactory
