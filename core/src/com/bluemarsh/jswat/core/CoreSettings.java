@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,22 +23,18 @@
 
 package com.bluemarsh.jswat.core;
 
-import java.io.IOException;
-import java.io.ObjectInput;
+import com.bluemarsh.jswat.core.util.Strings;
 import java.util.Collections;
 import java.util.List;
-import org.openide.options.SystemOption;
-import org.openide.util.HelpCtx;
-import org.openide.util.NbBundle;
+import java.util.prefs.Preferences;
+import org.openide.util.NbPreferences;
 
 /**
- * Manages the core debugger options.
+ * Manages the core debugger options. Delegates to NbPreferences.
  *
  * @author  Nathan Fiedler
  */
-public class CoreSettings extends SystemOption {
-    /** serial version UID - DO NOT CHANGE */
-    private static final long serialVersionUID = 5094910772009622985L;
+public class CoreSettings {
     /** Name of the connection timeout setting. */
     public static final String PROP_CONNECT_TIMEOUT = "connectionTimeout";
     /** Name of the method invocation timeout setting. */
@@ -53,14 +49,16 @@ public class CoreSettings extends SystemOption {
     public static final String PROP_SOURCE_EXTENSION = "sourceExtension";
     /** Name of the single-stepping excludes setting. */
     public static final String PROP_STEPPING_EXCLUDES = "steppingExcludes";
+    /** Singleton instance. */
+    private static CoreSettings theInstance;
+    /** The Preferences instance where our settings are stored. */
+    private Preferences preferences;
 
     /**
-     * Get the display name of this system option.
-     *
-     * @return  display name.
+     * Singleton constructor.
      */
-    public String displayName() {
-        return NbBundle.getMessage(getClass(), "CTL_CoreSettings_name");
+    private CoreSettings() {
+        preferences = NbPreferences.forModule(this.getClass());
     }
 
     /**
@@ -68,13 +66,11 @@ public class CoreSettings extends SystemOption {
      *
      * @return  the instance.
      */
-    public static CoreSettings getDefault() {
-        return findObject(CoreSettings.class, true);
-    }
-
-    @Override
-    public HelpCtx getHelpCtx() {
-        return HelpCtx.DEFAULT_HELP;
+    public static synchronized CoreSettings getDefault() {
+        if (theInstance == null) {
+            theInstance = new CoreSettings();
+        }
+        return theInstance;
     }
 
     /**
@@ -83,7 +79,7 @@ public class CoreSettings extends SystemOption {
      * @return  connection timeout (in milliseconds).
      */
     public int getConnectionTimeout() {
-        return ((Integer) getProperty(PROP_CONNECT_TIMEOUT)).intValue();
+        return preferences.getInt(PROP_CONNECT_TIMEOUT, 30000);
     }
 
     /**
@@ -92,7 +88,7 @@ public class CoreSettings extends SystemOption {
      * @return  invocation timeout (in milliseconds).
      */
     public int getInvocationTimeout() {
-        return ((Integer) getProperty(PROP_INVOKE_TIMEOUT)).intValue();
+        return preferences.getInt(PROP_INVOKE_TIMEOUT, 5000);
     }
 
     /**
@@ -101,7 +97,7 @@ public class CoreSettings extends SystemOption {
      * @return  true if showing all threads, false to hide weird threads.
      */
     public boolean getShowAllThreads() {
-        return ((Boolean) getProperty(PROP_SHOW_ALL_THREADS)).booleanValue();
+        return preferences.getBoolean(PROP_SHOW_ALL_THREADS, false);
     }
 
     /**
@@ -110,7 +106,7 @@ public class CoreSettings extends SystemOption {
      * @return  true if showing hidden files, false otherwise.
      */
     public boolean getShowHiddenFiles() {
-        return ((Boolean) getProperty(PROP_SHOW_HIDDEN_FILES)).booleanValue();
+        return preferences.getBoolean(PROP_SHOW_HIDDEN_FILES, false);
     }
 
     /**
@@ -119,7 +115,7 @@ public class CoreSettings extends SystemOption {
      * @return  true if skipping synthetics, false otherwise.
      */
     public boolean getSkipSynthetics() {
-        return ((Boolean) getProperty(PROP_SKIP_SYNTHETICS)).booleanValue();
+        return preferences.getBoolean(PROP_SKIP_SYNTHETICS, false);
     }
 
     /**
@@ -128,31 +124,18 @@ public class CoreSettings extends SystemOption {
      * @return  the file extension for locating source files.
      */
     public String getSourceExtension() {
-        return (String) getProperty(PROP_SOURCE_EXTENSION);
+        return preferences.get(PROP_SOURCE_EXTENSION, ".java");
     }
 
     /**
      * Retrieves the single-stepping exclusions value.
      *
-     * @return  list of packages (type String) to skip while single-stepping;
-     *          if there no excludes, the returned list is empty.
+     * @return  list of packages to skip while single-stepping;
+     *          empty list if there are no excludes.
      */
-    public List getSteppingExcludes() {
-        return (List) getProperty(PROP_STEPPING_EXCLUDES);
-    }
-
-    @Override
-    protected void initialize() {
-        super.initialize();
-        setDefaults();
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws
-            IOException, ClassNotFoundException {
-        super.readExternal(in);
-        // Upgrade the restored instance to include the latest settings.
-        setDefaults();
+    public List<String> getSteppingExcludes() {
+        String exc = preferences.get(PROP_STEPPING_EXCLUDES, "");
+        return Strings.stringToList(exc, ",");
     }
 
     /**
@@ -164,38 +147,7 @@ public class CoreSettings extends SystemOption {
         if (timeout < 0) {
             throw new IllegalArgumentException("timeout cannot be negative");
         }
-        putProperty(PROP_CONNECT_TIMEOUT, timeout, true);
-    }
-
-    /**
-     * For those properties that have null values, set them to the default.
-     */
-    private void setDefaults() {
-        if (getProperty(PROP_CONNECT_TIMEOUT) == null) {
-            // Use a high value for this, as most users cannot start the
-            // connection listener and then launch the deuggee within a
-            // few seconds (fixes issue 1833344).
-            putProperty(PROP_CONNECT_TIMEOUT, 30000);
-        }
-        if (getProperty(PROP_INVOKE_TIMEOUT) == null) {
-            putProperty(PROP_INVOKE_TIMEOUT, 5000);
-        }
-        if (getProperty(PROP_SOURCE_EXTENSION) == null) {
-            putProperty(PROP_SOURCE_EXTENSION, ".java");
-        }
-        if (getProperty(PROP_STEPPING_EXCLUDES) == null) {
-            List<String> empty = Collections.emptyList();
-            putProperty(PROP_STEPPING_EXCLUDES, empty);
-        }
-        if (getProperty(PROP_SHOW_ALL_THREADS) == null) {
-            putProperty(PROP_SHOW_ALL_THREADS, Boolean.FALSE);
-        }
-        if (getProperty(PROP_SHOW_HIDDEN_FILES) == null) {
-            putProperty(PROP_SHOW_HIDDEN_FILES, Boolean.FALSE);
-        }
-        if (getProperty(PROP_SKIP_SYNTHETICS) == null) {
-            putProperty(PROP_SKIP_SYNTHETICS, Boolean.FALSE);
-        }
+        preferences.putInt(PROP_CONNECT_TIMEOUT, timeout);
     }
 
     /**
@@ -207,7 +159,7 @@ public class CoreSettings extends SystemOption {
         if (timeout < 0) {
             throw new IllegalArgumentException("timeout cannot be negative");
         }
-        putProperty(PROP_INVOKE_TIMEOUT, timeout, true);
+        preferences.putInt(PROP_INVOKE_TIMEOUT, timeout);
     }
 
     /**
@@ -216,7 +168,7 @@ public class CoreSettings extends SystemOption {
      * @param  show  true to show all threads, false to hide weird threads.
      */
     public void setShowAllThreads(boolean show) {
-        putProperty(PROP_SHOW_ALL_THREADS, Boolean.valueOf(show));
+        preferences.putBoolean(PROP_SHOW_ALL_THREADS, show);
     }
 
     /**
@@ -225,7 +177,7 @@ public class CoreSettings extends SystemOption {
      * @param  show  true to show hidden files, false otherwise.
      */
     public void setShowHiddenFiles(boolean show) {
-        putProperty(PROP_SHOW_HIDDEN_FILES, Boolean.valueOf(show));
+        preferences.putBoolean(PROP_SHOW_HIDDEN_FILES, show);
     }
 
     /**
@@ -234,7 +186,7 @@ public class CoreSettings extends SystemOption {
      * @param  skip  true to skip synthetics, false otherwise.
      */
     public void setSkipSynthetics(boolean skip) {
-        putProperty(PROP_SKIP_SYNTHETICS, Boolean.valueOf(skip));
+        preferences.putBoolean(PROP_SKIP_SYNTHETICS, skip);
     }
 
     /**
@@ -243,14 +195,14 @@ public class CoreSettings extends SystemOption {
      * @param  extension  default file extension for source files.
      */
     public void setSourceExtension(String extension) {
-        if (extension.length() == 0) {
-            throw new IllegalArgumentException("extension not specified");
+        if (extension == null || extension.trim().length() == 0) {
+            throw new IllegalArgumentException("extension cannot be blank");
         }
+        // Ensure extension includes the leading period.
         if (extension.charAt(0) != '.') {
-            // Add the dot if not already included.
             extension = '.' + extension;
         }
-        putProperty(PROP_SOURCE_EXTENSION, extension, true);
+        preferences.put(PROP_SOURCE_EXTENSION, extension);
     }
 
     /**
@@ -263,6 +215,7 @@ public class CoreSettings extends SystemOption {
         if (excludes == null) {
             excludes = Collections.emptyList();
         }
-        putProperty(PROP_STEPPING_EXCLUDES, excludes, true);
+        String exc = Strings.listToString(excludes, ",");
+        preferences.put(PROP_STEPPING_EXCLUDES, exc);
     }
 }

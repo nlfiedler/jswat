@@ -10,18 +10,15 @@ $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
   - EditorSupport (see EditorContextImpl in NB api.debugger.jpda)
   - ClassChildren
   - NewBreakpointAction
-- Define ordering for the toolbars (use position attribute)
-- Define ordering for Help menu items (use position attribute)
-- Hide the Runtime window by default (?)
+- Fix the Options so it shows our options
+- ByteCodesView uses deprecated PlainKit, NbEditorDocument
 - Breakpoints view expands momentarily, then collapses
+- Hide the Runtime window by default (?)
 - Update list of modules required (product/modules.txt)
 - Fix build.xml to include modules we're using now
 - Check if there are other changes in NetBeans launcher that JSwat needs
 - Recompile the Windows launcher
 - Update copyright in splash and about images
-- Fix the Options so it shows our options
-- CoreSettings uses deprecated SystemOption (use NbPreferences instead)
-- ByteCodesView uses deprecated PlainKit, NbEditorDocument
 - Update developer documentation
 - Update docs in README and UserGuide wrt names of menus and items
 - Release
