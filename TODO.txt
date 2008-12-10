@@ -2,6 +2,7 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
+- Update javac.source, nbm.homepage for all modules
 - Find out how to use the new editor API and Java language support
   - The editor API (called Retouche) has an FAQ on the NetBeans wiki:
     http://wiki.netbeans.org/wiki/view/RetoucheDeveloperFAQ
