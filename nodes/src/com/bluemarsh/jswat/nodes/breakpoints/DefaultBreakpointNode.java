@@ -53,8 +53,8 @@ import org.openide.actions.DeleteAction;
 import org.openide.actions.NewAction;
 import org.openide.nodes.Sheet;
 import org.openide.nodes.Sheet.Set;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 
 /**
@@ -168,7 +168,7 @@ public class DefaultBreakpointNode extends BreakpointNode implements
     public Image getIcon(int type) {
         String url = NbBundle.getMessage(BreakpointNode.class,
                 "IMG_BreakpointNode");
-        return Utilities.loadImage(url);
+        return ImageUtilities.loadImage(url);
     }
 
     protected Action[] getNodeActions() {

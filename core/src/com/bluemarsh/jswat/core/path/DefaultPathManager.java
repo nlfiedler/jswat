@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -71,14 +71,17 @@ public class DefaultPathManager extends AbstractPathManager {
     public DefaultPathManager() {
     }
 
+    @Override
     public boolean canSetSourcePath() {
         return true;
     }
 
+    @Override
     public boolean canSetClassPath() {
         return true;
     }
 
+    @Override
     public FileObject findByteCode(ReferenceType clazz) {
         String filename = clazz.name();
         filename = filename.replace('.', File.separatorChar);
@@ -115,6 +118,7 @@ public class DefaultPathManager extends AbstractPathManager {
         return fo;
     }
 
+    @Override
     public FileObject findSource(String name) {
         String filename = Names.classnameToFilename(name);
         FileObject fo = findFile(filename, true);
@@ -139,6 +143,7 @@ public class DefaultPathManager extends AbstractPathManager {
         return fo;
     }
 
+    @Override
     public FileObject findSource(Location location) {
         try {
             String source = location.sourceName();
@@ -163,6 +168,7 @@ public class DefaultPathManager extends AbstractPathManager {
         return findSource(location.declaringType());
     }
 
+    @Override
     public FileObject findSource(ReferenceType clazz) {
         String classname = clazz.name();
         String filename;
@@ -196,6 +202,7 @@ public class DefaultPathManager extends AbstractPathManager {
         return fo;
     }
 
+    @Override
     public List<String> getClassPath() {
         Session session = PathProvider.getSession(this);
         String ignore = session.getProperty(PROP_IGNORE_DEBUGGEE);
@@ -215,14 +222,17 @@ public class DefaultPathManager extends AbstractPathManager {
         return classPath;
     }
 
+    @Override
     public List<FileObject> getSourcePath() {
         return sourcePath;
     }
 
+    @Override
     protected List<String> getUserClassPath() {
         return classPath;
     }
 
+    @Override
     protected void loadPaths(Session session) {
         // Load the classpath setting from the session properties.
         String cp = session.getProperty(PROP_CLASSPATH);
@@ -282,6 +292,7 @@ public class DefaultPathManager extends AbstractPathManager {
         }
     }
 
+    @Override
     protected void savePaths(Session session) {
         // Save the classpath setting to the session properties.
         if (classPath == null || classPath.size() == 0) {
@@ -300,6 +311,7 @@ public class DefaultPathManager extends AbstractPathManager {
         }
     }
 
+    @Override
     public void setClassPath(List<String> roots) {
         List<String> oldPath = classPath;
         // Wipe out the lookup and rebuild if possible.
@@ -343,6 +355,7 @@ public class DefaultPathManager extends AbstractPathManager {
         firePropertyChange(PROP_CLASSPATH, oldPath, classPath);
     }
 
+    @Override
     public void setSourcePath(List<FileObject> roots) {
         List<FileObject> oldPath = sourcePath;
         if (roots == null || roots.size() == 0) {

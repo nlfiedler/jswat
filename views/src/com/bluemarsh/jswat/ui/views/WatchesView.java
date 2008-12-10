@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -83,8 +83,8 @@ import org.openide.nodes.Node;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.actions.NodeAction;
 import org.openide.util.actions.SystemAction;
 import org.openide.windows.TopComponent;
@@ -151,6 +151,7 @@ public class WatchesView extends AbstractView
         // Use a simple root node for which we can set the display name;
         // otherwise the logical root's properties affect the table headers.
         Node rootNode = new AbstractNode(kids) {
+            @Override
             public Action[] getActions(boolean b) {
                 return new Action[] {
                     SystemAction.get(NewWatchAction.class)
@@ -235,6 +236,7 @@ public class WatchesView extends AbstractView
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         // Clear the tree to release resources.
@@ -253,6 +255,7 @@ public class WatchesView extends AbstractView
         }
     }
 
+    @Override
     protected void componentOpened() {
         super.componentOpened();
         // Build out the tree.
@@ -431,6 +434,7 @@ public class WatchesView extends AbstractView
         return theInstance;
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(WatchesView.class, "CTL_WatchesView_Name");
     }
@@ -439,14 +443,17 @@ public class WatchesView extends AbstractView
         return explorerManager;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-watches-view");
     }
 
+    @Override
     public int getPersistenceType() {
         return PERSISTENCE_ALWAYS;
     }
 
+    @Override
     public String getToolTipText() {
         return NbBundle.getMessage(WatchesView.class, "CTL_WatchesView_Tooltip");
     }
@@ -454,10 +461,12 @@ public class WatchesView extends AbstractView
     public void opened(Session session) {
     }
 
+    @Override
     protected String preferredID() {
         return PREFERRED_ID;
     }
 
+    @Override
     public void readExternal(ObjectInput in)
     throws IOException, ClassNotFoundException {
         super.readExternal(in);
@@ -507,6 +516,7 @@ public class WatchesView extends AbstractView
         buildTree();
     }
 
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         saveColumns(out, columns);
@@ -568,10 +578,12 @@ public class WatchesView extends AbstractView
             this.watch = watch;
         }
 
+        @Override
         public boolean canDestroy() {
             return true;
         }
 
+        @Override
         public void destroy() throws IOException {
             Session session = SessionProvider.getCurrentSession();
             WatchManager wm = WatchProvider.getWatchManager(session);
@@ -579,6 +591,7 @@ public class WatchesView extends AbstractView
             super.destroy();
         }
 
+        @Override
         public Action[] getActions(boolean context) {
             Action[] actions = new Action[] {
                 SystemAction.get(NewFixedWatchAction.class),
@@ -587,6 +600,7 @@ public class WatchesView extends AbstractView
             return (Action[]) Arrays.join(super.getActions(context), actions);
         }
 
+        @Override
         public Image getIcon(int type) {
             Node original = getOriginal();
             String url = null;
@@ -601,9 +615,10 @@ public class WatchesView extends AbstractView
                 url = NbBundle.getMessage(WatchNode.class,
                         "IMG_WatchesView_WatchNode");
             }
-            return Utilities.loadImage(url);
+            return ImageUtilities.loadImage(url);
         }
 
+        @Override
         public Image getOpenedIcon(int type) {
             return getIcon(type);
         }
@@ -639,10 +654,12 @@ public class WatchesView extends AbstractView
             this.watch = watch;
         }
 
+        @Override
         public boolean canDestroy() {
             return true;
         }
 
+        @Override
         public void destroy() throws IOException {
             Session session = SessionProvider.getCurrentSession();
             WatchManager wm = WatchProvider.getWatchManager(session);
@@ -650,6 +667,7 @@ public class WatchesView extends AbstractView
             super.destroy();
         }
 
+        @Override
         public Action[] getActions(boolean context) {
             Action[] actions = new Action[] {
                 SystemAction.get(DeleteAction.class)
@@ -657,6 +675,7 @@ public class WatchesView extends AbstractView
             return (Action[]) Arrays.join(super.getActions(context), actions);
         }
 
+        @Override
         public Image getIcon(int type) {
             Node original = getOriginal();
             String url = null;
@@ -671,9 +690,10 @@ public class WatchesView extends AbstractView
                 url = NbBundle.getMessage(FixedWatchNode.class,
                         "IMG_WatchesView_FixedWatchNode");
             }
-            return Utilities.loadImage(url);
+            return ImageUtilities.loadImage(url);
         }
 
+        @Override
         public Image getOpenedIcon(int type) {
             return getIcon(type);
         }
@@ -713,6 +733,7 @@ public class WatchesView extends AbstractView
             isMessage = message;
         }
 
+        @Override
         protected Sheet createSheet() {
             Sheet sheet = super.createSheet();
             Sheet.Set set = sheet.get(Sheet.PROPERTIES);
@@ -740,6 +761,7 @@ public class WatchesView extends AbstractView
         /** silence the compiler warnings */
         private static final long serialVersionUID = 1L;
 
+        @Override
         protected boolean asynchronous() {
             return false;
         }
@@ -789,6 +811,7 @@ public class WatchesView extends AbstractView
         /** silence the compiler warnings */
         private static final long serialVersionUID = 1L;
 
+        @Override
         protected boolean asynchronous() {
             return false;
         }

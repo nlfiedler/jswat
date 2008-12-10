@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -44,8 +44,8 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.nodes.Sheet.Set;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 
 /**
@@ -85,11 +85,12 @@ public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
     private Node.Property createProperty(String key, String value) {
         String desc = NbBundle.getMessage(
                 ClassNode.class, "CTL_ClassProperty_Desc_" + key);
-        String name = NbBundle.getMessage(
+        String _name = NbBundle.getMessage(
                 ClassNode.class, "CTL_ClassProperty_Name_" + key);
-        return new ReadOnlyProperty(key, String.class, name, desc, value);
+        return new ReadOnlyProperty(key, String.class, _name, desc, value);
     }
 
+    @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
         Set set = sheet.get(Sheet.PROPERTIES);
@@ -97,6 +98,7 @@ public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
         return sheet;
     }
 
+    @Override
     public String getDisplayName() {
         return shortName;
     }
@@ -105,15 +107,18 @@ public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
         return clazz;
     }
 
+    @Override
     public Image getIcon(int type) {
         String url = NbBundle.getMessage(ClassNode.class, "IMG_ClassNode");
-        return Utilities.loadImage(url);
+        return ImageUtilities.loadImage(url);
     }
 
+    @Override
     public Image getOpenedIcon(int type) {
         return getIcon(type);
     }
 
+    @Override
     public String getName() {
         return shortName;
     }

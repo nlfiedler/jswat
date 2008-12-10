@@ -9,16 +9,17 @@ $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
   - EditorSupport
   - ClassChildren
   - NewBreakpointAction
+- Hide the Runtime window by default (?)
 - Breakpoints view expands momentarily, then collapses
 - Product module doesn't specify spec.version.base which causes a warning
 - Fix build.xml to include modules we're using now
+- Check if there are other changes in NetBeans launcher that JSwat needs
 - Recompile the Windows launcher
-- Update the license information (CDDL) on the SourceForge project page.
 - Update copyright in splash and about images
 - Fix the Options so it shows our options
+- CoreSettings uses deprecated SystemOption
+- ByteCodesView uses deprecated PlainKit, NbEditorDocument
 - Update developer documentation
 - Update docs in README and UserGuide wrt names of menus and items
 - Release
 - Make plugin mode work
-- CoreSettings uses deprecated SystemOption
-- ByteCodesView uses deprecated PlainKit

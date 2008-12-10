@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -26,8 +26,8 @@ package com.bluemarsh.jswat.nodes;
 import java.awt.Image;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /**
  * Node for displaying a message and nothing more.
@@ -63,19 +63,22 @@ public class MessageNode extends AbstractNode {
         tooltip = tip;
     }
 
+    @Override
     public String getDisplayName() {
         return message;
     }
 
+    @Override
     public Image getIcon(int type) {
         if (nodeIcon == null) {
             String url = NbBundle.getMessage(MessageNode.class,
                         "IMG_MessageNode");
-            nodeIcon = Utilities.loadImage(url);
+            nodeIcon = ImageUtilities.loadImage(url);
         }
         return nodeIcon;
     }
 
+    @Override
     public String getShortDescription() {
         if (tooltip != null) {
             return tooltip;

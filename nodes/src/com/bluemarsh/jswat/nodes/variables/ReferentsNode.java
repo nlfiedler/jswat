@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -31,8 +31,8 @@ import java.util.Set;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /**
  * Class ReferentsNode represents the referring objects of an object
@@ -69,7 +69,7 @@ public class ReferentsNode extends AbstractNode implements Comparable<Node> {
     public Image getIcon(int type) {
         String url = NbBundle.getMessage(VariableNode.class,
                         "IMG_VariableNode_FieldNode");
-        return Utilities.loadImage(url);
+        return ImageUtilities.loadImage(url);
     }
 
     @Override
@@ -99,6 +99,7 @@ public class ReferentsNode extends AbstractNode implements Comparable<Node> {
             this.reference = reference;
         }
 
+        @Override
         protected void addNotify() {
             super.addNotify();
             try {

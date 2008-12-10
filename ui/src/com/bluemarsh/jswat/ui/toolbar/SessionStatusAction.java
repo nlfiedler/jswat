@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -50,8 +50,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.actions.CallableSystemAction;
 
 /**
@@ -69,6 +69,7 @@ public class SessionStatusAction extends CallableSystemAction {
      *
      * @return  true if asynchronous, false otherwise.
      */
+    @Override
     protected boolean asynchronous() {
         return false;
     }
@@ -96,6 +97,7 @@ public class SessionStatusAction extends CallableSystemAction {
      *
      * @return  the representation for this action.
      */
+    @Override
     public Component getToolbarPresenter() {
         // Use a GridBagLayout so that the combobox is not stretched
         // to fill the space created by the toolbar.
@@ -217,23 +219,15 @@ class SessionStatusRenderer extends DefaultListCellRenderer {
     private static Icon stoppedIcon;
 
     static {
-        pausedIcon = new ImageIcon(Utilities.loadImage(NbBundle.getMessage(
+        pausedIcon = new ImageIcon(ImageUtilities.loadImage(NbBundle.getMessage(
                 SessionStatusRenderer.class, "IMG_SessionStatus_Paused")));
-        startingIcon = new ImageIcon(Utilities.loadImage(NbBundle.getMessage(
+        startingIcon = new ImageIcon(ImageUtilities.loadImage(NbBundle.getMessage(
                 SessionStatusRenderer.class, "IMG_SessionStatus_Starting")));
-        stoppedIcon = new ImageIcon(Utilities.loadImage(NbBundle.getMessage(
+        stoppedIcon = new ImageIcon(ImageUtilities.loadImage(NbBundle.getMessage(
                 SessionStatusRenderer.class, "IMG_SessionStatus_Stopped")));
     }
 
-    /**
-     * Return a component that has been configured to display the specified value.
-     *
-     * @param  list          the JList we're painting.
-     * @param  value         the value returned by list.getModel().getElementAt(index).
-     * @param  index         the cell's index.
-     * @param  isSelected    true if the specified cell was selected.
-     * @param  cellHasFocus  true if the specified cell has the focus.
-     */
+    @Override
     public Component getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {
         JLabel label = (JLabel) super.getListCellRendererComponent(list,
