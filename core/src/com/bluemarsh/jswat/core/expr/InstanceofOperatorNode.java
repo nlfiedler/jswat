@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -48,6 +48,7 @@ class InstanceofOperatorNode extends BinaryOperatorNode {
         super(node);
     }
 
+    @Override
     protected Object eval(EvaluationContext context) throws EvaluationException {
         Node lChildNode = getChild(0);
         Node rChildNode = getChild(1);
@@ -95,7 +96,8 @@ class InstanceofOperatorNode extends BinaryOperatorNode {
         return Boolean.FALSE;
     }
 
+    @Override
     public int precedence() {
-        return 9; // XXX: is this correct?
+        return 9;
     }
 }
