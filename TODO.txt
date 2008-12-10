@@ -2,7 +2,6 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
-- Update javac.source, nbm.homepage for all modules
 - Find out how to use the new editor API and Java language support
   - The editor API (called Retouche) has an FAQ on the NetBeans wiki:
     http://wiki.netbeans.org/wiki/view/RetoucheDeveloperFAQ
@@ -15,8 +14,6 @@ $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 - Define ordering for Help menu items (use position attribute)
 - Hide the Runtime window by default (?)
 - Breakpoints view expands momentarily, then collapses
-- Product module doesn't specify spec.version.base which causes a warning
-  (http://wiki.netbeans.org/wiki/view/DevFaqImplementationDependency)
 - Update list of modules required (product/modules.txt)
 - Fix build.xml to include modules we're using now
 - Check if there are other changes in NetBeans launcher that JSwat needs
