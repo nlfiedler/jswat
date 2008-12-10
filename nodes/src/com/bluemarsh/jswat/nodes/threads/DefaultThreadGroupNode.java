@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -36,8 +36,8 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.nodes.Sheet.Set;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.actions.SystemAction;
 
@@ -144,7 +144,7 @@ public class DefaultThreadGroupNode extends ThreadGroupNode
             url = NbBundle.getMessage(ThreadGroupNode.class,
                     "IMG_ThreadGroupNode");
         }
-        return Utilities.loadImage(url);
+        return ImageUtilities.loadImage(url);
     }
 
     protected Action[] getNodeActions() {

@@ -48,8 +48,8 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node.Property;
 import org.openide.nodes.Sheet;
 import org.openide.nodes.Sheet.Set;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.NewType;
 
@@ -144,7 +144,7 @@ public class DefaultBreakpointGroupNode extends BreakpointGroupNode
     public Image getIcon(int type) {
         String url = NbBundle.getMessage(BreakpointGroupNode.class,
                 "IMG_GroupNode");
-        return Utilities.loadImage(url);
+        return ImageUtilities.loadImage(url);
     }
 
     public BreakpointGroup getBreakpointGroup() {

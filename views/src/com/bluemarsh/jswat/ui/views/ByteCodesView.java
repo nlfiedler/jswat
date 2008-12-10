@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2007. All Rights Reserved.
+ * are Copyright (C) 2006-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -143,6 +143,7 @@ public class ByteCodesView extends CloneableEditor
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         // By this time the editor components have been destroyed.
@@ -158,6 +159,7 @@ public class ByteCodesView extends CloneableEditor
         }
     }
 
+    @Override
     protected void componentOpened() {
         super.componentOpened();
         // Start listening to everything that affects our display.
@@ -199,18 +201,22 @@ public class ByteCodesView extends CloneableEditor
         return doc.getByteCodesPanel();
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(ByteCodesView.class, "CTL_ByteCodesView_Name");
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-bytecodes-view");
     }
 
+    @Override
     public int getPersistenceType() {
         return TopComponent.PERSISTENCE_NEVER;
     }
 
+    @Override
     public String getToolTipText() {
         return NbBundle.getMessage(ByteCodesView.class, "CTL_ByteCodesView_Tooltip");
     }
@@ -218,6 +224,7 @@ public class ByteCodesView extends CloneableEditor
     public void opened(Session session) {
     }
 
+    @Override
     protected String preferredID() {
         return getClass().getName();
     }
@@ -479,6 +486,7 @@ public class ByteCodesView extends CloneableEditor
             return null;
         }
 
+        @Override
         protected void loadFromStreamToKit(StyledDocument doc, InputStream stream, EditorKit kit) throws IOException, BadLocationException {
             // cleverly do nothing
         }
@@ -515,6 +523,7 @@ public class ByteCodesView extends CloneableEditor
             }
         }
 
+        @Override
         protected void saveFromKitToStream(StyledDocument doc, EditorKit kit, OutputStream stream) throws IOException, BadLocationException {
             // cleverly do nothing
         }
@@ -605,14 +614,17 @@ public class ByteCodesView extends CloneableEditor
 	public ByteCodesEditorKit() {
         }
 
+        @Override
         public Object clone() {
             return new ByteCodesEditorKit();
         }
 
+        @Override
         public Document createDefaultDocument() {
             return new ByteCodesDocument(this.getClass());
         }
 
+        @Override
         public void install(JEditorPane c) {
             super.install(c);
             // Remove the caret to enhance the "read-only" feeling of this
@@ -645,6 +657,7 @@ public class ByteCodesView extends CloneableEditor
             byteCodesPanel = new ByteCodesPanel();
         }
 
+        @Override
         public void addUndoableEditListener(UndoableEditListener listener) {
             // Do nothing so as to be read-only.
         }
@@ -675,6 +688,7 @@ public class ByteCodesView extends CloneableEditor
             }
         }
 
+        @Override
         public JToolBar createToolbar(JEditorPane pane) {
             JToolBar tbar = new JToolBar();
             tbar.add(byteCodesPanel);
@@ -690,11 +704,13 @@ public class ByteCodesView extends CloneableEditor
             return byteCodesPanel;
         }
 
+        @Override
         public void insertString(int offset, String str, AttributeSet a)
                 throws BadLocationException {
             // Do nothing so as to be read-only.
         }
 
+        @Override
         public void remove(int offs, int len) throws BadLocationException {
             // Do nothing so as to be read-only.
         }

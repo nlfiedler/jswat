@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -66,8 +66,8 @@ import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.actions.NodeAction;
 import org.openide.util.actions.SystemAction;
 import org.openide.windows.TopComponent;
@@ -118,6 +118,7 @@ public class SourcesView extends AbstractView
         // Use a simple root node for which we can set the display name;
         // otherwise the logical root's properties affect the table headers.
         Node rootNode = new AbstractNode(kids) {
+            @Override
             public Action[] getActions(boolean b) {
                 return new Action[] {
                     SystemAction.get(EditAction.class),
@@ -170,6 +171,7 @@ public class SourcesView extends AbstractView
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         // Clear the tree to release resources.
@@ -185,6 +187,7 @@ public class SourcesView extends AbstractView
         }
     }
 
+    @Override
     protected void componentOpened() {
         super.componentOpened();
         // Build out the tree.
@@ -274,6 +277,7 @@ public class SourcesView extends AbstractView
         return theInstance;
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(SourcesView.class, "CTL_SourcesView_Name");
     }
@@ -282,14 +286,17 @@ public class SourcesView extends AbstractView
         return explorerManager;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-sources-view");
     }
 
+    @Override
     public int getPersistenceType() {
         return PERSISTENCE_ALWAYS;
     }
 
+    @Override
     public String getToolTipText() {
         return NbBundle.getMessage(SourcesView.class, "CTL_SourcesView_Tooltip");
     }
@@ -324,6 +331,7 @@ public class SourcesView extends AbstractView
         return true;
     }
 
+    @Override
     protected String preferredID() {
         return PREFERRED_ID;
     }
@@ -379,6 +387,7 @@ public class SourcesView extends AbstractView
             displayName = FileUtil.getFileDisplayName(sourceRoot);
         }
 
+        @Override
         public String getDisplayName() {
             return displayName;
         }
@@ -402,6 +411,7 @@ public class SourcesView extends AbstractView
             sourceRoot = root;
         }
 
+        @Override
         protected void addNotify() {
             super.addNotify();
 
@@ -472,10 +482,12 @@ public class SourcesView extends AbstractView
             }
         }
 
+        @Override
         public String getDisplayName() {
             return displayName;
         }
 
+        @Override
         public Image getIcon(int type) {
             String url;
             if (isLeaf()) {
@@ -485,9 +497,10 @@ public class SourcesView extends AbstractView
                 url = NbBundle.getMessage(SourcesView.class,
                         "IMG_SourcesView_PackageNode");
             }
-            return Utilities.loadImage(url);
+            return ImageUtilities.loadImage(url);
         }
 
+        @Override
         public Image getOpenedIcon(int type) {
             return getIcon(type);
         }
@@ -578,6 +591,7 @@ public class SourcesView extends AbstractView
         /** silence the compiler warnings */
         private static final long serialVersionUID = 1L;
 
+        @Override
         protected boolean asynchronous() {
             return false;
         }
@@ -647,6 +661,7 @@ public class SourcesView extends AbstractView
         /** silence the compiler warnings */
         private static final long serialVersionUID = 1L;
 
+        @Override
         protected boolean asynchronous() {
             return false;
         }

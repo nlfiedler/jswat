@@ -46,8 +46,8 @@ import org.openide.nodes.PropertySupport;
 import org.openide.nodes.PropertySupport.Reflection;
 import org.openide.nodes.Sheet;
 import org.openide.nodes.Sheet.Set;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.actions.SystemAction;
 
@@ -157,7 +157,7 @@ public class DefaultSessionNode extends SessionNode implements
         } else {
             url = NbBundle.getMessage(SessionNode.class, "IMG_SessionNode");
         }
-        return Utilities.loadImage(url);
+        return ImageUtilities.loadImage(url);
     }
 
     public Session getSession() {
