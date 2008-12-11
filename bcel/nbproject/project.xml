@@ -17,8 +17,8 @@
                 <package>org.apache.bcel.verifier.structurals</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/bcel-5.1.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/bcel-5.1.jar</binary-origin>
+                <runtime-relative-path>ext/bcel-5.2.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/bcel-5.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>
