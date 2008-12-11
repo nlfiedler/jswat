@@ -3,16 +3,14 @@ JSWAT TASK LIST
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
 - Find out how to use the new editor API and Java language support
-  - The editor API (called Retouche) has an FAQ on the NetBeans wiki:
-    http://wiki.netbeans.org/wiki/view/RetoucheDeveloperFAQ
   - look for NB release notes that explain what happened to org.openide.src
     and how to use the javax.lang.model classes
-  - EditorSupport (see EditorContextImpl in NB api.debugger.jpda)
+  - EditorSupport (see EditorContextImpl in NB debugger.jpda.projects)
   - ClassChildren
   - NewBreakpointAction
+- ByteCodesView is broken, get class cast exception
 - Fix the Options so it shows our options
 - ByteCodesView uses deprecated PlainKit, NbEditorDocument
-- Breakpoints view expands momentarily, then collapses
 - Hide the Runtime window by default (?)
 - Update list of modules required (product/modules.txt)
 - Fix build.xml to include modules we're using now
