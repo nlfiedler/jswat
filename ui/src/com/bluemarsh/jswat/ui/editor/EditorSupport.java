@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2008. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -425,8 +425,9 @@ public class EditorSupport {
             return false;
         }
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                l.show(Line.SHOW_GOTO);
+                l.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS);
             }
         });
         return true;
@@ -437,28 +438,16 @@ public class EditorSupport {
      */
     private class DocumentWatcher implements DocumentListener {
 
-        /**
-         * Gives notification that an attribute or set of attributes changed.
-         *
-         * @param  event  document event.
-         */
+        @Override
         public void changedUpdate(DocumentEvent event) {
         }
 
-        /**
-         * Gives notification that there was an insert into the document.
-         *
-         * @param  event  document event.
-         */
+        @Override
         public void insertUpdate(DocumentEvent event) {
             updateAnnotations(event);
         }
 
-        /**
-         * Gives notification that a portion of the document has been removed.
-         *
-         * @param  event  document event.
-         */
+        @Override
         public void removeUpdate(DocumentEvent event) {
             updateAnnotations(event);
         }
