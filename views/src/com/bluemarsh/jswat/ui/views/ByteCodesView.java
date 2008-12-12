@@ -114,13 +114,16 @@ public class ByteCodesView extends CloneableEditor
         setLayout(new BorderLayout());
     }
 
+    @Override
     public void changedFrame(ContextEvent ce) {
     }
 
+    @Override
     public void changedLocation(ContextEvent ce) {
         updateDisplay();
     }
 
+    @Override
     public void changedThread(ContextEvent ce) {
     }
 
@@ -134,12 +137,14 @@ public class ByteCodesView extends CloneableEditor
         support.removeAnnotation();
         final ByteCodesDocument doc = (ByteCodesDocument) support.getDocument();
         NbDocument.runAtomic(doc, new Runnable() {
+            @Override
             public void run() {
                 doc.clear();
             }
         });
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
@@ -177,9 +182,11 @@ public class ByteCodesView extends CloneableEditor
         EventQueue.invokeLater(this);
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         clearDisplay();
     }
@@ -221,6 +228,7 @@ public class ByteCodesView extends CloneableEditor
         return NbBundle.getMessage(ByteCodesView.class, "CTL_ByteCodesView_Tooltip");
     }
 
+    @Override
     public void opened(Session session) {
     }
 
@@ -229,6 +237,7 @@ public class ByteCodesView extends CloneableEditor
         return getClass().getName();
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
         // Leave the display as-is since we may see it again very soon,
         // and it would be annoying to clear it and then rebuild the
@@ -238,10 +247,12 @@ public class ByteCodesView extends CloneableEditor
         support.removeAnnotation();
     }
 
+    @Override
     public void run() {
         updateDisplay();
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
@@ -249,6 +260,7 @@ public class ByteCodesView extends CloneableEditor
         dc.addContextListener(this);
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         Session session = e.getSession();
         session.removeSessionListener(this);
@@ -256,6 +268,7 @@ public class ByteCodesView extends CloneableEditor
         dc.removeContextListener(this);
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         updateDisplay();
     }
@@ -310,6 +323,7 @@ public class ByteCodesView extends CloneableEditor
         
         // Interpret the byte codes and append them to the text area.
         NbDocument.runAtomic(doc, new Runnable() {
+            @Override
             public void run() {
                 try {
                     doc.clear();
@@ -358,6 +372,7 @@ public class ByteCodesView extends CloneableEditor
         });
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
         Session session = sevt.getSession();
         SessionManager sm = SessionProvider.getSessionManager();
@@ -487,27 +502,34 @@ public class ByteCodesView extends CloneableEditor
         }
 
         @Override
-        protected void loadFromStreamToKit(StyledDocument doc, InputStream stream, EditorKit kit) throws IOException, BadLocationException {
+        protected void loadFromStreamToKit(StyledDocument doc,
+                InputStream stream, EditorKit kit)
+                throws IOException, BadLocationException {
             // cleverly do nothing
         }
 
+        @Override
         protected String messageName() {
             return NbBundle.getMessage(ByteCodesEditorSupport.class,
                     "CTL_ByteCodesView_Name");
         }
 
+        @Override
         protected String messageOpened() {
             return "opened";
         }
 
+        @Override
         protected String messageOpening() {
             return "opening";
         }
 
+        @Override
         protected String messageSave() {
             return "save";
         }
 
+        @Override
         protected String messageToolTip() {
             return NbBundle.getMessage(ByteCodesEditorSupport.class,
                     "CTL_ByteCodesView_Tooltip");
@@ -524,7 +546,9 @@ public class ByteCodesView extends CloneableEditor
         }
 
         @Override
-        protected void saveFromKitToStream(StyledDocument doc, EditorKit kit, OutputStream stream) throws IOException, BadLocationException {
+        protected void saveFromKitToStream(StyledDocument doc,
+                EditorKit kit, OutputStream stream)
+                throws IOException, BadLocationException {
             // cleverly do nothing
         }
     }
@@ -546,53 +570,66 @@ public class ByteCodesView extends CloneableEditor
         public ByteCodesEnvironment() {
         }
 
-        public void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+        @Override
+        public void addPropertyChangeListener(PropertyChangeListener l) {
         }
 
-        public void addVetoableChangeListener(VetoableChangeListener vetoableChangeListener) {
+        @Override
+        public void addVetoableChangeListener(VetoableChangeListener l) {
         }
 
+        @Override
         public CloneableOpenSupport findCloneableOpenSupport() {
             return support;
         }
 
+        @Override
         public String getMimeType() {
             return MIME_TYPE;
         }
 
+        @Override
         public Date getTime() {
             return new Date();
         }
 
+        @Override
         public InputStream inputStream() throws IOException {
             return null;
         }
 
+        @Override
         public boolean isModified() {
             return false;
         }
 
+        @Override
         public boolean isValid() {
             return true;
         }
 
+        @Override
         public void markModified() throws IOException {
         }
 
+        @Override
         public OutputStream outputStream() throws IOException {
             return null;
         }
 
-        public void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+        @Override
+        public void removePropertyChangeListener(PropertyChangeListener l) {
         }
 
-        public void removeVetoableChangeListener(VetoableChangeListener vetoableChangeListener) {
+        @Override
+        public void removeVetoableChangeListener(VetoableChangeListener l) {
         }
 
         public void setSupport(ByteCodesEditorSupport support) {
             this.support = support;
         }
 
+        @Override
         public void unmarkModified() {
         }
     }
@@ -611,7 +648,7 @@ public class ByteCodesView extends CloneableEditor
         /**
          * Public constructor for the JEditorPane factory to create us.
          */
-	public ByteCodesEditorKit() {
+        public ByteCodesEditorKit() {
         }
 
         @Override
