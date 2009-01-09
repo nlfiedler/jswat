@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: AttachDebuggeePanel.java 22 2007-12-25 07:30:24Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.ui.components;

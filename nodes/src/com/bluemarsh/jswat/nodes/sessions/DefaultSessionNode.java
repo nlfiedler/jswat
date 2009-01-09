@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: DefaultSessionNode.java 32 2008-06-30 01:23:05Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.nodes.sessions;

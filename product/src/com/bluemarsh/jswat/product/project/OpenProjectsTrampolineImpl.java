@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: OpenProjectsTrampolineImpl.java 26 2008-06-30 00:10:25Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.product.project;

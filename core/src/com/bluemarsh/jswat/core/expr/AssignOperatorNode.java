@@ -18,7 +18,7 @@
  *
  * Contributor(s): Antonia Kwok, Nathan Fiedler.
  *
- * $Id: AssignOperatorNode.java 6 2007-05-16 07:14:24Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.core.expr;

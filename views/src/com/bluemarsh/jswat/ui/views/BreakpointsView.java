@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: BreakpointsView.java 31 2008-06-30 01:21:45Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.ui.views;

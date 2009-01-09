@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: VariablesView.java 30 2008-06-30 01:12:15Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.ui.views;
