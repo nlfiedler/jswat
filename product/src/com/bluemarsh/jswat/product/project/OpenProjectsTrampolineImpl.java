@@ -36,32 +36,37 @@ import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
  */
 public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
 
-    public void addPropertyChangeListenerAPI(PropertyChangeListener propertyChangeListener) {
-    }
-
+    @Override
     public void closeAPI(Project[] project) {
     }
 
+    @Override
     public Project getMainProject() {
         return null;
     }
 
+    @Override
     public Project[] getOpenProjectsAPI() {
         return new Project[0];
     }
 
+    @Override
     public void openAPI(Project[] project, boolean b) {
     }
 
+    @Override
     public void removePropertyChangeListenerAPI(PropertyChangeListener propertyChangeListener) {
     }
 
+    @Override
     public void setMainProject(Project project) {
     }
 
+    @Override
     public void addPropertyChangeListenerAPI(PropertyChangeListener arg0, Object arg1) {
     }
 
+    @Override
     public Future<Project[]> openProjectsAPI() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
