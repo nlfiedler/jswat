@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: PackageLineBreakpointTestCode.java 6 2007-05-16 07:14:24Z nfiedler $
+ * $Id$
  */
 
 // This test calls for a class with a package name that does not match

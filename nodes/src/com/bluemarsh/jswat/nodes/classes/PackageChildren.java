@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: PackageChildren.java 21 2007-12-24 08:17:09Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.nodes.classes;

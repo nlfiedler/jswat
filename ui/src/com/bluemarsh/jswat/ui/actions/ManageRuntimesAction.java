@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: ManageRuntimesAction.java 6 2007-05-16 07:14:24Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.ui.actions;

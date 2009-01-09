@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: DefaultClassLoaderNode.java 24 2007-12-25 07:48:54Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.nodes.classes;

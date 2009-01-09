@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: ProgressPanel.java 25 2008-06-29 15:37:23Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.installer;

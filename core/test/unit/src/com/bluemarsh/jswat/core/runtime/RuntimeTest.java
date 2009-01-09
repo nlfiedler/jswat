@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: RuntimeTest.java 17 2007-12-24 01:54:00Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.core.runtime;

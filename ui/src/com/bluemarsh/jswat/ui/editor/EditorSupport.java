@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: EditorSupport.java 29 2008-06-30 00:41:09Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.ui.editor;

@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: ListeningConnection.java 20 2007-12-24 07:20:12Z nfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.core.connect;
