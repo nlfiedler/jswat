@@ -93,4 +93,16 @@
             <file name="DisabledBreakpointPC.xml" url="resources/editor/DisabledBreakpoint+PC.xml"/>
         </folder>
     </folder>
+
+    <folder name="OptionsDialog">
+        <file name="DebugOptionsCategory.instance">
+            <attr name="categoryName" bundlevalue="com.bluemarsh.jswat.ui.Bundle#OptionsCategory_Name_Debug"/>
+            <attr name="controller" newvalue="com.bluemarsh.jswat.ui.DebugOptionsPanelController"/>
+            <attr name="iconBase" stringvalue="com/bluemarsh/jswat/ui/debug_option.gif"/>
+            <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory"/>
+            <attr name="keywords" bundlevalue="com.bluemarsh.jswat.ui.Bundle#OptionsCategory_Keywords_Debug"/>
+            <attr name="keywordsCategory" stringvalue="Debug"/>
+            <attr name="title" bundlevalue="com.bluemarsh.jswat.ui.Bundle#OptionsCategory_Title_Debug"/>
+        </file>
+    </folder>
 </filesystem>
