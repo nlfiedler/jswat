@@ -258,11 +258,4 @@
         </folder>
     </folder>
     -->
-
-    <folder name="Windows2">
-        <folder name="Components">
-            <!-- Hide the Runtime window, it's of no use. -->
-            <file name="runtime.settings_hidden"/>
-        </folder>
-    </folder>
 </filesystem>
