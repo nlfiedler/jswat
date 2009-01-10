@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -69,11 +69,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
         suspendedActions = new HashSet<Action>();
     }
 
-    /**
-     * Called when the Session has connected to the debuggee.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void connected(SessionEvent sevt) {
         if (sevt.getSession().equals(currentSession)) {
             setEnabled(activeActions, true);
@@ -84,11 +80,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
         }
     }
 
-    /**
-     * Called when the Session is about to be closed.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
@@ -99,6 +91,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
      */
     private void disableAction(final Action action) {
         Runnable runner = new Runnable() {
+            @Override
             public void run() {
                 action.setEnabled(false);
             }
@@ -106,11 +99,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
         EventQueue.invokeLater(runner);
     }
 
-    /**
-     * Called when the Session has disconnected from the debuggee.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void disconnected(SessionEvent sevt) {
         if (sevt.getSession().equals(currentSession)) {
             setEnabled(activeActions, false);
@@ -132,12 +121,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
         return theInstance;
     }
 
-    /**
-     * Called after the Session has added this listener to the Session
-     * listener list.
-     *
-     * @param  session  the Session.
-     */
+    @Override
     public void opened(Session session) {
     }
 
@@ -197,11 +181,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
         }
     }
 
-    /**
-     * Called when the debuggee is about to be resumed.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void resuming(SessionEvent sevt) {
         if (sevt.getSession().equals(currentSession)) {
             setEnabled(runningActions, true);
@@ -209,30 +189,18 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
         }
     }
 
-    /**
-     * Called when a Session has been added to the SessionManager.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
     }
 
-    /**
-     * Called when a Session has been removed from the SessionManager.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         // the session will discard its listeners
     }
 
-    /**
-     * Called when a Session has been made the current session.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         // check session state and enable/disable actions
         Session session = e.getSession();
@@ -259,6 +227,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
      */
     private void setEnabled(final Set<Action> actions, final boolean enable) {
         Runnable runner = new Runnable() {
+            @Override
             public void run() {
                 for (Action action : actions) {
                     action.setEnabled(enable);
@@ -268,11 +237,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
         EventQueue.invokeLater(runner);
     }
 
-    /**
-     * Called when the debuggee has been suspended.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void suspended(SessionEvent sevt) {
         if (sevt.getSession().equals(currentSession)) {
             setEnabled(suspendedActions, true);
