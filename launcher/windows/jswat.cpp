@@ -36,8 +36,9 @@ static char options[4098] = "";
 static char dirs[4098] = "", extradirs[4098];
 static char jdkswitch[MAX_PATH] = "";
 
-static char* defaultDirs[] = { "jswat4",
-                               "ide9",
+static char* defaultDirs[] = { "jswat5",
+                               "ide10",
+                               "java2",
                                "extra",
                                NULL };
 
@@ -107,7 +108,7 @@ int WINAPI
         strcat(strcat(dirs, ";"), extradirs);
     }
 
-    sprintf(nbexec, "%s\\platform8\\lib\\nbexec.exe", topdir);
+    sprintf(nbexec, "%s\\platform9\\lib\\nbexec.exe", topdir);
 
     /* AutoUpgrade prevented IDE from starting, NF 2005.03.20 */
     sprintf(cmdline2, "\"%s\" %s --branding jswat --clusters \"%s\" --userdir \"%s\" %s %s",

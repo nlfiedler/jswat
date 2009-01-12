@@ -62,7 +62,7 @@ if [ -f "${userdir}"/etc/jswat.conf ] ; then
 fi
 
 netbeans_clusters=""
-for i in jswat4 ide9 extra ; do
+for i in jswat5 ide10 java2 extra ; do
     if [ -d "$progdir/../$i" ] ; then
         netbeans_clusters="$netbeans_clusters:$progdir/../$i"
     fi
@@ -72,7 +72,7 @@ if [ ! -z "$netbeans_extraclusters" ] ; then
     netbeans_clusters="$netbeans_clusters:$netbeans_extraclusters"
 fi
 
-nbexec="$progdir"/../platform8/lib/nbexec
+nbexec="$progdir"/../platform9/lib/nbexec
 
 case "`uname`" in
     Darwin*)
