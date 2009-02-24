@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -40,7 +40,7 @@ public class Controller {
     /** The main window. */
     private MainFrame mainFrame;
     /** Map of InstallerPanel instances, keyed by String name. */
-    private Map panelNames;
+    private Map<String, InstallerPanel> panelNames;
     /** The currently visible panel. */
     private InstallerPanel currentPanel;
     /** Installation properties. */
@@ -54,7 +54,7 @@ public class Controller {
      * Creates a new instance of Controller.
      */
     private Controller() {
-        panelNames = new HashMap();
+        panelNames = new HashMap<String, InstallerPanel>();
         installProps = new Properties();
     }
 
@@ -93,7 +93,7 @@ public class Controller {
      * @return  the panel, or null if error.
      */
     private InstallerPanel getPanel(String name) {
-        InstallerPanel panel = (InstallerPanel) panelNames.get(name);
+        InstallerPanel panel = panelNames.get(name);
         if (panel == null) {
             // Locate panel class and instantiate it.
             if (name.equals("welcome")) {
@@ -200,6 +200,7 @@ public class Controller {
         mainFrame.showPanel(currentPanel);
         enableButtons();
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 mainFrame.setLocationRelativeTo(null);
                 mainFrame.setVisible(true);

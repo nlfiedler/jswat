@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -61,6 +61,7 @@ public class JdkPanel extends InstallerPanel implements
         browseButton.addActionListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent event) {
         Object src = event.getSource();
         if (src == browseButton) {
@@ -82,6 +83,7 @@ public class JdkPanel extends InstallerPanel implements
         }
     }
 
+    @Override
     public boolean canProceed() {
         if (!jdkOkay) {
             messageLabel.setText(Bundle.getString("MSG_Jdk_Verifying"));
@@ -92,43 +94,52 @@ public class JdkPanel extends InstallerPanel implements
         }
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e) {
     }
 
+    @Override
     public void doHide() {
         Controller.getDefault().setProperty("jdk", homeTextField.getText());
     }
 
+    @Override
     public void doShow() {
         jdkOkay = false;
         String path = homeTextField.getText();
         validateDirectory(path);
     }
 
+    @Override
     public String getNext() {
         return "home";
     }
 
+    @Override
     public String getPrevious() {
         return "license";
     }
 
+    @Override
     public void insertUpdate(DocumentEvent e) {
         String path = homeTextField.getText();
         validateDirectory(path);
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         String path = homeTextField.getText();
         validateDirectory(path);
     }
 
+    @Override
     public void run() {
         File dir = new File(homeTextField.getText());
         final JdkVerifier verifier = new JdkVerifier();
         verifier.scanPath(dir);
         jdkOkay = verifier.hasDebugInterface() && verifier.sufficientVersion();
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 if (jdkOkay) {
                     messageLabel.setText("");
