@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -56,11 +56,15 @@ public class JdkVerifierTest extends TestCase {
         File dir = new File(home);
         JdkVerifier jv = new JdkVerifier();
         jv.scanPath(dir);
-        assertTrue("java.home has no JPDA?", jv.hasDebugInterface());
-        home = System.getProperty("user.home");
+        assertTrue(jv.hasDebugInterface());
+        assertTrue(jv.sufficientVersion());
+        // Do not use user.home as that tends to be huge compared
+        // to the current directory (this project directory).
+        home = System.getProperty("user.dir");
         dir = new File(home);
         jv = new JdkVerifier();
         jv.scanPath(dir);
-        assertFalse("user.home has JPDA?", jv.hasDebugInterface());
+        assertFalse(jv.hasDebugInterface());
+        assertFalse(jv.sufficientVersion());
     }
 }
