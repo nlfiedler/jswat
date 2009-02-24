@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -64,19 +64,24 @@ public class LicensePanel extends InstallerPanel implements ItemListener {
             ioe.printStackTrace();
         } finally {
             try {
-                if (is != null) is.close();
+                if (is != null) {
+                    is.close();
+                }
             } catch (IOException ioe) { }
         }
         licenseTextArea.setCaretPosition(0);
         agreeRadioButton.addItemListener(this);
     }
 
+    @Override
     public void doHide() {
     }
 
+    @Override
     public void doShow() {
     }
 
+    @Override
     public String getNext() {
         if (agreed) {
             return "jdk";
@@ -85,10 +90,12 @@ public class LicensePanel extends InstallerPanel implements ItemListener {
         }
     }
 
+    @Override
     public String getPrevious() {
         return "welcome";
     }
 
+    @Override
     public void itemStateChanged(ItemEvent event) {
         // We only listen to the agree button.
         agreed = event.getStateChange() == ItemEvent.SELECTED;

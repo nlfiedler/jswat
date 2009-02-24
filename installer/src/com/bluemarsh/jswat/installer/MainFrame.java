@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -54,11 +54,7 @@ public class MainFrame extends JFrame implements ActionListener {
         setSize(640, 420);
     }
 
-    /**
-     * Invoked when a button is pressed.
-     *
-     * @param  event  action event.
-     */
+    @Override
     public void actionPerformed(ActionEvent event) {
         Object src = event.getSource();
         if (src == backButton) {
@@ -73,6 +69,8 @@ public class MainFrame extends JFrame implements ActionListener {
     /**
      * Adds the given panel to the CardLayout-managed interior panel of this
      * window, using the panel's name.
+     *
+     * @param  panel  panel to add to window.
      */
     public void addPanel(InstallerPanel panel) {
         mainPanel.add(panel, panel.getName());
@@ -140,11 +138,7 @@ public class MainFrame extends JFrame implements ActionListener {
             image = new ImageIcon(Bundle.getResource("IMG_Background"));
         }
 
-        /**
-         * Paints the container.
-         *
-         * @param  g  the specified Graphics window.
-         */
+        @Override
         public void paint(Graphics g) {
             image.paintIcon(this, g, 0, 0);
             super.paint(g);
