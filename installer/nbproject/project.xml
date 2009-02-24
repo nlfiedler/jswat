@@ -2,9 +2,9 @@
 <project xmlns="http://www.netbeans.org/ns/project/1">
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
-        <data xmlns="http://www.netbeans.org/ns/j2se-project/2">
+        <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>JSwat Installer</name>
-            <minimum-ant-version>1.6</minimum-ant-version>
+            <minimum-ant-version>1.6.5</minimum-ant-version>
             <source-roots>
                 <root id="src.dir"/>
             </source-roots>
