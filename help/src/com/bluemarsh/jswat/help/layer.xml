@@ -36,6 +36,7 @@
     <folder name="Menu">
         <folder name="Help">
             <file name="org-netbeans-modules-usersguide-master.xml_hidden"/>
+            <file name="master-help.xml_hidden"/>
             <file name="com-bluemarsh-jswat-help-resources-master.xml" url="resources/master.xml">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.help.Bundle"/>
                 <attr name="position" intvalue="200"/>
