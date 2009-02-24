@@ -70,7 +70,7 @@ public final class DebugOptionsPanelController extends OptionsPanelController {
 
     @Override
     public HelpCtx getHelpCtx() {
-        return null; // TODO: new HelpCtx("...ID")
+        return new HelpCtx("jswat-options");
     }
 
     @Override

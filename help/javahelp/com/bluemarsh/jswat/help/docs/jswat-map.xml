@@ -15,7 +15,7 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2004-2006. All Rights Reserved.
+  are Copyright (C) 2004-2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
@@ -45,6 +45,8 @@
     <mapID target="jswat-getting-help" url="general/getting-help.html"/>
 
     <mapID target="jswat-launch-debuggee" url="action/launch-debuggee.html"/>
+
+    <mapID target="jswat-options" url="general/options-panel.html"/>
 
     <mapID target="jswat-paths" url="session/paths.html"/>
 
