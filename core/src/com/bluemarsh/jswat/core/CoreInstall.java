@@ -65,9 +65,7 @@ public class CoreInstall extends ModuleInstall implements Runnable, WindowListen
     /** Identifier for the special launch-API session. */
     private static final String LAUNCH_SESSION_ID = "LAUNCH";
 
-    /**
-     * Called when all modules agreed with closing and the IDE will be closed.
-     */
+    @Override
     public void close() {
         // Save the runtimes to persistent storage.
         RuntimeManager rm = RuntimeProvider.getRuntimeManager();
@@ -219,9 +217,7 @@ public class CoreInstall extends ModuleInstall implements Runnable, WindowListen
         setBreakpoint(session);
     }
 
-    /**
-     * Called when an already-installed module is restored (during IDE startup).
-     */
+    @Override
     public void restored() {
         super.restored();
         String transport = System.getProperty("jswat.transport");
@@ -233,6 +229,7 @@ public class CoreInstall extends ModuleInstall implements Runnable, WindowListen
         }
     }
 
+    @Override
     public void run() {
         Frame frame = WindowManager.getDefault().getMainWindow();
         if (frame.isShowing()) {
@@ -346,24 +343,31 @@ public class CoreInstall extends ModuleInstall implements Runnable, WindowListen
         }
     }
 
+    @Override
     public void windowActivated(WindowEvent e) {
     }
 
+    @Override
     public void windowClosed(WindowEvent e) {
     }
 
+    @Override
     public void windowClosing(WindowEvent e) {
     }
 
+    @Override
     public void windowDeactivated(WindowEvent e) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
+    @Override
     public void windowIconified(WindowEvent e) {
     }
 
+    @Override
     public void windowOpened(WindowEvent e) {
         EventQueue.invokeLater(this);
         e.getWindow().removeWindowListener(this);
