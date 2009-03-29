@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -69,6 +69,7 @@ public class DebugAnnotation extends Annotation {
         userObject = obj;
     }
 
+    @Override
     public String getAnnotationType() {
         return type;
     }
@@ -82,6 +83,7 @@ public class DebugAnnotation extends Annotation {
         return line;
     }
 
+    @Override
     public String getShortDescription () {
         if (type.equals(BREAKPOINT_TYPE)) {
             return NbBundle.getMessage(getClass(), "HINT_BREAKPOINT");
@@ -103,6 +105,7 @@ public class DebugAnnotation extends Annotation {
         return userObject;
     }
 
+    @Override
     public String toString() {
         return "DebugAnnotation=[Type=" + type + ",line=" + line +
                 ",userObject=" + userObject + "]";
