@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007-2008. All Rights Reserved.
+ * are Copyright (C) 2007-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -91,6 +91,7 @@ public class ClassChildren extends Children.SortedArray {
      */
     private static class MethodComparator implements Comparator<Node> {
 
+        @Override
         public int compare(Node o1, Node o2) {
             String n1 = o1.getDisplayName();
             String n2 = o2.getDisplayName();
@@ -238,6 +239,7 @@ public class ClassChildren extends Children.SortedArray {
             return longName;
         }
 
+        @Override
         public Method getMethod() {
             return method;
         }
@@ -247,6 +249,7 @@ public class ClassChildren extends Children.SortedArray {
             return method.name();
         }
 
+        @Override
         protected Action[] getNodeActions() {
             return new Action[] {
                 SystemAction.get(ShowSourceAction.class),
@@ -254,6 +257,7 @@ public class ClassChildren extends Children.SortedArray {
             };
         }
 
+        @Override
         public void showSource() {
             Session session = SessionProvider.getCurrentSession();
             PathManager pm = PathProvider.getPathManager(session);
