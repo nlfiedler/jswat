@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -61,14 +61,7 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
     public BreakpointAnnotationProvider() {
     }
 
-    /**
-     * Attach annotations to the Line.Set for given context.
-     *
-     * @param  set     the Line.Set to attach annotations to.
-     * @param  lookup  a Lookup describing the context for the Line.Set.
-     *                 It shall contain the FileObject the LineSet is
-     *                 associated with.
-     */
+    @Override
     public void annotate(Line.Set set, Lookup lookup) {
         FileObject fo = lookup.lookup(FileObject.class);
         if (fo != null) {

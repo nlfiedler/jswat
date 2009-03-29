@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -54,6 +54,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
     /** The expression that we are to evaluate. */
     private String expression;
 
+    @Override
     public String getAnnotationType() {
         return null;
     }
@@ -118,6 +119,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         return text.substring(exprBegin, exprEnd);
     }
 
+    @Override
     public String getShortDescription() {
         // Get the document for which we are annotating.
         Line.Part lp = (Line.Part) getAttachedAnnotatable();
@@ -154,6 +156,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         return null;
     }
 
+    @Override
     public void run() {
         // Need the current session to do anything.
         SessionManager sm = SessionProvider.getSessionManager();
