@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -24,24 +24,35 @@
 package com.bluemarsh.jswat.ui.editor;
 
 import com.bluemarsh.jswat.core.breakpoint.LineBreakpoint;
+// To use the com.sun.source classes, need libs.javacapi module dependency.
+import com.sun.source.tree.Scope;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 import java.awt.EventQueue;
-//import java.io.IOException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.swing.JEditorPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.java.source.CancellableTask;
+import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.ElementUtilities;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.openide.ErrorManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
-//import org.openide.cookies.SourceCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.URLMapper;
@@ -50,13 +61,6 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.loaders.DataShadow;
 import org.openide.nodes.Node;
-//import org.openide.src.ClassElement;
-//import org.openide.src.ConstructorElement;
-//import org.openide.src.Element;
-//import org.openide.src.FieldElement;
-//import org.openide.src.Identifier;
-//import org.openide.src.InitializerElement;
-//import org.openide.src.SourceElement;
 import org.openide.text.Annotatable;
 import org.openide.text.Annotation;
 import org.openide.text.Line;
@@ -154,53 +158,74 @@ public class EditorSupport {
      * @return  class name for given url and line number, or null if not found.
      */
     public String getClassName(String url, int line) {
-        // XXX: org.openide.src is gone
-//        Element element = getElement(url, line);
-//        if (element == null) {
-//            return "";
-//        }
-//        if (element instanceof ClassElement) {
-//            return getClassName((ClassElement) element);
-//        }
-//        if (element instanceof ConstructorElement) {
-//            return getClassName(((ConstructorElement) element).getDeclaringClass());
-//        }
-//        if (element instanceof FieldElement) {
-//            return getClassName(((FieldElement) element).getDeclaringClass());
-//        }
-//        if (element instanceof InitializerElement) {
-//            return getClassName(((InitializerElement) element).getDeclaringClass());
-//        }
-        return "";
-    }
+        DataObject dataObject = getDataObject(url);
+        if (dataObject == null) {
+            return null;
+        }
+        JavaSource js = JavaSource.forFileObject(dataObject.getPrimaryFile());
+        if (js == null) {
+            return "";
+        }
+        EditorCookie ec = dataObject.getCookie(EditorCookie.class);
+        if (ec == null) {
+            return "";
+        }
+        StyledDocument doc;
+        try {
+            doc = ec.openDocument();
+        } catch (IOException ioe) {
+            ErrorManager.getDefault().notify(ioe);
+            return "";
+        }
+        try {
+            final int offset = NbDocument.findLineOffset(doc, line - 1);
+            final String[] result = new String[]{""};
+            js.runUserActionTask(new CancellableTask<CompilationController>() {
 
-//    /**
-//     * Converts the given ClassElement into a class name String.
-//     *
-//     * @param  e  class element from which to get name.
-//     * @return  the name of the class.
-//     */
-//    private static String getClassName(ClassElement e) {
-//        String f = e.getName().getFullName();
-//        if (!e.isInner()) {
-//            return f;
-//        }
-//        SourceElement sourceEl = e.getSource();
-//        if (sourceEl == null) {
-//            return f;
-//        }
-//        Identifier ident = sourceEl.getPackage();
-//        String c;
-//        if (ident == null) {
-//            c = "";
-//        } else {
-//            c = ident.getFullName();
-//        }
-//        if (c.length() > 0) {
-//            return c + '.' + f.substring(c.length() + 1).replace('.', '$');
-//        }
-//        return f.replace('.', '$');
-//    }
+                @Override
+                public void cancel() {
+                }
+
+                @Override
+                public void run(CompilationController cc) throws Exception {
+                    if (cc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                        ErrorManager.getDefault().log(ErrorManager.WARNING,
+                                "Unable to resolve " + cc.getFileObject() +
+                                " to phase " + Phase.RESOLVED +
+                                ", current phase = " + cc.getPhase() +
+                                "\nDiagnostics = " + cc.getDiagnostics() +
+                                "\nFree memory = " + Runtime.getRuntime().freeMemory());
+                        return;
+                    }
+                    TreePath p = cc.getTreeUtilities().pathFor(offset);
+                    while (p != null && p.getLeaf().getKind() != Kind.CLASS) {
+                        p = p.getParentPath();
+                    }
+                    TypeElement te;
+                    if (p != null) {
+                        te = (TypeElement) cc.getTrees().getElement(p);
+                    } else {
+                        Scope scope = cc.getTreeUtilities().scopeFor(offset);
+                        te = scope.getEnclosingClass();
+                    }
+                    if (te != null) {
+                        result[0] = ElementUtilities.getBinaryName(te);
+                    } else {
+                        ErrorManager.getDefault().log(ErrorManager.WARNING,
+                                "No enclosing class for " + cc.getFileObject() +
+                                ", offset = " + offset);
+                    }
+                }
+            }, true);
+            return result[0];
+        } catch (IOException ioe) {
+            ErrorManager.getDefault().notify(ioe);
+            return "";
+        } catch (IndexOutOfBoundsException ioobe) {
+            ErrorManager.getDefault().notify(ioobe);
+            return null;
+        }
+    }
 
     /**
      * Retrieves the currently selected editor pane, if any.
@@ -323,33 +348,83 @@ public class EditorSupport {
     }
 
     /**
-     * Returns the source element for given url and line number, if any.
+     * Returns the executable source element for given url and line number,
+     * or null if the caret is outside of any method.
      *
      * @param  url   the URL for the source file.
      * @param  line  line number somewhere in class definition.
-     * @return  source element, or null if none.
+     * @return  executable element, or null if none.
      */
-//    public Element getElement(String url, int line) { XXX org.openide.src is gone
-//        DataObject dobj = getDataObject(url);
-//        if (dobj != null) {
-//            SourceCookie.Editor sc = (SourceCookie.Editor) dobj.
-//                    getCookie(SourceCookie.Editor.class);
-//            if (sc != null) {
-//                try {
-//                    StyledDocument sd = sc.openDocument();
-//                    if (sd != null) {
-//                        int offset = NbDocument.findLineOffset(sd, line - 1);
-//                        return sc.findElement(offset);
-//                    }
-//                } catch (IOException ioe) {
-//                    // Fall through to return null.
-//                } catch (IndexOutOfBoundsException ioobe) {
-//                    // Fall through to return null.
-//                }
-//            }
-//        }
-//        return null;
-//    }
+    public ExecutableElement getElement(String url, int line) {
+        DataObject dataObject = getDataObject(url);
+        if (dataObject == null) {
+            return null;
+        }
+        JavaSource js = JavaSource.forFileObject(dataObject.getPrimaryFile());
+        if (js == null) {
+            return null;
+        }
+        EditorCookie ec = dataObject.getCookie(EditorCookie.class);
+        if (ec == null) {
+            return null;
+        }
+        StyledDocument doc;
+        try {
+            doc = ec.openDocument();
+        } catch (IOException ioe) {
+            ErrorManager.getDefault().notify(ioe);
+            return null;
+        }
+        try {
+            final int offset = NbDocument.findLineOffset(doc, line - 1);
+            final ExecutableElement[] result = new ExecutableElement[]{null};
+            js.runUserActionTask(new CancellableTask<CompilationController>() {
+
+                @Override
+                public void cancel() {
+                }
+
+                @Override
+                public void run(CompilationController cc) throws Exception {
+                    if (cc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                        ErrorManager.getDefault().log(ErrorManager.WARNING,
+                                "Unable to resolve " + cc.getFileObject() +
+                                " to phase " + Phase.RESOLVED +
+                                ", current phase = " + cc.getPhase() +
+                                "\nDiagnostics = " + cc.getDiagnostics() +
+                                "\nFree memory = " + Runtime.getRuntime().freeMemory());
+                        return;
+                    }
+                    TreePath p = cc.getTreeUtilities().pathFor(offset);
+                    Scope scope = cc.getTreeUtilities().scopeFor(offset);
+                    result[0] = scope.getEnclosingMethod();
+                }
+            }, true);
+            return result[0];
+        } catch (IOException ioe) {
+            ErrorManager.getDefault().notify(ioe);
+            return null;
+        } catch (IndexOutOfBoundsException ioobe) {
+            ErrorManager.getDefault().notify(ioobe);
+            return null;
+        }
+    }
+
+    /**
+     * Finds the type element for the given element.
+     *
+     * @param  elem  element for which to find type.
+     * @return  type element, or null if not found.
+     */
+    public TypeElement getEnclosingType(Element elem) {
+        while (elem != null && !TypeElement.class.isInstance(elem)) {
+            elem = elem.getEnclosingElement();
+        }
+        if (elem != null) {
+            return (TypeElement) elem;
+        }
+        return null;
+    }
 
     /**
      * Get the Line instance from the given file at the given line.
@@ -389,6 +464,8 @@ public class EditorSupport {
 
     /**
      * Removes the given annotation from whatever line it is attached to.
+     *
+     * @param  ann  annotation to be removed.
      */
     public void removeAnnotation(Annotation ann) {
         Annotatable antbl = ann.getAttachedAnnotatable();
@@ -425,6 +502,7 @@ public class EditorSupport {
             return false;
         }
         EventQueue.invokeLater(new Runnable() {
+
             @Override
             public void run() {
                 l.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS);

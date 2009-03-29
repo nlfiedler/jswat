@@ -2,21 +2,14 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
-- Find out how to use the new editor API and Java language support
-  - look for NB release notes that explain what happened to org.openide.src
-    and how to use the javax.lang.model classes
-  - EditorSupport (see EditorContextImpl in NB debugger.jpda.projects)
-  - ClassChildren
-  - NewBreakpointAction
-- ByteCodesView is broken, get class cast exception
-- Fix the Options so it shows our options
+- Find Java class member icons for ClassChildren
+- ByteCodesView is broken, throws class cast exception
 - ByteCodesView uses deprecated PlainKit, NbEditorDocument
-- Hide the Runtime window by default (?)
+- Look for a programmatic way to close the Runtime window
+- Make a .icns file for dock icons on Mac
 - Update list of modules required (product/modules.txt)
 - Fix build.xml to include modules we're using now
-- Check if there are other changes in NetBeans launcher that JSwat needs
-- Recompile the Windows launcher
-- Update copyright in splash and about images
+- Update the jswat launcher based on changes in netbeans script
 - Update developer documentation
 - Update docs in README and UserGuide wrt names of menus and items
 - Release

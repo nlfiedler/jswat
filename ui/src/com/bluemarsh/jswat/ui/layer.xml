@@ -15,7 +15,7 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2004-2006. All Rights Reserved.
+  are Copyright (C) 2004-2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
@@ -53,14 +53,16 @@
     <folder name="Editors">
         <!-- For every type of file, we need to allow setting breakpoints. -->
         <folder name="text">
-            <folder name="base">
+            <folder name="x-java">
                 <folder name="GlyphGutterActions">
+                    <!-- Used to have this under 'base' but doesn't seem to be
+                         supported anymore. Using x-all-languages didn't work
+                         either. But, at least it works for java, if not all. -->
                     <file name="com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Debug/com-bluemarsh-jswat-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
                     </file>
                 </folder>
-            </folder>
-            <folder name="x-java">
                 <folder name="Popup">
                     <!-- Hide the actions that may cause trouble for our users. -->
                     <file name="format_hidden"/>
