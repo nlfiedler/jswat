@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -52,6 +52,8 @@ public class CreatorPanel extends JPanel implements ActionListener, ItemListener
     private static final long serialVersionUID = 1L;
     /** Dialog for displaying this panel. */
     private Dialog inputDialog;
+    /** Used to determine option user chose. */
+    private DialogDescriptor dialogDescriptor;
     /** True if the user has provided valid input, false otherwise. */
     private boolean okayToGo;
     /** Map of EditorPanel instances keyed by String types. */
@@ -99,14 +101,10 @@ public class CreatorPanel extends JPanel implements ActionListener, ItemListener
         typeComboBox.addItemListener(this);
     }
 
-    /**
-     * Invoked by the press of a button.
-     *
-     * @param  event  action event.
-     */
+    @Override
     public void actionPerformed(ActionEvent event) {
-        String cmd = event.getActionCommand();
-        if (cmd.equals("OK")) {
+        Object value = dialogDescriptor.getValue();
+        if (value == DialogDescriptor.OK_OPTION) {
             // Validate the input before saving the data and closing.
             if (validateInput()) {
                 okayToGo = true;
@@ -117,6 +115,7 @@ public class CreatorPanel extends JPanel implements ActionListener, ItemListener
         }
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         // Ensure dialog is not overly narrow.
@@ -151,22 +150,18 @@ public class CreatorPanel extends JPanel implements ActionListener, ItemListener
         // Collect the dialog elements.
         String title = NbBundle.getMessage(getClass(), "LBL_CreatorPanel_Title");
         // Display dialog and get the user response.
-        DialogDescriptor dd = new DialogDescriptor(this, title);
-        dd.setHelpCtx(new HelpCtx("jswat-create-breakpoint"));
-        dd.setButtonListener(this);
-        dd.setClosingOptions(new Object[] { DialogDescriptor.CANCEL_OPTION });
-        inputDialog = DialogDisplayer.getDefault().createDialog(dd);
+        dialogDescriptor = new DialogDescriptor(this, title);
+        dialogDescriptor.setHelpCtx(new HelpCtx("jswat-create-breakpoint"));
+        dialogDescriptor.setButtonListener(this);
+        dialogDescriptor.setClosingOptions(new Object[] { DialogDescriptor.CANCEL_OPTION });
+        inputDialog = DialogDisplayer.getDefault().createDialog(dialogDescriptor);
         okayToGo = false;
         inputDialog.setVisible(true);
         // (blocks until dialog is disposed...)
         return okayToGo;
     }
 
-    /**
-     * Invoked when an item has been selected or deselected by the user.
-     *
-     * @param  e  item event.
-     */
+    @Override
     public void itemStateChanged(ItemEvent e) {
         ItemSelectable selc = e.getItemSelectable();
         Object[] sels = selc.getSelectedObjects();
