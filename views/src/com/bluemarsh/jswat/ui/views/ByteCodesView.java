@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2008. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -39,15 +39,8 @@ import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.bluemarsh.jswat.ui.editor.DebugAnnotation;
 import com.sun.jdi.Location;
 import com.sun.jdi.ReferenceType;
-import java.awt.EventQueue;
-import org.apache.bcel.classfile.ClassParser;
-import org.apache.bcel.classfile.Code;
-import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.classfile.Utility;
-import org.apache.bcel.util.ByteSequence;
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 import java.io.FileNotFoundException;
@@ -65,6 +58,13 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.StyledDocument;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.Code;
+import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.Utility;
+import org.apache.bcel.util.ByteSequence;
 import org.netbeans.modules.editor.NbEditorDocument;
 import org.netbeans.modules.editor.plain.PlainKit;
 import org.openide.ErrorManager;
@@ -96,20 +96,15 @@ public class ByteCodesView extends CloneableEditor
      * index into this array is the line number minus one). */
     private long[] lineCodeIndices;
     /** Offset into the lineCodeIndices array of the first empty entry. */
-    private int lineCodeOffset;
+    private int lineCodeLength;
     /** A unique identifier of the method shown in the text area. */
     private String previousMethod;
-
-    static {
-        // Matches the mime-type returned by the editor environment.
-        JEditorPane.registerEditorKitForContentType(MIME_TYPE,
-                "com.bluemarsh.jswat.ui.views.ByteCodesView$ByteCodesEditorKit");
-    }
 
     /**
      * Creates a new instance of ByteCodesView.
      */
     public ByteCodesView() {
+        // The editor kit is registered via the layer.
         super(new ByteCodesEditorSupport());
         setLayout(new BorderLayout());
     }
@@ -136,12 +131,14 @@ public class ByteCodesView extends CloneableEditor
                 (ByteCodesEditorSupport) cloneableEditorSupport();
         support.removeAnnotation();
         final ByteCodesDocument doc = (ByteCodesDocument) support.getDocument();
-        NbDocument.runAtomic(doc, new Runnable() {
-            @Override
-            public void run() {
-                doc.clear();
-            }
-        });
+        if (doc != null) {
+            NbDocument.runAtomic(doc, new Runnable() {
+                @Override
+                public void run() {
+                    doc.clear();
+                }
+            });
+        }
     }
 
     @Override
@@ -300,7 +297,7 @@ public class ByteCodesView extends CloneableEditor
             support.removeAnnotation();
             boolean foundIndex = false;
             int line = 0;
-            while (!foundIndex && line < lineCodeOffset) {
+            while (!foundIndex && line < lineCodeLength) {
                 if (lineCodeIndices[line] == codeIndex) {
                     // Found the line, now highlight it, adding one to
                     // translate from relative to absolute numbering.
@@ -319,7 +316,7 @@ public class ByteCodesView extends CloneableEditor
         // We have not seen this method before.
         previousMethod = key;
         // Must reset this as we will be rebuilding the table soon.
-        lineCodeOffset = 0;
+        lineCodeLength = 0;
         
         // Interpret the byte codes and append them to the text area.
         NbDocument.runAtomic(doc, new Runnable() {
@@ -350,17 +347,17 @@ public class ByteCodesView extends CloneableEditor
                         doc.append(line.toString());
 
                         // Ensure the code indices table is big enough.
-                        if (lineCodeIndices.length == lineCodeOffset) {
-                            long[] temp = new long[lineCodeOffset * 2];
+                        if (lineCodeIndices.length == lineCodeLength) {
+                            long[] temp = new long[lineCodeLength * 2];
                             System.arraycopy(lineCodeIndices, 0, temp, 0, lineCodeIndices.length);
                             lineCodeIndices = temp;
                         }
                         // Add the byte code offset to the line table.
-                        lineCodeIndices[lineCodeOffset] = byteIndex;
-                        lineCodeOffset++;
+                        lineCodeIndices[lineCodeLength] = byteIndex;
+                        lineCodeLength++;
 
                         if (byteIndex == codeIndex) {
-                            pcLine = lineCodeOffset;
+                            pcLine = lineCodeLength;
                         }
                     }
                     support.annotate(pcLine);
@@ -564,12 +561,6 @@ public class ByteCodesView extends CloneableEditor
         /** Our support instance. */
         private ByteCodesEditorSupport support;
 
-        /**
-         * Creates a new instance of ByteCodesEnvironment.
-         */
-        public ByteCodesEnvironment() {
-        }
-
         @Override
         public void addPropertyChangeListener(PropertyChangeListener l) {
         }
@@ -645,12 +636,6 @@ public class ByteCodesView extends CloneableEditor
         /** silence compiler warnings */
         private static final long serialVersionUID = 1L;
 
-        /**
-         * Public constructor for the JEditorPane factory to create us.
-         */
-        public ByteCodesEditorKit() {
-        }
-
         @Override
         public Object clone() {
             return new ByteCodesEditorKit();
@@ -658,16 +643,16 @@ public class ByteCodesView extends CloneableEditor
 
         @Override
         public Document createDefaultDocument() {
-            return new ByteCodesDocument(this.getClass());
+            return new ByteCodesDocument();
         }
 
         @Override
-        public void install(JEditorPane c) {
-            super.install(c);
+        public void install(JEditorPane pane) {
+            super.install(pane);
             // Remove the caret to enhance the "read-only" feeling of this
             // editor. However, this prevents the Line.show() from working.
             // But since that doesn't work right, either, it doesn't matter.
-            c.getCaret().deinstall(c);
+            pane.getCaret().deinstall(pane);
         }
     }
 
@@ -686,17 +671,15 @@ public class ByteCodesView extends CloneableEditor
 
         /**
          * Creates a new instance of ByteCodesDocument.
-         *
-         * @param  kitClass  the editor kit class.
          */
-        public ByteCodesDocument(Class kitClass) {
-            super(kitClass);
+        public ByteCodesDocument() {
+            super(MIME_TYPE);
             byteCodesPanel = new ByteCodesPanel();
         }
 
         @Override
         public void addUndoableEditListener(UndoableEditListener listener) {
-            // Do nothing so as to be read-only.
+            // Do nothing, we are read-only.
         }
 
         /**
