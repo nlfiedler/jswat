@@ -3,8 +3,6 @@ JSWAT TASK LIST
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
 - Find Java class member icons for ClassChildren
-- ByteCodesView is broken, throws class cast exception
-- ByteCodesView uses deprecated PlainKit, NbEditorDocument
 - Look for a programmatic way to close the Runtime window
 - Make a .icns file for dock icons on Mac
 - Update list of modules required (product/modules.txt)

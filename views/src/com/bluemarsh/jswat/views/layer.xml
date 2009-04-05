@@ -40,6 +40,13 @@
             <file name="com-bluemarsh-jswat-views-actions-WatchesViewAction.instance"/>
         </folder>
     </folder>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="bytecode">
+                <file name="com-bluemarsh-jswat-ui-views-ByteCodesView$ByteCodesEditorKit.instance"/>
+            </folder>
+        </folder>
+    </folder>
     <folder name="Menu">
         <folder name="Session">
             <file name="com-bluemarsh-jswat-views-actions-SessionsViewAction.shadow">
