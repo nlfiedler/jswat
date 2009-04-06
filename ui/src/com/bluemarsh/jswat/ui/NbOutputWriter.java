@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -47,8 +47,10 @@ public class NbOutputWriter implements OutputWriter {
         tabname = NbBundle.getMessage(getClass(), "IO_Console");
     }
 
+    @Override
     public void ensureVisible() {
         Runnable runner = new Runnable() {
+            @Override
             public void run() {
                 getIO().select();
             }
@@ -70,8 +72,10 @@ public class NbOutputWriter implements OutputWriter {
         return io;
     }
 
+    @Override
     public void printError(final String msg) {
         Runnable runner = new Runnable() {
+            @Override
             public void run() {
                 getIO().getErr().println(msg);
             }
@@ -79,8 +83,10 @@ public class NbOutputWriter implements OutputWriter {
         EventQueue.invokeLater(runner);
     }
 
+    @Override
     public void printOutput(final String msg) {
         Runnable runner = new Runnable() {
+            @Override
             public void run() {
                 getIO().getOut().println(msg);
             }

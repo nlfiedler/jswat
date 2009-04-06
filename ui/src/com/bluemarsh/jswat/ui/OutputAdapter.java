@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -68,11 +68,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
         inputFutures = new HashMap<Session, Future>();
     }
 
-    /**
-     * Called when the Session has connected to the debuggee.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void connected(SessionEvent sevt) {
         // Create a new output tab for this session.
         Session session = sevt.getSession();
@@ -91,7 +87,8 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             // Clear the output pane so the user will not think the
             // old output was from the current debuggee.
             io.getOut().reset();
-            io.getErr().reset();
+            // Reset on error console generates a warning.
+            //io.getErr().reset();
         } catch (IOException ioe) {
             ErrorManager.getDefault().notify(ioe);
         }
@@ -122,11 +119,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
         }
     }
 
-    /**
-     * Called when the Session is about to be closed.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void closing(SessionEvent sevt) {
         // Close the output tab for this session.
         Session session = sevt.getSession();
@@ -136,11 +129,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
         }
     }
 
-    /**
-     * Called when the Session has disconnected from the debuggee.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void disconnected(SessionEvent sevt) {
         // Let the output/error reader threads die on their own.
         // The input reader thread, however, needs some help.
@@ -152,60 +141,31 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
         }
     }
 
-    /**
-     * Called after the Session has added this listener to the Session
-     * listener list.
-     *
-     * @param  session  the Session.
-     */
+    @Override
     public void opened(Session session) {
-        // ignored
     }
 
-    /**
-     * Called when the debuggee is about to be resumed.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void resuming(SessionEvent sevt) {
-        // ignored
     }
 
-    /**
-     * Called when a Session has been added to the SessionManager.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
     }
 
-    /**
-     * Called when a Session has been removed from the SessionManager.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         // the session will discard its listeners
     }
 
-    /**
-     * Called when a Session has been made the current session.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
-        // ignored
     }
 
-    /**
-     * Called when the debuggee has been suspended.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void suspended(SessionEvent sevt) {
-        // ignored
     }
 
     /**
@@ -231,10 +191,9 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             printWriter = pw;
         }
 
-        /**
-         * Read from the input stream.
-         */
+        @Override
         public void run() {
+            // Read from the input stream.
             try {
                 InputStreamReader isr = new InputStreamReader(inputStream);
                 char[] buf = new char[1024];
@@ -284,10 +243,9 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             printWriter = pw;
         }
 
-        /**
-         * Read from the reader.
-         */
+        @Override
         public void run() {
+            // Read from the reader.
             try {
                 OutputStreamWriter osw = new OutputStreamWriter(outputStream);
                 char[] buf = new char[256];
