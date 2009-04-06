@@ -106,35 +106,35 @@ public class ClassChildren extends Children.SortedArray {
      */
     private static class DefaultMethodNode extends MethodNode
             implements ShowSourceCookie {
-// XXX org.openide.src is gone, find the alternative
-//        private static final String INITIALIZER =
-//                "org/openide/src/resources/initializer.gif";
-//        private static final String INITIALIZER_ST =
-//                "org/openide/src/resources/initializerSt.gif";
-//        private static final String CONSTRUCTOR_PUBLIC =
-//                "org/openide/src/resources/constructorPublic.gif";
-//        private static final String CONSTRUCTOR_PROTECTED =
-//                "org/openide/src/resources/constructorProtected.gif";
-//        private static final String CONSTRUCTOR_PRIVATE =
-//                "org/openide/src/resources/constructorPrivate.gif";
-//        private static final String CONSTRUCTOR_PACKAGE =
-//                "org/openide/src/resources/constructorPackage.gif";
-//        private static final String METHOD_PUBLIC =
-//                "org/openide/src/resources/methodPublic.gif";
-//        private static final String METHOD_PROTECTED =
-//                "org/openide/src/resources/methodProtected.gif";
-//        private static final String METHOD_PRIVATE =
-//                "org/openide/src/resources/methodPrivate.gif";
-//        private static final String METHOD_PACKAGE =
-//                "org/openide/src/resources/methodPackage.gif";
-//        private static final String METHOD_ST_PUBLIC =
-//                "org/openide/src/resources/methodStPublic.gif";
-//        private static final String METHOD_ST_PROTECTED =
-//                "org/openide/src/resources/methodStProtected.gif";
-//        private static final String METHOD_ST_PRIVATE =
-//                "org/openide/src/resources/methodStPrivate.gif";
-//        private static final String METHOD_ST_PACKAGE =
-//                "org/openide/src/resources/methodStPackage.gif";
+//        private static final String INITIALIZER = UNUSED?
+//                "org/netbeans/modules/java/source/resources/icons/initializer.png";
+        // For these references to work, need dependency on "Java Source" NetBeans module.
+        private static final String INITIALIZER_ST =
+                "org/netbeans/modules/java/source/resources/icons/initializerStatic.png";
+        private static final String CONSTRUCTOR_PUBLIC =
+                "org/netbeans/modules/java/source/resources/icons/constructorPublic.png";
+        private static final String CONSTRUCTOR_PROTECTED =
+                "org/netbeans/modules/java/source/resources/icons/constructorProtected.png";
+        private static final String CONSTRUCTOR_PRIVATE =
+                "org/netbeans/modules/java/source/resources/icons/constructorPrivate.png";
+        private static final String CONSTRUCTOR_PACKAGE =
+                "org/netbeans/modules/java/source/resources/icons/constructorPackage.png";
+        private static final String METHOD_PUBLIC =
+                "org/netbeans/modules/java/source/resources/icons/methodPublic.png";
+        private static final String METHOD_PROTECTED =
+                "org/netbeans/modules/java/source/resources/icons/methodProtected.png";
+        private static final String METHOD_PRIVATE =
+                "org/netbeans/modules/java/source/resources/icons/methodPrivate.png";
+        private static final String METHOD_PACKAGE =
+                "org/netbeans/modules/java/source/resources/icons/methodPackage.png";
+        private static final String METHOD_ST_PUBLIC =
+                "org/netbeans/modules/java/source/resources/icons/methodStaticPublic.png";
+        private static final String METHOD_ST_PROTECTED =
+                "org/netbeans/modules/java/source/resources/icons/methodStaticProtected.png";
+        private static final String METHOD_ST_PRIVATE =
+                "org/netbeans/modules/java/source/resources/icons/methodStaticPrivate.png";
+        private static final String METHOD_ST_PACKAGE =
+                "org/netbeans/modules/java/source/resources/icons/methodStaticPackage.png";
         /** The method we represent. */
         private Method method;
         /** The descriptive name for this method. */
@@ -175,40 +175,39 @@ public class ClassChildren extends Children.SortedArray {
             longName = sb.toString();
 
             // Define the icon for this method.
-// XXX: org.openide.src is gone, need to find the icons again
-//            if (method.isStaticInitializer()) {
-//                setIconBaseWithExtension(INITIALIZER_ST);
-//            } else if (method.isConstructor()) {
-//                if (method.isPrivate()) {
-//                    setIconBaseWithExtension(CONSTRUCTOR_PRIVATE);
-//                } else if (method.isProtected()) {
-//                    setIconBaseWithExtension(CONSTRUCTOR_PROTECTED);
-//                } else if (method.isPublic()) {
-//                    setIconBaseWithExtension(CONSTRUCTOR_PUBLIC);
-//                } else {
-//                    setIconBaseWithExtension(CONSTRUCTOR_PACKAGE);
-//                }
-//            } else if (method.isStatic()) {
-//                if (method.isPrivate()) {
-//                    setIconBaseWithExtension(METHOD_ST_PRIVATE);
-//                } else if (method.isProtected()) {
-//                    setIconBaseWithExtension(METHOD_ST_PROTECTED);
-//                } else if (method.isPublic()) {
-//                    setIconBaseWithExtension(METHOD_ST_PUBLIC);
-//                } else {
-//                    setIconBaseWithExtension(METHOD_ST_PACKAGE);
-//                }
-//            } else {
-//                if (method.isPrivate()) {
-//                    setIconBaseWithExtension(METHOD_PRIVATE);
-//                } else if (method.isProtected()) {
-//                    setIconBaseWithExtension(METHOD_PROTECTED);
-//                } else if (method.isPublic()) {
-//                    setIconBaseWithExtension(METHOD_PUBLIC);
-//                } else {
-//                    setIconBaseWithExtension(METHOD_PACKAGE);
-//                }
-//            }
+            if (method.isStaticInitializer()) {
+                setIconBaseWithExtension(INITIALIZER_ST);
+            } else if (method.isConstructor()) {
+                if (method.isPrivate()) {
+                    setIconBaseWithExtension(CONSTRUCTOR_PRIVATE);
+                } else if (method.isProtected()) {
+                    setIconBaseWithExtension(CONSTRUCTOR_PROTECTED);
+                } else if (method.isPublic()) {
+                    setIconBaseWithExtension(CONSTRUCTOR_PUBLIC);
+                } else {
+                    setIconBaseWithExtension(CONSTRUCTOR_PACKAGE);
+                }
+            } else if (method.isStatic()) {
+                if (method.isPrivate()) {
+                    setIconBaseWithExtension(METHOD_ST_PRIVATE);
+                } else if (method.isProtected()) {
+                    setIconBaseWithExtension(METHOD_ST_PROTECTED);
+                } else if (method.isPublic()) {
+                    setIconBaseWithExtension(METHOD_ST_PUBLIC);
+                } else {
+                    setIconBaseWithExtension(METHOD_ST_PACKAGE);
+                }
+            } else {
+                if (method.isPrivate()) {
+                    setIconBaseWithExtension(METHOD_PRIVATE);
+                } else if (method.isProtected()) {
+                    setIconBaseWithExtension(METHOD_PROTECTED);
+                } else if (method.isPublic()) {
+                    setIconBaseWithExtension(METHOD_PUBLIC);
+                } else {
+                    setIconBaseWithExtension(METHOD_PACKAGE);
+                }
+            }
         }
 
         /**
