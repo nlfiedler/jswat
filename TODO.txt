@@ -2,7 +2,6 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
-- Update list of modules required (product/modules.txt)
 - Fix build.xml to include modules we're using now
 - Update the jswat launcher based on changes in netbeans script
 - Update developer documentation

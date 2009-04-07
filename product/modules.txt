@@ -1,7 +1,5 @@
-org.apache.xml.resolver
 org.netbeans.api.java
-org.netbeans.api.xml
-org.netbeans.insane
+org.netbeans.api.java.classpath
 org.netbeans.libs.javacapi
 org.netbeans.libs.javacimpl
 org.netbeans.libs.lucene
@@ -11,6 +9,8 @@ org.netbeans.modules.editor
 org.netbeans.modules.editor.bracesmatching
 org.netbeans.modules.editor.codetemplates
 org.netbeans.modules.editor.completion
+org.netbeans.modules.editor.deprecated.pre61completion
+org.netbeans.modules.editor.deprecated.pre61settings
 org.netbeans.modules.editor.errorstripe
 org.netbeans.modules.editor.errorstripe.api
 org.netbeans.modules.editor.fold
@@ -28,7 +28,6 @@ org.netbeans.modules.editor.settings.storage
 org.netbeans.modules.editor.util
 org.netbeans.modules.java.editor
 org.netbeans.modules.java.editor.lib
-org.netbeans.modules.java.j2seplatform
 org.netbeans.modules.java.lexer
 org.netbeans.modules.java.navigation
 org.netbeans.modules.java.platform
@@ -40,15 +39,11 @@ org.netbeans.modules.lexer
 org.netbeans.modules.lexer.editorbridge
 org.netbeans.modules.lexer.nbbridge
 org.netbeans.modules.options.editor
-org.netbeans.modules.project.ant
 org.netbeans.modules.project.libraries
 org.netbeans.modules.projectapi
-org.netbeans.modules.projectui
 org.netbeans.modules.projectuiapi
 org.netbeans.modules.refactoring.api
-org.netbeans.modules.timers
 org.netbeans.modules.utilities
-org.netbeans.modules.xml.catalog
 org.netbeans.spi.editor.hints
 org.netbeans.spi.navigator
 org.netbeans.spi.tasklist
