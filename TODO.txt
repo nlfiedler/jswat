@@ -2,10 +2,12 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
-- Find out why ui and views modules seem to depend on org.openide.options
 - See what can be done about the ClassPath related warnings
+    WARNING [org.netbeans.modules.java.source.usages.RepositoryUpdater]: Ignoring root with no ClassPath: /Users/nfiedler/projects/jswat/trunk/core/test/integration/src
+    WARNING [org.netbeans.modules.java.source.usages.RepositoryUpdater]: Ignoring root with no ClassPath: /System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/src.jar
+    WARNING [org.netbeans.api.java.source.JavaSource]: ClassPath identity changed for /Users/nfiedler/projects/jswat/trunk/core/test/integration/src/PackRat.java, class path owner: null
 - Update Windows launcher to match NetBeans 6.5, recompile
 - @version@ appears in the messages.log for installed app, should be replaced
-- Update developer documentation
+- Move the developer documentation to the project wiki
 - Update docs in README and UserGuide wrt names of menus and items
 - Release
