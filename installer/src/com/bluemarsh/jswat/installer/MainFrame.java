@@ -24,11 +24,8 @@
 package com.bluemarsh.jswat.installer;
 
 import java.awt.CardLayout;
-import java.awt.Container;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -44,8 +41,6 @@ public class MainFrame extends JFrame implements ActionListener {
      * Creates new form MainFrame.
      */
     public MainFrame() {
-        // Set the content pane before constructing the components.
-        setContentPane(new Content());
         initComponents();
         backButton.addActionListener(this);
         nextButton.addActionListener(this);
@@ -120,29 +115,6 @@ public class MainFrame extends JFrame implements ActionListener {
     public void showPanel(InstallerPanel panel) {
         CardLayout layout = (CardLayout) mainPanel.getLayout();
         layout.show(mainPanel, panel.getName());
-    }
-
-    /**
-     * Class Content exists purely to draw the background using an image.
-     */
-    private static class Content extends Container {
-        /** silence compiler warnings */
-        private static final long serialVersionUID = 1L;
-        /** The background image. */
-        private ImageIcon image;
-
-        /**
-         * Constructs a new instance of Content.
-         */
-        public Content() {
-            image = new ImageIcon(Bundle.getResource("IMG_Background"));
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            image.paintIcon(this, g, 0, 0);
-            super.paint(g);
-        }
     }
 
     /** This method is called from within the constructor to
