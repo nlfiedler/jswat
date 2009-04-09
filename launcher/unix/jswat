@@ -46,54 +46,136 @@ if [ -f /etc/jswat.conf ] ; then
     . /etc/jswat.conf
 fi
 
-args="$@"
 
-userdir=${netbeans_default_userdir}
-while [ $# -gt 0 ] ; do
-    case "$1" in
-        --userdir) shift; if [ $# -gt 0 ] ; then userdir=$1; fi
-            ;;
-    esac
-    shift
+# #68373: look for userdir, but do not modify "$@"
+userdir="${netbeans_default_userdir}"
+founduserdir=""
+for opt in "$@"; do
+    if [ "${founduserdir}" = "yes" ]; then
+        userdir="$opt"
+        break
+    elif [ "$opt" = "--userdir" ]; then
+        founduserdir="yes"
+    fi
 done
 
 if [ -f "${userdir}"/etc/jswat.conf ] ; then
     . "${userdir}"/etc/jswat.conf
 fi
 
-netbeans_clusters=""
-for i in jswat5 ide10 java2 extra ; do
-    if [ -d "$progdir/../$i" ] ; then
-        netbeans_clusters="$netbeans_clusters:$progdir/../$i"
-    fi
-done
+
+if [ ! -f "$progdir"/../etc/jswat.clusters ]; then
+    echo Cannot read cluster file: "$progdir"/../etc/jswat.clusters 1>&2
+    exit 1
+fi
+
+readClusters() {
+    grep -v "^#" "$progdir"/../etc/jswat.clusters | grep -v "^$" | grep -v platform | while read X; do
+        if [ -d "$progdir"/../$X ]; then
+            echo $progdir/../$X
+        elif [ -d "$X" ]; then
+            echo $X
+        elif expr "$X" : ".*/" >/dev/null; then
+            echo $X
+        else
+            echo $progdir/../$X
+        fi
+    done
+}
+
+absolutize_paths() {
+    while read path; do
+        if [ -d "$path" ]; then
+            (cd "$path" 2>/dev/null && pwd)
+        fi
+    done
+}
+
+netbeans_clusters=`readClusters | absolutize_paths | tr '\012' ':'`
 
 if [ ! -z "$netbeans_extraclusters" ] ; then
     netbeans_clusters="$netbeans_clusters:$netbeans_extraclusters"
 fi
 
-nbexec="$progdir"/../platform9/lib/nbexec
+heap_size () {
+    mem=640
+    case "`uname`" in
+        Linux*)
+        mem=`cat /proc/meminfo | grep MemTotal | tr -d [:space:][:alpha:]:`
+        mem=`expr $mem / 1024`
+        ;;
+    SunOS*)
+        mem=`/usr/sbin/prtconf | grep Memory | /usr/bin/tr -dc '[0-9]'`
+        ;;
+    Darwin*)
+        mem=`/usr/sbin/sysctl hw.memsize | tr -d [:alpha:][:space:].:`
+        mem=`expr $mem / 1048576`
+        ;;
+        *) 
+        ;;
+    esac
+    if [ -z "$mem" ] ; then
+        mem=640
+    fi
+    mem=`expr $mem / 5`
+    if [ $mem -gt 512 ] ; then
+        mem=512
+    elif [ $mem -lt 96 ] ; then
+        mem=96
+    fi
+    max_heap_size=$mem
+    return 0
+}
 
+
+if grep -v -- "-J-Xmx" >/dev/null <<EOF ; then
+${netbeans_default_options}
+EOF
+        heap_size
+	netbeans_default_options="-J-Xmx${max_heap_size}m ${netbeans_default_options}"
+fi
+
+launchNbexec() {
+    nbexec=`grep -v "^#" "$progdir"/../etc/jswat.clusters | grep -v "^$" | grep platform | while read X; do
+        if [ -f $X/lib/nbexec ]; then
+           echo $X/lib/nbexec
+        elif [ -f "$progdir"/../$X/lib/nbexec ]; then
+            echo "$progdir"/../$X/lib/nbexec
+        fi
+    done | head -n 1`
+    sh=sh
+    # #73162: Ubuntu uses the ancient Bourne shell, which does not implement trap well.
+    if [ -x /bin/bash ]
+    then
+        sh=/bin/bash
+    fi
+    if [ "${founduserdir}" = "yes" ]; then
+        exec $sh "$nbexec" "$@"
+    else
+        exec $sh "$nbexec" --userdir "${userdir}" "$@"
+    fi
+}
+
+# in case of macosx, the apple.laf.useScreenMenuBar property should be ideally in the Info.plist file
+# but it doesn't get propagated into the executed java VM. 
 case "`uname`" in
     Darwin*)
-        "$nbexec" \
-            --jdkhome "$netbeans_jdkhome" \
+        eval launchNbexec \
+            --jdkhome '"$netbeans_jdkhome"' \
             -J-Dcom.apple.mrj.application.apple.menu.about.name=JSwat \
             -J-Xdock:name=JSwat \
-            "-J-Xdock:icon=$progdir/../nb4.1/netbeans.icns" \
+            '"-J-Xdock:icon=$progdir/../nb6.5/netbeans.icns"' \
             --branding jswat \
-            --clusters "$netbeans_clusters" \
-            --userdir "${userdir}" \
+            --clusters '"$netbeans_clusters"' \
             ${netbeans_default_options} \
-            $args
+            '"$@"'
         ;;
     *)
-        "$nbexec" \
-            --jdkhome "$netbeans_jdkhome" \
+        eval launchNbexec \
+            --jdkhome '"$netbeans_jdkhome"' \
             --branding jswat \
-            --clusters "$netbeans_clusters" \
-            --userdir "${userdir}" \
+            --clusters '"$netbeans_clusters"' \
             ${netbeans_default_options} \
-            $args
+            '"$@"'
         ;;
 esac
