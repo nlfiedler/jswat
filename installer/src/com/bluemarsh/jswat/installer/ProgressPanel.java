@@ -166,7 +166,7 @@ public class ProgressPanel extends InstallerPanel implements Runnable {
             // Create the destination directory so that if the first entry
             // in the .zip is a file, we have a place to put it.
             new File(home).mkdirs();
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[16384];
             ZipEntry entry = zis.getNextEntry();
             // Process each of the entries in the .zip file, unless we
             // were interrupted by the user.
@@ -242,6 +242,41 @@ public class ProgressPanel extends InstallerPanel implements Runnable {
                 } else {
                     bw.write(line);
                 }
+                bw.newLine();
+                line = br.readLine();
+            }
+            bw.close();
+            osw.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        // Perform EOL character conversion on jswat.clusters file.
+        try {
+            // First slurp the file into memory so we can easily overwrite it.
+            File file = new File(home + File.separator +
+                    "etc" + File.separator + "jswat.clusters");
+            FileInputStream fis = new FileInputStream(file);
+            InputStreamReader isr = new InputStreamReader(fis);
+            StringWriter sw = new StringWriter(1024);
+            char[] buffer = new char[1024];
+            int charsRead = isr.read(buffer);
+            while (charsRead != -1) {
+                sw.write(buffer, 0, charsRead);
+                charsRead = isr.read(buffer);
+            }
+            isr.close();
+
+            // Now process the file as we write it back out again.
+            // - Change the EOL character to the appropriate value.
+            StringReader sr = new StringReader(sw.toString());
+            BufferedReader br = new BufferedReader(sr);
+            FileOutputStream fos = new FileOutputStream(file);
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+            BufferedWriter bw = new BufferedWriter(osw);
+            String line = br.readLine();
+            while (line != null) {
+                bw.write(line);
                 bw.newLine();
                 line = br.readLine();
             }
