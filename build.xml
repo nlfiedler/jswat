@@ -15,7 +15,7 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2004-2007. All Rights Reserved.
+  are Copyright (C) 2004-2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
@@ -105,89 +105,119 @@
                         fullpath="bin/jswat.gif"/>
             <zipfileset dir="launcher" prefix="etc">
                 <include name="*.conf"/>
+                <include name="*.clusters"/>
             </zipfileset>
-            <zipfileset dir="${netbeans.dest.dir}/platform7" prefix="platform7"/>
-            <zipfileset dir="${netbeans.dest.dir}/ide8/modules/ext" prefix="ide8/modules/ext">
-                <include name="gjast.jar"/>
-                <include name="java-parser.jar"/>
-                <include name="jmi.jar"/>
-                <include name="jmiutils.jar"/>
-                <include name="mdr.jar"/>
-                <include name="mof.jar"/>
+            <zipfileset dir="${netbeans.dest.dir}/platform9" prefix="platform9"/>
+            <zipfileset dir="${netbeans.dest.dir}/ide10/modules/ext" prefix="ide10/modules/ext">
+                <include name="lucene-core-2.3.2.jar"/>
             </zipfileset>
-            <zipfileset dir="${netbeans.dest.dir}/ide8/modules" prefix="ide8/modules">
-                <include name="javax-jmi-model.jar"/>
-                <include name="javax-jmi-reflect.jar"/>
-                <include name="org-netbeans-api-java.jar"/>
-                <include name="org-netbeans-api-mdr.jar"/>
-                <include name="org-netbeans-jmi-javamodel.jar"/>
+            <zipfileset dir="${netbeans.dest.dir}/ide10/modules" prefix="ide10/modules">
+                <include name="org-netbeans-api-java-classpath.jar"/>
+                <include name="org-netbeans-libs-lucene.jar"/>
                 <include name="org-netbeans-modules-classfile.jar"/>
+                <include name="org-netbeans-modules-diff.jar"/>
+                <include name="org-netbeans-modules-editor-bracesmatching.jar"/>
                 <include name="org-netbeans-modules-editor-codetemplates.jar"/>
                 <include name="org-netbeans-modules-editor-completion.jar"/>
+                <include name="org-netbeans-modules-editor-deprecated-pre61completion.jar"/>
+                <include name="org-netbeans-modules-editor-deprecated-pre61settings.jar"/>
                 <include name="org-netbeans-modules-editor-errorstripe-api.jar"/>
+                <include name="org-netbeans-modules-editor-errorstripe.jar"/>
                 <include name="org-netbeans-modules-editor-fold.jar"/>
-                <include name="org-netbeans-modules-editor.jar"/>
+                <include name="org-netbeans-modules-editor-guards.jar"/>
+                <include name="org-netbeans-modules-editor-highlights.jar"/>
+                <include name="org-netbeans-modules-editor-indent.jar"/>
                 <include name="org-netbeans-modules-editor-lib.jar"/>
-                <include name="org-netbeans-modules-editor-mimelookup.jar"/>
-                <include name="org-netbeans-modules-editor-plain.jar"/>
+                <include name="org-netbeans-modules-editor-lib2.jar"/>
                 <include name="org-netbeans-modules-editor-plain-lib.jar"/>
+                <include name="org-netbeans-modules-editor-plain.jar"/>
+                <include name="org-netbeans-modules-editor-settings-storage.jar"/>
                 <include name="org-netbeans-modules-editor-settings.jar"/>
                 <include name="org-netbeans-modules-editor-util.jar"/>
-                <include name="org-netbeans-modules-javacore.jar"/>
-                <include name="org-netbeans-modules-java-editor.jar"/>
-                <include name="org-netbeans-modules-java-editor-lib.jar"/>
-                <include name="org-netbeans-modules-java-j2seplatform.jar"/>
-                <include name="org-netbeans-modules-java.jar"/>
-                <!-- For Java navigator to work we need j2seplatform module;
-                     and ensure that platform cluster has masterfs module. -->
-                <include name="org-netbeans-modules-java-navigation.jar"/>
-                <include name="org-netbeans-modules-java-platform.jar"/>
-                <include name="org-netbeans-modules-jmiutils.jar"/>
-                <include name="org-netbeans-modules-mdr.jar"/>
-                <include name="org-netbeans-modules-project-ant.jar"/>
-                <include name="org-netbeans-modules-projectapi.jar"/>
+                <include name="org-netbeans-modules-editor.jar"/>
+                <include name="org-netbeans-modules-jumpto.jar"/>
+                <include name="org-netbeans-modules-lexer-editorbridge.jar"/>
+                <include name="org-netbeans-modules-lexer-nbbridge.jar"/>
+                <include name="org-netbeans-modules-lexer.jar"/>
+                <include name="org-netbeans-modules-options-editor.jar"/>
                 <include name="org-netbeans-modules-project-libraries.jar"/>
+                <include name="org-netbeans-modules-projectapi.jar"/>
                 <include name="org-netbeans-modules-projectuiapi.jar"/>
+                <include name="org-netbeans-modules-refactoring-api.jar"/>
                 <include name="org-netbeans-modules-utilities.jar"/>
+                <include name="org-netbeans-spi-editor-hints.jar"/>
                 <include name="org-netbeans-spi-navigator.jar"/>
-                <include name="org-openide-src.jar"/>
+                <include name="org-netbeans-spi-tasklist.jar"/>
                 <include name="org-openidex-util.jar"/>
             </zipfileset>
-            <zipfileset dir="${netbeans.dest.dir}/ide8/config/Modules" prefix="ide8/config/Modules">
-                <include name="javax-jmi-model.xml"/>
-                <include name="javax-jmi-reflect.xml"/>
-                <include name="org-netbeans-api-java.xml"/>
-                <include name="org-netbeans-api-mdr.xml"/>
-                <include name="org-netbeans-jmi-javamodel.xml"/>
+            <zipfileset dir="${netbeans.dest.dir}/ide10/config/Modules" prefix="ide10/config/Modules">
+                <include name="org-netbeans-api-java-classpath.xml"/>
+                <include name="org-netbeans-libs-lucene.xml"/>
                 <include name="org-netbeans-modules-classfile.xml"/>
+                <include name="org-netbeans-modules-diff.xml"/>
+                <include name="org-netbeans-modules-editor-bracesmatching.xml"/>
                 <include name="org-netbeans-modules-editor-codetemplates.xml"/>
                 <include name="org-netbeans-modules-editor-completion.xml"/>
+                <include name="org-netbeans-modules-editor-deprecated-pre61completion.xml"/>
+                <include name="org-netbeans-modules-editor-deprecated-pre61settings.xml"/>
                 <include name="org-netbeans-modules-editor-errorstripe-api.xml"/>
+                <include name="org-netbeans-modules-editor-errorstripe.xml"/>
                 <include name="org-netbeans-modules-editor-fold.xml"/>
-                <include name="org-netbeans-modules-editor.xml"/>
+                <include name="org-netbeans-modules-editor-guards.xml"/>
+                <include name="org-netbeans-modules-editor-highlights.xml"/>
+                <include name="org-netbeans-modules-editor-indent.xml"/>
                 <include name="org-netbeans-modules-editor-lib.xml"/>
-                <include name="org-netbeans-modules-editor-mimelookup.xml"/>
-                <include name="org-netbeans-modules-editor-plain.xml"/>
+                <include name="org-netbeans-modules-editor-lib2.xml"/>
                 <include name="org-netbeans-modules-editor-plain-lib.xml"/>
+                <include name="org-netbeans-modules-editor-plain.xml"/>
+                <include name="org-netbeans-modules-editor-settings-storage.xml"/>
                 <include name="org-netbeans-modules-editor-settings.xml"/>
                 <include name="org-netbeans-modules-editor-util.xml"/>
-                <include name="org-netbeans-modules-javacore.xml"/>
-                <include name="org-netbeans-modules-java-editor.xml"/>
+                <include name="org-netbeans-modules-editor.xml"/>
+                <include name="org-netbeans-modules-jumpto.xml"/>
+                <include name="org-netbeans-modules-lexer-editorbridge.xml"/>
+                <include name="org-netbeans-modules-lexer-nbbridge.xml"/>
+                <include name="org-netbeans-modules-lexer.xml"/>
+                <include name="org-netbeans-modules-options-editor.xml"/>
+                <include name="org-netbeans-modules-project-libraries.xml"/>
+                <include name="org-netbeans-modules-projectapi.xml"/>
+                <include name="org-netbeans-modules-projectuiapi.xml"/>
+                <include name="org-netbeans-modules-refactoring-api.xml"/>
+                <include name="org-netbeans-modules-utilities.xml"/>
+                <include name="org-netbeans-spi-editor-hints.xml"/>
+                <include name="org-netbeans-spi-navigator.xml"/>
+                <include name="org-netbeans-spi-tasklist.xml"/>
+                <include name="org-openidex-util.xml"/>
+            </zipfileset>
+            <zipfileset dir="${netbeans.dest.dir}/java2/modules/ext" prefix="java2/modules/ext">
+                <include name="javac-api-nb-7.0-b07.jar"/>
+                <include name="javac-impl-nb-7.0-b07.jar"/>
+            </zipfileset>
+            <zipfileset dir="${netbeans.dest.dir}/java2/modules" prefix="java2/modules">
+                <include name="org-netbeans-api-java.jar"/>
+                <include name="org-netbeans-libs-javacapi.jar"/>
+                <include name="org-netbeans-libs-javacimpl.jar"/>
+                <include name="org-netbeans-modules-java-editor-lib.jar"/>
+                <include name="org-netbeans-modules-java-editor.jar"/>
+                <include name="org-netbeans-modules-java-lexer.jar"/>
+                <include name="org-netbeans-modules-java-navigation.jar"/>
+                <include name="org-netbeans-modules-java-platform.jar"/>
+                <include name="org-netbeans-modules-java-preprocessorbridge.jar"/>
+                <include name="org-netbeans-modules-java-source.jar"/>
+                <include name="org-netbeans-modules-java-sourceui.jar"/>
+            </zipfileset>
+            <zipfileset dir="${netbeans.dest.dir}/java2/config/Modules" prefix="java2/config/Modules">
+                <include name="org-netbeans-api-java.xml"/>
+                <include name="org-netbeans-libs-javacapi.xml"/>
+                <include name="org-netbeans-libs-javacimpl.xml"/>
                 <include name="org-netbeans-modules-java-editor-lib.xml"/>
-                <include name="org-netbeans-modules-java-j2seplatform.xml"/>
-                <include name="org-netbeans-modules-java.xml"/>
+                <include name="org-netbeans-modules-java-editor.xml"/>
+                <include name="org-netbeans-modules-java-lexer.xml"/>
                 <include name="org-netbeans-modules-java-navigation.xml"/>
                 <include name="org-netbeans-modules-java-platform.xml"/>
-                <include name="org-netbeans-modules-jmiutils.xml"/>
-                <include name="org-netbeans-modules-mdr.xml"/>
-                <include name="org-netbeans-modules-project-ant.xml"/>
-                <include name="org-netbeans-modules-projectapi.xml"/>
-                <include name="org-netbeans-modules-project-libraries.xml"/>
-                <include name="org-netbeans-modules-projectuiapi.xml"/>
-                <include name="org-netbeans-modules-utilities.xml"/>
-                <include name="org-netbeans-spi-navigator.xml"/>
-                <include name="org-openide-src.xml"/>
-                <include name="org-openidex-util.xml"/>
+                <include name="org-netbeans-modules-java-preprocessorbridge.xml"/>
+                <include name="org-netbeans-modules-java-source.xml"/>
+                <include name="org-netbeans-modules-java-sourceui.xml"/>
             </zipfileset>
         </zip>
 
