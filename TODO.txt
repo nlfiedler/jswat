@@ -2,8 +2,10 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
-- Fix build.xml to include modules we're using now
-- Update the jswat launcher based on changes in netbeans script
+- Find out why ui and views modules seem to depend on org.openide.options
+- See what can be done about the ClassPath related warnings
+- Update Windows launcher to match NetBeans 6.5, recompile
+- @version@ appears in the messages.log for installed app, should be replaced
 - Update developer documentation
 - Update docs in README and UserGuide wrt names of menus and items
 - Release
