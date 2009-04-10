@@ -91,7 +91,7 @@
         <antcall target="build"/>
         <!-- Make the binary distribution. -->
         <zip destfile="jswat.zip">
-            <zipfileset dir="build/cluster" prefix="jswat4">
+            <zipfileset dir="build/cluster" prefix="jswat5">
                 <exclude name="**/*_hidden"/>
             </zipfileset>
             <zipfileset dir="docs/release"/>
