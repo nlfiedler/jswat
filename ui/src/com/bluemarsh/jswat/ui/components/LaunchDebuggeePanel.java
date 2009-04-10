@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -92,11 +92,14 @@ public class LaunchDebuggeePanel extends JPanel implements
         javaHomeButton.addActionListener(SystemAction.get(
                 ManageRuntimesAction.class));
         classNameField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
             public void changedUpdate(DocumentEvent event) {
             }
+            @Override
             public void insertUpdate(DocumentEvent event) {
                 validate(event);
             }
+            @Override
             public void removeUpdate(DocumentEvent event) {
                 validate(event);
             }
@@ -301,6 +304,7 @@ public class LaunchDebuggeePanel extends JPanel implements
         }
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getPropertyName().equals(NotifyDescriptor.PROP_VALID)) {
             // The input validity has changed in some way.
@@ -310,10 +314,12 @@ public class LaunchDebuggeePanel extends JPanel implements
         }
     }
 
+    @Override
     public void runtimeAdded(RuntimeEvent event) {
         buildRuntimesList();
     }
 
+    @Override
     public void runtimeRemoved(RuntimeEvent event) {
         buildRuntimesList();
     }
@@ -449,7 +455,7 @@ public class LaunchDebuggeePanel extends JPanel implements
             .addGroup(parametersPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(parametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(resumeCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(resumeCheckBox)
                     .addGroup(parametersPanelLayout.createSequentialGroup()
                         .addGroup(parametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(javaParamsLabel)
@@ -459,12 +465,12 @@ public class LaunchDebuggeePanel extends JPanel implements
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(parametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(parametersPanelLayout.createSequentialGroup()
-                                .addComponent(runtimeComboBox, 0, 353, Short.MAX_VALUE)
+                                .addComponent(runtimeComboBox, 0, 378, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(javaHomeButton))
                             .addComponent(javaParamsScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(classParamsScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(classNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE))))
+                            .addComponent(classNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         parametersPanelLayout.setVerticalGroup(
@@ -483,13 +489,13 @@ public class LaunchDebuggeePanel extends JPanel implements
                 .addGroup(parametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(classNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(classNameLabel))
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(parametersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(classParamsLabel)
                     .addComponent(classParamsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resumeCheckBox)
-                .addGap(329, 329, 329))
+                .addContainerGap())
         );
 
         tabbedPane.addTab(bundle.getString("LBL_Launch_ParamsTabTitle"), parametersPanel); // NOI18N
@@ -509,14 +515,14 @@ public class LaunchDebuggeePanel extends JPanel implements
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(validationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
-                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE))
+                    .addComponent(tabbedPane))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(validationLabel))
         );
