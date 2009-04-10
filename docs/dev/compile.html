@@ -22,8 +22,8 @@
     <li><a href="http://java.sun.com/javase/">JDK 1.6</a> must be
     installed to compile JSwat.</li>
 
-    <li><a href="http://www.netbeans.org/">NetBeans IDE 6.5</a> must be
-    installed, as JSwat is based on the NetBeans Platform, with some
+    <li><a href="http://www.netbeans.org/">NetBeans IDE 6.5.1</a> must
+    be installed, as JSwat is based on the NetBeans Platform, with some
     additional IDE modules.</li>
 
     <li>Start the NetBeans IDE and open the JSwat project; this needs
@@ -48,8 +48,8 @@
   the release appropriate for your system. <em>It is possible, though
   not recommended, to use compatible software from other vendors. In
   this case, make sure that software includes the <a href=
-  "http://java.sun.com/products/jpda/">Java Platform Debugger
-  Architecture</a> (JPDA) library.</em></p>
+  "http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
+  Platform Debugger Architecture</a> (JPDA) library.</em></p>
 
   <h4>Apache Ant</h4>
 
@@ -70,7 +70,7 @@
   <p>JSwat is based on the NetBeans Platform 6.5, and utilizes some of
   the modules provided in the NetBeans IDE. Thus, to build JSwat you
   will need to install the <a href=
-  "http://www.netbeans.org/products/ide/">NetBeans IDE</a> version 6.5.
+  "http://www.netbeans.org/features/ide/">NetBeans IDE</a> version 6.5.
   Developing JSwat within the NetBeans IDE is highly recommended, as it
   makes many of the mundane tasks much easier.</p>
 
@@ -149,7 +149,7 @@ ant -Drun.args=&quot;-J-agentlib:jdwp=transport=dt_socket,suspend=n,server=y,add
     <li>Add the following line to the
     <code>nbproject/private/platform-private.properties</code> file:
       <pre>
-<nbplatform.active=NetBeans_6.5
+nbplatform.active=NetBeans_6.5
 </pre>
     </li>
 
