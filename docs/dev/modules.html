@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
 
   <title>JSwat - Writing New Modules</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -26,23 +26,12 @@
 
   <h3>What <em>not</em> to Check In</h3>
 
-  <p>Try to avoid checking in the following files into the source
-  repository:</p>
-
-  <ul>
-    <li><code>nbproject/genfiles.properties</code></li>
-
-    <li><code>nbproject/build-impl.xml</code></li>
-
-    <li><code>nbproject/private/</code></li>
-  </ul>
-
-  <p>To achieve this, set the <code>svn:ignore</code> property on the
-  <code>nbproject</code> directory like so:</p>
+  <p>Try to avoid checking in the <code>nbproject/private</code>
+  directory into the source repository. To achieve this, set the
+  <code>svn:ignore</code> property on the <code>nbproject</code>
+  directory of the module, like so:</p>
   <pre>
-genfiles.properties
-build-impl.xml
-private
+svn ps svn:ignore private module/nbproject
 </pre>
 </body>
 </html>
