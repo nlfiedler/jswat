@@ -94,7 +94,13 @@ public class EvaluatorTestCode {
      * @param  p3  third parameter.
      */
     public static void staticMethod(int p1, char p2, String p3) {
-        // Don't actually need any code here.
+        double local_dbl = 3.14d;
+        float local_flt = 3.14f;
+        int local_int = 314;
+        long l = (long) (local_dbl + local_flt) + local_int;
+        if (l == 320) { // BREAKPOINT HERE: 101
+            System.out.println("That's weird");
+        }
     }
 
     /**
@@ -106,7 +112,13 @@ public class EvaluatorTestCode {
      * @param  p3  third parameter.
      */
     public void instanceMethod(int p1, char p2, String p3) {
-        // Don't actually need any code here.
+        double local_dbl = 3.14d;
+        float local_flt = 3.14f;
+        int local_int = 314;
+        long l = (long) (local_dbl + local_flt) + local_int;
+        if (l == 320) { // BREAKPOINT HERE: 119
+            System.out.println("That's weird");
+        }
     }
 
     /**

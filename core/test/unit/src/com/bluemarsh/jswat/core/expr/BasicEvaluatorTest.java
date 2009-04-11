@@ -89,6 +89,11 @@ public class BasicEvaluatorTest extends TestCase {
 
             // mult, div, mod: *, /, %
             new TestData("1 * 2", new Integer(2)),
+            new TestData("10 * 20", new Integer(200)),
+            new TestData("-1 * 5", new Integer(-5)),
+            new TestData("0 * 1", new Integer(0)),
+            new TestData("1 * a"),
+            new TestData("foo * 2.0"),
             new TestData("6 / 2", new Integer(3)),
             new TestData("1 / 0"),
             new TestData("0.0 / 0.0", new Float(Float.NaN)),
@@ -195,7 +200,7 @@ public class BasicEvaluatorTest extends TestCase {
             new TestData("(List) 123"),
             new TestData("(short) true"),
         };
-        EvaluatorHelper helper = new EvaluatorHelper(this);
-        helper.performTest(testDatum, null, 0);
+        EvaluatorHelper helper = new EvaluatorHelper();
+        helper.performTests(testDatum, null, 0);
     }
 }
