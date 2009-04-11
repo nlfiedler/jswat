@@ -31,11 +31,10 @@ import com.bluemarsh.jswat.core.breakpoint.BreakpointFactory;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
 import com.bluemarsh.jswat.core.breakpoint.MalformedClassNameException;
-import com.bluemarsh.jswat.core.breakpoint.MalformedMemberNameException;
 import com.bluemarsh.jswat.core.context.ContextProvider;
 import com.sun.jdi.ThreadReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.net.MalformedURLException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -66,30 +65,27 @@ public class JdiEvaluatorTest extends TestCase {
             // no debugging context, can't invoke methods
             new TestData("String.valueOf(10)"),
         };
-        EvaluatorHelper helper = new EvaluatorHelper(this);
-        helper.performTest(testDatum, null, 0);
+        EvaluatorHelper helper = new EvaluatorHelper();
+        helper.performTests(testDatum, null, 0);
 
         // Set a breakpoint at a convenient location.
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
-        String[] methods = { "staticMethod", "instanceMethod" };
+        int[] lines = { 101, 119 };
+        String srcpath = System.getProperty("test.src.dir");
+        File srcfile = new File(srcpath, "EvaluatorTestCode.java");
         try {
-            // Both methods have same argument types.
-            List<String> argTypes = new ArrayList<String>(3);
-            argTypes.add("int");
-            argTypes.add("char");
-            argTypes.add("java.lang.String");
-            for (String method : methods) {
-                Breakpoint bp = bf.createMethodBreakpoint(
-                    "EvaluatorTestCode", method, argTypes);
+            String url = srcfile.toURI().toURL().toString();
+            for (int line : lines) {
+                Breakpoint bp = bf.createLineBreakpoint(url, null, line);
                 bp.setDeleteOnExpire(true);
                 bp.setExpireCount(1);
                 bm.addBreakpoint(bp);
             }
         } catch (MalformedClassNameException mcne) {
             fail(mcne.toString());
-        } catch (MalformedMemberNameException mmne) {
-            fail(mmne.toString());
+        } catch (MalformedURLException mue) {
+            fail(mue.toString());
         }
 
         // Resume the debuggee to hit the next breakpoint (staticMethod).
@@ -241,8 +237,34 @@ public class JdiEvaluatorTest extends TestCase {
             new TestData("\"abc\" + Integer.SIZE", "abc32"),
             new TestData("String.valueOf(10) + \"abc\"", "10abc"),
             new TestData("String.valueOf(10) + Integer.SIZE", "1032"),
+
+            // basic operators
+            new TestData("local_dbl * 4", 12.56d),
+            new TestData("local_flt * 4", 12.56f),
+            new TestData("local_int * 4", 1256),
+            new TestData("local_dbl / 2", 1.57d),
+            new TestData("local_flt / 2", 1.57f),
+            new TestData("local_int / 2", 157),
+            new TestData("local_dbl + 2", 5.14d),
+            new TestData("local_flt + 2", 5.14f),
+            new TestData("local_int + 2", 316),
+            new TestData("local_dbl - 2", 1.14d),
+            new TestData("local_flt - 2", 1.14f),
+            new TestData("local_int - 2", 312),
+            new TestData("static_double * 4", 4.0d),
+            new TestData("static_float * 4", 4.0f),
+            new TestData("static_int * 4", 4),
+            new TestData("static_double / 2", 0.5d),
+            new TestData("static_float / 2", 0.5f),
+            new TestData("static_int / 2", 0),
+            new TestData("static_double + 2", 3.0d),
+            new TestData("static_float + 2", 3.0f),
+            new TestData("static_int + 2", 3),
+            new TestData("static_double - 2", -1.0d),
+            new TestData("static_float - 2", -1.0f),
+            new TestData("static_int - 2", -1),
         };
-        helper.performTest(testDatum, thread, frame);
+        helper.performTests(testDatum, thread, frame);
 
         // Resume the debuggee to hit the next breakpoint (instanceMethod).
         SessionHelper.resumeAndWait(session);
@@ -363,8 +385,34 @@ public class JdiEvaluatorTest extends TestCase {
             new TestData("inst_strarr[100] = \"123\""),
             new TestData("inst_char_array[3] = 10"),
             new TestData("inst_int_array[2] = 'a'"),
+
+            // basic operators
+            new TestData("local_dbl * 4", 12.56d),
+            new TestData("local_flt * 4", 12.56f),
+            new TestData("local_int * 4", 1256),
+            new TestData("local_dbl / 2", 1.57d),
+            new TestData("local_flt / 2", 1.57f),
+            new TestData("local_int / 2", 157),
+            new TestData("local_dbl + 2", 5.14d),
+            new TestData("local_flt + 2", 5.14f),
+            new TestData("local_int + 2", 316),
+            new TestData("local_dbl - 2", 1.14d),
+            new TestData("local_flt - 2", 1.14f),
+            new TestData("local_int - 2", 312),
+            new TestData("inst_double * 4", 8.0d),
+            new TestData("inst_float * 4", 8.0f),
+            new TestData("inst_int * 4", 8),
+            new TestData("inst_double / 2", 1.0d),
+            new TestData("inst_float / 2", 1.0f),
+            new TestData("inst_int / 2", 1),
+            new TestData("inst_double + 2", 4.0d),
+            new TestData("inst_float + 2", 4.0f),
+            new TestData("inst_int + 2", 4),
+            new TestData("inst_double - 2", 0.0d),
+            new TestData("inst_float - 2", 0.0f),
+            new TestData("inst_int - 2", 0),
         };
-        helper.performTest(testDatum, thread, frame);
+        helper.performTests(testDatum, thread, frame);
 
         // Disconnect the session.
         session.disconnect(true);

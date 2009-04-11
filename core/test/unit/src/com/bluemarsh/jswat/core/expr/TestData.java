@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2005. All Rights Reserved.
+ * are Copyright (C) 2003-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -31,7 +31,7 @@ package com.bluemarsh.jswat.core.expr;
 public class TestData {
     /** Expression to be evaluated. */
     public String expr;
-    /** The expected result as the expect type. */
+    /** The expected result as the expected type. */
     public Object result;
     /** The error message to display if the expression does not
      * evaluate to be equal to the reslt. */
@@ -41,22 +41,51 @@ public class TestData {
     /** True if expression evaluator should do debugging. */
     public boolean debug;
 
+    /**
+     * Creates a TestData that evaluates the given expression, which is
+     * assumed to fail (because it has no expected result).
+     *
+     * @param  expr  expression expected to fail.
+     */
     public TestData(String expr) {
         this.expr = expr;
         fail = true;
     }
 
+    /**
+     * Creates a TestData for the given expression which is expected to
+     * evaluate to the given result.
+     *
+     * @param  expr    expression to evaluate.
+     * @param  result  expected result.
+     */
     public TestData(String expr, Object result) {
         this.expr = expr;
         this.result = result;
     }
 
+    /**
+     * Creates a TestData for the given expression which is expected to
+     * evaluate to the given result. Shows the message if test fails.
+     *
+     * @param  expr     expression to evaluate.
+     * @param  result   expected result.
+     * @param  message  displayed when expression fails.
+     */
     public TestData(String expr, Object result, String message) {
         this.expr = expr;
         this.result = result;
         this.message = message;
     }
 
+    /**
+     * Creates a TestData for the given expression which is expected to
+     * evaluate to the given result. Shows parsed syntax tree.
+     *
+     * @param  expr    expression to evaluate.
+     * @param  result  expected result.
+     * @param  debug   true to show the parsed syntax tree.
+     */
     public TestData(String expr, Object result, boolean debug) {
         this.expr = expr;
         this.result = result;

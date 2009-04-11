@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2005. All Rights Reserved.
+ * are Copyright (C) 2003-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -46,21 +46,6 @@ import junit.framework.TestCase;
  * @author Nathan Fiedler
  */
 public class EvaluatorHelper {
-    /** The one to fail to. */
-    private TestCase testCase;
-    
-    /**
-     * Creates a new instance of EvaluatorHelper.
-     *
-     * @param tc  test case we are helping.
-     */
-    public EvaluatorHelper(TestCase tc) {
-        testCase = tc;
-    }
-    
-    private void fail(String msg) {
-        testCase.fail(msg);
-    }
 
     /**
      * Runs the given evaluator tests.
@@ -69,9 +54,9 @@ public class EvaluatorHelper {
      * @param  thread     thread on which to run the evaluator (may be null).
      * @param  frame      frame number in stack for running evaluator.
      */
-    public void performTest(TestData[] testDatum,
-                            ThreadReference thread,
-                            int frame) {
+    public void performTests(TestData[] testDatum,
+            ThreadReference thread,
+            int frame) {
         for (int ii = 0; ii < testDatum.length; ii++) {
             TestData data = testDatum[ii];
             Evaluator eval = new Evaluator(data.expr);
@@ -90,7 +75,7 @@ public class EvaluatorHelper {
                         buf.append(result.getClass().getName());
                         buf.append(')');
                     }
-                    fail(buf.toString());
+                    TestCase.fail(buf.toString());
                 }
             } catch (EvaluationException ee) {
                 if (!data.fail) {
@@ -103,14 +88,14 @@ public class EvaluatorHelper {
                     // this includes the exception description
                     ee.printStackTrace(pw);
                     buf.append(sw.toString());
-                    fail(buf.toString());
+                    TestCase.fail(buf.toString());
                 }
             } catch (Exception e) {
                 StringBuilder buf = new StringBuilder();
                 buf.append(data.expr);
                 buf.append(" <<unexpected exception>> ");
                 buf.append(e.toString());
-                fail(buf.toString());
+                TestCase.fail(buf.toString());
             }
 
             boolean equals;
@@ -140,7 +125,7 @@ public class EvaluatorHelper {
                         buf.append(result.getClass().getName());
                         buf.append(')');
                     }
-                    fail(buf.toString());
+                    TestCase.fail(buf.toString());
 
                 } else {
                     StringBuilder buf = new StringBuilder();
@@ -159,7 +144,7 @@ public class EvaluatorHelper {
                         buf.append(result.getClass().getName());
                         buf.append(')');
                     }
-                    fail(buf.toString());
+                    TestCase.fail(buf.toString());
                 }
             }
         }
@@ -205,7 +190,21 @@ public class EvaluatorHelper {
         if (v1 == null || v2 == null) {
             return false;
         }
-        return v1.equals(v2);
+        if (v1.equals(v2)) {
+            return true;
+        } else {
+            // Check if they are floating point numbers.
+            if ((v1 instanceof Float || v1 instanceof Double) &&
+                    (v2 instanceof Float || v2 instanceof Double)) {
+                // Yes they are, see if they are close to equal.
+                Number n1 = (Number) v1;
+                Number n2 = (Number) v2;
+                if (Math.abs(n1.doubleValue() - n2.doubleValue()) < 0.00001) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
