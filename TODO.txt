@@ -1,7 +1,3 @@
 JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
-
-- Update Windows launcher to match NetBeans 6.5, recompile
-- Move the developer documentation to the project wiki
-- Release
