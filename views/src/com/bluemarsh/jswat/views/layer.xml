@@ -106,6 +106,9 @@
                     <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-WatchesViewAction.instance"/>
                     <attr name="position" intvalue="200"/>
                 </file>
+                <file name="com-bluemarsh-jswat-views-actions-CommandViewAction.instance">
+                    <attr name="position" intvalue="1000"/>
+                </file>
             </folder>
         </folder>
     </folder>
@@ -139,6 +142,9 @@
         <file name="OS-8.instance">
             <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.EvaluatorViewAction"/>
         </file>
+        <file name="OS-9.instance">
+            <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.views.actions.CommandViewAction"/>
+        </file>
     </folder>
 
     <folder name="Windows2">
@@ -146,6 +152,7 @@
             <file name="breakpoints.settings" url="resources/breakpoints_settings.xml"/>
             <file name="bytecodes.settings" url="resources/bytecodes_settings.xml"/>
             <file name="classes.settings" url="resources/classes_settings.xml"/>
+            <file name="command.settings" url="resources/command_settings.xml"/>
             <file name="evaluator.settings" url="resources/evaluator_settings.xml"/>
             <file name="sessions.settings" url="resources/sessions_settings.xml"/>
             <file name="sources.settings" url="resources/sources_settings.xml"/>
@@ -161,6 +168,7 @@
             <file name="debugger.wsmode" url="resources/debugger_wsmode.xml"/>
             <folder name="debugger">
                 <file name="breakpoints.wstcref" url="resources/breakpoints_wstcref.xml"/>
+                <file name="command.wstcref" url="resources/command_wstcref.xml"/>
                 <file name="evaluator.wstcref" url="resources/evaluator_wstcref.xml"/>
                 <file name="sessions.wstcref" url="resources/sessions_wstcref.xml"/>
                 <file name="variables.wstcref" url="resources/variables_wstcref.xml"/>
@@ -185,6 +193,7 @@
                 <file name="breakpoints.wstcgrp" url="resources/breakpoints_wstcgrp.xml"/>
                 <file name="bytecodes.wstcgrp" url="resources/bytecodes_wstcgrp.xml"/>
                 <file name="classes.wstcgrp" url="resources/classes_wstcgrp.xml"/>
+                <file name="command.wstcgrp" url="resources/command_wstcgrp.xml"/>
                 <file name="evaluator.wstcgrp" url="resources/evaluator_wstcgrp.xml"/>
                 <file name="sessions.wstcgrp" url="resources/sessions_wstcgrp.xml"/>
                 <file name="sources.wstcgrp" url="resources/sources_wstcgrp.xml"/>

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -25,9 +25,7 @@ package com.bluemarsh.jswat.command.view;
 
 import java.awt.BorderLayout;
 import org.openide.util.NbBundle;
-import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  * Class CommandView shows the command input field and the output area.
@@ -48,10 +46,7 @@ public class CommandView extends TopComponent {
         setLayout(new BorderLayout());
     }
 
-    /**
-     * Called only when top component was closed so that now it is closed
-     * on all workspaces in the system.
-     */
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         if (commandPanel != null) {
@@ -61,10 +56,7 @@ public class CommandView extends TopComponent {
         }
     }
 
-    /**
-     * Called only when top component was closed on all workspaces before
-     * and now is opened for the first time on some workspace.
-     */
+    @Override
     protected void componentOpened() {
         super.componentOpened();
         if (commandPanel == null) {
@@ -73,38 +65,22 @@ public class CommandView extends TopComponent {
         }
     }
 
-    /**
-     * Returns the display name for this component.
-     *
-     * @return  display name.
-     */
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(getClass(), "CTL_CommandView_Name");
     }
 
-    /**
-     * Returns the desired persistent type for this component.
-     *
-     * @return  desired persistence type.
-     */
+    @Override
     public int getPersistenceType() {
         return PERSISTENCE_ONLY_OPENED;
     }
 
-    /**
-     * Returns the display name for this component.
-     *
-     * @return  tooltip text.
-     */
+    @Override
     public String getToolTipText() {
         return NbBundle.getMessage(getClass(), "CTL_CommandView_Tooltip");
     }
 
-    /**
-     * Returns the unique identifier for this component.
-     *
-     * @return  unique component identifier.
-     */
+    @Override
     protected String preferredID() {
         return getClass().getName();
     }

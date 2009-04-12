@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2005. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -69,12 +69,7 @@ public class CommandInputAdapter implements ActionListener, KeyListener {
         input.addKeyListener(this);
     }
 
-    /**
-     * Text field was activated by user. Parse the input and execute the
-     * command, then clear the input field to receive more input.
-     *
-     * @param  event  action event.
-     */
+    @Override
     public void actionPerformed(ActionEvent event) {
         String input = inputField.getText().trim();
         if (input.length() > 0) {
@@ -102,12 +97,7 @@ public class CommandInputAdapter implements ActionListener, KeyListener {
         inputField.setText("");
     }
 
-    /**
-     * Invoked when a key has been pressed in the input field. We take this
-     * opportunity to implement the "previous" and "next" command feature.
-     *
-     * @param  event  key event.
-     */
+    @Override
     public void keyPressed(KeyEvent event) {
         if (event.isConsumed()
             || !(event.isControlDown() || event.isActionKey())) {
@@ -149,19 +139,11 @@ public class CommandInputAdapter implements ActionListener, KeyListener {
         }
     }
 
-    /**
-     * Invoked when a key has been released.
-     *
-     * @param  event  key event.
-     */
+    @Override
     public void keyReleased(KeyEvent event) {
     }
 
-    /**
-     * Invoked when a key has been pressed and released.
-     *
-     * @param  event  key event.
-     */
+    @Override
     public void keyTyped(KeyEvent event) {
     }
 }

@@ -15,18 +15,18 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2005. All Rights Reserved.
+  are Copyright (C) 2005-2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
   $Id$
 -->
-<!DOCTYPE tc-group
-  PUBLIC "-//NetBeans//DTD Top Component in Group Properties 2.0//EN"
-         "http://www.netbeans.org/dtds/tc-group2_0.dtd">
+<!DOCTYPE settings
+  PUBLIC "-//NetBeans//DTD Session settings 1.0//EN"
+         "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
 
-<tc-group version="2.0">
-  <module name="com.bluemarsh.jswat.command/1" spec="1.0"/>
-  <tc-id id="command"/>
-  <open-close-behavior open="false" close="true"/>
-</tc-group>
+<settings version="1.0">
+  <module name="com.bluemarsh.jswat.ui.views/1" spec="1.0"/>
+  <instanceof class="org.openide.windows.TopComponent"/>
+  <instance class="com.bluemarsh.jswat.command.view.CommandView"/>
+</settings>
