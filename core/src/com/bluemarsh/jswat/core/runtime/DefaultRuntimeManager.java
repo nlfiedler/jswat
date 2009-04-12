@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,9 +23,12 @@
 
 package com.bluemarsh.jswat.core.runtime;
 
+import com.bluemarsh.jswat.core.PlatformProvider;
+import com.bluemarsh.jswat.core.PlatformService;
 import java.beans.ExceptionListener;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,10 +37,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileLock;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
-import org.openide.filesystems.Repository;
 
 /**
  * DefaultRuntimeManager manages JavaRuntime instances that are persisted
@@ -57,36 +56,39 @@ public class DefaultRuntimeManager extends AbstractRuntimeManager {
         openRuntimes = new LinkedList<JavaRuntime>();
     }
 
+    @Override
     public synchronized void add(JavaRuntime runtime) {
         openRuntimes.add(runtime);
         fireEvent(new RuntimeEvent(runtime, RuntimeEvent.Type.ADDED));
     }
 
+    @Override
     public Iterator<JavaRuntime> iterateRuntimes() {
         // Make sure the caller cannot modify the list.
         List<JavaRuntime> ro = Collections.unmodifiableList(openRuntimes);
         return ro.iterator();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void loadRuntimes(RuntimeFactory factory) {
         XMLDecoder decoder = null;
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
+            PlatformService platform = PlatformProvider.getPlatformService();
             String name = "runtimes.xml";
-            FileObject fo = fs.findResource(name);
-            if (fo != null && fo.isData()) {
-                InputStream is = fo.getInputStream();
-                decoder = new XMLDecoder(is);
-                decoder.setExceptionListener(new ExceptionListener() {
-                    public void exceptionThrown(Exception e) {
-                        ErrorManager.getDefault().notify(e);
-                    }
-                });
-                openRuntimes = (List<JavaRuntime>) decoder.readObject();
-                // Leave possibly invalid runtimes in the last, let user
-                // decide what to do with them.
-            }
+            InputStream is = platform.readFile(name);
+            decoder = new XMLDecoder(is);
+            decoder.setExceptionListener(new ExceptionListener() {
+                @Override
+                public void exceptionThrown(Exception e) {
+                    ErrorManager.getDefault().notify(e);
+                }
+            });
+            openRuntimes = (List<JavaRuntime>) decoder.readObject();
+        // Leave possibly invalid runtimes in the last, let user
+        // decide what to do with them.
+        } catch (FileNotFoundException e) {
+            // Ignore this error, it's normal.
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
@@ -98,29 +100,25 @@ public class DefaultRuntimeManager extends AbstractRuntimeManager {
         }
     }
 
+    @Override
     public synchronized void remove(JavaRuntime runtime) {
         openRuntimes.remove(runtime);
         fireEvent(new RuntimeEvent(runtime, RuntimeEvent.Type.REMOVED));
     }
 
+    @Override
     public synchronized void saveRuntimes() {
-        FileLock lock = null;
+        PlatformService platform = PlatformProvider.getPlatformService();
+        String name = "runtimes.xml";
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
-            String name = "runtimes.xml";
-            FileObject fo = fs.findResource(name);
-            if (fo == null) {
-                fo = fs.getRoot().createData(name);
-            }
-            lock = fo.lock();
-            OutputStream os = fo.getOutputStream(lock);
+            OutputStream os = platform.writeFile(name);
             XMLEncoder encoder = new XMLEncoder(os);
             encoder.writeObject(openRuntimes);
             encoder.close();
         } catch (IOException ioe) {
             ErrorManager.getDefault().notify(ioe);
         } finally {
-            if (lock != null) lock.releaseLock();
+            platform.releaseLock(name);
         }
     }
 }

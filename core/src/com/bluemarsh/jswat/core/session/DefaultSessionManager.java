@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,9 +23,12 @@
 
 package com.bluemarsh.jswat.core.session;
 
+import com.bluemarsh.jswat.core.PlatformProvider;
+import com.bluemarsh.jswat.core.PlatformService;
 import java.beans.ExceptionListener;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,10 +37,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileLock;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
-import org.openide.filesystems.Repository;
 
 /**
  * DefaultSessionManager manages Session instances persisted to properties
@@ -61,6 +60,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
         openSessions = new LinkedList<Session>();
     }
 
+    @Override
     public synchronized void add(Session session) {
         // Give the session a name, if it doesn't have one already.
         String name = session.getProperty(Session.PROP_SESSION_NAME);
@@ -77,6 +77,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
                 SessionManagerEvent.Type.ADDED));
     }
 
+    @Override
     public synchronized Session copy(Session session, String name) {
         SessionFactory factory = SessionProvider.getSessionFactory();
         String id = generateIdentifier();
@@ -110,6 +111,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
         return null;
     }
 
+    @Override
     public String generateIdentifier() {
         if (openSessions.isEmpty()) {
             return ID_PREFIX + '1';
@@ -133,34 +135,36 @@ public class DefaultSessionManager extends AbstractSessionManager {
         }
     }
 
+    @Override
     public synchronized Session getCurrent() {
         return currentSession;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public synchronized void loadSessions() {
         // Read the persisted Sessions from disk.
         XMLDecoder decoder = null;
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
+            PlatformService platform = PlatformProvider.getPlatformService();
             String name = "sessions.xml";
-            FileObject fo = fs.findResource(name);
-            if (fo != null && fo.isData()) {
-                InputStream is = fo.getInputStream();
-                decoder = new XMLDecoder(is);
-                decoder.setExceptionListener(new ExceptionListener() {
-                    public void exceptionThrown(Exception e) {
-                        ErrorManager.getDefault().notify(e);
-                    }
-                });
-                openSessions = (List<Session>) decoder.readObject();
-                // Get the ID of the current session.
-                String id = (String) decoder.readObject();
-                Session session = findById(id);
-                if (session != null) {
-                    setCurrent(session);
+            InputStream is = platform.readFile(name);
+            decoder = new XMLDecoder(is);
+            decoder.setExceptionListener(new ExceptionListener() {
+                @Override
+                public void exceptionThrown(Exception e) {
+                    ErrorManager.getDefault().notify(e);
                 }
+            });
+            openSessions = (List<Session>) decoder.readObject();
+            // Get the ID of the current session.
+            String id = (String) decoder.readObject();
+            Session session = findById(id);
+            if (session != null) {
+                setCurrent(session);
             }
+        } catch (FileNotFoundException e) {
+            // Do not report this error, it's normal.
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
@@ -173,12 +177,14 @@ public class DefaultSessionManager extends AbstractSessionManager {
         }
     }
 
+    @Override
     public synchronized Iterator<Session> iterateSessions() {
         // Make sure the caller cannot modify the list.
         List<Session> ro = Collections.unmodifiableList(openSessions);
         return ro.iterator();
     }
 
+    @Override
     public synchronized void remove(Session session) {
         if (currentSession == session) {
             throw new IllegalArgumentException("cannot delete current session");
@@ -188,6 +194,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
                 SessionManagerEvent.Type.REMOVED));
     }
 
+    @Override
     public synchronized void saveSessions(boolean close) {
         if (close) {
             for (Session session : openSessions) {
@@ -197,16 +204,10 @@ public class DefaultSessionManager extends AbstractSessionManager {
                 session.close();
             }
         }
-        FileLock lock = null;
+        String name = "sessions.xml";
+        PlatformService platform = PlatformProvider.getPlatformService();
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
-            String name = "sessions.xml";
-            FileObject fo = fs.findResource(name);
-            if (fo == null) {
-                fo = fs.getRoot().createData(name);
-            }
-            lock = fo.lock();
-            OutputStream os = fo.getOutputStream(lock);
+            OutputStream os = platform.writeFile(name);
             XMLEncoder encoder = new XMLEncoder(os);
             encoder.writeObject(openSessions);
             encoder.writeObject(currentSession.getIdentifier());
@@ -214,36 +215,14 @@ public class DefaultSessionManager extends AbstractSessionManager {
         } catch (IOException ioe) {
             ErrorManager.getDefault().notify(ioe);
         } finally {
-            if (lock != null) lock.releaseLock();
+            platform.releaseLock(name);
         }
     }
 
+    @Override
     public synchronized void setCurrent(Session session) {
         currentSession = session;
         fireEvent(new SessionManagerEvent(this, session,
                 SessionManagerEvent.Type.CURRENT));
-    }
-
-    /**
-     * Listens for exceptions while calling XMLDecoder.
-     */
-    private static class DecoderListener implements ExceptionListener {
-        private Exception exception;
-
-        /**
-         * This method is called when a recoverable exception has been caught. 
-         * 
-         * @param e The exception that was caught. 
-         */
-        public void exceptionThrown(Exception e) {
-            exception = e;
-        }
-
-        /**
-         * @return  exception thrown by XMLDecoder.
-         */
-        public Exception getException() {
-            return exception;
-        }
     }
 }

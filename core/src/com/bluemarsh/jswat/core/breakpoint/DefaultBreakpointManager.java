@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2007. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,11 +23,14 @@
 
 package com.bluemarsh.jswat.core.breakpoint;
 
+import com.bluemarsh.jswat.core.PlatformProvider;
+import com.bluemarsh.jswat.core.PlatformService;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionListener;
 import java.beans.ExceptionListener;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,10 +38,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileLock;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
-import org.openide.filesystems.Repository;
 
 /**
  * DefaultBreakpointManager is responsible for maintaining the breakpoints
@@ -54,6 +53,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
      * breakpoints will go by default. */
     private BreakpointGroup defaultGroup;
 
+    @Override
     public void addBreakpoint(Breakpoint bp) {
         super.addBreakpoint(bp);
         // Add the breakpoint to the default group.
@@ -67,6 +67,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         fireEvent(bp, BreakpointEvent.Type.ADDED, null);
     }
 
+    @Override
     public void addBreakpointGroup(BreakpointGroup group, BreakpointGroup parent) {
         super.addBreakpointGroup(group, parent);
         if (parent == null) {
@@ -76,40 +77,40 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         fireEvent(new BreakpointGroupEvent(group, BreakpointGroupEvent.Type.ADDED));
     }
 
+    @Override
     protected void deleteBreakpoints(Session session) {
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
+            PlatformService platform = PlatformProvider.getPlatformService();
             String name = session.getIdentifier() + FILENAME_SUFFIX;
-            FileObject fo = fs.findResource(name);
-            if (fo != null && fo.isData()) {
-                fo.delete();
-            }
+            platform.deleteFile(name);
         } catch (IOException ioe) {
             ErrorManager.getDefault().notify(ioe);
         }
     }
 
+    @Override
     public BreakpointGroup getDefaultGroup() {
         return defaultGroup;
     }
 
+    @Override
     protected void loadBreakpoints(Session session) {
         // Recreate the breakpoints from the persistent store.
         XMLDecoder decoder = null;
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
+            PlatformService platform = PlatformProvider.getPlatformService();
             String name = session.getIdentifier() + FILENAME_SUFFIX;
-            FileObject fo = fs.findResource(name);
-            if (fo != null && fo.isData()) {
-                InputStream is = fo.getInputStream();
-                decoder = new XMLDecoder(is);
-                decoder.setExceptionListener(new ExceptionListener() {
-                    public void exceptionThrown(Exception e) {
-                        ErrorManager.getDefault().notify(e);
-                    }
-                });
-                defaultGroup = (BreakpointGroup) decoder.readObject();
-            }
+            InputStream is = platform.readFile(name);
+            decoder = new XMLDecoder(is);
+            decoder.setExceptionListener(new ExceptionListener() {
+                @Override
+                public void exceptionThrown(Exception e) {
+                    ErrorManager.getDefault().notify(e);
+                }
+            });
+            defaultGroup = (BreakpointGroup) decoder.readObject();
+        } catch (FileNotFoundException e) {
+            // Do not report this error, it's normal.
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
@@ -152,6 +153,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         }
     }
 
+    @Override
     public void removeBreakpoint(Breakpoint bp) {
         super.removeBreakpoint(bp);
         // Notify the listeners before taking action.
@@ -166,6 +168,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         bp.destroy();
     }
 
+    @Override
     public void removeBreakpointGroup(BreakpointGroup group) {
         super.removeBreakpointGroup(group);
         // First deal with this group's subgroups.
@@ -196,25 +199,20 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         fireEvent(new BreakpointGroupEvent(group, BreakpointGroupEvent.Type.REMOVED));
     }
 
+    @Override
     protected void saveBreakpoints(Session session) {
         // Persist the breakpoints to a file.
-        FileLock lock = null;
+        String name = session.getIdentifier() + FILENAME_SUFFIX;
+        PlatformService platform = PlatformProvider.getPlatformService();
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
-            String name = session.getIdentifier() + FILENAME_SUFFIX;
-            FileObject fo = fs.findResource(name);
-            if (fo == null) {
-                fo = fs.getRoot().createData(name);
-            }
-            lock = fo.lock();
-            OutputStream os = fo.getOutputStream(lock);
+            OutputStream os = platform.writeFile(name);
             XMLEncoder encoder = new XMLEncoder(os);
             encoder.writeObject(defaultGroup);
             encoder.close();
         } catch (IOException ioe) {
             ErrorManager.getDefault().notify(ioe);
         } finally {
-            if (lock != null) lock.releaseLock();
+            platform.releaseLock(name);
         }
     }
 }

@@ -1,0 +1,3 @@
+# Remove the default implementation so we can provide our own.
+#-com.bluemarsh.jswat.core.DefaultPlatformService
+com.bluemarsh.jswat.nbcore.NetBeansPlatformService

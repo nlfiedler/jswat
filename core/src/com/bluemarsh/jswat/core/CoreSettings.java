@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2008. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -27,7 +27,6 @@ import com.bluemarsh.jswat.core.util.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.prefs.Preferences;
-import org.openide.util.NbPreferences;
 
 /**
  * Manages the core debugger options. Delegates to NbPreferences.
@@ -58,7 +57,8 @@ public class CoreSettings {
      * Singleton constructor.
      */
     private CoreSettings() {
-        preferences = NbPreferences.forModule(this.getClass());
+        PlatformService platform = PlatformProvider.getPlatformService();
+        preferences = platform.getPreferences(this.getClass());
     }
 
     /**
