@@ -14,17 +14,16 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
 
-package com.bluemarsh.jswat.core.actions;
+package com.bluemarsh.jswat.ui.actions;
 
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.TextAction;
 import org.openide.util.ContextAwareAction;

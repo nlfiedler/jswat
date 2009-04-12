@@ -14,40 +14,52 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
 
-package com.bluemarsh.jswat.command;
+package com.bluemarsh.jswat.ui.actions;
 
-import org.openide.modules.ModuleInstall;
+import java.awt.event.ActionEvent;
+import javax.swing.Action;
+import javax.swing.KeyStroke;
+import javax.swing.text.JTextComponent;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 /**
- * Manages the command module's lifecycle.
+ * Copies the selected text to the system clipboard and removes it
+ * from the text component.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
-public class Install extends ModuleInstall {
+public class CutAction extends ContextAwareTextAction {
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
     /**
-     * The IDE is starting up.
+     * Creates a new instance of CutAction.
      */
-    public void restored() {
-        CommandParser parser = Lookup.getDefault().lookup(CommandParser.class);
-        parser.loadSettings();
+    public CutAction() {
+        super(NbBundle.getMessage(CutAction.class, "LBL_CutAction_Name"));
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
     }
 
-    /**
-     * The IDE is exiting, shut down now.
-     */
-    public void close() {
-        CommandParser parser = Lookup.getDefault().lookup(CommandParser.class);
-        parser.saveSettings();
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        JTextComponent target = getText(event);
+        if (target != null) {
+            target.cut();
+        }
+    }
+
+    @Override
+    public Action createContextAwareInstance(Lookup lookup) {
+        CutAction action = new CutAction();
+        action.setLookup(lookup);
+        return action;
     }
 }

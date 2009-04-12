@@ -14,15 +14,15 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
+package com.bluemarsh.jswat.nbcore;
 
-package com.bluemarsh.jswat.core;
-
+import com.bluemarsh.jswat.command.CommandParser;
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointFactory;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
@@ -52,14 +52,15 @@ import java.util.List;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.openide.modules.ModuleInstall;
+import org.openide.util.Lookup;
 import org.openide.windows.WindowManager;
 
 /**
- * Manages the core module's lifecycle.
+ * Manages the startup of the JSwat application.
  *
  * @author  Nathan Fiedler
  */
-public class CoreInstall extends ModuleInstall implements Runnable, WindowListener {
+public class Installer extends ModuleInstall implements Runnable, WindowListener {
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Identifier for the special launch-API session. */
@@ -73,6 +74,9 @@ public class CoreInstall extends ModuleInstall implements Runnable, WindowListen
         // Save the sessions to persistent storage.
         SessionManager sm = SessionProvider.getSessionManager();
         sm.saveSessions(true);
+        // Save the command aliases.
+        CommandParser parser = Lookup.getDefault().lookup(CommandParser.class);
+        parser.saveSettings();
         super.close();
     }
 
@@ -220,6 +224,10 @@ public class CoreInstall extends ModuleInstall implements Runnable, WindowListen
     @Override
     public void restored() {
         super.restored();
+        // Load the command aliases.
+        CommandParser parser = Lookup.getDefault().lookup(CommandParser.class);
+        parser.loadSettings();
+        // See if the user provided connection arguments.
         String transport = System.getProperty("jswat.transport");
         String launch = System.getProperty("jswat.launch");
         if (transport != null || launch != null) {

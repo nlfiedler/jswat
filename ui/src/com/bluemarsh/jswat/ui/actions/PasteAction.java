@@ -14,50 +14,60 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
 
-package com.bluemarsh.jswat.core.actions;
+package com.bluemarsh.jswat.ui.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
-import javax.swing.text.TextAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
- * Clears the text component of its contents.
+ * Pastes text from the system clipboard.
  *
  * @author Nathan Fiedler
  */
-public class ClearAction extends ContextAwareTextAction {
+public class PasteAction extends ContextAwareTextAction {
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new instance of ClearAction.
+     * Creates a new instance of PasteAction.
      */
-    public ClearAction() {
-        super(NbBundle.getMessage(ClearAction.class, "LBL_ClearAction_Name"));
-        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control L"));
+    public PasteAction() {
+        super(NbBundle.getMessage(PasteAction.class, "LBL_PasteAction_Name"));
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent event) {
         JTextComponent target = getText(event);
         if (target != null) {
-            target.setText("");
+            target.paste();
         }
     }
 
+    @Override
     public Action createContextAwareInstance(Lookup lookup) {
-        ClearAction action = new ClearAction();
+        PasteAction action = new PasteAction();
         action.setLookup(lookup);
         return action;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        JTextComponent text = getText();
+        if (text != null) {
+            return text.isEditable();
+        }
+        return super.isEnabled();
     }
 }

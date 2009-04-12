@@ -14,14 +14,14 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
 
-package com.bluemarsh.jswat.core.actions;
+package com.bluemarsh.jswat.ui.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
@@ -31,32 +31,33 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
- * Copies the selected text to the system clipboard and removes it
- * from the text component.
+ * Copies the selected text to the system clipboard.
  *
  * @author Nathan Fiedler
  */
-public class CutAction extends ContextAwareTextAction {
+public class CopyAction extends ContextAwareTextAction {
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates a new instance of CutAction.
+     * Creates a new instance of CopyAction.
      */
-    public CutAction() {
-        super(NbBundle.getMessage(CutAction.class, "LBL_CutAction_Name"));
-        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
+    public CopyAction() {
+        super(NbBundle.getMessage(CopyAction.class, "LBL_CopyAction_Name"));
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
     }
 
+    @Override
     public void actionPerformed(ActionEvent event) {
         JTextComponent target = getText(event);
         if (target != null) {
-            target.cut();
+            target.copy();
         }
     }
 
+    @Override
     public Action createContextAwareInstance(Lookup lookup) {
-        CutAction action = new CutAction();
+        CopyAction action = new CopyAction();
         action.setLookup(lookup);
         return action;
     }

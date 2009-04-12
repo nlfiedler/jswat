@@ -23,11 +23,11 @@
 
 package com.bluemarsh.jswat.ui.components;
 
-import com.bluemarsh.jswat.core.actions.Actions;
-import com.bluemarsh.jswat.core.actions.ClearAction;
-import com.bluemarsh.jswat.core.actions.CopyAction;
-import com.bluemarsh.jswat.core.actions.CutAction;
-import com.bluemarsh.jswat.core.actions.PasteAction;
+import com.bluemarsh.jswat.ui.actions.Actions;
+import com.bluemarsh.jswat.ui.actions.ClearAction;
+import com.bluemarsh.jswat.ui.actions.CopyAction;
+import com.bluemarsh.jswat.ui.actions.CutAction;
+import com.bluemarsh.jswat.ui.actions.PasteAction;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.runtime.RuntimeEvent;
 import com.bluemarsh.jswat.core.runtime.RuntimeListener;

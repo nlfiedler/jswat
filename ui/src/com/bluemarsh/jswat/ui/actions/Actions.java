@@ -21,7 +21,7 @@
  * $Id$
  */
 
-package com.bluemarsh.jswat.core.actions;
+package com.bluemarsh.jswat.ui.actions;
 
 import javax.swing.Action;
 import javax.swing.ActionMap;

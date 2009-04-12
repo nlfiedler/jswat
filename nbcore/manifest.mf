@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.bluemarsh.jswat.nbcore/1
+OpenIDE-Module-Install: com/bluemarsh/jswat/nbcore/Installer.class
+OpenIDE-Module-Localizing-Bundle: com/bluemarsh/jswat/nbcore/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

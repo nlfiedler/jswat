@@ -1,6 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: com.bluemarsh.jswat.core/1
-OpenIDE-Module-Install: com/bluemarsh/jswat/core/CoreInstall.class
 OpenIDE-Module-Java-Dependencies: Java > 1.6
 OpenIDE-Module-Localizing-Bundle: com/bluemarsh/jswat/core/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
