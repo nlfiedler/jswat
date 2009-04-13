@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -33,7 +33,6 @@ import com.sun.jdi.PathSearchingVirtualMachine;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.VirtualMachine;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -42,7 +41,6 @@ import java.util.List;
 import java.util.Set;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
-import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
@@ -118,30 +116,34 @@ public class DefaultPathManager extends AbstractPathManager {
         return fo;
     }
 
-    @Override
-    public FileObject findSource(String name) {
-        String filename = Names.classnameToFilename(name);
-        FileObject fo = findFile(filename, true);
-        if (fo == null) {
-            try {
-                // Try to locate the .class file and read the source name
-                // attribute from the bytecode, then get that source file.
-                // (note ClassPath wants / for all platforms)
-                filename = name.replace('.', '/') + ".class";
-                fo = findFile(filename, false);
-                if (fo != null) {
-                    File file = FileUtil.toFile(fo);
-                    ClassFile cf = new ClassFile(file, false);
-                    String srcname = cf.getSourceFileName();
-                    filename = Names.classnameToFilename(name, srcname);
-                    fo = findFile(filename, true);
-                }
-            } catch (IOException ioe) {
-                // fall through...
-            }
-        }
-        return fo;
-    }
+// Turns out nothing in JSwat was calling this method, but keeping in
+// case it comes up again.
+//    @Override
+//    public FileObject findSource(String name) {
+//        String filename = Names.classnameToFilename(name);
+//        FileObject fo = findFile(filename, true);
+//        if (fo == null) {
+//            try {
+//                // Try to locate the .class file and read the source name
+//                // attribute from the bytecode, then get that source file.
+//                // (note ClassPath wants / for all platforms)
+//                filename = name.replace('.', '/') + ".class";
+//                fo = findFile(filename, false);
+//                if (fo != null) {
+//                    File file = FileUtil.toFile(fo);
+//                    // This is using the NetBeans classfile reader module.
+//                    // Should use BCEL instead to avoid NB dependency.
+//                    ClassFile cf = new ClassFile(file, false);
+//                    String srcname = cf.getSourceFileName();
+//                    filename = Names.classnameToFilename(name, srcname);
+//                    fo = findFile(filename, true);
+//                }
+//            } catch (IOException ioe) {
+//                // fall through...
+//            }
+//        }
+//        return fo;
+//    }
 
     @Override
     public FileObject findSource(Location location) {

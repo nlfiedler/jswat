@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -52,14 +52,17 @@ public abstract class AbstractPathManager implements PathManager, SessionListene
         propSupport = new PropertyChangeSupport(this);
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propSupport.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
         savePaths(sevt.getSession());
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         // Save this for later to restore the classpath defined by the user.
         userDefinedClassPath = getUserClassPath();
@@ -69,6 +72,7 @@ public abstract class AbstractPathManager implements PathManager, SessionListene
         setClassPath(cp);
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         // Restore the classpath to what the user had intended.
         setClassPath(userDefinedClassPath);
@@ -101,14 +105,17 @@ public abstract class AbstractPathManager implements PathManager, SessionListene
      */
     protected abstract void loadPaths(Session session);
 
+    @Override
     public void opened(Session session) {
         loadPaths(session);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propSupport.removePropertyChangeListener(listener);
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
@@ -119,6 +126,7 @@ public abstract class AbstractPathManager implements PathManager, SessionListene
      */
     protected abstract void savePaths(Session session);
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

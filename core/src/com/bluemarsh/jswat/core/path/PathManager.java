@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -90,7 +90,7 @@ public interface PathManager {
      * @param  name  name of the class to find source for.
      * @return  source file object, or null if not found.
      */
-    FileObject findSource(String name);
+    //FileObject findSource(String name); Nothing was calling this method.
 
     /**
      * Find the source file for the declaring type of the given location.
