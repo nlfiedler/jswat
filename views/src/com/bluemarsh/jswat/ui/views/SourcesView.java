@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -31,6 +31,7 @@ import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionManagerEvent;
 import com.bluemarsh.jswat.core.session.SessionManagerListener;
 import com.bluemarsh.jswat.core.session.SessionProvider;
+import com.bluemarsh.jswat.nbcore.path.PathConverter;
 import com.bluemarsh.jswat.ui.components.PathEditorPanel;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -141,10 +142,11 @@ public class SourcesView extends AbstractView
         Session session = sm.getCurrent();
 
         PathManager pm = PathProvider.getPathManager(session);
-        List<FileObject> roots = pm.getSourcePath();
+        List<String> roots = pm.getSourcePath();
         if (roots != null) {
-            for (FileObject root : roots) {
-                Node node = new SourceRootNode(root);
+            for (String root : roots) {
+                FileObject fo = PathConverter.toFileObject(root);
+                Node node = new SourceRootNode(fo);
                 list.add(node);
             }
         }
@@ -160,6 +162,7 @@ public class SourcesView extends AbstractView
 
         // Must expand the nodes on the AWT event thread.
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 // Need to refetch the root in case it was replaced.
                 Node rootNode = explorerManager.getRootContext();
@@ -282,6 +285,7 @@ public class SourcesView extends AbstractView
         return NbBundle.getMessage(SourcesView.class, "CTL_SourcesView_Name");
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
@@ -336,6 +340,7 @@ public class SourcesView extends AbstractView
         return PREFERRED_ID;
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         // See if the current session's sourcepath has changed.
         Session session = SessionProvider.getCurrentSession();
@@ -347,18 +352,21 @@ public class SourcesView extends AbstractView
         }
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         PathManager pm = PathProvider.getPathManager(session);
         pm.addPropertyChangeListener(this);
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         Session session = e.getSession();
         PathManager pm = PathProvider.getPathManager(session);
         pm.removePropertyChangeListener(this);
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         buildTree();
     }
@@ -472,6 +480,7 @@ public class SourcesView extends AbstractView
             displayName = path.replace('/', '.');
         }
 
+        @Override
         public int compareTo(Node o) {
             if (!(o instanceof PackageNode)) {
                 return -1;
@@ -532,6 +541,7 @@ public class SourcesView extends AbstractView
             super(original);
         }
 
+        @Override
         public int compareTo(Node o) {
             String on = o.getDisplayName();
             String tn = getDisplayName();
@@ -552,6 +562,7 @@ public class SourcesView extends AbstractView
             VisibilityQuery.getDefault().addChangeListener(this);
         }
 
+        @Override
         public boolean acceptDataObject(DataObject obj) {
             if (obj instanceof DataFolder) {
                 return false;
@@ -560,6 +571,7 @@ public class SourcesView extends AbstractView
             return VisibilityQuery.getDefault().isVisible(fo);
         }
 
+        @Override
         public void stateChanged(ChangeEvent e) {
             Object[] listeners = ell.getListenerList();
             ChangeEvent event = null;
@@ -573,10 +585,12 @@ public class SourcesView extends AbstractView
             }
         }
 
+        @Override
         public void addChangeListener(ChangeListener listener) {
             ell.add(ChangeListener.class, listener);
         }
 
+        @Override
         public void removeChangeListener(ChangeListener listener) {
             ell.remove(ChangeListener.class, listener);
         }
@@ -596,32 +610,31 @@ public class SourcesView extends AbstractView
             return false;
         }
 
+        @Override
         protected boolean enable(Node[] activatedNodes) {
             return true;
         }
 
+        @Override
         public HelpCtx getHelpCtx() {
             return HelpCtx.DEFAULT_HELP;
         }
 
+        @Override
         public String getName() {
             return NbBundle.getMessage(SourcesView.class,
                     "LBL_SourcesView_EditAction");
         }
 
+        @Override
         protected void performAction(Node[] activatedNodes) {
             PathEditorPanel editor = new PathEditorPanel();
             Session session = SessionProvider.getCurrentSession();
             PathManager pm = PathProvider.getPathManager(session);
             // Load the current sourcepath into the editor.
-            List<FileObject> sourcepath = pm.getSourcePath();
+            List<String> sourcepath = pm.getSourcePath();
             if (sourcepath != null && sourcepath.size() > 0) {
-                List<String> srcpath = new LinkedList<String>();
-                for (FileObject fo : sourcepath) {
-                    String path = FileUtil.getFileDisplayName(fo);
-                    srcpath.add(path);
-                }
-                editor.setPath(srcpath);
+                editor.setPath(sourcepath);
             }
 
             // Display the editor in a simple dialog.
@@ -638,14 +651,12 @@ public class SourcesView extends AbstractView
 
             // Save the new sourcepath setting.
             List<String> paths = editor.getPath();
-            List<FileObject> roots = new LinkedList<FileObject>();
+            List<String> roots = new LinkedList<String>();
             for (String path : paths) {
                 File file = new File(path);
                 // It is possible for the user to add paths that don't exist.
                 if (file.exists() && file.canRead()) {
-                    file = FileUtil.normalizeFile(file);
-                    FileObject fo = FileUtil.toFileObject(file);
-                    roots.add(fo);
+                    roots.add(path);
                 }
             }
             pm.setSourcePath(roots);
@@ -666,19 +677,23 @@ public class SourcesView extends AbstractView
             return false;
         }
 
+        @Override
         protected boolean enable(Node[] activatedNodes) {
             return true;
         }
 
+        @Override
         public HelpCtx getHelpCtx() {
             return HelpCtx.DEFAULT_HELP;
         }
 
+        @Override
         public String getName() {
             return NbBundle.getMessage(RefreshAction.class,
                     "LBL_RefreshAction_Name");
         }
 
+        @Override
         protected void performAction(Node[] activatedNodes) {
             SourcesView view = SourcesView.findInstance();
             view.buildTree();

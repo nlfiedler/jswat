@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -37,8 +37,10 @@ import org.openide.util.Lookup;
  * @author Nathan Fiedler
  */
 public class PathProvider {
+    /** Factory for generating PathEntry instances. */
+    private static PathEntryFactory entryFactory;
     /** Used to control access to the instance maps. */
-    private static Object mapsLock;
+    private static final Object mapsLock;
     /** Map of PathManager instances, keyed by Session instance. */
     private static Map<Session, PathManager> instanceMap;
     /** Map of Session instances, keyed by PathManager instance. */
@@ -54,6 +56,19 @@ public class PathProvider {
      * Creates a new instance of PathProvider.
      */
     private PathProvider() {
+    }
+
+    /**
+     * Retrieve the PlatformService instance, creating one if necessary.
+     *
+     * @return  PlatformService instance.
+     */
+    public static synchronized PathEntryFactory getPathEntryFactory() {
+        if (entryFactory == null) {
+            // Perform lookup to find a PathEntryFactory instance.
+            entryFactory = Lookup.getDefault().lookup(PathEntryFactory.class);
+        }
+        return entryFactory;
     }
 
     /**

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -29,7 +29,6 @@ import com.bluemarsh.jswat.core.path.PathProvider;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -40,8 +39,6 @@ import javax.swing.event.ListDataListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
@@ -94,15 +91,18 @@ public class SessionPropertiesPanel extends JPanel implements
 
         nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 
+            @Override
             public void changedUpdate(DocumentEvent event) {
             }
 
+            @Override
             public void insertUpdate(DocumentEvent event) {
                 // This fires an event only if the value has changed.
                 putClientProperty(NotifyDescriptor.PROP_VALID,
                         Boolean.valueOf(event.getDocument().getLength() > 0));
             }
 
+            @Override
             public void removeUpdate(DocumentEvent event) {
                 // This fires an event only if the value has changed.
                 putClientProperty(NotifyDescriptor.PROP_VALID,
@@ -112,14 +112,17 @@ public class SessionPropertiesPanel extends JPanel implements
 
         sourcepathEditor.addListDataListener(new ListDataListener() {
 
+            @Override
             public void contentsChanged(ListDataEvent event) {
                 validateInput();
             }
 
+            @Override
             public void intervalAdded(ListDataEvent event) {
                 validateInput();
             }
 
+            @Override
             public void intervalRemoved(ListDataEvent event) {
                 validateInput();
             }
@@ -175,17 +178,11 @@ public class SessionPropertiesPanel extends JPanel implements
         }
 
         // Load the sourcepath setting.
-        List<FileObject> sourcepath = pm.getSourcePath();
-        if (sourcepath != null && sourcepath.size() > 0) {
-            List<String> srcpath = new LinkedList<String>();
-            for (FileObject fo : sourcepath) {
-                String path = FileUtil.getFileDisplayName(fo);
-                srcpath.add(path);
-            }
-            sourcepathEditor.setPath(srcpath);
-        }
+        List<String> sourcepath = pm.getSourcePath();
+        sourcepathEditor.setPath(sourcepath);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
         if (event.getPropertyName().equals(NotifyDescriptor.PROP_VALID)) {
             // The input validity has changed in some way.
@@ -228,14 +225,7 @@ public class SessionPropertiesPanel extends JPanel implements
 
         // Save the sourcepath setting.
         List<String> paths = sourcepathEditor.getPath();
-        List<FileObject> roots = new LinkedList<FileObject>();
-        for (String path : paths) {
-            File file = new File(path);
-            file = FileUtil.normalizeFile(file);
-            FileObject fo = FileUtil.toFileObject(file);
-            roots.add(fo);
-        }
-        pm.setSourcePath(roots);
+        pm.setSourcePath(paths);
     }
 
     /**

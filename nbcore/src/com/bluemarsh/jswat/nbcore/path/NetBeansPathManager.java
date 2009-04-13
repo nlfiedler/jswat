@@ -21,9 +21,11 @@
  * $Id$
  */
 
-package com.bluemarsh.jswat.core.path;
+package com.bluemarsh.jswat.nbcore.path;
 
 import com.bluemarsh.jswat.core.connect.JvmConnection;
+import com.bluemarsh.jswat.core.path.AbstractPathManager;
+import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.util.Names;
 import com.bluemarsh.jswat.core.util.Strings;
@@ -33,10 +35,20 @@ import com.sun.jdi.PathSearchingVirtualMachine;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.VirtualMachine;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.NbBundle;
 
 /**
  * The default implementation of the PathManager interface. Stores the
@@ -44,16 +56,20 @@ import org.openide.filesystems.FileObject;
  *
  * @author Nathan Fiedler
  */
-public class DefaultPathManager extends AbstractPathManager {
+public class NetBeansPathManager extends AbstractPathManager {
     /** The classpath setting, if specified by the user (read-only). */
     private List<String> classPath;
     /** The sourcepath setting, if specified by the user (read-only). */
     private List<String> sourcePath;
+    /** The classpath as a ClassPath, used to look up resources. */
+    private ClassPath classPathLookup;
+    /** The sourcepath as a ClassPath, used to look up resources. */
+    private ClassPath sourcePathLookup;
 
     /**
      * Creates a new instance of DefaultPathManager.
      */
-    public DefaultPathManager() {
+    public NetBeansPathManager() {
     }
 
     @Override
@@ -83,26 +99,54 @@ public class DefaultPathManager extends AbstractPathManager {
      * @param  fuzzy     apply a fuzzy search.
      * @return  file object, or null if not found.
      */
-    protected FileObject findFile(String filename, boolean fuzzy) { // TODO
+    protected FileObject findFile(String filename, boolean fuzzy) {
         // ClassPath wants / no matter which platform we are on.
         filename = filename.replace('\\', '/');
-//        FileObject fo = null;
-//        if (sourcePathLookup != null) {
-//            fo = sourcePathLookup.findResource(filename);
-//        }
-//        if (fo == null && classPathLookup != null) {
-//            fo = classPathLookup.findResource(filename);
-//        }
-//        if (fo == null && fuzzy) {
-//            int last = filename.lastIndexOf('/');
-//            if (last > 0) {
-//                filename = filename.substring(last + 1);
+        FileObject fo = null;
+        if (sourcePathLookup != null) {
+            fo = sourcePathLookup.findResource(filename);
+        }
+        if (fo == null && classPathLookup != null) {
+            fo = classPathLookup.findResource(filename);
+        }
+        if (fo == null && fuzzy) {
+            int last = filename.lastIndexOf('/');
+            if (last > 0) {
+                filename = filename.substring(last + 1);
+                fo = findFile(filename, false);
+            }
+        }
+        return fo;
+    }
+
+// Turns out nothing in JSwat was calling this method, but keeping in
+// case it comes up again.
+//    @Override
+//    public FileObject findSource(String name) {
+//        String filename = Names.classnameToFilename(name);
+//        FileObject fo = findFile(filename, true);
+//        if (fo == null) {
+//            try {
+//                // Try to locate the .class file and read the source name
+//                // attribute from the bytecode, then get that source file.
+//                // (note ClassPath wants / for all platforms)
+//                filename = name.replace('.', '/') + ".class";
 //                fo = findFile(filename, false);
+//                if (fo != null) {
+//                    File file = FileUtil.toFile(fo);
+//                    // This is using the NetBeans classfile reader module.
+//                    // Should use BCEL instead to avoid NB dependency.
+//                    ClassFile cf = new ClassFile(file, false);
+//                    String srcname = cf.getSourceFileName();
+//                    filename = Names.classnameToFilename(name, srcname);
+//                    fo = findFile(filename, true);
+//                }
+//            } catch (IOException ioe) {
+//                // fall through...
 //            }
 //        }
 //        return fo;
-        return null;
-    }
+//    }
 
     @Override
     public FileObject findSource(Location location) {
@@ -211,6 +255,48 @@ public class DefaultPathManager extends AbstractPathManager {
         }
     }
 
+    /**
+     * Replace the current ClassPath.COMPILE entries with the one contained
+     * in classPathLookup. The intent is that the Java editor will be able
+     * to find the classes when parsing open source files, and avoid having
+     * the error stripe in the source viewer.
+     */
+    @SuppressWarnings("unchecked")
+    private void registerClassPath() {
+        GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
+        Set paths = gpr.getPaths(ClassPath.COMPILE);
+        if (paths.size() > 0) {
+            ClassPath[] arr = (ClassPath[]) paths.toArray(
+                    new ClassPath[paths.size()]);
+            gpr.unregister(ClassPath.COMPILE, arr);
+        }
+        if (classPathLookup != null) {
+            ClassPath[] arr = new ClassPath[] { classPathLookup };
+            gpr.register(ClassPath.COMPILE, arr);
+        }
+    }
+
+    /**
+     * Replace the current ClassPath.SOURCE entries with the one contained
+     * in sourcePathLookup. The intent is that the Java editor will be able
+     * to find the classes when parsing open source files, and avoid having
+     * the error stripe in the source viewer.
+     */
+    @SuppressWarnings("unchecked")
+    private void registerSourcePath() {
+        GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
+        Set paths = gpr.getPaths(ClassPath.SOURCE);
+        if (paths.size() > 0) {
+            ClassPath[] arr = (ClassPath[]) paths.toArray(
+                    new ClassPath[paths.size()]);
+            gpr.unregister(ClassPath.SOURCE, arr);
+        }
+        if (sourcePathLookup != null) {
+            ClassPath[] arr = new ClassPath[] { sourcePathLookup };
+            gpr.register(ClassPath.SOURCE, arr);
+        }
+    }
+
     @Override
     protected void savePaths(Session session) {
         // Save the classpath setting to the session properties.
@@ -231,76 +317,85 @@ public class DefaultPathManager extends AbstractPathManager {
     }
 
     @Override
-    public void setClassPath(List<String> roots) { // TODO
+    public void setClassPath(List<String> roots) {
+        // TODO: canonicalize the roots and prune duplicates
         List<String> oldPath = classPath;
+        // Wipe out the lookup and rebuild if possible.
+        classPathLookup = null;
         if (roots == null || roots.size() == 0) {
             classPath = null;
         } else {
             classPath = Collections.unmodifiableList(roots);
-//            // Convert the list of Strings to a list of FileObjects, if possible.
-//            List<FileObject> foRoots = new LinkedList<FileObject>();
-//            for (String path : roots) {
-//                File file = new File(path);
-//                if (file.exists()) {
-//                    file = FileUtil.normalizeFile(file);
-//                    FileObject fo = FileUtil.toFileObject(file);
-//                    // Check if the files are actually archives, and get the
-//                    // root of the archive as a file object; the classpath
-//                    // support does not like receiving the archive file as-is.
-//                    if (FileUtil.isArchiveFile(fo)) {
-//                        fo = FileUtil.getArchiveRoot(fo);
-//                    }
-//                    foRoots.add(fo);
-//                }
-//            }
-//            if (foRoots.size() > 0) {
-//                // Create a lookup of the available paths.
-//                FileObject[] arr = new FileObject[foRoots.size()];
-//                arr = foRoots.toArray(arr);
-//                try {
-//                    classPathLookup = ClassPathSupport.createClassPath(arr);
-//                } catch (IllegalArgumentException iae) {
-//                    ErrorManager em = ErrorManager.getDefault();
-//                    em.annotate(iae, NbBundle.getMessage(
-//                            DefaultPathManager.class,
-//                            "ERR_PathManager_BadPathEntry", iae));
-//                    em.notify(iae);
-//                }
-//            }
+            // Convert the list of Strings to a list of FileObjects, if possible.
+            List<FileObject> foRoots = new LinkedList<FileObject>();
+            for (String path : roots) {
+                File file = new File(path);
+                if (file.exists()) {
+                    file = FileUtil.normalizeFile(file);
+                    FileObject fo = FileUtil.toFileObject(file);
+                    // Check if the files are actually archives, and get the
+                    // root of the archive as a file object; the classpath
+                    // support does not like receiving the archive file as-is.
+                    if (FileUtil.isArchiveFile(fo)) {
+                        fo = FileUtil.getArchiveRoot(fo);
+                    }
+                    foRoots.add(fo);
+                }
+            }
+            if (foRoots.size() > 0) {
+                // Create a lookup of the available paths.
+                FileObject[] arr = new FileObject[foRoots.size()];
+                arr = foRoots.toArray(arr);
+                try {
+                    classPathLookup = ClassPathSupport.createClassPath(arr);
+                } catch (IllegalArgumentException iae) {
+                    ErrorManager em = ErrorManager.getDefault();
+                    em.annotate(iae, NbBundle.getMessage(
+                            NetBeansPathManager.class,
+                            "ERR_PathManager_BadPathEntry", iae));
+                    em.notify(iae);
+                }
+            }
         }
+        registerClassPath();
         firePropertyChange(PROP_CLASSPATH, oldPath, classPath);
     }
 
     @Override
-    public void setSourcePath(List<String> roots) { // TODO
+    public void setSourcePath(List<String> roots) {
+        // TODO: canonicalize the roots and prune duplicates
         List<String> oldPath = sourcePath;
         if (roots == null || roots.size() == 0) {
             sourcePath = null;
+            sourcePathLookup = null;
         } else {
-//            // Check if the files are actually archives, and get the root
-//            // of the archive as a file object; the classpath support does
-//            // not like receiving the archive file itself.
-//            List<FileObject> nrts = new ArrayList<FileObject>();
-//            for (FileObject root : roots) {
-//                if (FileUtil.isArchiveFile(root)) {
-//                    root = FileUtil.getArchiveRoot(root);
-//                }
-//                nrts.add(root);
-//            }
-            sourcePath = Collections.unmodifiableList(roots); // XXX: was nrts
-//            FileObject[] arr = new FileObject[nrts.size()];
-//            arr = nrts.toArray(arr);
-//            try {
-//                sourcePathLookup = ClassPathSupport.createClassPath(arr);
-//            } catch (IllegalArgumentException iae) {
-//                sourcePathLookup = null;
-//                ErrorManager em = ErrorManager.getDefault();
-//                em.annotate(iae, NbBundle.getMessage(
-//                        DefaultPathManager.class,
-//                        "ERR_PathManager_BadPathEntry", iae));
-//                em.notify(iae);
-//            }
+            // Check if the files are actually archives, and get the root
+            // of the archive as a file object; the classpath support does
+            // not like receiving the archive file itself.
+            Set<FileObject> nrts = new HashSet<FileObject>();
+            for (String root : roots) {
+                FileObject fobj = PathConverter.toFileObject(root);
+                if (fobj != null) {
+                    fobj = PathConverter.convertToRoot(fobj);
+                    nrts.add(fobj);
+                }
+            }
+            List<FileObject> fobjs = new ArrayList<FileObject>(nrts);
+            sourcePath = PathConverter.toStrings(fobjs);
+            FileObject[] arr = new FileObject[nrts.size()];
+            arr = nrts.toArray(arr);
+            try {
+                sourcePathLookup = ClassPathSupport.createClassPath(arr);
+            } catch (IllegalArgumentException iae) {
+                sourcePathLookup = null;
+                ErrorManager em = ErrorManager.getDefault();
+                em.annotate(iae, NbBundle.getMessage(
+                        NetBeansPathManager.class,
+                        "ERR_PathManager_BadPathEntry", iae));
+                em.notify(iae);
+            }
         }
+        registerSourcePath();
         firePropertyChange(PROP_SOURCEPATH, oldPath, sourcePath);
     }
 }

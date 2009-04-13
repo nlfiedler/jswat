@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -29,7 +29,6 @@ import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import java.util.List;
-import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
@@ -49,19 +48,23 @@ public class CopySessionAction extends NodeAction {
         return false;
     }
 
+    @Override
     protected boolean enable(Node[] activatedNodes) {
         return activatedNodes != null && activatedNodes.length > 0;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(CopySessionAction.class,
                 "LBL_CopySessionAction");
     }
 
+    @Override
     protected void performAction(Node[] activatedNodes) {
         SessionManager sm = SessionProvider.getSessionManager();
         for (Node n : activatedNodes) {
@@ -73,7 +76,7 @@ public class CopySessionAction extends NodeAction {
                 // Copy the source/class paths to the copy.
                 PathManager pm = PathProvider.getPathManager(session);
                 List<String> cpath = pm.getClassPath();
-                List<FileObject> spath = pm.getSourcePath();
+                List<String> spath = pm.getSourcePath();
                 pm = PathProvider.getPathManager(copy);
                 pm.setClassPath(cpath);
                 pm.setSourcePath(spath);

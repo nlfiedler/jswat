@@ -126,7 +126,7 @@ public interface PathManager {
      *
      * @return  list of sourcepath roots, may be null.
      */
-    List<FileObject> getSourcePath();
+    List<String> getSourcePath();
 
     /**
      * Remove a PropertyChangeListener from the listener list.
@@ -149,5 +149,5 @@ public interface PathManager {
      *
      * @param  roots  list of sourcepath roots, may be null.
      */
-    void setSourcePath(List<FileObject> roots);
+    void setSourcePath(List<String> roots);
 }

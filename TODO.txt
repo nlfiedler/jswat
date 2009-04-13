@@ -5,11 +5,11 @@ $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 - Determine what needs to be written from scratch
   - An abstraction layer that provides the following services:
     - Open a source file
-    - Resolve a class to a source file
 
 - Changes to core
   - How to deal with FileObject usage in PathManager?
-  - Move PathConverter to nbcore
+  - Implement a new DefaultPathManager based on 2.x version
+  - Move PathConverter to nbcore, to be used exclusively by NetBeansPathManager
   - Turn core into a standard Java project
   - Add to library dependencies
     - org-openide-util.jar

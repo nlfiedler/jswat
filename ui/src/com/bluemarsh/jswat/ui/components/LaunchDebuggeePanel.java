@@ -59,8 +59,6 @@ import javax.swing.text.Document;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.SystemAction;
@@ -269,32 +267,17 @@ public class LaunchDebuggeePanel extends JPanel implements
     private void mergeSourcePath(JavaRuntime rt, PathManager pm) {
         List<String> paths = rt.getSources();
         if (paths != null && !paths.isEmpty()) {
-            List<FileObject> fos = new LinkedList<FileObject>();
-            for (String path : paths) {
-                File dir = new File(path);
-                dir = FileUtil.normalizeFile(dir);
-                FileObject fo = FileUtil.toFileObject(dir);
-                if (fo == null) {
-                    // Not sure why, but this has happened (bug 1101).
-                    continue;
-                }
-                if (FileUtil.isArchiveFile(fo)) {
-                    // Convert archive files to the archive's root folder.
-                    fo = FileUtil.getArchiveRoot(fo);
-                }
-                fos.add(fo);
-            }
-            List<FileObject> srcpath = pm.getSourcePath();
+            List<String> srcpath = pm.getSourcePath();
             if (srcpath == null) {
-                srcpath = new LinkedList<FileObject>();
+                srcpath = new LinkedList<String>();
             } else {
                 // Have to make a modifiable list.
-                srcpath = new LinkedList<FileObject>(srcpath);
+                srcpath = new LinkedList<String>(srcpath);
             }
             boolean changed = false;
-            for (FileObject fo : fos) {
-                if (!srcpath.contains(fo)) {
-                    srcpath.add(fo);
+            for (String path : paths) {
+                if (!srcpath.contains(path)) {
+                    srcpath.add(path);
                     changed = true;
                 }
             }

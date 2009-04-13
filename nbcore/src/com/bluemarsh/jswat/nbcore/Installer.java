@@ -30,7 +30,6 @@ import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
 import com.bluemarsh.jswat.core.connect.ConnectionFactory;
 import com.bluemarsh.jswat.core.connect.ConnectionProvider;
 import com.bluemarsh.jswat.core.connect.JvmConnection;
-import com.bluemarsh.jswat.core.path.PathConverter;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.runtime.JavaRuntime;
@@ -50,7 +49,6 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileObject;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.Lookup;
 import org.openide.windows.WindowManager;
@@ -345,8 +343,8 @@ public class Installer extends ModuleInstall implements Runnable, WindowListener
     private void setSourcePath(Session session) {
         String sourcepath = System.getProperty("jswat.sourcepath");
         if (sourcepath != null) {
+            List<String> roots = Strings.stringToList(sourcepath, File.pathSeparator);
             PathManager pm = PathProvider.getPathManager(session);
-            List<FileObject> roots = PathConverter.toFileObject(sourcepath);
             pm.setSourcePath(roots);
         }
     }
