@@ -5,7 +5,6 @@ $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 - Identify what parts of core/cmd require NetBeans modules
   - Make use of new abstraction layer:
     - core.connect.ListeningConnection
-    - command.AbstractCommandParser
 
 - Determine what needs to be written from scratch
   - An abstraction layer that provides the following services:

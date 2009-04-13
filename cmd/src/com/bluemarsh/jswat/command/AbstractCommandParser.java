@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2005. All Rights Reserved.
+ * are Copyright (C) 1999-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,9 +23,12 @@
 
 package com.bluemarsh.jswat.command;
 
+import com.bluemarsh.jswat.core.PlatformProvider;
+import com.bluemarsh.jswat.core.PlatformService;
 import java.beans.ExceptionListener;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,10 +40,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileLock;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
-import org.openide.filesystems.Repository;
 
 /**
  * Class AbstractCommandParser provides a partial implementation of a
@@ -94,19 +93,17 @@ public abstract class AbstractCommandParser implements CommandParser {
         }
     }
 
+    @Override
     public String getAlias(String name) {
         return aliasMap.get(name);
     }
 
-    /**
-     * Returns an iterator of the names of all the available command aliases.
-     *
-     * @return  iterator of alias names.
-     */
+    @Override
     public Iterator<String> getAliases() {
         return aliasMap.keySet().iterator();
     }
 
+    @Override
     public Iterator<String> getHistory(boolean reverse) {
         if (reverse) {
             // List is already in reverse order.
@@ -119,6 +116,7 @@ public abstract class AbstractCommandParser implements CommandParser {
         }
     }
 
+    @Override
     public String getHistoryNext() {
         if (currentHistory > 0) {
             currentHistory--;
@@ -130,6 +128,7 @@ public abstract class AbstractCommandParser implements CommandParser {
         }
     }
 
+    @Override
     public String getHistoryPrev() {
         if (currentHistory < (inputHistory.size() - 1)) {
             currentHistory++;
@@ -152,26 +151,27 @@ public abstract class AbstractCommandParser implements CommandParser {
         return outputWriter;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void loadSettings() {
         XMLDecoder decoder = null;
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
+            PlatformService platform = PlatformProvider.getPlatformService();
             String name = "commands.xml";
-            FileObject fo = fs.findResource(name);
-            if (fo != null && fo.isData()) {
-                InputStream is = fo.getInputStream();
-                decoder = new XMLDecoder(is);
-                decoder.setExceptionListener(new ExceptionListener() {
-                    public void exceptionThrown(Exception e) {
-                        ErrorManager.getDefault().notify(e);
-                    }
-                });
-                aliasMap = (Map<String, String>) decoder.readObject();
-                inputHistory = (List<String>) decoder.readObject();
-                Integer size = (Integer) decoder.readObject();
-                setHistorySize(size.intValue());
-            }
+            InputStream is = platform.readFile(name);
+            decoder = new XMLDecoder(is);
+            decoder.setExceptionListener(new ExceptionListener() {
+                @Override
+                public void exceptionThrown(Exception e) {
+                    ErrorManager.getDefault().notify(e);
+                }
+            });
+            aliasMap = (Map<String, String>) decoder.readObject();
+            inputHistory = (List<String>) decoder.readObject();
+            Integer size = (Integer) decoder.readObject();
+            setHistorySize(size.intValue());
+        } catch (FileNotFoundException e) {
+            // Do not report this error, it's normal.
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
@@ -183,17 +183,12 @@ public abstract class AbstractCommandParser implements CommandParser {
         }
     }
 
+    @Override
     public void saveSettings() {
-        FileLock lock = null;
+        String name = "commands.xml";
+        PlatformService platform = PlatformProvider.getPlatformService();
         try {
-            FileSystem fs = Repository.getDefault().getDefaultFileSystem();
-            String name = "commands.xml";
-            FileObject fo = fs.findResource(name);
-            if (fo == null) {
-                fo = fs.getRoot().createData(name);
-            }
-            lock = fo.lock();
-            OutputStream os = fo.getOutputStream(lock);
+            OutputStream os = platform.writeFile(name);
             XMLEncoder encoder = new XMLEncoder(os);
             encoder.writeObject(aliasMap);
             encoder.writeObject(inputHistory);
@@ -202,10 +197,11 @@ public abstract class AbstractCommandParser implements CommandParser {
         } catch (IOException ioe) {
             ErrorManager.getDefault().notify(ioe);
         } finally {
-            if (lock != null) lock.releaseLock();
+            platform.releaseLock(name);
         }
     }
 
+    @Override
     public void setAlias(String name, String cmnd) {
         if (cmnd == null) {
             aliasMap.remove(name);
@@ -221,6 +217,7 @@ public abstract class AbstractCommandParser implements CommandParser {
         currentHistory = -1;
     }
 
+    @Override
     public void setHistorySize(int size) {
         if (size < 0) {
             throw new IllegalArgumentException("size must be positive");
@@ -228,6 +225,7 @@ public abstract class AbstractCommandParser implements CommandParser {
         historySizeLimit = size;
     }
 
+    @Override
     public void setOutput(PrintWriter writer) {
         outputWriter = writer;
     }
