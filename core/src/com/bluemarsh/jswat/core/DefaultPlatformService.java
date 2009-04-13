@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.prefs.Preferences;
+import org.openide.util.Cancellable;
 
 /**
  * Default implementation of the platform service which works independently
@@ -71,6 +72,16 @@ public class DefaultPlatformService implements PlatformService {
     @Override
     public void releaseLock(String name) {
         // Nothing to do.
+    }
+
+    @Override
+    public Object startProgress(String label, Cancellable callback) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void stopProgress(Object handle) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override

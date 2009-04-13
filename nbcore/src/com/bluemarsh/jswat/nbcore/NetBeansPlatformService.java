@@ -31,10 +31,13 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.Preferences;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.Repository;
+import org.openide.util.Cancellable;
 import org.openide.util.NbPreferences;
 
 /**
@@ -83,6 +86,22 @@ public class NetBeansPlatformService implements PlatformService {
         FileLock lock = locks.remove(name);
         if (lock != null) {
             lock.releaseLock();
+        }
+    }
+
+    @Override
+    public Object startProgress(String label, Cancellable callback) {
+        ProgressHandle ph = ProgressHandleFactory.createHandle(label, callback);
+        ph.start();
+        return ph;
+    }
+
+    @Override
+    public void stopProgress(Object handle) {
+        if (handle instanceof ProgressHandle) {
+            ((ProgressHandle) handle).finish();
+        } else {
+            throw new IllegalArgumentException("handle not a ProgressHandle");
         }
     }
 

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2007. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,6 +23,8 @@
 
 package com.bluemarsh.jswat.core.connect;
 
+import com.bluemarsh.jswat.core.PlatformProvider;
+import com.bluemarsh.jswat.core.PlatformService;
 import com.bluemarsh.jswat.core.output.OutputProvider;
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.Connector;
@@ -31,8 +33,6 @@ import com.sun.jdi.connect.ListeningConnector;
 import com.sun.jdi.connect.TransportTimeoutException;
 import java.io.IOException;
 import java.util.Map;
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.ErrorManager;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
@@ -59,6 +59,7 @@ public class ListeningConnection extends AbstractConnection
         super(connector, args);
     }
 
+    @Override
     public boolean cancel() {
         ListeningConnector conn = (ListeningConnector) getConnector();
         try {
@@ -74,17 +75,19 @@ public class ListeningConnection extends AbstractConnection
         return true;
     }
 
+    @Override
     public void connect()
             throws IllegalConnectorArgumentsException, IOException {
         cancelled = false;
         RequestProcessor.getDefault().post(this);
     }
 
+    @Override
     public void run() {
-        ProgressHandle ph = ProgressHandleFactory.createHandle(
+        PlatformService platform = PlatformProvider.getPlatformService();
+        Object ph = platform.startProgress(
                 NbBundle.getMessage(ListeningConnection.class,
                 "LBL_ListeningConnector_Waiting"), this);
-        ph.start();
         ListeningConnector conn = (ListeningConnector) getConnector();
         Map<String, ? extends Connector.Argument> args = getConnectorArgs();
         try {
@@ -113,7 +116,7 @@ public class ListeningConnection extends AbstractConnection
         } catch (IllegalConnectorArgumentsException icae) {
             ErrorManager.getDefault().notify(icae);
         } finally {
-            ph.finish();
+            platform.stopProgress(ph);
         }
     }
 }

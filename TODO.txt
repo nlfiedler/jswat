@@ -2,16 +2,11 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
-- Identify what parts of core/cmd require NetBeans modules
-  - Make use of new abstraction layer:
-    - core.connect.ListeningConnection
-
 - Determine what needs to be written from scratch
   - An abstraction layer that provides the following services:
     - Get source information from a .class file
     - Open a source file
     - Resolve a class to a source file
-    - Start/stop a progress indicator
 
 - Changes to core
   - How to deal with FileObject usage in PathManager?

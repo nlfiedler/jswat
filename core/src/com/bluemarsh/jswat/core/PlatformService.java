@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.prefs.Preferences;
+import org.openide.util.Cancellable;
 
 /**
  * Defines the API for interacting with the underlying platform, which
@@ -71,6 +72,23 @@ public interface PlatformService {
      * @param  name  name of the file, with optional partial path.
      */
     void releaseLock(String name);
+
+    /**
+     * Displays a progress indicator to show that a task is running in
+     * the background.
+     *
+     * @param  label     displayed with the progress indicator.
+     * @param  callback  called if the user cancels the task.
+     * @return  a handle for the progress indicator.
+     */
+    Object startProgress(String label, Cancellable callback);
+
+    /**
+     * Terminate the progress indicator for the given progress handle.
+     *
+     * @param  handle  progress handle.
+     */
+    void stopProgress(Object handle);
 
     /**
      * Opens an output stream for the named file (with optional leading path).
