@@ -37,8 +37,6 @@ import org.openide.util.Lookup;
  * @author Nathan Fiedler
  */
 public class PathProvider {
-    /** Factory for generating PathEntry instances. */
-    private static PathEntryFactory entryFactory;
     /** Used to control access to the instance maps. */
     private static final Object mapsLock;
     /** Map of PathManager instances, keyed by Session instance. */
@@ -56,19 +54,6 @@ public class PathProvider {
      * Creates a new instance of PathProvider.
      */
     private PathProvider() {
-    }
-
-    /**
-     * Retrieve the PlatformService instance, creating one if necessary.
-     *
-     * @return  PlatformService instance.
-     */
-    public static synchronized PathEntryFactory getPathEntryFactory() {
-        if (entryFactory == null) {
-            // Perform lookup to find a PathEntryFactory instance.
-            entryFactory = Lookup.getDefault().lookup(PathEntryFactory.class);
-        }
-        return entryFactory;
     }
 
     /**
