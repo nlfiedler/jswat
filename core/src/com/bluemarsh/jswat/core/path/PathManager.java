@@ -27,7 +27,6 @@ import com.sun.jdi.Location;
 import com.sun.jdi.ReferenceType;
 import java.beans.PropertyChangeListener;
 import java.util.List;
-import org.openide.filesystems.FileObject;
 
 /**
  * A PathManager maintains the classpath and sourcepath values within the
@@ -38,10 +37,6 @@ import org.openide.filesystems.FileObject;
  * may only have meaning on the machine running the debuggee. That is, the
  * path roots may refer to files and directories that exist only on the
  * debuggee host.</p>
- *
- * <p>The sourcepath is represented as a list of FileObjects since the
- * sources must be locally accessible to the debugger. Therefore, they
- * must be representible using FileObject instances.</p>
  *
  * @author Nathan Fiedler
  */
@@ -80,7 +75,7 @@ public interface PathManager {
      * @param  clazz  class for which to locate code.
      * @return  .class file object, or null if not found.
      */
-    FileObject findByteCode(ReferenceType clazz);
+    PathEntry findByteCode(ReferenceType clazz);
 
     /**
      * Scan the sourcepath and classpath to find the source file for the
@@ -90,7 +85,7 @@ public interface PathManager {
      * @param  name  name of the class to find source for.
      * @return  source file object, or null if not found.
      */
-    //FileObject findSource(String name); Nothing was calling this method.
+    //PathEntry findSource(String name); Nothing was calling this method.
 
     /**
      * Find the source file for the declaring type of the given location.
@@ -98,7 +93,7 @@ public interface PathManager {
      * @param  location  location for which to locate source.
      * @return  source file object, or null if not found.
      */
-    FileObject findSource(Location location);
+    PathEntry findSource(Location location);
 
     /**
      * Find the source file for the given class.
@@ -106,7 +101,7 @@ public interface PathManager {
      * @param  clazz  class for which to locate source.
      * @return  source file object, or null if not found.
      */
-    FileObject findSource(ReferenceType clazz);
+    PathEntry findSource(ReferenceType clazz);
 
     /**
      * Returns the classpath as it is currently known. If the debugger is

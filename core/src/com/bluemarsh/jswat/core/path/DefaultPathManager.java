@@ -33,10 +33,15 @@ import com.sun.jdi.PathSearchingVirtualMachine;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.VirtualMachine;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import org.openide.filesystems.FileObject;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * The default implementation of the PathManager interface. Stores the
@@ -67,7 +72,7 @@ public class DefaultPathManager extends AbstractPathManager {
     }
 
     @Override
-    public FileObject findByteCode(ReferenceType clazz) {
+    public PathEntry findByteCode(ReferenceType clazz) {
         String filename = clazz.name();
         filename = filename.replace('.', File.separatorChar);
         filename += ".class";
@@ -83,7 +88,7 @@ public class DefaultPathManager extends AbstractPathManager {
      * @param  fuzzy     apply a fuzzy search.
      * @return  file object, or null if not found.
      */
-    protected FileObject findFile(String filename, boolean fuzzy) { // TODO
+    protected PathEntry findFile(String filename, boolean fuzzy) { // TODO
         // ClassPath wants / no matter which platform we are on.
         filename = filename.replace('\\', '/');
 //        FileObject fo = null;
@@ -105,22 +110,22 @@ public class DefaultPathManager extends AbstractPathManager {
     }
 
     @Override
-    public FileObject findSource(Location location) {
+    public PathEntry findSource(Location location) {
         try {
             String source = location.sourceName();
             String classname = location.declaringType().name();
             String filename = Names.classnameToFilename(classname, source);
-            FileObject fo = findFile(filename, true);
-            if (fo == null) {
+            PathEntry pe = findFile(filename, true);
+            if (pe == null) {
                 // Common case failed, try another method.
                 VirtualMachine vm = location.virtualMachine();
                 if (vm.canGetSourceDebugExtension()) {
                     String path = location.sourcePath(null);
-                    fo = findFile(path, true);
+                    pe = findFile(path, true);
                 }
             }
-            if (fo != null) {
-                return fo;
+            if (pe != null) {
+                return pe;
             }
         } catch (AbsentInformationException aie) {
             // fall through...
@@ -130,7 +135,7 @@ public class DefaultPathManager extends AbstractPathManager {
     }
 
     @Override
-    public FileObject findSource(ReferenceType clazz) {
+    public PathEntry findSource(ReferenceType clazz) {
         String classname = clazz.name();
         String filename;
         try {
@@ -140,8 +145,8 @@ public class DefaultPathManager extends AbstractPathManager {
         } catch (AbsentInformationException aie) {
             filename = Names.classnameToFilename(classname);
         }
-        FileObject fo = findFile(filename, true);
-        if (fo == null) {
+        PathEntry pe = findFile(filename, true);
+        if (pe == null) {
             // Common case failed, try another method.
             VirtualMachine vm = clazz.virtualMachine();
             if (vm.canGetSourceDebugExtension()) {
@@ -150,8 +155,8 @@ public class DefaultPathManager extends AbstractPathManager {
                     Iterator iter = paths.iterator();
                     while (iter.hasNext()) {
                         String path = (String) iter.next();
-                        fo = findFile(path, true);
-                        if (fo != null) {
+                        pe = findFile(path, true);
+                        if (pe != null) {
                             break;
                         }
                     }
@@ -160,7 +165,7 @@ public class DefaultPathManager extends AbstractPathManager {
                 }
             }
         }
-        return fo;
+        return pe;
     }
 
     @Override
@@ -302,5 +307,190 @@ public class DefaultPathManager extends AbstractPathManager {
 //            }
         }
         firePropertyChange(PROP_SOURCEPATH, oldPath, sourcePath);
+    }
+
+    /**
+     * A FilePathEntry is a concrete implementation of PathEntry in
+     * which the source is backed by a <code>java.io.File</code> instance.
+     *
+     * @author  Nathan Fiedler
+     */
+    private class FilePathEntry implements PathEntry {
+        /** The file that contains the source object. */
+        private final File fileSource;
+
+        /**
+         * Constructs a FilePathEntry instance for the given File.
+         *
+         * @param  src  file path entry.
+         */
+        public FilePathEntry(File src) {
+            if (src == null) {
+                throw new NullPointerException("src must be non-null");
+            }
+            fileSource = src;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof FilePathEntry) {
+                FilePathEntry ofs = (FilePathEntry) o;
+                return ofs.fileSource.equals(fileSource);
+            }
+            return false;
+        }
+
+//        @Override
+//        public boolean exists() {
+//            return fileSource.exists();
+//        }
+
+        @Override
+        public String getDisplayName() {
+            return fileSource.getName();
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return new FileInputStream(fileSource);
+        }
+
+        @Override
+        public String getName() {
+            return fileSource.getName();
+        }
+
+        @Override
+        public String getPath() {
+            try {
+                return fileSource.getCanonicalPath();
+            } catch (IOException ioe) {
+                // In this case, the path would be useless anyway.
+                return null;
+            }
+        }
+
+        @Override
+        public URL getURL() { // TODO
+            return null;
+        }
+
+        @Override
+        public int hashCode() {
+            // Nifty hash function generated by NetBeans.
+            int hash = 5;
+            hash = 79 * hash + (this.fileSource != null ? this.fileSource.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public boolean isSame(Object o) {
+            if (o instanceof File) {
+                File f = (File) o;
+                return f.equals(fileSource);
+            }
+            return false;
+        }
+    }
+
+    /**
+     * A PathEntry based on an entry in a zip file.
+     *
+     * @author  Nathan Fiedler
+     */
+    private class ZipPathEntry implements PathEntry {
+        /** Zip file. */
+        private ZipFile zipFile;
+        /** Entry in zip file. */
+        private ZipEntry zipEntry;
+        /** The last part of the zip entry name. */
+        private final String entryName;
+        /** Used for getting just the name of the zip entry. */
+        private final File entryAsFile;
+
+        /**
+         * Constructs a ZipPathEntry from the given file and entry.
+         *
+         * @param  file   zip file.
+         * @param  entry  zip file entry.
+         */
+        public ZipPathEntry(ZipFile file, ZipEntry entry) {
+            if (file == null || entry == null) {
+                throw new IllegalArgumentException("arguments must be non-null");
+            }
+            zipFile = file;
+            zipEntry = entry;
+            // Convert the name to the local file system form, stripping
+            // away everything but the name of the file itself (i.e.
+            // "path/to/entry.file" becomes "entry.file").
+            entryName = new File(zipEntry.getName()).getName();
+            // Use both zip file name and entry name to make a
+            // unique identifier for the hashCode() method.
+            entryAsFile = new File(file.getName(), entry.getName());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof ZipPathEntry) {
+                ZipPathEntry zpe = (ZipPathEntry) o;
+                return zpe.entryAsFile.equals(entryAsFile);
+            }
+            return false;
+        }
+
+//        @Override
+//        public boolean exists() {
+//            return true;
+//        }
+
+        @Override
+        public String getDisplayName() {
+            return entryName;
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            try {
+                return zipFile.getInputStream(zipEntry);
+            } catch (IllegalStateException ise) {
+                // Zip file was apparently closed.
+                // Try to reopen the zip file.
+                zipFile = new ZipFile(zipFile.getName());
+                zipEntry = zipFile.getEntry(zipEntry.getName());
+                return zipFile.getInputStream(zipEntry);
+            }
+        }
+
+        @Override
+        public String getName() {
+            return entryName;
+        }
+
+        @Override
+        public String getPath() {
+            return null;
+        }
+
+        @Override
+        public URL getURL() { // TODO
+            return null;
+        }
+
+        @Override
+        public int hashCode() {
+            // Nifty hash function generated by NetBeans.
+            int hash = 3;
+            hash = 41 * hash + (this.entryAsFile != null ? this.entryAsFile.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public boolean isSame(Object o) {
+            if (o instanceof ZipEntry) {
+                ZipEntry ze = (ZipEntry) o;
+                return ze.equals(zipEntry);
+            }
+            return false;
+        }
     }
 }
