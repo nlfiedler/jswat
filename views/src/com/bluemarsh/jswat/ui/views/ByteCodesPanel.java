@@ -23,11 +23,10 @@
 
 package com.bluemarsh.jswat.ui.views;
 
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.sun.jdi.Location;
 import org.apache.bcel.classfile.Code;
 import java.util.Arrays;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  * Displays the byte codes of the current method.
@@ -75,7 +74,7 @@ public class ByteCodesPanel extends javax.swing.JPanel {
      * @param  code      the byte codes to be displayed.
      * @param  location  the Location being displayed.
      */
-    public void showLocation(FileObject file, Code code, Location location) {
+    public void showLocation(PathEntry file, Code code, Location location) {
         // Show where these byte codes came from.
 //            FileObject jar = FileUtil.getArchiveFile(file);
 //            StringBuilder path = new StringBuilder();
@@ -86,7 +85,7 @@ public class ByteCodesPanel extends javax.swing.JPanel {
 //            }
 //            path.append(file.getNameExt());
 //            fileLabel.setText(path.toString());
-        String name = FileUtil.getFileDisplayName(file);
+        String name = file.getDisplayName();
         fileTextField.setText(name);
 
         // Show the method signature since that is what the byte code

@@ -23,6 +23,7 @@
 
 package com.bluemarsh.jswat.ui.editor;
 
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -76,8 +77,8 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
             if (loc != null) {
                 // There is a location, see if we can get the source file.
                 PathManager pm = PathProvider.getPathManager(session);
-                FileObject fobj = pm.findSource(loc);
-                if (fobj != null && fo.equals(fobj)) {
+                PathEntry pe = pm.findSource(loc);
+                if (pe != null && pe.isSame(fo)) {
                     // It is indeed this file, show the annotation.
                     SteppingSupport.getDefault().showProgramCounter(session, true);
                 }

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -25,6 +25,7 @@ package com.bluemarsh.jswat.nodes.stack;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
 import com.bluemarsh.jswat.core.context.DebuggingContext;
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.session.Session;
@@ -50,8 +51,6 @@ import javax.swing.Action;
 import org.openide.DialogDisplayer;
 import org.openide.ErrorManager;
 import org.openide.NotifyDescriptor;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.nodes.Sheet.Set;
@@ -122,9 +121,11 @@ public class DefaultStackFrameNode extends StackFrameNode
         }
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
     }
 
@@ -153,6 +154,7 @@ public class DefaultStackFrameNode extends StackFrameNode
         return sheet;
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
     }
 
@@ -189,10 +191,12 @@ public class DefaultStackFrameNode extends StackFrameNode
         return ImageUtilities.loadImage(url);
     }
 
+    @Override
     public int getFrameIndex() {
         return frameIndex;
     }
 
+    @Override
     protected Action[] getNodeActions() {
         return new Action[] {
             SystemAction.get(SetCurrentAction.class),
@@ -207,13 +211,16 @@ public class DefaultStackFrameNode extends StackFrameNode
         return SystemAction.get(SetCurrentAction.class);
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
         getLookupContent().remove(this);
     }
 
+    @Override
     public void showSource() {
         SessionManager sm = SessionProvider.getSessionManager();
         Session session = sm.getCurrent();
@@ -223,9 +230,9 @@ public class DefaultStackFrameNode extends StackFrameNode
             StackFrame frame = tr.frame(frameIndex);
             Location location = frame.location();
             PathManager pm = PathProvider.getPathManager(session);
-            FileObject fobj = pm.findSource(location);
-            if (fobj != null) {
-                String url = fobj.getURL().toString();
+            PathEntry pe = pm.findSource(location);
+            if (pe != null) {
+                String url = pe.getURL().toString();
                 EditorSupport es = EditorSupport.getDefault();
                 int line = location.lineNumber();
                 es.showSource(url, line);
@@ -237,8 +244,6 @@ public class DefaultStackFrameNode extends StackFrameNode
                         msg, NotifyDescriptor.ERROR_MESSAGE);
                 DialogDisplayer.getDefault().notify(desc);
             }
-        } catch (FileStateInvalidException fsie) {
-            ErrorManager.getDefault().notify(fsie);
         } catch (IncompatibleThreadStateException itse) {
             ErrorManager.getDefault().notify(itse);
         } catch (IndexOutOfBoundsException ioobe) {
@@ -246,6 +251,7 @@ public class DefaultStackFrameNode extends StackFrameNode
         }
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

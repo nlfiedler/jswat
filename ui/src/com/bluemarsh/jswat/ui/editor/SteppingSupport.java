@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -25,15 +25,13 @@ package com.bluemarsh.jswat.ui.editor;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
 import com.bluemarsh.jswat.core.context.DebuggingContext;
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.session.Session;
 import com.sun.jdi.Location;
 import java.util.HashMap;
 import java.util.Map;
-import org.openide.ErrorManager;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 
 /**
  * Controls the editor annotations for the program counter for each Session.
@@ -94,18 +92,10 @@ public class SteppingSupport {
         if (loc != null) {
             // There is a location, see if we can get the source file.
             PathManager pm = PathProvider.getPathManager(session);
-            FileObject fobj = pm.findSource(loc);
-            if (fobj != null) {
+            PathEntry pe = pm.findSource(loc);
+            if (pe != null) {
                 // There is a source file, get the URL.
-                String url = null;
-                try {
-                    url = fobj.getURL().toString();
-                } catch (FileStateInvalidException fsie) {
-                    // Highly unlikely, but log it anyway.
-                    ErrorManager.getDefault().log(
-                            ErrorManager.WARNING, fsie.toString());
-                    return;
-                }
+                String url = pe.getURL().toString();
                 EditorSupport es = EditorSupport.getDefault();
                 // Remove the existing program counter annotation.
                 DebugAnnotation ann = pcAnnotations.remove(session);

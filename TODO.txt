@@ -2,25 +2,17 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
-- Determine what needs to be written from scratch
-  - An abstraction layer that provides the following services:
-    - Open a source file
-
 - Changes to core
-  - How to deal with FileObject usage in PathManager?
-  - Implement a new DefaultPathManager based on 2.x version
-  - Move PathConverter to nbcore, to be used exclusively by NetBeansPathManager
+  - Change DefaultPathManager to work like 2.x version
   - Turn core into a standard Java project
   - Add to library dependencies
     - org-openide-util.jar
-    - org-openide-filesystems.jar
     - com-bluemarsh-jswat-parser.java
 
 - Changes to cmd
   - Turn cmd into a standard Java project
   - Add to library dependencies
     - org-openide-util.jar
-    - org-openide-filesystems.jar
   - Add project dependency (?)
     - com-bluemarsh-jswat-core.jar
 

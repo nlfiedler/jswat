@@ -25,6 +25,7 @@ package com.bluemarsh.jswat.nbcore.path;
 
 import com.bluemarsh.jswat.core.connect.JvmConnection;
 import com.bluemarsh.jswat.core.path.AbstractPathManager;
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.util.Names;
@@ -35,6 +36,9 @@ import com.sun.jdi.PathSearchingVirtualMachine;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.VirtualMachine;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,6 +51,7 @@ import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
@@ -83,7 +88,7 @@ public class NetBeansPathManager extends AbstractPathManager {
     }
 
     @Override
-    public FileObject findByteCode(ReferenceType clazz) {
+    public PathEntry findByteCode(ReferenceType clazz) {
         String filename = clazz.name();
         filename = filename.replace('.', File.separatorChar);
         filename += ".class";
@@ -99,7 +104,7 @@ public class NetBeansPathManager extends AbstractPathManager {
      * @param  fuzzy     apply a fuzzy search.
      * @return  file object, or null if not found.
      */
-    protected FileObject findFile(String filename, boolean fuzzy) {
+    protected PathEntry findFile(String filename, boolean fuzzy) {
         // ClassPath wants / no matter which platform we are on.
         filename = filename.replace('\\', '/');
         FileObject fo = null;
@@ -113,10 +118,10 @@ public class NetBeansPathManager extends AbstractPathManager {
             int last = filename.lastIndexOf('/');
             if (last > 0) {
                 filename = filename.substring(last + 1);
-                fo = findFile(filename, false);
+                return findFile(filename, false);
             }
         }
-        return fo;
+        return new FileObjectPathEntry(fo);
     }
 
 // Turns out nothing in JSwat was calling this method, but keeping in
@@ -149,22 +154,22 @@ public class NetBeansPathManager extends AbstractPathManager {
 //    }
 
     @Override
-    public FileObject findSource(Location location) {
+    public PathEntry findSource(Location location) {
         try {
             String source = location.sourceName();
             String classname = location.declaringType().name();
             String filename = Names.classnameToFilename(classname, source);
-            FileObject fo = findFile(filename, true);
-            if (fo == null) {
+            PathEntry pe = findFile(filename, true);
+            if (pe == null) {
                 // Common case failed, try another method.
                 VirtualMachine vm = location.virtualMachine();
                 if (vm.canGetSourceDebugExtension()) {
                     String path = location.sourcePath(null);
-                    fo = findFile(path, true);
+                    pe = findFile(path, true);
                 }
             }
-            if (fo != null) {
-                return fo;
+            if (pe != null) {
+                return pe;
             }
         } catch (AbsentInformationException aie) {
             // fall through...
@@ -174,7 +179,7 @@ public class NetBeansPathManager extends AbstractPathManager {
     }
 
     @Override
-    public FileObject findSource(ReferenceType clazz) {
+    public PathEntry findSource(ReferenceType clazz) {
         String classname = clazz.name();
         String filename;
         try {
@@ -184,8 +189,8 @@ public class NetBeansPathManager extends AbstractPathManager {
         } catch (AbsentInformationException aie) {
             filename = Names.classnameToFilename(classname);
         }
-        FileObject fo = findFile(filename, true);
-        if (fo == null) {
+        PathEntry pe = findFile(filename, true);
+        if (pe == null) {
             // Common case failed, try another method.
             VirtualMachine vm = clazz.virtualMachine();
             if (vm.canGetSourceDebugExtension()) {
@@ -194,8 +199,8 @@ public class NetBeansPathManager extends AbstractPathManager {
                     Iterator iter = paths.iterator();
                     while (iter.hasNext()) {
                         String path = (String) iter.next();
-                        fo = findFile(path, true);
-                        if (fo != null) {
+                        pe = findFile(path, true);
+                        if (pe != null) {
                             break;
                         }
                     }
@@ -204,7 +209,7 @@ public class NetBeansPathManager extends AbstractPathManager {
                 }
             }
         }
-        return fo;
+        return pe;
     }
 
     @Override
@@ -397,5 +402,80 @@ public class NetBeansPathManager extends AbstractPathManager {
         }
         registerSourcePath();
         firePropertyChange(PROP_SOURCEPATH, oldPath, sourcePath);
+    }
+
+    /**
+     * A PathEntry that is based on FileObject from NetBeans.
+     *
+     * @author  Nathan Fiedler
+     */
+    private class FileObjectPathEntry implements PathEntry {
+        /** The FileObject representing this path entry. */
+        private FileObject fileObject;
+
+        /**
+         * Constructs a new instance of FileObjectPathEntry.
+         *
+         * @param  fobj  the file object.
+         */
+        public FileObjectPathEntry(FileObject fobj) {
+            fileObject = fobj;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof FileObjectPathEntry) {
+                FileObjectPathEntry fope = (FileObjectPathEntry) o;
+                return fope.fileObject.equals(fileObject);
+            }
+            return false;
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return fileObject.getInputStream();
+        }
+
+        @Override
+        public String getDisplayName() {
+            return FileUtil.getFileDisplayName(fileObject);
+        }
+
+        @Override
+        public String getName() {
+            return fileObject.getName();
+        }
+
+        @Override
+        public String getPath() {
+            return fileObject.getPath();
+        }
+
+        @Override
+        public URL getURL() {
+            try {
+                return fileObject.getURL();
+            } catch (FileStateInvalidException fsie) {
+                ErrorManager.getDefault().notify(fsie);
+            }
+            return null;
+        }
+
+        @Override
+        public int hashCode() {
+            // Nifty hash function generated by NetBeans.
+            int hash = 5;
+            hash = 29 * hash + (this.fileObject != null ? this.fileObject.hashCode() : 0);
+            return hash;
+        }
+
+        @Override
+        public boolean isSame(Object o) {
+            if (o instanceof FileObject) {
+                FileObject fo = (FileObject) o;
+                return fo.equals(fileObject);
+            }
+            return false;
+        }
     }
 }

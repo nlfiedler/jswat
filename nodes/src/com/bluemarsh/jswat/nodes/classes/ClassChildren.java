@@ -23,6 +23,7 @@
 
 package com.bluemarsh.jswat.nodes.classes;
 
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.session.Session;
@@ -41,10 +42,7 @@ import java.util.List;
 import java.util.ListIterator;
 import javax.swing.Action;
 import org.openide.DialogDisplayer;
-import org.openide.ErrorManager;
 import org.openide.NotifyDescriptor;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
@@ -261,15 +259,11 @@ public class ClassChildren extends Children.SortedArray {
             Session session = SessionProvider.getCurrentSession();
             PathManager pm = PathProvider.getPathManager(session);
             ReferenceType type = method.declaringType();
-            FileObject src = pm.findSource(type);
+            PathEntry src = pm.findSource(type);
             if (src != null) {
-                try {
-                    String url = src.getURL().toString();
-                    int line = method.location().lineNumber();
-                    EditorSupport.getDefault().showSource(url, line);
-                } catch (FileStateInvalidException fsie) {
-                    ErrorManager.getDefault().notify(fsie);
-                }
+                String url = src.getURL().toString();
+                int line = method.location().lineNumber();
+                EditorSupport.getDefault().showSource(url, line);
             } else {
                 String msg = NbBundle.getMessage(DefaultMethodNode.class,
                         "ERR_SourceMissing", type.name());

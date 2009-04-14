@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,6 +23,7 @@
 
 package com.bluemarsh.jswat.nodes.classes;
 
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.session.Session;
@@ -36,10 +37,7 @@ import com.sun.jdi.ReferenceType;
 import java.awt.Image;
 import javax.swing.Action;
 import org.openide.DialogDisplayer;
-import org.openide.ErrorManager;
 import org.openide.NotifyDescriptor;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
@@ -103,6 +101,7 @@ public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
         return shortName;
     }
 
+    @Override
     public ReferenceType getReferenceType() {
         return clazz;
     }
@@ -123,6 +122,7 @@ public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
         return shortName;
     }
 
+    @Override
     protected Action[] getNodeActions() {
         return new Action[] {
             SystemAction.get(ShowSourceAction.class),
@@ -131,17 +131,14 @@ public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
         };
     }
 
+    @Override
     public void showSource() {
         Session session = SessionProvider.getCurrentSession();
         PathManager pm = PathProvider.getPathManager(session);
-        FileObject src = pm.findSource(clazz);
+        PathEntry src = pm.findSource(clazz);
         if (src != null) {
-            try {
-                String url = src.getURL().toString();
-                EditorSupport.getDefault().showSource(url, 1);
-            } catch (FileStateInvalidException fsie) {
-                ErrorManager.getDefault().notify(fsie);
-            }
+            String url = src.getURL().toString();
+            EditorSupport.getDefault().showSource(url, 1);
         } else {
             String msg = NbBundle.getMessage(ClassNode.class,
                     "ERR_SourceMissing", clazz.name());

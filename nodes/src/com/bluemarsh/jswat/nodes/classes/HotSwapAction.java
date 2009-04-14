@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,6 +23,7 @@
 
 package com.bluemarsh.jswat.nodes.classes;
 
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.session.Session;
@@ -33,7 +34,6 @@ import com.sun.jdi.VirtualMachine;
 import java.io.IOException;
 import java.io.InputStream;
 import org.openide.awt.StatusDisplayer;
-import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
@@ -48,10 +48,12 @@ public class HotSwapAction extends NodeAction {
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     protected boolean enable(Node[] activatedNodes) {
         if (activatedNodes != null &&
                 activatedNodes.length == 1 &&
@@ -61,15 +63,18 @@ public class HotSwapAction extends NodeAction {
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(HotSwapAction.class,
                 "LBL_HotSwapAction_Name");
     }
 
+    @Override
     protected void performAction(Node[] activatedNodes) {
         if (activatedNodes != null &&
                 activatedNodes.length == 1 &&
@@ -81,7 +86,7 @@ public class HotSwapAction extends NodeAction {
             StatusDisplayer sd = StatusDisplayer.getDefault();
 
             // Try to find the .class file.
-            FileObject fo = pm.findByteCode(rt);
+            PathEntry fo = pm.findByteCode(rt);
             if (fo == null) {
                 sd.setStatusText(NbBundle.getMessage(HotSwapAction.class,
                         "ERR_HotSwapAction_ClassFileNotFound"));

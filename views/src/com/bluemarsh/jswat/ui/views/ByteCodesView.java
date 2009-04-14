@@ -27,6 +27,7 @@ import com.bluemarsh.jswat.core.context.ContextEvent;
 import com.bluemarsh.jswat.core.context.ContextListener;
 import com.bluemarsh.jswat.core.context.ContextProvider;
 import com.bluemarsh.jswat.core.context.DebuggingContext;
+import com.bluemarsh.jswat.core.path.PathEntry;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.session.Session;
@@ -68,7 +69,6 @@ import org.apache.bcel.util.ByteSequence;
 import org.netbeans.modules.editor.NbEditorDocument;
 import org.netbeans.modules.editor.plain.PlainKit;
 import org.openide.ErrorManager;
-import org.openide.filesystems.FileObject;
 import org.openide.text.Annotation;
 import org.openide.text.CloneableEditor;
 import org.openide.text.CloneableEditorSupport;
@@ -397,15 +397,15 @@ public class ByteCodesView extends CloneableEditor
             ByteCodesPanel bytecodesPanel = getByteCodesPanel();
             ReferenceType clazz = location.declaringType();
             PathManager pm = PathProvider.getPathManager(session);
-            FileObject fobj = pm.findByteCode(clazz);
-            if (fobj == null) {
+            PathEntry pe = pm.findByteCode(clazz);
+            if (pe == null) {
                 bytecodesPanel.displayError(NbBundle.getMessage(
                         ByteCodesView.class, "ERR_ByteCodesView_MissingFile",
                         clazz.name()));
                 return;
             }
             try {
-                InputStream classData = fobj.getInputStream();
+                InputStream classData = pe.getInputStream();
                 // Use the BCEL conveniently provided by the JDK.
                 ClassParser parser = new ClassParser(classData, clazz.name());
                 JavaClass jc = parser.parse();
@@ -417,7 +417,7 @@ public class ByteCodesView extends CloneableEditor
                     if (method.getName().equals(name) &&
                             method.getSignature().equals(sign)) {
                         Code code = method.getCode();
-                        bytecodesPanel.showLocation(fobj, code, location);
+                        bytecodesPanel.showLocation(pe, code, location);
                         showByteCodes(jc.getConstantPool(), code, location);
                         break;
                     }
