@@ -1,6 +1,6 @@
 JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
+$Id$
 
 - Turn core into a standard Java project
   - Add to library dependencies
