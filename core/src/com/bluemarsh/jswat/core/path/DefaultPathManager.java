@@ -36,8 +36,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -88,24 +90,72 @@ public class DefaultPathManager extends AbstractPathManager {
      * @param  fuzzy     apply a fuzzy search.
      * @return  file object, or null if not found.
      */
-    protected PathEntry findFile(String filename, boolean fuzzy) { // TODO
-        // ClassPath wants / no matter which platform we are on.
-        filename = filename.replace('\\', '/');
-//        FileObject fo = null;
-//        if (sourcePathLookup != null) {
-//            fo = sourcePathLookup.findResource(filename);
-//        }
-//        if (fo == null && classPathLookup != null) {
-//            fo = classPathLookup.findResource(filename);
-//        }
-//        if (fo == null && fuzzy) {
-//            int last = filename.lastIndexOf('/');
-//            if (last > 0) {
-//                filename = filename.substring(last + 1);
-//                fo = findFile(filename, false);
-//            }
-//        }
-//        return fo;
+    protected PathEntry findFile(String filename, boolean fuzzy) {
+        PathEntry pe = null;
+        if (sourcePath != null) {
+            for (String path : sourcePath) {
+                pe = findResource(path, filename);
+                if (pe != null) {
+                    break;
+                }
+            }
+        }
+        if (pe == null && classPath != null) {
+            for (String path : classPath) {
+                pe = findResource(path, filename);
+                if (pe != null) {
+                    break;
+                }
+            }
+        }
+        if (pe == null && fuzzy) {
+            int last = filename.lastIndexOf('/');
+            if (last > 0) {
+                filename = filename.substring(last + 1);
+                pe = findFile(filename, false);
+            }
+        }
+        return pe;
+    }
+
+    /**
+     * Given an entry in a collection of paths (e.g. class path or
+     * source path) and a file path and name, check if the specified
+     * file exists within that path.
+     *
+     * @param  path  element of class or source path.
+     * @param  file  the path and file name to find.
+     * @return  new path entry if found, null otherwise.
+     */
+    private PathEntry findResource(String path, String file) {
+        File f = new File(path);
+        if (f.isFile()) {
+            // Chances are this is some form of archive, let's check.
+            ZipFile zipFile = null;
+            try {
+                zipFile = new ZipFile(path);
+            } catch (IOException ioe) {
+                // Well maybe it wasn't an archive after all.
+                return null;
+            }
+            Enumeration entries = zipFile.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+                String entryName = zipEntry.getName();
+                // Convert the name to the local file system form so we
+                // can compare it to the filename argument.
+                entryName = new File(entryName).getPath();
+                if (entryName.equals(file)) {
+                    return new ZipPathEntry(zipFile, zipEntry);
+                }
+            }
+        } else {
+            // Directory path entry.
+            f = new File(path, file);
+            if (f.exists()) {
+                return new FilePathEntry(f);
+            }
+        }
         return null;
     }
 
@@ -236,75 +286,23 @@ public class DefaultPathManager extends AbstractPathManager {
     }
 
     @Override
-    public void setClassPath(List<String> roots) { // TODO
+    public void setClassPath(List<String> roots) {
         List<String> oldPath = classPath;
         if (roots == null || roots.size() == 0) {
             classPath = null;
         } else {
             classPath = Collections.unmodifiableList(roots);
-//            // Convert the list of Strings to a list of FileObjects, if possible.
-//            List<FileObject> foRoots = new LinkedList<FileObject>();
-//            for (String path : roots) {
-//                File file = new File(path);
-//                if (file.exists()) {
-//                    file = FileUtil.normalizeFile(file);
-//                    FileObject fo = FileUtil.toFileObject(file);
-//                    // Check if the files are actually archives, and get the
-//                    // root of the archive as a file object; the classpath
-//                    // support does not like receiving the archive file as-is.
-//                    if (FileUtil.isArchiveFile(fo)) {
-//                        fo = FileUtil.getArchiveRoot(fo);
-//                    }
-//                    foRoots.add(fo);
-//                }
-//            }
-//            if (foRoots.size() > 0) {
-//                // Create a lookup of the available paths.
-//                FileObject[] arr = new FileObject[foRoots.size()];
-//                arr = foRoots.toArray(arr);
-//                try {
-//                    classPathLookup = ClassPathSupport.createClassPath(arr);
-//                } catch (IllegalArgumentException iae) {
-//                    ErrorManager em = ErrorManager.getDefault();
-//                    em.annotate(iae, NbBundle.getMessage(
-//                            DefaultPathManager.class,
-//                            "ERR_PathManager_BadPathEntry", iae));
-//                    em.notify(iae);
-//                }
-//            }
         }
         firePropertyChange(PROP_CLASSPATH, oldPath, classPath);
     }
 
     @Override
-    public void setSourcePath(List<String> roots) { // TODO
+    public void setSourcePath(List<String> roots) {
         List<String> oldPath = sourcePath;
         if (roots == null || roots.size() == 0) {
             sourcePath = null;
         } else {
-//            // Check if the files are actually archives, and get the root
-//            // of the archive as a file object; the classpath support does
-//            // not like receiving the archive file itself.
-//            List<FileObject> nrts = new ArrayList<FileObject>();
-//            for (FileObject root : roots) {
-//                if (FileUtil.isArchiveFile(root)) {
-//                    root = FileUtil.getArchiveRoot(root);
-//                }
-//                nrts.add(root);
-//            }
-            sourcePath = Collections.unmodifiableList(roots); // XXX: was nrts
-//            FileObject[] arr = new FileObject[nrts.size()];
-//            arr = nrts.toArray(arr);
-//            try {
-//                sourcePathLookup = ClassPathSupport.createClassPath(arr);
-//            } catch (IllegalArgumentException iae) {
-//                sourcePathLookup = null;
-//                ErrorManager em = ErrorManager.getDefault();
-//                em.annotate(iae, NbBundle.getMessage(
-//                        DefaultPathManager.class,
-//                        "ERR_PathManager_BadPathEntry", iae));
-//                em.notify(iae);
-//            }
+            sourcePath = Collections.unmodifiableList(roots);
         }
         firePropertyChange(PROP_SOURCEPATH, oldPath, sourcePath);
     }
@@ -371,8 +369,13 @@ public class DefaultPathManager extends AbstractPathManager {
         }
 
         @Override
-        public URL getURL() { // TODO
-            return null;
+        public URL getURL() {
+            try {
+                return fileSource.toURI().toURL();
+            } catch (MalformedURLException ex) {
+                // This is highly unlikely.
+                return null;
+            }
         }
 
         @Override
@@ -472,8 +475,13 @@ public class DefaultPathManager extends AbstractPathManager {
         }
 
         @Override
-        public URL getURL() { // TODO
-            return null;
+        public URL getURL() {
+            try {
+                return entryAsFile.toURI().toURL();
+            } catch (MalformedURLException ex) {
+                // This is highly unlikely.
+                return null;
+            }
         }
 
         @Override

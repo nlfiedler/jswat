@@ -323,7 +323,6 @@ public class NetBeansPathManager extends AbstractPathManager {
 
     @Override
     public void setClassPath(List<String> roots) {
-        // TODO: canonicalize the roots and prune duplicates
         List<String> oldPath = classPath;
         // Wipe out the lookup and rebuild if possible.
         classPathLookup = null;
@@ -368,7 +367,6 @@ public class NetBeansPathManager extends AbstractPathManager {
 
     @Override
     public void setSourcePath(List<String> roots) {
-        // TODO: canonicalize the roots and prune duplicates
         List<String> oldPath = sourcePath;
         if (roots == null || roots.size() == 0) {
             sourcePath = null;

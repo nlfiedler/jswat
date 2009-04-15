@@ -2,15 +2,12 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 
-- Changes to core
-  - Change DefaultPathManager to work like 2.x version
-  - Turn core into a standard Java project
+- Turn core into a standard Java project
   - Add to library dependencies
     - org-openide-util.jar
     - com-bluemarsh-jswat-parser.java
 
-- Changes to cmd
-  - Turn cmd into a standard Java project
+- Turn cmd into a standard Java project
   - Add to library dependencies
     - org-openide-util.jar
   - Add project dependency (?)
@@ -25,13 +22,13 @@ $Id: TODO.txt 2923 2007-03-18 08:01:15Z nfiedler $
 - Console mode
   - Bootstrap everything
     - Initialize SessionManager, BreakpointManager, CommandParser, RuntimeManager, etc.
+  - Print a helpful message about how to get started
   - Copy ConsoleAdapter from 2.x version
+    - Change to use System.console() to get a Console instance
   - Need a way to read errors sent to ErrorManager
   - Need an event and session listener to display state changes
   - Need a reader/writer for the debuggee output/input streams
-  - Is there a signal handler for catching Ctrl-c and SIGTERM?
-
-- Add unit tests for PathManager once the NetBeans dependency is gone
+  - Use Runtime.addShutdownHook() to exit cleanly (both normal and abnormal)
 
 - Documentation updates
   - docs/dev/platform.html
