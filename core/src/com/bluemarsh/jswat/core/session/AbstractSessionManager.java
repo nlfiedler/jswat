@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -44,6 +44,7 @@ public abstract class AbstractSessionManager implements SessionManager {
     protected AbstractSessionManager() {
     }
 
+    @Override
     public void addSessionManagerListener(SessionManagerListener l) {
         if (l != null) {
             synchronized (this) {
@@ -99,6 +100,7 @@ public abstract class AbstractSessionManager implements SessionManager {
         }
     }
 
+    @Override
     public void removeSessionManagerListener(SessionManagerListener l) {
         if (l != null) {
             synchronized (this) {

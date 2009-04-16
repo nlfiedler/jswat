@@ -23,8 +23,6 @@
 
 package com.bluemarsh.jswat.core.session;
 
-import com.bluemarsh.jswat.core.session.Session;
-
 /**
  * Class SessionEventMulticaster implements a thread-safe list of
  * session listeners. It is technically a tree but it grows only
@@ -125,67 +123,37 @@ public class SessionEventMulticaster implements SessionListener {
         return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
     }
 
-    /**
-     * Handles the given event by invoking the appropriate method on
-     * the chained listeners.
-     *
-     * @param  e  the session event.
-     */
+    @Override
     public void connected(SessionEvent e) {
         listener1.connected(e);
         listener2.connected(e);
     }
 
-    /**
-     * Handles the given event by invoking the appropriate method on
-     * the chained listeners.
-     *
-     * @param  e  the session event.
-     */
+    @Override
     public void closing(SessionEvent e) {
         listener1.closing(e);
         listener2.closing(e);
     }
 
-    /**
-     * Handles the given event by invoking the appropriate method on
-     * the chained listeners.
-     *
-     * @param  e  the session event.
-     */
+    @Override
     public void disconnected(SessionEvent e) {
         listener1.disconnected(e);
         listener2.disconnected(e);
     }
 
-    /**
-     * Handles the given action by invoking the appropriate method on
-     * the chained listeners.
-     *
-     * @param  s  the session.
-     */
+    @Override
     public void opened(Session s) {
         listener1.opened(s);
         listener2.opened(s);
     }
 
-    /**
-     * Handles the given event by invoking the appropriate method on
-     * the chained listeners.
-     *
-     * @param  e  the session event.
-     */
+    @Override
     public void resuming(SessionEvent e) {
         listener1.resuming(e);
         listener2.resuming(e);
     }
 
-    /**
-     * Handles the given event by invoking the appropriate method on
-     * the chained listeners.
-     *
-     * @param  e  the session event.
-     */
+    @Override
     public void suspended(SessionEvent e) {
         listener1.suspended(e);
         listener2.suspended(e);

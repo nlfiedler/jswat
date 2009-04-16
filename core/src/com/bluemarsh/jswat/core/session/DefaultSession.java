@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2007. All Rights Reserved.
+ * are Copyright (C) 1999-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -33,7 +33,6 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.VMDisconnectedException;
 import com.sun.jdi.event.ClassPrepareEvent;
-import com.sun.jdi.event.Event;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.LocatableEvent;
 import com.sun.jdi.event.ThreadDeathEvent;
@@ -62,6 +61,7 @@ public class DefaultSession extends AbstractSession {
         vmStartedLock = new Semaphore(0);
     }
 
+    @Override
     public void close() {
         if (isConnected()) {
             throw new IllegalStateException("session not disconnected");
@@ -69,6 +69,7 @@ public class DefaultSession extends AbstractSession {
         fireEvent(new SessionEvent(this, SessionEvent.Type.CLOSING));
     }
 
+    @Override
     public void connect(JvmConnection connection) {
         if (isConnected()) {
             throw new IllegalStateException("session not disconnected");
@@ -86,12 +87,14 @@ public class DefaultSession extends AbstractSession {
         // and before we attempt to acquire the semaphore.
         DispatcherProvider.getDispatcher(this).start(
                 connection.getVM().eventQueue(), new DispatcherListener() {
+            @Override
             public boolean eventOccurred(Event event) {
                 // Let the connect thread know that the VM has started.
                 vmStartedLock.release();
                 return false;
             }
         }, new Runnable() {
+            @Override
             public void run() {
                 // Perform the post-disconnect cleanup (ignore the
                 // connected state, since chances are we lost the
@@ -99,6 +102,7 @@ public class DefaultSession extends AbstractSession {
                 disconnected();
             }
         }, new DispatcherListener() {
+            @Override
             public boolean eventOccurred(Event event) {
                 if (!isConnected()) {
                     // Silently ignore events between the time the VM
@@ -144,6 +148,7 @@ public class DefaultSession extends AbstractSession {
         //
     }
 
+    @Override
     public void disconnect(boolean forceExit) {
         if (!isConnected()) {
             throw new IllegalStateException("session not connected");
@@ -174,10 +179,12 @@ public class DefaultSession extends AbstractSession {
         fireEvent(new SessionEvent(this, SessionEvent.Type.DISCONNECTED));
     }
 
+    @Override
     public JvmConnection getConnection() {
         return vmConnection;
     }
 
+    @Override
     public boolean isConnected() {
         if (vmConnection != null) {
             return vmConnection.isConnected();
@@ -185,6 +192,7 @@ public class DefaultSession extends AbstractSession {
         return false;
     }
 
+    @Override
     public boolean isSuspended() {
         if (!isConnected()) {
             throw new IllegalStateException("session not connected");
@@ -202,6 +210,7 @@ public class DefaultSession extends AbstractSession {
         return false;
     }
 
+    @Override
     public void resumeVM() {
         if (!isConnected()) {
             throw new IllegalStateException("session not connected");
@@ -219,6 +228,7 @@ public class DefaultSession extends AbstractSession {
         vmConnection.getVM().resume();
     }
 
+    @Override
     public void suspendVM() {
         if (!isConnected()) {
             throw new IllegalStateException("session not connected");

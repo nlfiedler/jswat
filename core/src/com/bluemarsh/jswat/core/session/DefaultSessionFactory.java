@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -30,12 +30,7 @@ package com.bluemarsh.jswat.core.session;
  */
 public class DefaultSessionFactory implements SessionFactory {
 
-    /**
-     * Create a new Session whose identifier is the one given.
-     *
-     * @param  id  unique identifier to assign to the new Session.
-     * @return  newly created Session.
-     */
+    @Override
     public Session createSession(String id) {
         Session session = new DefaultSession();
         session.setIdentifier(id);

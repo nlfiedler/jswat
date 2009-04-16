@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2005. All Rights Reserved.
+ * are Copyright (C) 2003-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -55,10 +55,12 @@ public abstract class AbstractSession implements Session {
         propSupport = new PropertyChangeSupport(this);
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propSupport.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void addSessionListener(SessionListener listener) {
         if (listener == null) {
             return;
@@ -73,14 +75,13 @@ public abstract class AbstractSession implements Session {
         }
     }
 
-    /**
-     * Indicates whether some other object is "equal to" this one.
-     *
-     * @param  o  the reference object with which to compare.
-     */
+    @Override
     public boolean equals(Object o) {
-        Session s = (Session) o;
-        return s.getIdentifier().equals(getIdentifier());
+        if (o instanceof Session) {
+            Session s = (Session) o;
+            return s.getIdentifier().equals(getIdentifier());
+        }
+        return false;
     }
 
     /**
@@ -98,6 +99,7 @@ public abstract class AbstractSession implements Session {
         }
     }
 
+    @Override
     public String getAddress() {
         JvmConnection conn = getConnection();
         if (conn != null) {
@@ -107,14 +109,17 @@ public abstract class AbstractSession implements Session {
         }
     }
 
+    @Override
     public String getIdentifier() {
         return sessionIdentifier;
     }
 
+    @Override
     public String getProperty(String name) {
         return sessionProperties.get(name);
     }
 
+    @Override
     public String getState() {
         if (isConnected()) {
             if (isSuspended()) {
@@ -127,6 +132,7 @@ public abstract class AbstractSession implements Session {
         }
     }
 
+    @Override
     public String getStratum() {
         JvmConnection conn = getConnection();
         String stratum = null;
@@ -139,23 +145,22 @@ public abstract class AbstractSession implements Session {
         return stratum == null ? "Java" : stratum;
     }
 
-    /**
-     * Returns a hash code value for the object.
-     *
-     * @return  a hash code value for this object.
-     */
+    @Override
     public int hashCode() {
         return getIdentifier().hashCode();
     }
 
+    @Override
     public Iterator<String> propertyNames() {
         return sessionProperties.keySet().iterator();
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propSupport.removePropertyChangeListener(listener);
     }
 
+    @Override
     public void removeSessionListener(SessionListener listener) {
         if (listener == null) {
             return;
@@ -171,10 +176,12 @@ public abstract class AbstractSession implements Session {
         se.getType().fireEvent(se, listener);
     }
 
+    @Override
     public void setIdentifier(String id) {
         sessionIdentifier = id;
     }
 
+    @Override
     public void setProperty(String name, String value) {
         String old = sessionProperties.get(name);
         if (value == null) {

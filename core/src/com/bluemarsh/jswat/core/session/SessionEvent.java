@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2006. All Rights Reserved.
+ * are Copyright (C) 2002-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -48,31 +48,37 @@ public class SessionEvent extends EventObject {
      */
     public static enum Type {
         CLOSING {
+            @Override
             public void fireEvent(SessionEvent e, SessionListener l) {
                 l.closing(e);
             }
         },
         CONNECTED {
+            @Override
             public void fireEvent(SessionEvent e, SessionListener l) {
                 l.connected(e);
             }
         },
         DISCONNECTED {
+            @Override
             public void fireEvent(SessionEvent e, SessionListener l) {
                 l.disconnected(e);
             }
         },
         OPENED {
+            @Override
             public void fireEvent(SessionEvent e, SessionListener l) {
                 l.opened(e.getSession());
             }
         },
         RESUMING {
+            @Override
             public void fireEvent(SessionEvent e, SessionListener l) {
                 l.resuming(e);
             }
         },
         SUSPENDED {
+            @Override
             public void fireEvent(SessionEvent e, SessionListener l) {
                 l.suspended(e);
             }

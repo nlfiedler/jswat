@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -22,8 +22,6 @@
  */
 
 package com.bluemarsh.jswat.core.session;
-
-import com.bluemarsh.jswat.core.session.Session;
 
 /**
  * Class SessionManagerEventMulticaster implements a thread-safe list of
@@ -56,9 +54,9 @@ import com.bluemarsh.jswat.core.session.Session;
  */
 public class SessionManagerEventMulticaster implements SessionManagerListener {
     /** A session manager listener. */
-    protected final SessionManagerListener listener1;
+    private final SessionManagerListener listener1;
     /** A session manager listener. */
-    protected final SessionManagerListener listener2;
+    private final SessionManagerListener listener2;
 
     /**
      * Adds the second listener to the first listener and returns the
@@ -72,7 +70,7 @@ public class SessionManagerEventMulticaster implements SessionManagerListener {
                                              SessionManagerListener l2) {
         return (l1 == null) ? l2 :
                (l2 == null) ? l1 : new SessionManagerEventMulticaster(l1, l2);
-    } // add
+    }
 
     /**
      * Removes the second listener from the first listener and returns
@@ -91,7 +89,7 @@ public class SessionManagerEventMulticaster implements SessionManagerListener {
         } else {
             return l1;
         }
-    } // remove
+    }
 
     /**
      * Creates a session event multicaster instance which chains
@@ -104,7 +102,7 @@ public class SessionManagerEventMulticaster implements SessionManagerListener {
                                              SessionManagerListener l2) {
         listener1 = l1;
         listener2 = l2;
-    } // SessionManagerEventMulticaster
+    }
 
     /**
      * Removes a session manager listener from this multicaster and returns
@@ -124,35 +122,23 @@ public class SessionManagerEventMulticaster implements SessionManagerListener {
         SessionManagerListener l1 = remove(listener1, l);
         SessionManagerListener l2 = remove(listener2, l);
         return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
-    } // remove
+    }
 
-    /**
-     * Called when a Session has been added to the SessionManager.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         listener1.sessionAdded(e);
         listener2.sessionAdded(e);
-    } // sessionAdded
+    }
 
-    /**
-     * Called when a Session has been removed from the SessionManager.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         listener1.sessionRemoved(e);
         listener2.sessionRemoved(e);
-    } // sessionRemoved
+    }
 
-    /**
-     * Called when a Session has been made the current session.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         listener1.sessionSetCurrent(e);
         listener2.sessionSetCurrent(e);
-    } // sessionSetCurrent
-} // SessionManagerEventMulticaster
+    }
+}
