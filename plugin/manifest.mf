@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: com.bluemarsh.jswat.plugin/1
-OpenIDE-Module-Layer: com/bluemarsh/jswat/plugin/layer.xml
-OpenIDE-Module-Localizing-Bundle: com/bluemarsh/jswat/plugin/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
-
