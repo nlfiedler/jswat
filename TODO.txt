@@ -2,24 +2,10 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
-- Turn core into a standard Java project
-  - Add to library dependencies
-    - org-openide-util.jar
-    - com-bluemarsh-jswat-parser.java
-
-- Turn cmd into a standard Java project
-  - Add to library dependencies
-    - org-openide-util.jar
-  - Add project dependency (?)
-    - com-bluemarsh-jswat-core.jar
-
-- module nbcore
-  - Becomes the "library wrapper" for the core and cmd jars
-    - see http://wiki.netbeans.org/DevFaqWrapperModules
-    - see http://wiki.netbeans.org/DevFaqHowPackageLibraries
-  - Modules that depended on core now depend on nbcore instead
-
 - Console mode
+  - use java.io.Console for read/writing to the console
+  - Look at old code to see how to handle messages from different threads
+    and have the prompt displayed correctly (i.e. not get lost)
   - Bootstrap everything
     - Initialize SessionManager, BreakpointManager, CommandParser, RuntimeManager, etc.
   - Print a helpful message about how to get started
@@ -30,7 +16,19 @@ $Id$
   - Need a reader/writer for the debuggee output/input streams
   - Use Runtime.addShutdownHook() to exit cleanly (both normal and abnormal)
 
+- Make sure tools.jar is in the classpath of all of the projects
+  - Mac has it in the classes.jar already
+  - Test in another OS in VirtualBox
+
+- Fix distributable/installer build
+- Fix branding
+
 - Documentation updates
+  - Explain how the modules build and how the suite is set up
+    - Link to http://wiki.netbeans.org/DevFaqWrapperModules
+  - For each new external library added, need to add a class-path-extension
+    to the nbcore/nbproject/project.xml so that it can be found
   - docs/dev/platform.html
     - Copy new org-openide-util.jar from NetBeans/platform
+    - The util.jar is not used when running in NetBeans
   - Write a tutorial on using the console interface

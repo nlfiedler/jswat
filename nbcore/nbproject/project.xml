@@ -7,24 +7,6 @@
             <suite-component/>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>com.bluemarsh.jswat.command</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>com.bluemarsh.jswat.core</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.api.java.classpath</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -76,9 +58,40 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>com.bluemarsh.jswat.command</package>
+                <package>com.bluemarsh.jswat.command.commands</package>
+                <package>com.bluemarsh.jswat.core</package>
+                <package>com.bluemarsh.jswat.core.breakpoint</package>
+                <package>com.bluemarsh.jswat.core.connect</package>
+                <package>com.bluemarsh.jswat.core.context</package>
+                <package>com.bluemarsh.jswat.core.event</package>
+                <package>com.bluemarsh.jswat.core.expr</package>
+                <package>com.bluemarsh.jswat.core.output</package>
+                <package>com.bluemarsh.jswat.core.path</package>
+                <package>com.bluemarsh.jswat.core.runtime</package>
+                <package>com.bluemarsh.jswat.core.session</package>
+                <package>com.bluemarsh.jswat.core.stepping</package>
+                <package>com.bluemarsh.jswat.core.util</package>
+                <package>com.bluemarsh.jswat.core.watch</package>
                 <package>com.bluemarsh.jswat.nbcore</package>
                 <package>com.bluemarsh.jswat.nbcore.path</package>
+                <package>com.bluemarsh.jswat.parser.analysis</package>
+                <package>com.bluemarsh.jswat.parser.lexer</package>
+                <package>com.bluemarsh.jswat.parser.node</package>
+                <package>com.bluemarsh.jswat.parser.parser</package>
             </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/com-bluemarsh-jswat-parser.jar</runtime-relative-path>
+                <binary-origin>../core/lib/com-bluemarsh-jswat-parser.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/com-bluemarsh-jswat-core.jar</runtime-relative-path>
+                <binary-origin>../core/dist/com-bluemarsh-jswat-core.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/com-bluemarsh-jswat-cmd.jar</runtime-relative-path>
+                <binary-origin>../cmd/dist/com-bluemarsh-jswat-cmd.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

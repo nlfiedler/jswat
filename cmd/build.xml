@@ -15,23 +15,82 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2005-2006. All Rights Reserved.
+  are Copyright (C) 2005-2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
   $Id$
 -->
-<!--
-   You may freely edit this file. See harness/README in the NetBeans platform
-   for some information on what you could do (e.g. targets to override).
-   If you delete this file and reopen the project it will be recreated.
--->
-<project name="com.bluemarsh.jswat.command" default="netbeans" basedir=".">
-    <description>Builds, tests, and runs the project com.bluemarsh.jswat.command.</description>
-    <property file="../build.properties"/>
+<project name="JSwat Commands" default="default" basedir=".">
+    <description>Builds, tests, and runs the project JSwat Commands.</description>
     <import file="nbproject/build-impl.xml"/>
+    <!--
 
-    <target name="testuserdir-delete">
-        <!-- Do nothing in the hopes that our userdir will stick around. -->
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
+
+    (Targets beginning with '-' are not intended to be called on their own.)
+
+    Example of inserting an obfuscator after compilation could look like this:
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
+
+
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
+
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar-with-manifest:    JAR building (if you are using a manifest)
+      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
+
+    An example of overriding the target for project execution could look like this:
+
+        <target name="run" depends="cmd-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
+
+    -->
+
+    <!-- NetBeans uses antfile instead of dir which breaks our build. -->
+    <target depends="init" name="deps-clean" unless="no.deps">
+        <ant dir="${project.JSwat_Core}" inheritall="false" target="clean"/>
+    </target>
+    <target depends="init" name="deps-jar" unless="no.deps">
+        <ant dir="${project.JSwat_Core}" inheritall="false" target="jar"/>
     </target>
 </project>
