@@ -83,11 +83,7 @@ public class PathEditorPanel extends JPanel implements ActionListener,
         updateButtons();
     }
 
-    /**
-     * Invoked when an action occurs.
-     *
-     * @param  event  action event.
-     */
+    @Override
     public void actionPerformed(ActionEvent event) {
         Object src = event.getSource();
         if (src == addButton) {
@@ -214,8 +210,10 @@ public class PathEditorPanel extends JPanel implements ActionListener,
      */
     public void setPath(List<String> path) {
         listModel.clear();
-        for (String entry : path) {
-            listModel.add(listModel.size(), entry);
+        if (path != null) {
+            for (String entry : path) {
+                listModel.add(listModel.size(), entry);
+            }
         }
         if (writable) {
             pathList.setSelectedIndex(0);
@@ -286,11 +284,7 @@ public class PathEditorPanel extends JPanel implements ActionListener,
         }
     }
 
-    /**
-     * Called whenever the value of the selection changes.
-     *
-     * @param  event  list selection event.
-     */
+    @Override
     public void valueChanged(ListSelectionEvent event) {
         // Enable/disable the move buttons depending on the selection.
         if (event == null || !event.getValueIsAdjusting() && writable) {
@@ -304,12 +298,7 @@ public class PathEditorPanel extends JPanel implements ActionListener,
      */
     private static class PathFilter extends FileFilter {
 
-        /**
-         * Test if the given file or directory is acceptable.
-         *
-         * @param  f  file to consider.
-         * @return  true if file is acceptable.
-         */
+        @Override
         public boolean accept(File f) {
             if (f.isDirectory()) {
                 return true;
@@ -319,11 +308,7 @@ public class PathEditorPanel extends JPanel implements ActionListener,
             }
         }
 
-        /**
-         * Returns the description of this file filter.
-         *
-         * @return  String description of this filter.
-         */
+        @Override
         public String getDescription() {
             return NbBundle.getMessage(PathEditorPanel.class, "LBL_PathFilter");
         }
