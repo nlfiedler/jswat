@@ -3,25 +3,22 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
-  - use java.io.Console for read/writing to the console
-  - Look at old code to see how to handle messages from different threads
-    and have the prompt displayed correctly (i.e. not get lost)
-  - Bootstrap everything
-    - Initialize SessionManager, BreakpointManager, CommandParser, RuntimeManager, etc.
-  - Print a helpful message about how to get started
-  - Copy ConsoleAdapter from 2.x version
-    - Change to use System.console() to get a Console instance
-  - Need a way to read errors sent to ErrorManager
-  - Need an event and session listener to display state changes
   - Need a reader/writer for the debuggee output/input streams
-  - Use Runtime.addShutdownHook() to exit cleanly (both normal and abnormal)
+    - Look at OutputAdapter in ui module
+      - Compare with ConsoleAdapter from 2.x version
+  - Create an event watcher
+    - listens to sessions, displays event notifications
+    - listens to debugging context, displays event notifications
+    - listens to breakpoints, displays event notifications
+  - Need a way to read errors sent to ErrorManager
+
+- Search for all TODO/XXX items and resolve or file bugs
 
 - Make sure tools.jar is in the classpath of all of the projects
   - Mac has it in the classes.jar already
   - Test in another OS in VirtualBox
 
 - Fix distributable/installer build
-- Fix branding
 
 - Documentation updates
   - Explain how the modules build and how the suite is set up
@@ -30,5 +27,5 @@ $Id$
     to the nbcore/nbproject/project.xml so that it can be found
   - docs/dev/platform.html
     - Copy new org-openide-util.jar from NetBeans/platform
-    - The util.jar is not used when running in NetBeans
+    - The org-openide-util.jar is not used when running in NetBeans
   - Write a tutorial on using the console interface
