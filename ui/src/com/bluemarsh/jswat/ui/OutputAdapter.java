@@ -196,11 +196,11 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             // Read from the input stream.
             try {
                 InputStreamReader isr = new InputStreamReader(inputStream);
-                char[] buf = new char[1024];
+                char[] buf = new char[8192];
                 int len = isr.read(buf);
                 while (len != -1) {
                     String str = new String(buf, 0, len);
-                    printWriter.println(str);
+                    printWriter.print(str);
                     // Note that yield() is not effective on multi-CPU systems.
                     Thread.sleep(1);
                     len = isr.read(buf);
@@ -248,7 +248,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             // Read from the reader.
             try {
                 OutputStreamWriter osw = new OutputStreamWriter(outputStream);
-                char[] buf = new char[256];
+                char[] buf = new char[512];
                 int len = reader.read(buf);
                 while (len != -1) {
                     osw.write(buf, 0, len);
