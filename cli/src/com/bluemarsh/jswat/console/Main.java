@@ -34,6 +34,7 @@ import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.sun.jdi.Bootstrap;
 import java.io.Console;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import org.openide.util.NbBundle;
 
 /**
@@ -61,7 +62,7 @@ public class Main {
         Console console = System.console();
         if (console == null) {
             // When run in NetBeans, or when the output streams are
-            // directed elsewhere, there will not be a Cosnole.
+            // directed elsewhere, there will not be a Console.
             System.out.println(NbBundle.getMessage(Main.class, "MSG_Main_NoConsole"));
             System.exit(1);
         }
@@ -81,6 +82,9 @@ public class Main {
 
             @Override
             public void run() {
+                // Save the command aliases.
+                CommandParser parser = CommandProvider.getCommandParser();
+                parser.saveSettings();
                 // Save the runtimes to persistent storage.
                 RuntimeManager rm = RuntimeProvider.getRuntimeManager();
                 rm.saveRuntimes();
@@ -88,9 +92,6 @@ public class Main {
                 // close down in preparation to exit.
                 SessionManager sm = SessionProvider.getSessionManager();
                 sm.saveSessions(true);
-                // Save the command aliases.
-                CommandParser parser = CommandProvider.getCommandParser();
-                parser.saveSettings();
                 System.out.println(NbBundle.getMessage(Main.class, "MSG_Main_Goodbye"));
             }
         }));
@@ -102,6 +103,18 @@ public class Main {
         CommandParser parser = CommandProvider.getCommandParser();
         parser.loadSettings();
         parser.setOutput(output);
+
+        // Create an OutputAdapter to display debuggee output.
+        OutputAdapter adapter = new OutputAdapter(output);
+        SessionManager sessionMgr = SessionProvider.getSessionManager();
+        sessionMgr.addSessionManagerListener(adapter);
+
+        // Add the watchers and adapters to the open sessions.
+        Iterator iter = sessionMgr.iterateSessions();
+        while (iter.hasNext()) {
+            Session s = (Session) iter.next();
+            s.addSessionListener(adapter);
+        }
 
         // Display a helpful greeting.
         output.println(NbBundle.getMessage(Main.class, "MSG_Main_Welcome"));

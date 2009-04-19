@@ -3,14 +3,41 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
-  - Need a reader/writer for the debuggee output/input streams
-    - Look at OutputAdapter in ui module
-      - Compare with ConsoleAdapter from 2.x version
   - Create an event watcher
     - listens to sessions, displays event notifications
     - listens to debugging context, displays event notifications
     - listens to breakpoints, displays event notifications
+  - Commands that are needed right away
+    - session launch|attach|close|kill|copy
+    - break at|in|rm|on|dis|en|when
+    - step into|over|intoi|overi
+    - resume
+    - suspend
+  - Show a few lines of source code each time a breakpoint is hit
+  - Show a single line of source code for each single step
   - Need a way to read errors sent to ErrorManager
+  - Lacking a way to send input to the debuggee stdin stream
+    - OutputAdapter has the means, but nothing to read from
+  - Commands that are needed before release
+    - catch
+    - classes
+    - classpath
+    - fields [static|all] (defaults to non-static)
+    - locals
+    - sourcepath
+    - stack up|down|N
+    - thread [list|groups|locks|N]
+  - Test debugging
+    - Reading from debuggee output streams
+  - Read commands from an 'rc' file in the home directory
+  - Commands to write later
+    - hotswap
+    - interrupt
+    - evaluate
+    - send (sends input to debuggee)
+    - Setting class load/unload breakpoints
+    - Setting thread start/stop breakpoints
+    - Setting exception breakpoints
 
 - Search for all TODO/XXX items and resolve or file bugs
 
@@ -29,3 +56,5 @@ $Id$
     - Copy new org-openide-util.jar from NetBeans/platform
     - The org-openide-util.jar is not used when running in NetBeans
   - Write a tutorial on using the console interface
+    - Command line arguments are interpreted as command input
+    - A unique prefix for a command will invoke that command (e.g. hi => history)
