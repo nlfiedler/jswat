@@ -24,6 +24,7 @@
 package com.bluemarsh.jswat.command.view;
 
 import com.bluemarsh.jswat.command.CommandParser;
+import com.bluemarsh.jswat.command.CommandProvider;
 import com.bluemarsh.jswat.ui.actions.Actions;
 import com.bluemarsh.jswat.ui.actions.ClearAction;
 import com.bluemarsh.jswat.ui.actions.CopyAction;
@@ -46,7 +47,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultCaret;
 import org.openide.ErrorManager;
-import org.openide.util.Lookup;
 
 /**
  * Displays an input field for receiving commands and a text area for
@@ -95,7 +95,7 @@ public class CommandPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         // Perform lookup to find the CommandParser instance.
-        CommandParser parser = Lookup.getDefault().lookup(CommandParser.class);
+        CommandParser parser = CommandProvider.getCommandParser();
         if (parser != null) {
             PipedWriter pwriter = new PipedWriter();
             PipedReader preader = new PipedReader();
