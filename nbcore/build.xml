@@ -35,8 +35,8 @@
               value="${cmd.project.dir}/dist/com-bluemarsh-jswat-cmd.jar"/>
 
     <target name="compile">
-        <ant dir="${core.project.dir}" target="jar" inheritall="false"/>
-        <ant dir="${cmd.project.dir}" target="jar" inheritall="false"/>
+        <ant antfile="${core.project.dir}/build.xml" target="jar" inheritall="false"/>
+        <ant antfile="${cmd.project.dir}/build.xml" target="jar" inheritall="false"/>
         <copy todir="${cluster}/modules/ext" file="${core.project.jar}"/>
         <copy todir="${cluster}/modules/ext" file="${core.parser.jar}"/>
         <copy todir="${cluster}/modules/ext" file="${cmd.project.jar}"/>
@@ -44,7 +44,7 @@
     </target>
 
     <target name="clean" depends="projectized-common.clean">
-        <ant dir="${cmd.project.dir}" target="clean" inheritall="false"/>
-        <ant dir="${core.project.dir}" target="clean" inheritall="false"/>
+        <ant antfile="${cmd.project.dir}/build.xml" target="clean" inheritall="false"/>
+        <ant antfile="${core.project.dir}/build.xml" target="clean" inheritall="false"/>
     </target>
 </project>

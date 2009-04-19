@@ -23,6 +23,7 @@
 package com.bluemarsh.jswat.nbcore;
 
 import com.bluemarsh.jswat.command.CommandParser;
+import com.bluemarsh.jswat.command.CommandProvider;
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointFactory;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
@@ -50,7 +51,6 @@ import java.util.Iterator;
 import java.util.List;
 import org.openide.ErrorManager;
 import org.openide.modules.ModuleInstall;
-import org.openide.util.Lookup;
 import org.openide.windows.WindowManager;
 
 /**
@@ -73,7 +73,7 @@ public class Installer extends ModuleInstall implements Runnable, WindowListener
         SessionManager sm = SessionProvider.getSessionManager();
         sm.saveSessions(true);
         // Save the command aliases.
-        CommandParser parser = Lookup.getDefault().lookup(CommandParser.class);
+        CommandParser parser = CommandProvider.getCommandParser();
         parser.saveSettings();
         super.close();
     }
@@ -223,7 +223,7 @@ public class Installer extends ModuleInstall implements Runnable, WindowListener
     public void restored() {
         super.restored();
         // Load the command aliases.
-        CommandParser parser = Lookup.getDefault().lookup(CommandParser.class);
+        CommandParser parser = CommandProvider.getCommandParser();
         parser.loadSettings();
         // See if the user provided connection arguments.
         String transport = System.getProperty("jswat.transport");
