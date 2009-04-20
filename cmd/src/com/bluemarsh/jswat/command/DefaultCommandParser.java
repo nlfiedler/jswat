@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2005. All Rights Reserved.
+ * are Copyright (C) 1999-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -51,13 +51,13 @@ public class DefaultCommandParser extends AbstractCommandParser {
     /** Result of looking up the available input processors. */
     private Lookup.Result processorLookupResult;
     /** Synchronize on this to access inputProcessors reference. */
-    private Object inputProcessorsLock;
+    private final Object inputProcessorsLock;
     /** List of the available input processors. */
     private Collection<InputProcessor> inputProcessors;
     /** Result of looking up the available commands. */
     private Lookup.Result commandLookupResult;
     /** Synchronize on this to access loadedCommands and commandMap. */
-    private Object commandsLock;
+    private final Object commandsLock;
     /** Collection of the available Command instances. */
     private Collection<Command> loadedCommands;
     /** Map of Command instances keyed by their name. */
@@ -138,18 +138,21 @@ public class DefaultCommandParser extends AbstractCommandParser {
         return command;
     }
 
+    @Override
     public Command getCommand(String name) {
         synchronized (commandsLock) {
             return commandMap.get(name);
         }
     }
 
+    @Override
     public Iterator<Command> getCommands() {
         synchronized (commandsLock) {
             return loadedCommands.iterator();
         }
     }
 
+    @Override
     public void parseInput(String input)
             throws CommandException, MissingArgumentsException {
         input = input.trim();
@@ -295,11 +298,7 @@ public class DefaultCommandParser extends AbstractCommandParser {
      */
     private class CommandLookupListener implements LookupListener {
 
-        /**
-         * A change in lookup occured.
-         *
-         * @param  event  event describing the change.
-         */
+        @Override
         public void resultChanged(LookupEvent event) {
             synchronized (commandsLock) {
                 rebuildCommands();
@@ -314,11 +313,7 @@ public class DefaultCommandParser extends AbstractCommandParser {
      */
     private class InputProcessLookupListener implements LookupListener {
 
-        /**
-         * A change in lookup occured.
-         *
-         * @param  event  event describing the change.
-         */
+        @Override
         public void resultChanged(LookupEvent event) {
             synchronized (inputProcessorsLock) {
                 rebuildProcessors();

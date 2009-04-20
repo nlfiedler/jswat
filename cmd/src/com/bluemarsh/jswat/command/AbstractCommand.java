@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -39,6 +39,7 @@ public abstract class AbstractCommand implements Command {
     public AbstractCommand() {
     }
 
+    @Override
     public String getHelp() {
         String name = getName();
         // This will load the bundle from the command's package, whatever
@@ -46,6 +47,7 @@ public abstract class AbstractCommand implements Command {
         return NbBundle.getMessage(getClass(), name + "_Help");
     }
 
+    @Override
     public String getDescription() {
         String name = getName();
         // This will load the bundle from the command's package, whatever
@@ -53,14 +55,17 @@ public abstract class AbstractCommand implements Command {
         return NbBundle.getMessage(getClass(), name + "_Description");
     }
 
+    @Override
     public boolean requiresArguments() {
         return false;
     }
 
+    @Override
     public boolean requiresDebuggee() {
         return false;
     }
 
+    @Override
     public boolean requiresThread() {
         return false;
     }
