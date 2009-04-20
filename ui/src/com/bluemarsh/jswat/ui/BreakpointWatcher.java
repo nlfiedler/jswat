@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -43,7 +43,6 @@ import com.bluemarsh.jswat.ui.editor.EditorConstants;
 import com.bluemarsh.jswat.ui.editor.EditorSupport;
 import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import org.openide.text.Annotation;
 import org.openide.util.NbBundle;
@@ -59,7 +58,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class BreakpointWatcher implements BreakpointListener,
-        PropertyChangeListener, SessionManagerListener {
+        SessionManagerListener {
     /** Place where messages are written. */
     private OutputWriter outputWriter;
 
@@ -69,7 +68,6 @@ public class BreakpointWatcher implements BreakpointListener,
     public BreakpointWatcher() {
         outputWriter = OutputProvider.getWriter();
         SessionManager sessionMgr = SessionProvider.getSessionManager();
-        sessionMgr.addSessionManagerListener(this);
         Iterator<Session> iter = sessionMgr.iterateSessions();
         while (iter.hasNext()) {
             addListeners(iter.next());
@@ -91,6 +89,7 @@ public class BreakpointWatcher implements BreakpointListener,
         }
     }
 
+    @Override
     public void breakpointAdded(BreakpointEvent event) {
         Breakpoint bp = event.getBreakpoint();
         bp.addPropertyChangeListener(this);
@@ -99,6 +98,7 @@ public class BreakpointWatcher implements BreakpointListener,
         }
     }
 
+    @Override
     public void breakpointRemoved(BreakpointEvent event) {
         Breakpoint bp = event.getBreakpoint();
         bp.removePropertyChangeListener(this);
@@ -107,11 +107,13 @@ public class BreakpointWatcher implements BreakpointListener,
         }
     }
 
+    @Override
     public void breakpointStopped(final BreakpointEvent event) {
         // Get the breakpoint message immediately to avoid timing issues.
         final String msg = event.getBreakpoint().describe(event.getEvent());
         // The rest must be done on the AWT thread.
         Runnable runner = new Runnable() {
+            @Override
             public void run() {
                 Breakpoint bp = event.getBreakpoint();
                 // Make the breakpoint's session the current one.
@@ -129,8 +131,10 @@ public class BreakpointWatcher implements BreakpointListener,
         EventQueue.invokeLater(runner);
     }
 
+    @Override
     public void errorOccurred(final BreakpointEvent event) {
         Runnable runner = new Runnable() {
+            @Override
             public void run() {
                 Breakpoint bp = event.getBreakpoint();
                 outputWriter.ensureVisible();
@@ -144,6 +148,7 @@ public class BreakpointWatcher implements BreakpointListener,
         EventQueue.invokeLater(runner);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
         Object src = event.getSource();
         String pname = event.getPropertyName();
@@ -185,14 +190,17 @@ public class BreakpointWatcher implements BreakpointListener,
         }
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         addListeners(e.getSession());
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         removeListeners(e.getSession());
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         // Add annotations for the current session, remove all the others.
         Session current = e.getSession();

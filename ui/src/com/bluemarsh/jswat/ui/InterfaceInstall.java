@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,8 +23,6 @@
 
 package com.bluemarsh.jswat.ui;
 
-import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
-import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
@@ -40,22 +38,21 @@ public class InterfaceInstall extends ModuleInstall {
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * The IDE is starting up.
-     */
+    @Override
     public void restored() {
+        SessionManager sessionMgr = SessionProvider.getSessionManager();
+
         // Create a SessionWatcher to monitor the session status.
         SessionWatcher swatcher = new SessionWatcher();
+        sessionMgr.addSessionManagerListener(swatcher);
 
         // Create an OutputAdapter to display debuggee output.
         OutputAdapter adapter = new OutputAdapter();
-        SessionManager sessionMgr = SessionProvider.getSessionManager();
         sessionMgr.addSessionManagerListener(adapter);
 
-        // Create the BreakpointWatcher to monitor breakpoints. This
-        // class, unlike some of the others, registers itself to the
-        // components it is interested in.
+        // Create the BreakpointWatcher to monitor breakpoints.
         BreakpointWatcher bwatcher = new BreakpointWatcher();
+        sessionMgr.addSessionManagerListener(bwatcher);
 
         // Get the ActionEnabler that controls the actions enabled state.
         ActionEnabler ae = ActionEnabler.getDefault();

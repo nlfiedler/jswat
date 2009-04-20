@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -64,48 +64,46 @@ public class SessionWatcher implements ContextListener, SessionListener,
      */
     public SessionWatcher() {
         outputWriter = OutputProvider.getWriter();
-        SessionManager sm = SessionProvider.getSessionManager();
-        sm.addSessionManagerListener(this);
-        DebuggingContext dc = ContextProvider.getContext(sm.getCurrent());
+        Session session = SessionProvider.getCurrentSession();
+        DebuggingContext dc = ContextProvider.getContext(session);
         dc.addContextListener(this);
     }
 
+    @Override
     public void changedFrame(ContextEvent ce) {
-        // Ignore suspending events, as that is already handled elsewhere.
+        // Ignore suspending events, that's handled in suspended().
         if (!ce.isSuspending()) {
             contextChanged(ce.getSession());
         }
     }
 
+    @Override
     public void changedLocation(ContextEvent ce) {
-        // Ignore suspending events, as that is already handled elsewhere.
+        // Ignore suspending events, that's handled in suspended().
         if (!ce.isSuspending()) {
             contextChanged(ce.getSession());
         }
     }
 
+    @Override
     public void changedThread(ContextEvent ce) {
-        // Ignore suspending events, as that is already handled elsewhere.
+        // Ignore suspending events, that's handled in suspended().
         if (!ce.isSuspending()) {
             contextChanged(ce.getSession());
         }
     }
 
-    /**
-     * Called when the Session has connected to the debuggee.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void connected(SessionEvent sevt) {
         Session session = sevt.getSession();
         String name = session.getProperty(Session.PROP_SESSION_NAME);
         JvmConnection connection = session.getConnection();
         if (connection.isRemote()) {
             showStatus(NbBundle.getMessage(
-                    getClass(), "SessionWatcher.vmAttached", name), false);
+                    SessionWatcher.class, "SessionWatcher.vmAttached", name), false);
         } else {
             showStatus(NbBundle.getMessage(
-                    getClass(), "SessionWatcher.vmLoaded", name), false);
+                    SessionWatcher.class, "SessionWatcher.vmLoaded", name), false);
         }
     }
 
@@ -116,21 +114,13 @@ public class SessionWatcher implements ContextListener, SessionListener,
         }
     }
 
-    /**
-     * Called when the Session is about to be closed.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void closing(SessionEvent sevt) {
         Session session = sevt.getSession();
         SteppingSupport.getDefault().hideProgramCounter(session);
     }
 
-    /**
-     * Called when the Session has disconnected from the debuggee.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void disconnected(SessionEvent sevt) {
         Session session = sevt.getSession();
         Session current = SessionProvider.getSessionManager().getCurrent();
@@ -141,27 +131,18 @@ public class SessionWatcher implements ContextListener, SessionListener,
         JvmConnection connection = session.getConnection();
         if (connection.isRemote()) {
             showStatus(NbBundle.getMessage(
-                    getClass(), "SessionWatcher.vmDetached", name), false);
+                    SessionWatcher.class, "SessionWatcher.vmDetached", name), false);
         } else {
             showStatus(NbBundle.getMessage(
-                    getClass(), "SessionWatcher.vmClosed", name), false);
+                    SessionWatcher.class, "SessionWatcher.vmClosed", name), false);
         }
     }
 
-    /**
-     * Called after the Session has added this listener to the Session
-     * listener list.
-     *
-     * @param  session  the Session.
-     */
+    @Override
     public void opened(Session session) {
     }
 
-    /**
-     * Called when the debuggee is about to be resumed.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void resuming(SessionEvent sevt) {
         Session session = sevt.getSession();
         Session current = SessionProvider.getSessionManager().getCurrent();
@@ -170,14 +151,10 @@ public class SessionWatcher implements ContextListener, SessionListener,
         }
         String name = session.getProperty(Session.PROP_SESSION_NAME);
         showStatus(NbBundle.getMessage(
-                getClass(), "SessionWatcher.vmResumed", name), false);
+                SessionWatcher.class, "SessionWatcher.vmResumed", name), false);
     }
 
-    /**
-     * Called when a Session has been added to the SessionManager.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
@@ -185,11 +162,7 @@ public class SessionWatcher implements ContextListener, SessionListener,
         dc.addContextListener(this);
     }
 
-    /**
-     * Called when a Session has been removed from the SessionManager.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         // the session will discard its listeners
         Session session = e.getSession();
@@ -197,11 +170,7 @@ public class SessionWatcher implements ContextListener, SessionListener,
         dc.removeContextListener(this);
     }
 
-    /**
-     * Called when a Session has been made the current session.
-     *
-     * @param  e  session manager event.
-     */
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         Session current = e.getSession();
         SessionManager sm = (SessionManager) e.getSource();
@@ -239,7 +208,7 @@ public class SessionWatcher implements ContextListener, SessionListener,
                     args,
                     String.valueOf(loc.lineNumber())
                 };
-                String msg = NbBundle.getMessage(getClass(),
+                String msg = NbBundle.getMessage(SessionWatcher.class,
                         "SessionWatcher.location", params);
                 showStatus(msg, false);
             }
@@ -254,6 +223,7 @@ public class SessionWatcher implements ContextListener, SessionListener,
      */
     private void showStatus(final String status, final boolean move) {
         Runnable runner = new Runnable() {
+            @Override
             public void run() {
                 if (move) {
                     WindowManager.getDefault().getMainWindow().toFront();
@@ -265,16 +235,12 @@ public class SessionWatcher implements ContextListener, SessionListener,
         EventQueue.invokeLater(runner);
     }
 
-    /**
-     * Called when the debuggee has been suspended.
-     *
-     * @param  sevt  session event.
-     */
+    @Override
     public void suspended(SessionEvent sevt) {
         Session session = sevt.getSession();
         String name = session.getProperty(Session.PROP_SESSION_NAME);
         showStatus(NbBundle.getMessage(
-                getClass(), "SessionWatcher.vmSuspended", name), true);
+                SessionWatcher.class, "SessionWatcher.vmSuspended", name), true);
         Session current = SessionProvider.getSessionManager().getCurrent();
         Event event = sevt.getEvent();
         if (session.equals(current) && event != null) {
