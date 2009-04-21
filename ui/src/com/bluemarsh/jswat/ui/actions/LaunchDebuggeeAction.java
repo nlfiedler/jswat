@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -55,46 +55,30 @@ public class LaunchDebuggeeAction extends CallableSystemAction {
         ae.registerInactiveAction(this);
     }
 
-    /**
-     * Indicates if this action can be invoked on any thread.
-     *
-     * @return  true if asynchronous, false otherwise.
-     */
+    @Override
     protected boolean asynchronous() {
         // performAction() should run in event thread
         return false;
     }
 
-    /**
-     * Returns the help context for this action.
-     *
-     * @return  help context.
-     */
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-launch-debuggee");
     }
 
-    /**
-     * Returns the name of this action.
-     *
-     * @return  name of action.
-     */
+    @Override
     public String getName() {
-        return NbBundle.getMessage(getClass(), "LBL_LaunchDebuggeeAction");
+        return NbBundle.getMessage(LaunchDebuggeeAction.class,
+                "LBL_LaunchDebuggeeAction");
     }
 
-    /**
-     * Specify the proper resource name for the action's icon.
-     *
-     * @return  the resource name for the icon.
-     */
+    @Override
     protected String iconResource() {
-        return NbBundle.getMessage(getClass(), "IMG_LaunchDebuggeeAction");
+        return NbBundle.getMessage(LaunchDebuggeeAction.class,
+                "IMG_LaunchDebuggeeAction");
     }
 
-    /**
-     * Performs the action.
-     */
+    @Override
     public void performAction() {
         LaunchDebuggeePanel ldp = new LaunchDebuggeePanel();
         SessionManager sm = SessionProvider.getSessionManager();
@@ -104,7 +88,8 @@ public class LaunchDebuggeeAction extends CallableSystemAction {
         if (ldp.display()) {
             if (session.isConnected()) {
                 // See if the user wants to open a new session.
-                String msg = NbBundle.getMessage(getClass(), "MSG_ActivateNewSession");
+                String msg = NbBundle.getMessage(LaunchDebuggeeAction.class,
+                        "MSG_ActivateNewSession");
                 NotifyDescriptor desc = new NotifyDescriptor.Confirmation(msg);
                 Object ans = DialogDisplayer.getDefault().notify(desc);
                 if (ans == NotifyDescriptor.YES_OPTION) {
@@ -137,15 +122,14 @@ public class LaunchDebuggeeAction extends CallableSystemAction {
                 // error messages it provided, along with the exception.
                 Process proc = vmse.process();
                 String output = Processes.waitFor(proc);
-                String msg = NbBundle.getMessage(
-                        getClass(), "ERR_LaunchFailed", vmse.toString() +
-                        '\n' + output);
+                String msg = NbBundle.getMessage(LaunchDebuggeeAction.class,
+                        "ERR_LaunchFailed", vmse.toString() + '\n' + output);
                 NotifyDescriptor desc = new NotifyDescriptor.Message(
                     msg, NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(desc);
             } catch (Exception e) {
-                String msg = NbBundle.getMessage(
-                        getClass(), "ERR_LaunchFailed", e.toString());
+                String msg = NbBundle.getMessage(LaunchDebuggeeAction.class,
+                        "ERR_LaunchFailed", e.toString());
                 NotifyDescriptor desc = new NotifyDescriptor.Message(
                     msg, NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(desc);

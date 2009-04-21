@@ -162,11 +162,9 @@ public class LaunchDebuggeePanel extends JPanel implements
         JavaRuntime runtime = (JavaRuntime) nvp.getValue();
         PathManager pm = PathProvider.getPathManager(session);
         mergeSourcePath(runtime, pm);
-        JvmConnection connection = null;
         ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
-        connection = factory.createLaunching(runtime, javaParams, className);
         // This may throw an IllegalArgumentException.
-        return connection;
+        return factory.createLaunching(runtime, javaParams, className);
     }
 
     /**
