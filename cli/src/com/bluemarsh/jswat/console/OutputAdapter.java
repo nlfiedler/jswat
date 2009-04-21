@@ -70,7 +70,6 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
 
     @Override
     public void connected(SessionEvent sevt) {
-        // Create a new output tab for this session.
         Session session = sevt.getSession();
         // Start reading from the debuggee output streams.
         JvmConnection conn = session.getConnection();

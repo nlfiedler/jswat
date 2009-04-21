@@ -3,41 +3,56 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
-  - Create an event watcher
-    - listens to sessions, displays event notifications
-    - listens to debugging context, displays event notifications
-    - listens to breakpoints, displays event notifications
   - Commands that are needed right away
+    - cont
     - session launch|attach|close|kill|copy
-    - break at|in|rm|on|dis|en|when
-    - step into|over|intoi|overi
-    - resume
-    - suspend
+    - break <class id>:<line>
+    - break <class id>.<method>[(argument types)]
+    - clear <class id>:<line>
+    - clear <class id>.<method>[(argument types)]
+    - step [up]
+    - stepi
+    - next
+    - resume [thread id(s)]
+    - suspend [thread id(s)]
+    - where
+    - wherei
+  - Need a way to manage runtimes and set one as the default for a session
   - Show a few lines of source code each time a breakpoint is hit
   - Show a single line of source code for each single step
   - Need a way to read errors sent to ErrorManager
   - Lacking a way to send input to the debuggee stdin stream
+    - SendCommand is the starting point
     - OutputAdapter has the means, but nothing to read from
   - Commands that are needed before release
     - catch
+    - ignore
     - classes
     - classpath
-    - fields [static|all] (defaults to non-static)
+    - fields
     - locals
+    - methods
     - sourcepath
-    - stack up|down|N
-    - thread [list|groups|locks|N]
+    - up [n]
+    - down [n]
+    - thread
+    - threads
+    - threadgroups
+    - threadlocks
+    - monitor
+    - unmonitor
+    - watch
+    - unwatch
   - Test debugging
     - Reading from debuggee output streams
   - Read commands from an 'rc' file in the home directory
   - Commands to write later
-    - hotswap
+    - redefine
     - interrupt
-    - evaluate
+    - eval
     - send (sends input to debuggee)
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
-    - Setting exception breakpoints
 
 - Search for all TODO/XXX items and resolve or file bugs
 
@@ -58,3 +73,5 @@ $Id$
   - Write a tutorial on using the console interface
     - Command line arguments are interpreted as command input
     - A unique prefix for a command will invoke that command (e.g. hi => history)
+    - RC-like file for commands that are executed at startup
+      - Look for .jswatrc and jswat.ini in user.home and user.dir

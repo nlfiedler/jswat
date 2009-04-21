@@ -108,12 +108,19 @@ public class Main {
         OutputAdapter adapter = new OutputAdapter(output);
         SessionManager sessionMgr = SessionProvider.getSessionManager();
         sessionMgr.addSessionManagerListener(adapter);
+        // Create a SessionWatcher to monitor the session status.
+        SessionWatcher swatcher = new SessionWatcher();
+        sessionMgr.addSessionManagerListener(swatcher);
+        // Create a BreakpointWatcher to monitor the breakpoints.
+        BreakpointWatcher bwatcher = new BreakpointWatcher();
+        sessionMgr.addSessionManagerListener(bwatcher);
 
         // Add the watchers and adapters to the open sessions.
         Iterator iter = sessionMgr.iterateSessions();
         while (iter.hasNext()) {
             Session s = (Session) iter.next();
             s.addSessionListener(adapter);
+            s.addSessionListener(swatcher);
         }
 
         // Display a helpful greeting.
@@ -139,11 +146,8 @@ public class Main {
         while (true) {
             String input = console.readLine("[%s] > ",
                     session.getProperty(Session.PROP_SESSION_NAME));
-            input = input.trim();
-            if (input.equals("exit") || input.equals("quit")) {
-                // The shutdown hook will take care of cleaning up.
-                System.exit(0);
-            } else {
+            // Console returns null to indicate end of stream.
+            if (input != null) {
                 performCommand(output, parser, input);
             }
         }
