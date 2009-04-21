@@ -12,6 +12,7 @@ com.bluemarsh.jswat.command.commands.MethodsCommand
 com.bluemarsh.jswat.command.commands.ObjectLocksCommand
 com.bluemarsh.jswat.command.commands.PropertiesCommand
 com.bluemarsh.jswat.command.commands.RequestsCommand
+com.bluemarsh.jswat.command.commands.RunCommand
 com.bluemarsh.jswat.command.commands.SourceNamesCommand
 com.bluemarsh.jswat.command.commands.ThreadsCommand
 com.bluemarsh.jswat.command.commands.ThreadLocksCommand
