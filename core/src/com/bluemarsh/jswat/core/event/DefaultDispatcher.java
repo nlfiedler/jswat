@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2007. All Rights Reserved.
+ * are Copyright (C) 1999-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -59,10 +59,12 @@ public class DefaultDispatcher implements Dispatcher, Runnable {
     public DefaultDispatcher() {
     }
 
+    @Override
     public void register(DispatcherListener listener, EventRequest request) {
         request.putProperty(PROP_LISTENER, listener);
     }
 
+    @Override
     public void run() {
         // Run until we get interrupted or the VM disconnects.
         boolean stop = false;
@@ -122,6 +124,7 @@ public class DefaultDispatcher implements Dispatcher, Runnable {
         }
     }
 
+    @Override
     public void start(EventQueue queue, DispatcherListener started,
             Runnable stopped, DispatcherListener suspended) {
         startedCallback = started;
@@ -131,6 +134,7 @@ public class DefaultDispatcher implements Dispatcher, Runnable {
         Threads.getThreadPool().submit(this);
     }
 
+    @Override
     public void unregister(EventRequest request) {
         request.putProperty(PROP_LISTENER, null);
     }
