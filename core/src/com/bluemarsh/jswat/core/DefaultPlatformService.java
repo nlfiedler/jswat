@@ -55,7 +55,9 @@ public class DefaultPlatformService implements PlatformService {
     @Override
     public void deleteFile(String name) throws IOException {
         File file = new File(userDirectory, name);
-        file.delete();
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     @Override
@@ -87,6 +89,10 @@ public class DefaultPlatformService implements PlatformService {
     @Override
     public OutputStream writeFile(String name) throws IOException {
         File file = new File(userDirectory, name);
+        File parent = file.getParentFile();
+        if (parent != null) {
+            parent.mkdirs();
+        }
         return new FileOutputStream(file);
     }
 }
