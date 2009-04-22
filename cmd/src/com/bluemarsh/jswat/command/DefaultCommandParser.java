@@ -113,10 +113,9 @@ public class DefaultCommandParser extends AbstractCommandParser {
                     if (match != null) {
                         // There is more than one matching command.
                         if (sb == null) {
-                            sb = new StringBuilder();
-                        } else {
-                            sb.append(", ");
+                            sb = new StringBuilder(match);
                         }
+                        sb.append(", ");
                         sb.append(nm);
                     } else {
                         match = nm;
@@ -220,7 +219,7 @@ public class DefaultCommandParser extends AbstractCommandParser {
                 // The first token is going to be the command name.
                 command = findCommand(name);
             } catch (AmbiguousMatchException ame) {
-                throw new CommandException(ame.getMessage(), ame);
+                throw new CommandException(ame.getMessage());
             }
             if (command != null) {
                 if (command.requiresArguments() && !args.hasMoreTokens()) {
