@@ -3,6 +3,7 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
+  - Ambiguous command prefix message shows twice, only shows one command
   - Commands that are needed right away
     - cont
     - session launch|attach|close|kill|copy
@@ -60,6 +61,8 @@ $Id$
   - Mac has it in the classes.jar already
   - Test in another OS in VirtualBox
 
+- Experiement with using low priority thread pool and Thread.yield() in
+  OutputAdapter in ui module.
 - Fix distributable/installer build
 
 - Documentation updates

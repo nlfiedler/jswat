@@ -32,7 +32,9 @@ import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.sun.jdi.Bootstrap;
-import java.io.Console;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import org.openide.util.NbBundle;
@@ -57,17 +59,24 @@ public class Main {
      * @param  args  the command line arguments.
      */
     public static void main(String[] args) {
-        // Make sure we have a Console to work with.
-        // This appears to work from bash and emacs shell.
-        Console console = System.console();
-        if (console == null) {
-            // When run in NetBeans, or when the output streams are
-            // directed elsewhere, there will not be a Console.
-            System.out.println(NbBundle.getMessage(Main.class, "MSG_Main_NoConsole"));
-            System.exit(1);
-        }
+        //
+        // Briefly attempted to use Console in java.io, but that
+        // is not designed to handle asynchronous output from
+        // multiple threads.
+        //
 
-        PrintWriter output = console.writer();
+        //
+        // Where console mode seems to work:
+        // - bash
+        // - emacs
+        //
+        // Where console mode does not seem to work:
+        // - NetBeans: output from other threads is never shown
+        //
+
+        // Turn on flushing so printing the prompt will flush
+        // all buffered output generated from other threads.
+        PrintWriter output = new PrintWriter(System.out, true);
 
         // Make sure we have the JPDA classes.
         try {
@@ -143,12 +152,19 @@ public class Main {
         }
 
         // Enter the main loop of processing user input.
+        BufferedReader input = new BufferedReader(
+                new InputStreamReader(System.in));
         while (true) {
-            String input = console.readLine("[%s] > ",
+            output.format("[%s] > ",
                     session.getProperty(Session.PROP_SESSION_NAME));
-            // Console returns null to indicate end of stream.
-            if (input != null) {
-                performCommand(output, parser, input);
+            try {
+                String command = input.readLine();
+                // A null value indicates end of stream.
+                if (command != null) {
+                    performCommand(output, parser, command);
+                }
+            } catch (IOException ioe) {
+                output.println(ioe);
             }
         }
     }

@@ -78,17 +78,17 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             Process process = conn.getVM().process();
             InputStream is = process.getInputStream();
             OutputReader or = new OutputReader(is, outputSink);
-            Threads.getThreadPool().submit(or);
+            Threads.getThreadPool(true).submit(or);
 
             is = process.getErrorStream();
             or = new OutputReader(is, outputSink);
-            Threads.getThreadPool().submit(or);
+            Threads.getThreadPool(true).submit(or);
 
             // TODO: should get a reader from which to get user input
             StringReader sr = new StringReader("");
             OutputStream os = process.getOutputStream();
             InputReader ir = new InputReader(sr, os, outputSink);
-            Future future = Threads.getThreadPool().submit(ir);
+            Future future = Threads.getThreadPool(true).submit(ir);
             inputFutures.put(session, future);
         }
     }
@@ -169,12 +169,9 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                 while (len != -1) {
                     String str = new String(buf, 0, len);
                     printWriter.print(str);
-//                    // Note that yield() is not effective on multi-CPU systems.
-//                    Thread.sleep(1);
+                    Thread.yield();
                     len = isr.read(buf);
                 }
-//            } catch (InterruptedException ie) {
-//                // Just stop reading.
             } catch (InterruptedIOException iioe) {
                 // Just stop reading.
             } catch (IOException ioe) {
@@ -222,12 +219,9 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                     osw.write(buf, 0, len);
                     // Must flush each time.
                     osw.flush();
-//                    // Note that yield() is not effective on multi-CPU systems.
-//                    Thread.sleep(1);
+                    Thread.yield();
                     len = reader.read(buf);
                 }
-//            } catch (InterruptedException ie) {
-//                // Just stop reading.
             } catch (InterruptedIOException iioe) {
                 // Just stop reading.
             } catch (IOException ioe) {
