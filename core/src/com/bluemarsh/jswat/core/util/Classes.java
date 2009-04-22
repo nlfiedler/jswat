@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2007. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -58,6 +58,12 @@ import java.util.concurrent.TimeoutException;
  * @author  Nathan Fiedler
  */
 public class Classes {
+
+    /**
+     * Creates a new instance of Classes.
+     */
+    private Classes() {
+    }
 
     /**
      * Return a list of classes and interfaces whose names match the given
@@ -356,6 +362,7 @@ public class Classes {
             this.arguments = arguments;
         }
 
+        @Override
         public Value call() throws Exception {
             // It is not safe to invoke methods with the single-threaded
             // bit flag, so let JDI resume all of the threads normally.

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -26,6 +26,7 @@ package com.bluemarsh.jswat.core.util;
 /**
  * Represents a named value.
  *
+ * @param  <V>  the value for the name/value pair.
  * @author Nathan Fiedler
  */
 public class NameValuePair<V> {
@@ -45,15 +46,19 @@ public class NameValuePair<V> {
         this.value = value;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        NameValuePair<?> pair = (NameValuePair<?>) obj;
-        if (pair.value == null && value == null) {
-            return true;
-        } else if (pair.value == null || value == null) {
-            return false;
-        } else {
-            return pair.value.equals(value);
+        if (obj instanceof NameValuePair) {
+            NameValuePair<?> pair = (NameValuePair<?>) obj;
+            if (pair.value == null && value == null) {
+                return true;
+            } else if (pair.value == null || value == null) {
+                return false;
+            } else {
+                return pair.value.equals(value);
+            }
         }
+        return false;
     }
 
     /**
@@ -74,6 +79,7 @@ public class NameValuePair<V> {
         return value;
     }
 
+    @Override
     public int hashCode() {
         if (value != null) {
             return value.hashCode();
@@ -82,11 +88,7 @@ public class NameValuePair<V> {
         }
     }
 
-    /**
-     * Returns the name.
-     *
-     * @return  String of this.
-     */
+    @Override
     public String toString() {
         return getName();
     }

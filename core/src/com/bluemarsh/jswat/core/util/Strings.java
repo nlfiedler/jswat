@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2007. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -39,6 +39,12 @@ import java.util.StringTokenizer;
 public class Strings {
 
     /**
+     * Creates a new instance of Strings.
+     */
+    private Strings() {
+    }
+
+    /**
      * Substitute any non-printable characters with their escaped form,
      * allowing them to be interpreted by the user.
      *
@@ -56,16 +62,15 @@ public class Strings {
         StringTokenizer st = new StringTokenizer(input, "\r\n\t\b\f", true);
         while (st.hasMoreElements()) {
             String s = st.nextToken();
-            s = s.intern();
-            if (s == "\t") {
+            if (s.equals("\t")) {
                 buf.append("\\t");
-            } else if (s == "\n") {
+            } else if (s.equals("\n")) {
                 buf.append("\\n");
-            } else if (s == "\b") {
+            } else if (s.equals("\b")) {
                 buf.append("\\b");
-            } else if (s == "\f") {
+            } else if (s.equals("\f")) {
                 buf.append("\\f");
-            } else if (s == "\r") {
+            } else if (s.equals("\r")) {
                 buf.append("\\r");
             } else {
                 buf.append(s);
