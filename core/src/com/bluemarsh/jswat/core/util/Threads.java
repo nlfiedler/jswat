@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import org.openide.util.NbBundle;
 
 /**
@@ -40,6 +41,11 @@ import org.openide.util.NbBundle;
 public class Threads {
     /** The thread pool, if created, for running background tasks. */
     private static ExecutorService threadPool;
+    /** The thread pool of low priority threads, if created,
+     * for running background tasks. */
+    private static ExecutorService threadPoolLow;
+    /** The priority for the low priority threads. */
+    private static final int THREAD_LOW_PRIORITY = 3;
 
     /**
      * Creates a new instance of Threads.
@@ -115,10 +121,39 @@ public class Threads {
      * @return  cached thread pool.
      */
     public synchronized static ExecutorService getThreadPool() {
-        if (threadPool == null || threadPool.isShutdown()) {
-            threadPool = Executors.newCachedThreadPool();
+        return getThreadPool(false);
+    }
+
+    /**
+     * Returns the thread pool for running tasks in the background.
+     * If the service has not yet been created, or if the existing
+     * service has been shut down, then a new service will be created.
+     *
+     * @param  lowPriority  true to turn a thread pool consisting that
+     *                      creates threads with a below normal priority.
+     * @return  cached thread pool.
+     */
+    public synchronized static ExecutorService getThreadPool(boolean lowPriority) {
+        if (lowPriority) {
+            if (threadPoolLow == null || threadPoolLow.isShutdown()) {
+                final ThreadFactory factory = Executors.defaultThreadFactory();
+                threadPoolLow = Executors.newCachedThreadPool(new ThreadFactory() {
+
+                    @Override
+                    public Thread newThread(Runnable r) {
+                        Thread th = factory.newThread(r);
+                        th.setPriority(THREAD_LOW_PRIORITY);
+                        return th;
+                    }
+                });
+            }
+            return threadPoolLow;
+        } else {
+            if (threadPool == null || threadPool.isShutdown()) {
+                threadPool = Executors.newCachedThreadPool();
+            }
+            return threadPool;
         }
-        return threadPool;
     }
 
     /**
