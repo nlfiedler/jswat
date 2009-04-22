@@ -3,9 +3,7 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
-  - Ambiguous command prefix message shows twice, only shows one command
   - Commands that are needed right away
-    - cont
     - session launch|attach|close|kill|copy
     - break <class id>:<line>
     - break <class id>.<method>[(argument types)]
@@ -17,7 +15,6 @@ $Id$
     - resume [thread id(s)]
     - suspend [thread id(s)]
     - where
-    - wherei
   - Need a way to manage runtimes and set one as the default for a session
   - Show a few lines of source code each time a breakpoint is hit
   - Show a single line of source code for each single step

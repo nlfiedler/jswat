@@ -1,6 +1,7 @@
 com.bluemarsh.jswat.command.commands.AliasCommand
 com.bluemarsh.jswat.command.commands.AproposCommand
 com.bluemarsh.jswat.command.commands.CodeLinesCommand
+com.bluemarsh.jswat.command.commands.ContinueCommand
 com.bluemarsh.jswat.command.commands.DebuggeeInfoCommand
 com.bluemarsh.jswat.command.commands.DisableCollectionCommand
 com.bluemarsh.jswat.command.commands.ElementsCommand
