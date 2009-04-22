@@ -1,5 +1,6 @@
 com.bluemarsh.jswat.command.commands.AliasCommand
 com.bluemarsh.jswat.command.commands.AproposCommand
+com.bluemarsh.jswat.command.commands.ClasspathCommand
 com.bluemarsh.jswat.command.commands.CodeLinesCommand
 com.bluemarsh.jswat.command.commands.ContinueCommand
 com.bluemarsh.jswat.command.commands.DebuggeeInfoCommand
@@ -15,6 +16,7 @@ com.bluemarsh.jswat.command.commands.PropertiesCommand
 com.bluemarsh.jswat.command.commands.RequestsCommand
 com.bluemarsh.jswat.command.commands.RunCommand
 com.bluemarsh.jswat.command.commands.SourceNamesCommand
+com.bluemarsh.jswat.command.commands.SourcepathCommand
 com.bluemarsh.jswat.command.commands.ThreadsCommand
 com.bluemarsh.jswat.command.commands.ThreadLocksCommand
 com.bluemarsh.jswat.command.commands.UnaliasCommand

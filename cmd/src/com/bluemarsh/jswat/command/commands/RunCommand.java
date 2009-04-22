@@ -37,8 +37,6 @@ import com.bluemarsh.jswat.core.runtime.JavaRuntime;
 import com.bluemarsh.jswat.core.runtime.RuntimeManager;
 import com.bluemarsh.jswat.core.runtime.RuntimeProvider;
 import com.bluemarsh.jswat.core.session.Session;
-import com.bluemarsh.jswat.core.session.SessionManager;
-import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.bluemarsh.jswat.core.util.Processes;
 import com.bluemarsh.jswat.core.util.Strings;
 import com.sun.jdi.connect.VMStartException;
@@ -63,8 +61,7 @@ public class RunCommand extends AbstractCommand {
             throws CommandException, MissingArgumentsException {
 
         PrintWriter writer = context.getWriter();
-        SessionManager sm = SessionProvider.getSessionManager();
-        Session session = sm.getCurrent();
+        Session session = context.getSession();
         if (session.isConnected()) {
             writer.println(NbBundle.getMessage(RunCommand.class,
                     "CTL_run_activeSession"));

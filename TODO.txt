@@ -4,7 +4,6 @@ $Id$
 
 - Console mode
   - Commands that are needed right away
-    - session launch|attach|close|kill|copy
     - break <class id>:<line>
     - break <class id>.<method>[(argument types)]
     - clear <class id>:<line>
@@ -23,14 +22,14 @@ $Id$
     - SendCommand is the starting point
     - OutputAdapter has the means, but nothing to read from
   - Commands that are needed before release
+    - attach
     - catch
+    - detach
     - ignore
     - classes
-    - classpath
     - fields
     - locals
     - methods
-    - sourcepath
     - up [n]
     - down [n]
     - thread
@@ -41,6 +40,7 @@ $Id$
     - unmonitor
     - watch
     - unwatch
+    - session new|copy|delete
   - Test debugging
     - Reading from debuggee output streams
   - Read commands from an 'rc' file in the home directory
