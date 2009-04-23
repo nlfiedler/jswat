@@ -36,7 +36,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DefaultRuntimeManager manages JavaRuntime instances that are persisted
@@ -45,6 +46,9 @@ import org.openide.ErrorManager;
  * @author Nathan Fiedler
  */
 public class DefaultRuntimeManager extends AbstractRuntimeManager {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            DefaultRuntimeManager.class.getName());
     /** List of the open runtimes. */
     private List<JavaRuntime> openRuntimes;
 
@@ -81,7 +85,7 @@ public class DefaultRuntimeManager extends AbstractRuntimeManager {
             decoder.setExceptionListener(new ExceptionListener() {
                 @Override
                 public void exceptionThrown(Exception e) {
-                    ErrorManager.getDefault().notify(e);
+                    logger.log(Level.SEVERE, null, e);
                 }
             });
             openRuntimes = (List<JavaRuntime>) decoder.readObject();
@@ -92,7 +96,7 @@ public class DefaultRuntimeManager extends AbstractRuntimeManager {
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
-            ErrorManager.getDefault().notify(e);
+            logger.log(Level.SEVERE, null, e);
         } finally {
             if (decoder != null) {
                 decoder.close();
@@ -116,7 +120,7 @@ public class DefaultRuntimeManager extends AbstractRuntimeManager {
             encoder.writeObject(openRuntimes);
             encoder.close();
         } catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ioe);
+            logger.log(Level.SEVERE, null, ioe);
         } finally {
             platform.releaseLock(name);
         }

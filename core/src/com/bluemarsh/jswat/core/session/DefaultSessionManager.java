@@ -36,7 +36,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DefaultSessionManager manages Session instances persisted to properties
@@ -45,6 +46,9 @@ import org.openide.ErrorManager;
  * @author  Nathan Fiedler
  */
 public class DefaultSessionManager extends AbstractSessionManager {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            DefaultSessionManager.class.getName());
     /** The prefix for session identifiers. */
     private static final String ID_PREFIX = "SID_";
     /** List of the open sessions. */
@@ -153,7 +157,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
             decoder.setExceptionListener(new ExceptionListener() {
                 @Override
                 public void exceptionThrown(Exception e) {
-                    ErrorManager.getDefault().notify(e);
+                    logger.log(Level.SEVERE, null, e);
                 }
             });
             openSessions = (List<Session>) decoder.readObject();
@@ -168,7 +172,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
-            ErrorManager.getDefault().notify(e);
+            logger.log(Level.SEVERE, null, e);
             // SessionProvider will ensure that a current session exists.
         } finally {
             if (decoder != null) {
@@ -213,7 +217,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
             encoder.writeObject(currentSession.getIdentifier());
             encoder.close();
         } catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ioe);
+            logger.log(Level.SEVERE, null, ioe);
         } finally {
             platform.releaseLock(name);
         }

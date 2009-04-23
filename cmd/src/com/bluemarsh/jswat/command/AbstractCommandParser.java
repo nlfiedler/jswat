@@ -39,7 +39,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class AbstractCommandParser provides a partial implementation of a
@@ -48,6 +49,9 @@ import org.openide.ErrorManager;
  * @author  Nathan Fiedler
  */
 public abstract class AbstractCommandParser implements CommandParser {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            AbstractCommandParser.class.getName());
     /** Map of command aliases, keyed by their alias name. */
     private Map<String, String> aliasMap;
     /** List of commands executed by the user, stored in order. */
@@ -163,7 +167,7 @@ public abstract class AbstractCommandParser implements CommandParser {
             decoder.setExceptionListener(new ExceptionListener() {
                 @Override
                 public void exceptionThrown(Exception e) {
-                    ErrorManager.getDefault().notify(e);
+                    logger.log(Level.SEVERE, null, e);
                 }
             });
             aliasMap = (Map<String, String>) decoder.readObject();
@@ -175,7 +179,7 @@ public abstract class AbstractCommandParser implements CommandParser {
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
-            ErrorManager.getDefault().notify(e);
+            logger.log(Level.SEVERE, null, e);
         } finally {
             if (decoder != null) {
                 decoder.close();
@@ -195,7 +199,7 @@ public abstract class AbstractCommandParser implements CommandParser {
             encoder.writeObject(new Integer(historySizeLimit));
             encoder.close();
         } catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ioe);
+            logger.log(Level.SEVERE, null, ioe);
         } finally {
             platform.releaseLock(name);
         }

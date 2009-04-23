@@ -37,7 +37,8 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The default implementation of the WatchManager interface.
@@ -45,6 +46,9 @@ import org.openide.ErrorManager;
  * @author Nathan Fiedler
  */
 public class DefaultWatchManager extends AbstractWatchManager {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            DefaultWatchManager.class.getName());
     /** List of all defined watches. */
     private List<Watch> watchList;
 
@@ -79,7 +83,7 @@ public class DefaultWatchManager extends AbstractWatchManager {
             decoder.setExceptionListener(new ExceptionListener() {
                 @Override
                 public void exceptionThrown(Exception e) {
-                    ErrorManager.getDefault().notify(e);
+                    logger.log(Level.SEVERE, null, e);
                 }
             });
             watchList = (List<Watch>) decoder.readObject();
@@ -88,7 +92,7 @@ public class DefaultWatchManager extends AbstractWatchManager {
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
-            ErrorManager.getDefault().notify(e);
+            logger.log(Level.SEVERE, null, e);
         } finally {
             if (decoder != null) {
                 decoder.close();
@@ -130,7 +134,7 @@ public class DefaultWatchManager extends AbstractWatchManager {
             encoder.writeObject(watchList);
             encoder.close();
         } catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ioe);
+            logger.log(Level.SEVERE, null, ioe);
         } finally {
             platform.releaseLock(name);
         }

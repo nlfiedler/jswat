@@ -37,7 +37,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DefaultBreakpointManager is responsible for maintaining the breakpoints
@@ -47,6 +48,9 @@ import org.openide.ErrorManager;
  * @author  Nathan Fiedler
  */
 public class DefaultBreakpointManager extends AbstractBreakpointManager {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            DefaultBreakpointManager.class.getName());
     /** Suffix for the session file names. */
     private static final String FILENAME_SUFFIX = "-breakpoints.xml";
     /** The default breakpoint group, into which all new groups and
@@ -84,7 +88,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
             String name = session.getIdentifier() + FILENAME_SUFFIX;
             platform.deleteFile(name);
         } catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ioe);
+            logger.log(Level.SEVERE, null, ioe);
         }
     }
 
@@ -105,7 +109,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
             decoder.setExceptionListener(new ExceptionListener() {
                 @Override
                 public void exceptionThrown(Exception e) {
-                    ErrorManager.getDefault().notify(e);
+                    logger.log(Level.SEVERE, null, e);
                 }
             });
             defaultGroup = (BreakpointGroup) decoder.readObject();
@@ -114,7 +118,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         } catch (Exception e) {
             // Parser, I/O, and various runtime exceptions may occur,
             // need to report them and gracefully recover.
-            ErrorManager.getDefault().notify(e);
+            logger.log(Level.SEVERE, null, e);
         } finally {
             if (decoder != null) {
                 decoder.close();
@@ -210,7 +214,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
             encoder.writeObject(defaultGroup);
             encoder.close();
         } catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ioe);
+            logger.log(Level.SEVERE, null, ioe);
         } finally {
             platform.releaseLock(name);
         }

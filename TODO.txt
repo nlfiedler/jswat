@@ -6,8 +6,14 @@ $Id$
   - Commands that are needed right away
     - break <class id>:<line>
     - break <class id>.<method>[(argument types)]
+      - copy breakpoint parsing code from 2.x; where to put it?
+        - BreakpointFactory?
+        - breakpoint package?
+        - util package?
     - clear <class id>:<line>
     - clear <class id>.<method>[(argument types)]
+      - Need a means of finding a matching breakpoint
+        - Use the above parsing code then search for equal breakpoints
     - step [up]
     - stepi
     - next
@@ -17,9 +23,6 @@ $Id$
   - Need a way to manage runtimes and set one as the default for a session
   - Show a few lines of source code each time a breakpoint is hit
   - Show a single line of source code for each single step
-  - Need a way to read errors sent to ErrorManager
-    - Remove all uses of ErrorManager in core/cmd/cli and replace
-      with java.util.logging calls
   - Lacking a way to send input to the debuggee stdin stream
     - SendCommand is the starting point
     - OutputAdapter has the means, but nothing to read from
