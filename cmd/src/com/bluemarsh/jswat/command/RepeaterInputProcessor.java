@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -25,7 +25,8 @@ package com.bluemarsh.jswat.command;
 
 import java.util.Collections;
 import java.util.List;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Handles the integer prefix to repeat a given command multiple times.
@@ -33,7 +34,11 @@ import org.openide.ErrorManager;
  * @author Nathan Fiedler
  */
 public class RepeaterInputProcessor implements InputProcessor {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            RepeaterInputProcessor.class.getName());
 
+    @Override
     public boolean canProcess(String input, CommandParser parser) {
         int index = input.indexOf(' ');
         // See if the first token is an integer.
@@ -49,10 +54,12 @@ public class RepeaterInputProcessor implements InputProcessor {
         return false;
     }
 
+    @Override
     public boolean expandsInput() {
         return false;
     }
 
+    @Override
     public List<String> process(String input, CommandParser parser)
             throws CommandException {
         try {
@@ -63,7 +70,7 @@ public class RepeaterInputProcessor implements InputProcessor {
             return Collections.nCopies(times, command);
         } catch (NumberFormatException nfe) {
             // This should not have happened.
-            ErrorManager.getDefault().notify(nfe);
+            logger.log(Level.SEVERE, null, nfe);
         }
         return null;
     }

@@ -18,6 +18,8 @@ $Id$
   - Show a few lines of source code each time a breakpoint is hit
   - Show a single line of source code for each single step
   - Need a way to read errors sent to ErrorManager
+    - Remove all uses of ErrorManager in core/cmd/cli and replace
+      with java.util.logging calls
   - Lacking a way to send input to the debuggee stdin stream
     - SendCommand is the starting point
     - OutputAdapter has the means, but nothing to read from
@@ -51,6 +53,8 @@ $Id$
     - send (sends input to debuggee)
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
+  - Define logging properties for the console mode so log messages are
+    saved to the userdir
 
 - Search for all TODO/XXX items and resolve or file bugs
 

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -27,7 +27,8 @@ import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionListener;
 import java.util.HashMap;
 import java.util.Map;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.Lookup;
 
 /**
@@ -37,8 +38,11 @@ import org.openide.util.Lookup;
  * @author Nathan Fiedler
  */
 public class WatchProvider {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            WatchProvider.class.getName());
     /** Used to control access to the instance maps. */
-    private static Object mapsLock;
+    private static final Object mapsLock;
     /** Map of WatchManager instances, keyed by Session instance. */
     private static Map<Session, WatchManager> instanceMap;
     /** Map of Session instances, keyed by WatchManager instance. */
@@ -90,10 +94,10 @@ public class WatchProvider {
                 try {
                     inst = (WatchManager) protoClass.newInstance();
                 } catch (InstantiationException ie) {
-                    ErrorManager.getDefault().notify(ie);
+                    logger.log(Level.SEVERE, null, ie);
                     return null;
                 } catch (IllegalAccessException iae) {
-                    ErrorManager.getDefault().notify(iae);
+                    logger.log(Level.SEVERE, null, iae);
                     return null;
                 }
                 instanceMap.put(session, inst);

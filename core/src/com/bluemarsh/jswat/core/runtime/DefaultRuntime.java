@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -28,7 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The default implementation of a JavaRuntime.
@@ -36,6 +37,9 @@ import org.openide.ErrorManager;
  * @author Nathan Fiedler
  */
 public class DefaultRuntime implements JavaRuntime {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            DefaultRuntime.class.getName());
     /** Unique identifier for this instance. */
     private String runtimeIdentifier;
     /** Base directory of this runtime. */
@@ -47,6 +51,7 @@ public class DefaultRuntime implements JavaRuntime {
     /** Name of this runtime; not to be persisted. */
     private transient String cachedName;
 
+    @Override
     public JavaRuntime clone() {
         try {
             // Make a deep copy of this runtime for the sake of editing.
@@ -62,6 +67,7 @@ public class DefaultRuntime implements JavaRuntime {
         }
     }
 
+    @Override
     public File findExecutable(File base, String exec) {
         if (base == null) {
             return null;
@@ -82,6 +88,7 @@ public class DefaultRuntime implements JavaRuntime {
         return execf;
     }
 
+    @Override
     public String getBase() {
         if (baseDirectory == null) {
             return null;
@@ -90,10 +97,12 @@ public class DefaultRuntime implements JavaRuntime {
         }
     }
 
+    @Override
     public String getExec() {
         return runtimeExec;
     }
 
+    @Override
     public String getName() {
         //
         // Typical output from the Sun JVM:
@@ -119,7 +128,7 @@ public class DefaultRuntime implements JavaRuntime {
                         cachedName = cachedName.substring(0, idx);
                     }
                 } catch (IOException ioe) {
-                    ErrorManager.getDefault().notify(ioe);
+                    logger.log(Level.SEVERE, null, ioe);
                 }
             }
         }
@@ -130,14 +139,17 @@ public class DefaultRuntime implements JavaRuntime {
         return cachedName;
     }
 
+    @Override
     public String getIdentifier() {
         return runtimeIdentifier;
     }
 
+    @Override
     public List<String> getSources() {
         return sourceCodes;
     }
 
+    @Override
     public boolean isValid() {
         if (baseDirectory != null && runtimeExec != null) {
             // Try to find the executable.
@@ -147,6 +159,7 @@ public class DefaultRuntime implements JavaRuntime {
         return false;
     }
 
+    @Override
     public void setBase(String base) {
         if (base == null || base.length() == 0) {
             throw new IllegalArgumentException("invalid base value");
@@ -156,6 +169,7 @@ public class DefaultRuntime implements JavaRuntime {
         baseDirectory = new File(base);
     }
 
+    @Override
     public void setExec(String exec) {
         if (exec == null || exec.length() == 0) {
             throw new IllegalArgumentException("invalid exec value");
@@ -165,10 +179,12 @@ public class DefaultRuntime implements JavaRuntime {
         // up the deserialization process.
     }
 
+    @Override
     public void setIdentifier(String id) {
         runtimeIdentifier = id;
     }
 
+    @Override
     public void setSources(List<String> sources) {
         if (sources == null || sources.isEmpty()) {
             sourceCodes = null;

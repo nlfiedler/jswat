@@ -35,7 +35,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -48,6 +49,9 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class DefaultCommandParser extends AbstractCommandParser {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            DefaultCommandParser.class.getName());
     /** Result of looking up the available input processors. */
     private Lookup.Result processorLookupResult;
     /** Synchronize on this to access inputProcessors reference. */
@@ -248,7 +252,7 @@ public class DefaultCommandParser extends AbstractCommandParser {
                     throw ce;
                 } catch (Exception e) {
                     // Everything else, report it and encapsulate it.
-                    ErrorManager.getDefault().notify(e);
+                    logger.log(Level.SEVERE, null, e);
                     throw new CommandException("Unexpected exception", e);
                 }
             } else {

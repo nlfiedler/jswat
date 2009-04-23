@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -41,7 +41,8 @@ import com.sun.jdi.request.MethodExitRequest;
 import com.sun.jdi.request.StepRequest;
 import java.util.Iterator;
 import java.util.List;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 
 /**
@@ -50,6 +51,9 @@ import org.openide.util.NbBundle;
  * @author Nathan Fiedler
  */
 public class DefaultStepper extends AbstractStepper implements DispatcherListener {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            DefaultStepper.class.getName());
 
     /**
      * Creates a new instance of DefaultStepper.
@@ -75,7 +79,7 @@ public class DefaultStepper extends AbstractStepper implements DispatcherListene
                             // Resume VM so step event will occur.
                             return true;
                         } catch (SteppingException se) {
-                            ErrorManager.getDefault().notify(se);
+                            logger.log(Level.SEVERE, null, se);
                         }
                     }
                 }
@@ -139,7 +143,7 @@ public class DefaultStepper extends AbstractStepper implements DispatcherListene
             return request;
         } catch (IncompatibleThreadStateException itse) {
             // This cannot be possible.
-            ErrorManager.getDefault().notify(itse);
+            logger.log(Level.SEVERE, null, itse);
         } catch (VMDisconnectedException vmde) {
             // This is unusual and there's no sense reporting it.
         }

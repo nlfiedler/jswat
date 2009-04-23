@@ -33,7 +33,8 @@ import com.sun.jdi.connect.ListeningConnector;
 import com.sun.jdi.connect.TransportTimeoutException;
 import java.io.IOException;
 import java.util.Map;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -45,6 +46,9 @@ import org.openide.util.RequestProcessor;
  */
 public class ListeningConnection extends AbstractConnection
         implements Cancellable, Runnable {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            ListeningConnection.class.getName());
     /** If true, this listener has been cancelled by the user. */
     private boolean cancelled;
 
@@ -66,10 +70,10 @@ public class ListeningConnection extends AbstractConnection
             cancelled = true;
             conn.stopListening(getConnectorArgs());
         } catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ioe);
+            logger.log(Level.SEVERE, null, ioe);
             return false;
         } catch (IllegalConnectorArgumentsException icae) {
-            ErrorManager.getDefault().notify(icae);
+            logger.log(Level.SEVERE, null, icae);
             return false;
         }
         return true;
@@ -111,10 +115,10 @@ public class ListeningConnection extends AbstractConnection
             OutputProvider.getWriter().printOutput(msg);
         } catch (IOException ioe) {
             if (!cancelled) {
-                ErrorManager.getDefault().notify(ioe);
+                logger.log(Level.SEVERE, null, ioe);
             }
         } catch (IllegalConnectorArgumentsException icae) {
-            ErrorManager.getDefault().notify(icae);
+            logger.log(Level.SEVERE, null, icae);
         } finally {
             platform.stopProgress(ph);
         }

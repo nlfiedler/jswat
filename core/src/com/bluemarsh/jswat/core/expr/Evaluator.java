@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2007. All Rights Reserved.
+ * are Copyright (C) 2002-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -44,7 +44,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 
 /**
@@ -55,6 +56,9 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class Evaluator {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            Evaluator.class.getName());
     /** The expression to evaluate. */
     private String expression;
     /** Root of the parsed abstract syntax tree. */
@@ -193,11 +197,11 @@ public class Evaluator {
                         methods.get(0), arguments);
                 buf.append(result != null ? Strings.trimQuotes(result.toString()) : "null");
             } catch (ExecutionException ee) {
-                ErrorManager.getDefault().notify(ee);
+                logger.log(Level.SEVERE, null, ee);
             } catch (InterruptedException ie) {
-                ErrorManager.getDefault().notify(ie);
+                logger.log(Level.SEVERE, null, ie);
             } catch (TimeoutException te) {
-                ErrorManager.getDefault().notify(te);
+                logger.log(Level.SEVERE, null, te);
             }
 
         } else if (value instanceof CharValue) {

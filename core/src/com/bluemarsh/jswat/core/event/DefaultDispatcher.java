@@ -32,7 +32,8 @@ import com.sun.jdi.event.EventSet;
 import com.sun.jdi.event.VMDisconnectEvent;
 import com.sun.jdi.event.VMStartEvent;
 import com.sun.jdi.request.EventRequest;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class DefaultDispatcher is a concrete implementation of the Dispatcher
@@ -42,6 +43,9 @@ import org.openide.ErrorManager;
  * @author  Nathan Fiedler
  */
 public class DefaultDispatcher implements Dispatcher, Runnable {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            DefaultDispatcher.class.getName());
     /** EventRequest property for the DispatcherListener. */
     private static final String PROP_LISTENER = "listener";
     /** VM event queue. */
@@ -116,7 +120,7 @@ public class DefaultDispatcher implements Dispatcher, Runnable {
                 // We do not care what FindBugs says about this catch.
                 // We absolutely cannot terminate this loop -- catch the
                 // exception, report it, and continue reading events.
-                ErrorManager.getDefault().notify(e);
+                logger.log(Level.SEVERE, null, e);
             }
         }
         if (stoppedCallback != null) {

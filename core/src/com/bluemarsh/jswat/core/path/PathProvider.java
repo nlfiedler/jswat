@@ -27,7 +27,8 @@ import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionListener;
 import java.util.HashMap;
 import java.util.Map;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.Lookup;
 
 /**
@@ -37,6 +38,9 @@ import org.openide.util.Lookup;
  * @author Nathan Fiedler
  */
 public class PathProvider {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            PathProvider.class.getName());
     /** Used to control access to the instance maps. */
     private static final Object mapsLock;
     /** Map of PathManager instances, keyed by Session instance. */
@@ -75,10 +79,10 @@ public class PathProvider {
                 try {
                     inst = (PathManager) protoClass.newInstance();
                 } catch (InstantiationException ie) {
-                    ErrorManager.getDefault().notify(ie);
+                    logger.log(Level.SEVERE, null, ie);
                     return null;
                 } catch (IllegalAccessException iae) {
-                    ErrorManager.getDefault().notify(iae);
+                    logger.log(Level.SEVERE, null, iae);
                     return null;
                 }
                 instanceMap.put(session, inst);

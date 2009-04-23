@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2006. All Rights Reserved.
+ * are Copyright (C) 1999-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -27,7 +27,8 @@ import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionEvent;
 import com.bluemarsh.jswat.core.session.SessionListener;
 import com.sun.jdi.VMDisconnectedException;
-import org.openide.ErrorManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class AbstractDebuggingContext provides an abstract implementation of
@@ -38,6 +39,9 @@ import org.openide.ErrorManager;
  */
 public abstract class AbstractDebuggingContext
         implements DebuggingContext, SessionListener {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(
+            AbstractDebuggingContext.class.getName());
     /** List of context listeners. */
     private ContextListener listeners;
     /** The Session instance we belong to. */
@@ -49,6 +53,7 @@ public abstract class AbstractDebuggingContext
     protected AbstractDebuggingContext() {
     }
 
+    @Override
     public void addContextListener(ContextListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -57,12 +62,15 @@ public abstract class AbstractDebuggingContext
         }
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
     }
 
@@ -87,14 +95,16 @@ public abstract class AbstractDebuggingContext
         } catch (VMDisconnectedException vmde) {
             // This happens quite often, so ignore it.
         } catch (Exception e) {
-            ErrorManager.getDefault().notify(e);
+            logger.log(Level.SEVERE, null, e);
         }
     }
 
+    @Override
     public void opened(Session session) {
         ourSession = session;
     }
 
+    @Override
     public void removeContextListener(ContextListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -103,9 +113,11 @@ public abstract class AbstractDebuggingContext
         }
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }
