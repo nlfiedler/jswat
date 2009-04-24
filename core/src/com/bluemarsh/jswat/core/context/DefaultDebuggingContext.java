@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2005. All Rights Reserved.
+ * are Copyright (C) 1999-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -49,10 +49,12 @@ public class DefaultDebuggingContext extends AbstractDebuggingContext {
     public DefaultDebuggingContext() {
     }
 
+    @Override
     public synchronized int getFrame() {
         return currentFrame;
     }
 
+    @Override
     public synchronized Location getLocation() {
         Location loc = null;
         try {
@@ -75,6 +77,7 @@ public class DefaultDebuggingContext extends AbstractDebuggingContext {
         return loc;
     }
 
+    @Override
     public synchronized StackFrame getStackFrame() throws
             IncompatibleThreadStateException, IndexOutOfBoundsException,
             ObjectCollectedException {
@@ -85,15 +88,18 @@ public class DefaultDebuggingContext extends AbstractDebuggingContext {
         }
     }
 
+    @Override
     public synchronized ThreadReference getThread() {
         return currentThread;
     }
 
+    @Override
     public synchronized void reset() {
         currentThread = null;
         currentFrame = 0;
     }
 
+    @Override
     public synchronized void setFrame(int frame) throws
             IncompatibleThreadStateException, IndexOutOfBoundsException {
         if (frame < 0) {
@@ -118,6 +124,7 @@ public class DefaultDebuggingContext extends AbstractDebuggingContext {
         }
     }
 
+    @Override
     public synchronized void setLocation(LocatableEvent le, boolean suspending) {
         currentFrame = 0;
         if (le != null) {
@@ -128,6 +135,7 @@ public class DefaultDebuggingContext extends AbstractDebuggingContext {
         fireChange(ContextEvent.Type.LOCATION, suspending);
     }
 
+    @Override
     public synchronized void setThread(ThreadReference thread, boolean suspending) {
         currentThread = thread;
         // If thread changes, stack frame is reset to zero.

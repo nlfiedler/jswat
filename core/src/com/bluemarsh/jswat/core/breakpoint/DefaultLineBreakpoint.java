@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -65,17 +65,21 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
     public DefaultLineBreakpoint() {
     }
 
+    @Override
     public boolean canFilterClass() {
         return false;
     }
 
+    @Override
     public boolean canFilterThread() {
         return true;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     protected ClassPrepareRequest createPrepareRequest(VirtualMachine vm) {
         ClassPrepareRequest request = super.createPrepareRequest(vm);
         // If source name filtering is available, use it to make the
@@ -91,6 +95,7 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         return request;
     }
 
+    @Override
     public String describe(Event e) {
         String name = sourceName;
         // The event is expected to be locatable, but in the event that
@@ -110,27 +115,33 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
                 "Line.description.stop", name, lineNumber, thread);
     }
 
+    @Override
     public String getDescription() {
         return NbBundle.getMessage(DefaultLineBreakpoint.class,
                 "Line.description", sourceName, lineNumber);
     }
 
+    @Override
     public int getLineNumber() {
         return lineNumber;
     }
 
+    @Override
     public String getPackageName() {
         return packageName;
     }
 
+    @Override
     public String getSourceName() {
         return sourceName;
     }
 
+    @Override
     public String getURL() {
         return url;
     }
 
+    @Override
     protected boolean matches(ReferenceType clazz) {
         boolean found = false;
         try {
@@ -166,9 +177,11 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         return found;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     protected boolean resolveReference(ReferenceType clazz,
             List<EventRequest> requests) throws ResolveException {
         List locs = null;
@@ -205,9 +218,11 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -217,6 +232,7 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setLineNumber(int line) {
         if (line < 1) {
             throw new IllegalArgumentException("line cannot be < 1");
@@ -231,12 +247,14 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setPackageName(String pkg) {
         String old = packageName;
         packageName = pkg;
         propSupport.firePropertyChange(PROP_PACKAGENAME, old, pkg);
     }
 
+    @Override
     public void setSourceName(String name) {
         if (name == null || name.length() == 0) {
             throw new IllegalArgumentException("name cannot be null/empty");
@@ -246,6 +264,7 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         propSupport.firePropertyChange(PROP_SOURCENAME, old, name);
     }
 
+    @Override
     public void setURL(String url) {
         if (url == null || url.length() == 0) {
             throw new IllegalArgumentException("url cannot be null/empty");
@@ -255,6 +274,7 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         propSupport.firePropertyChange(PROP_URL, old, url);
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

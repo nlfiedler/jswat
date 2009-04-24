@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2005. All Rights Reserved.
+ * are Copyright (C) 1999-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -72,11 +72,7 @@ public class ResolveException extends Exception {
         super(cause);
     }
 
-    /**
-     * Creates a localized description of this throwable.
-     *
-     * @return  The localized description of this throwable.
-     */
+    @Override
     public String getLocalizedMessage() {
         Throwable cause = getCause();
         if (cause instanceof AbsentInformationException) {
@@ -108,11 +104,7 @@ public class ResolveException extends Exception {
         }
     }
 
-    /**
-     * Returns a String representation of this.
-     *
-     * @return  string of this.
-     */
+    @Override
     public String toString() {
         return getLocalizedMessage();
     }
