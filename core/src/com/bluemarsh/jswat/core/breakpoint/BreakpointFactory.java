@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,6 +23,9 @@
 
 package com.bluemarsh.jswat.core.breakpoint;
 
+import com.bluemarsh.jswat.core.context.DebuggingContext;
+import com.bluemarsh.jswat.core.util.AmbiguousMethodException;
+import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Field;
 import com.sun.jdi.Location;
 import com.sun.jdi.ObjectReference;
@@ -36,6 +39,64 @@ import java.util.List;
  * @author Nathan Fiedler
  */
 public interface BreakpointFactory {
+
+    /**
+     * Creates either a line breakpoint or a method breakpoint, based on
+     * the specification given. The recognized specification formats include:
+     *
+     * <ul>
+     *   <li><code>[[&lt;package&gt;.]&lt;class&gt;:]&lt;line&gt;</code></li>
+     *   <li><code>[[&lt;package&gt;.]&lt;class&gt;:]&lt;method&gt;[(&lt;arg-list&gt;)]</code></li>
+     *   <li><code>[&lt;path&gt;/&lt;file&gt;:]&lt;line&gt;</code></li>
+     * </ul>
+     *
+     * <p>Both a path and file name, as well as a fully-qualified class name,
+     * are supported means for specifying a location. That is, if the user
+     * wants to set a breakpoint in a source file, they can specify the
+     * path and name of that source file. The path does not have to be
+     * absolute, nor does the file have to exist on the local system. The
+     * only requirement is that the path and file name match the source path
+     * and source name found in the class file. Note that the path separator
+     * must be the platform-specific value (e.g. \ on Windows), but it will
+     * always be converted to forward slash (/) internally.</p>
+     *
+     * <p>If the user wants to use a class name, specifying the class
+     * by its fully-qualified binary name (e.g. java.lang.String) will
+     * probably be sufficient. If the class is inside a source file whose
+     * extension differs from the default, then it may not resolve.</p>
+     *
+     * <p>The <code>arg-list</code> is a comma-separated list of types,
+     * such as <code>int</code> and <code>java.lang.String</code>. The
+     * types must match one of the methods in the given class for the
+     * breakpoint to be resolved successfully.</p>
+     *
+     * <p>If the class name is not given, then the current location must
+     * be set in the <code>DebuggingContext</code> or the breakpoint
+     * creation will fail.</p>
+     *
+     * @param  spec     specification for the breakpoint.
+     * @param  context  provides current location; may be null if the
+     *                  breakpoint specification includes a class name.
+     * @return  the new breakpoint.
+     * @throws  AbsentInformationException
+     *          if extracting source information from the current location
+     *          is unsuccessful (in which case the caller may want to give
+     *          a class name next time).
+     * @throws  AmbiguousClassSpecException
+     *          thrown if class name was missing and context was null.
+     * @throws  AmbiguousMethodException
+     *          if the method specified is not specific enough to match.
+     * @throws  MalformedClassNameException
+     *          if the class name is not a valid identifier.
+     * @throws  MalformedMemberNameException
+     *          if the method name is not a valid identifier.
+     * @throws  NumberFormatException
+     *          if a line number was not actually a number.
+     */
+    Breakpoint createBreakpoint(String spec, DebuggingContext context)
+            throws AbsentInformationException, AmbiguousClassSpecException,
+            AmbiguousMethodException, MalformedClassNameException,
+            MalformedMemberNameException, NumberFormatException;
 
     /**
      * Create a breakpoint group and add it to the given breakpoint group.
@@ -74,7 +135,7 @@ public interface BreakpointFactory {
      * @param  caught    true to stop on caught exceptions, false to ignore.
      * @param  uncaught  true to stop on uncaught exceptions, false to ignore.
      * @return  new exception breakpoint.
-     * @throws  ClassNotFoundException
+     * @throws  MalformedClassNameException
      *          if class pattern is not a valid identifier.
      */
     ExceptionBreakpoint createExceptionBreakpoint(String cname, boolean caught,
@@ -164,6 +225,8 @@ public interface BreakpointFactory {
      * @return  new variable breakpoint.
      * @throws  MalformedClassNameException
      *          if class name is not a valid identifier.
+     * @throws  MalformedMemberNameException
+     *          if methodname is not a valid identifier.
      */
     WatchBreakpoint createWatchBreakpoint(String cname, String field,
             boolean access, boolean modify)

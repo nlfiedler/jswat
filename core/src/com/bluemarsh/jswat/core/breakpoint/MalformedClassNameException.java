@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -34,7 +34,7 @@ public class MalformedClassNameException extends Exception {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructs a MalformedClassNameException with no message.
+     * Constructs a MalformedClassNameException with no message or cause.
      */
     public MalformedClassNameException() {
         super();
@@ -43,9 +43,29 @@ public class MalformedClassNameException extends Exception {
     /**
      * Constructs a MalformedClassNameException with the given message.
      *
-     * @param  s  exception message.
+     * @param  msg  exception message.
      */
-    public MalformedClassNameException(String s) {
-        super(s);
+    public MalformedClassNameException(String msg) {
+        super(msg);
+    }
+
+    /**
+     * Constructs a MalformedClassNameException with the given message
+     * and cause.
+     *
+     * @param  msg    exception message.
+     * @param  cause  cause of this exception.
+     */
+    public MalformedClassNameException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
+    /**
+     * Constructs a MalformedClassNameException with the given cause.
+     *
+     * @param  cause  cause of this exception.
+     */
+    public MalformedClassNameException(Throwable cause) {
+        super(cause);
     }
 }

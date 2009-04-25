@@ -4,14 +4,14 @@ $Id$
 
 - Console mode
   - Commands that are needed right away
-    - break <class id>:<line>
-    - break <class id>.<method>[(argument types)]
+    - break <class id>|<file>:<line>
+    - break <class id>:<method>[(argument types)]
       - copy breakpoint parsing code from 2.x; where to put it?
         - BreakpointFactory?
         - breakpoint package?
         - util package?
-    - clear <class id>:<line>
-    - clear <class id>.<method>[(argument types)]
+    - clear <class id>|<file>:<line>
+    - clear <class id>:<method>[(argument types)]
       - Need a means of finding a matching breakpoint
         - Use the above parsing code then search for equal breakpoints
     - step [up]
@@ -45,10 +45,10 @@ $Id$
     - unmonitor
     - watch
     - unwatch
-    - session new|copy|delete
+    - session create|copy|rename|delete
   - Test debugging
     - Reading from debuggee output streams
-  - Read commands from an 'rc' file in the home directory
+  - Read commands from an 'rc' file in the home directory (see below)
   - Commands to write later
     - redefine
     - interrupt
@@ -66,7 +66,7 @@ $Id$
   - Test in another OS in VirtualBox
 
 - Experiement with using low priority thread pool and Thread.yield() in
-  OutputAdapter in ui module.
+  OutputAdapter in the _ui_ module.
 - Fix distributable/installer build
 
 - Documentation updates
