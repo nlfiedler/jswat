@@ -39,7 +39,7 @@ public class ConsoleOutputWriter implements OutputWriter {
      * Default constructor for ConsoleOutputWriter.
      */
     public ConsoleOutputWriter() {
-        output = System.console().writer();
+        output = new PrintWriter(System.out);
     }
 
     @Override
