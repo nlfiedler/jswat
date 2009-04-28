@@ -38,7 +38,7 @@ public class ContinueCommand extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "cont";
+        return "continue";
     }
 
     @Override
