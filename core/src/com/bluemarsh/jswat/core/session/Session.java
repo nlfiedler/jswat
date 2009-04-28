@@ -45,7 +45,7 @@ public interface Session {
     public static final String PROP_CLASS_NAME = "ClassName";
     /** Name of the main class parameters property. */
     public static final String PROP_CLASS_PARAMS = "ClassParams";
-    /** Name of the socket host property. */
+    /** Name of the process identifier property. */
     public static final String PROP_PROCESS_ID = "ProcessID";
     /** Name of the shared name property. */
     public static final String PROP_SHARED_NAME = "SharedName";
