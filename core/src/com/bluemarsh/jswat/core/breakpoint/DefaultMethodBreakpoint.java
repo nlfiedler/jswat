@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2007. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -66,17 +66,21 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
     public DefaultMethodBreakpoint() {
     }
 
+    @Override
     public boolean canFilterClass() {
         return false;
     }
 
+    @Override
     public boolean canFilterThread() {
         return false;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public String describe(Event e) {
         // Use the exact location information, since the description of this
         // breakpoint may be vague, and useless when events occur repeatedly.
@@ -91,6 +95,7 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
                 "Method.description.stop", params);
     }
 
+    @Override
     public String getDescription() {
         String cname = getClassName();
         String mname;
@@ -109,17 +114,21 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
                 "Method.description", cname, mname, args);
     }
 
+    @Override
     public List<String> getMethodParameters() {
         return methodParameters;
     }
 
+    @Override
     public String getMethodName() {
         return methodId;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     protected boolean resolveReference(ReferenceType refType,
             List<EventRequest> requests) throws ResolveException {
 
@@ -179,9 +188,11 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
         return locations.size() > 0;
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -191,6 +202,7 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setMethodName(String name) throws MalformedMemberNameException {
         if (name == null) {
             throw new IllegalArgumentException("name must be non-null");
@@ -209,6 +221,7 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setMethodParameters(List<String> args) {
         if (args == null) {
             throw new NullPointerException("args cannot be null");
@@ -223,6 +236,7 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }
