@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -63,6 +63,8 @@ public interface Breakpoint {
     public static final String PROP_SUSPENDPOLICY = "suspendPolicy";
     /** Name of 'threadFilter' property. */
     public static final String PROP_THREADFILTER = "threadFilter";
+    /** Name of the 'uniqueNumber' property. */
+    public static final String PROP_NUMBER = "uniqueNumber";
 
     /**
      * Add a breakpoint listener to this breakpoint.

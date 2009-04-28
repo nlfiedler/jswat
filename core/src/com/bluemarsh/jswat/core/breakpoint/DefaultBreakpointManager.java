@@ -56,6 +56,8 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
     /** The default breakpoint group, into which all new groups and
      * breakpoints will go by default. */
     private BreakpointGroup defaultGroup;
+    /** Used to assign unique numbers to each breakpoint. */
+    private int nextBreakpointNumber;
 
     @Override
     public void addBreakpoint(Breakpoint bp) {
@@ -67,6 +69,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         if (bp instanceof SessionListener) {
             getSession().addSessionListener((SessionListener) bp);
         }
+        bp.setProperty(Breakpoint.PROP_NUMBER, nextBreakpointNumber++);
         // Notify everyone that a breakpoint was added.
         fireEvent(bp, BreakpointEvent.Type.ADDED, null);
     }
@@ -131,7 +134,9 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
 
         // Make sure our uncaught exceptions breakpoint exists.
         // At the same time, we register each of the breakpoints.
+        // Ensure breakpoints have a unique number for ease of reference.
         boolean uncaughtExists = false;
+        List<Breakpoint> numberless = new ArrayList<Breakpoint>();
         Iterator<Breakpoint> biter = defaultGroup.breakpoints(true);
         while (biter.hasNext()) {
             Breakpoint bp = biter.next();
@@ -144,10 +149,19 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
             if (bp instanceof UncaughtExceptionBreakpoint) {
                 uncaughtExists = true;
             }
+            Integer n = (Integer) bp.getProperty(Breakpoint.PROP_NUMBER);
+            if (n == null) {
+                numberless.add(bp);
+            } else if (n >= nextBreakpointNumber) {
+                nextBreakpointNumber = n + 1;
+            }
         }
         if (!uncaughtExists) {
             Breakpoint bp = bf.createUncaughtExceptionBreakpoint();
             addBreakpoint(bp);
+        }
+        for (Breakpoint bp : numberless) {
+            bp.setProperty(Breakpoint.PROP_NUMBER, nextBreakpointNumber++);
         }
 
         // Make sure we are listening to all of the groups.
