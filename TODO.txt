@@ -3,11 +3,6 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
-  - Need a way to manage runtimes and set one as the default for a session
-    - Runtime preference is set per session using PROP_RUNTIME_ID
-    - runtime command to list, add, remove runtimes
-      - runtime add path [exe]
-      - runtime remove path
   - Show a few lines of source code each time a breakpoint is hit
   - Show a single line of source code for each single step
   - Lacking a way to send input to the debuggee stdin stream
@@ -65,3 +60,4 @@ $Id$
     - A unique prefix for a command will invoke that command (e.g. hi => history)
     - RC-like file for commands that are executed at startup
       - Looks for .jswatrc and jswat.ini in user.home and user.dir
+    - Using runtime command to set Java runtimes for session

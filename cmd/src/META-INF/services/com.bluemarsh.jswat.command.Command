@@ -20,6 +20,7 @@ com.bluemarsh.jswat.command.commands.PropertiesCommand
 com.bluemarsh.jswat.command.commands.RequestsCommand
 com.bluemarsh.jswat.command.commands.ResumeCommand
 com.bluemarsh.jswat.command.commands.RunCommand
+com.bluemarsh.jswat.command.commands.RuntimeCommand
 com.bluemarsh.jswat.command.commands.ShutdownCommand
 com.bluemarsh.jswat.command.commands.SourceNamesCommand
 com.bluemarsh.jswat.command.commands.SourcepathCommand
