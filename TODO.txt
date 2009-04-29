@@ -3,61 +3,46 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
-  - Commands that are needed right away
-    - break <class id>|<file>:<line>
-    - break <class id>:<method>[(argument types)]
-      - copy breakpoint parsing code from 2.x; where to put it?
-        - BreakpointFactory?
-        - breakpoint package?
-        - util package?
-    - clear <class id>|<file>:<line>
-    - clear <class id>:<method>[(argument types)]
-      - Need a means of finding a matching breakpoint
-        - Use the above parsing code then search for equal breakpoints
-    - step [up]
-    - stepi
-    - next
-    - resume [thread id(s)]
-    - suspend [thread id(s)]
-    - where
   - Need a way to manage runtimes and set one as the default for a session
+    - Runtime preference is set per session using PROP_RUNTIME_ID
+    - runtime command to list, add, remove runtimes
+      - runtime add path [exe]
+      - runtime remove path
   - Show a few lines of source code each time a breakpoint is hit
   - Show a single line of source code for each single step
   - Lacking a way to send input to the debuggee stdin stream
     - SendCommand is the starting point
     - OutputAdapter has the means, but nothing to read from
-  - Commands that are needed before release
-    - attach
+  - Commands to be implemented
     - catch
-    - detach
+    - commands: assign monitors to breakpoints (list if no arguments)
+    - condition: assign condition to breakpoints (list if no arguments)
     - ignore
     - classes
+    - exclude (manage stepping excludes)
     - fields
+    - filters: assign thread/class filters to breakpoints (list if no args)
     - locals
     - methods
     - up [n]
     - down [n]
-    - thread
-    - threads
     - threadgroups
-    - threadlocks
     - monitor
     - unmonitor
     - watch
     - unwatch
     - session create|copy|rename|delete
-  - Test debugging
-    - Reading from debuggee output streams
-  - Read commands from an 'rc' file in the home directory (see below)
-  - Commands to write later
     - redefine
     - interrupt
     - eval
     - send (sends input to debuggee)
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
+  - Read commands from RC-like file during startup
+    - Look for .jswatrc and jswat.ini in user.home and user.dir
   - Define logging properties for the console mode so log messages are
     saved to the userdir
+  - Add help categories, as in gdb, for describing sets of commands
 
 - Search for all TODO/XXX items and resolve or file bugs
 
@@ -65,8 +50,6 @@ $Id$
   - Mac has it in the classes.jar already
   - Test in another OS in VirtualBox
 
-- Experiement with using low priority thread pool and Thread.yield() in
-  OutputAdapter in the _ui_ module.
 - Fix distributable/installer build
 
 - Documentation updates
@@ -81,4 +64,4 @@ $Id$
     - Command line arguments are interpreted as command input
     - A unique prefix for a command will invoke that command (e.g. hi => history)
     - RC-like file for commands that are executed at startup
-      - Look for .jswatrc and jswat.ini in user.home and user.dir
+      - Looks for .jswatrc and jswat.ini in user.home and user.dir
