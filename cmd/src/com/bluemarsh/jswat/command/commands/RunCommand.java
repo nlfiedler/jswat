@@ -41,7 +41,6 @@ import com.bluemarsh.jswat.core.util.Processes;
 import com.bluemarsh.jswat.core.util.Strings;
 import com.sun.jdi.connect.VMStartException;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import org.openide.util.NbBundle;
 
 /**
@@ -82,14 +81,24 @@ public class RunCommand extends AbstractCommand {
                 session.setProperty(Session.PROP_CLASS_PARAMS, classParams);
             }
 
+            // Find the Java runtime to use for this session.
+            String runtimeId = session.getProperty(Session.PROP_RUNTIME_ID);
+            RuntimeManager rm = RuntimeProvider.getRuntimeManager();
+            JavaRuntime runtime = null;
+            if (runtimeId != null && runtimeId.length() > 0) {
+                // Try to find the runtime, if it is still around.
+                runtime = rm.findById(runtimeId);
+            }
+            if (runtime == null) {
+                // Runtime not specified or it has been uninstalled.
+                // Just grab whatever is available.
+                runtime = rm.iterateRuntimes().next();
+            }
+
             // Create a connection, connect and resume the session
             PathManager pm = PathProvider.getPathManager(session);
             String cp = Strings.listToString(pm.getClassPath());
             String javaParams = "-cp " + cp;
-            RuntimeManager rm = RuntimeProvider.getRuntimeManager();
-            // TODO: how to define a runtime and set it as the default?
-            Iterator<JavaRuntime> runtimes = rm.iterateRuntimes();
-            JavaRuntime runtime = runtimes.next();
             ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
             // This may throw an IllegalArgumentException.
             JvmConnection connection = factory.createLaunching(runtime,
