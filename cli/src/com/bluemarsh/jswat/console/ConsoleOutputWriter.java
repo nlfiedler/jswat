@@ -39,7 +39,8 @@ public class ConsoleOutputWriter implements OutputWriter {
      * Default constructor for ConsoleOutputWriter.
      */
     public ConsoleOutputWriter() {
-        output = new PrintWriter(System.out);
+        // Turn on auto-flush so we don't have to bother.
+        output = new PrintWriter(System.out, true);
     }
 
     @Override

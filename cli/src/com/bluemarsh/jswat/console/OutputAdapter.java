@@ -169,9 +169,11 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                 while (len != -1) {
                     String str = new String(buf, 0, len);
                     printWriter.print(str);
-                    Thread.yield();
+                    Thread.sleep(1);
                     len = isr.read(buf);
                 }
+            } catch (InterruptedException ex) {
+                // Just stop reading.
             } catch (InterruptedIOException iioe) {
                 // Just stop reading.
             } catch (IOException ioe) {
@@ -219,9 +221,11 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                     osw.write(buf, 0, len);
                     // Must flush each time.
                     osw.flush();
-                    Thread.yield();
+                    Thread.sleep(1);
                     len = reader.read(buf);
                 }
+            } catch (InterruptedException ex) {
+                // Just stop reading.
             } catch (InterruptedIOException iioe) {
                 // Just stop reading.
             } catch (IOException ioe) {
