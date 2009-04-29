@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -42,6 +42,15 @@ public class CommandException extends Exception {
      */
     public CommandException(String message) {
         super(message);
+    }
+
+    /**
+     * Constructs a new exception with the specified cause.
+     *
+     * @param  cause  the cause of this exception.
+     */
+    public CommandException(Throwable cause) {
+        super(cause);
     }
 
     /**

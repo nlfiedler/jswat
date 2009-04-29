@@ -69,7 +69,6 @@ public class RunCommand extends AbstractCommand {
             // Get the previously defined class and parameters.
             String className = session.getProperty(Session.PROP_CLASS_NAME);
             String classParams = session.getProperty(Session.PROP_CLASS_PARAMS);
-            session.setProperty(Session.PROP_CLASS_PARAMS, classParams);
             if (arguments.hasMoreTokens()) {
                 className = arguments.nextToken();
                 // Allow reseting the parameters by not specifying any.
@@ -83,7 +82,7 @@ public class RunCommand extends AbstractCommand {
                 session.setProperty(Session.PROP_CLASS_PARAMS, classParams);
             }
 
-            // Create a connection, connect and resune the session
+            // Create a connection, connect and resume the session
             PathManager pm = PathProvider.getPathManager(session);
             String cp = Strings.listToString(pm.getClassPath());
             String javaParams = "-cp " + cp;
