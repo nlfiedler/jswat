@@ -50,10 +50,12 @@ import org.openide.util.NbBundle;
  */
 public class WhereCommand extends AbstractCommand {
 
+    @Override
     public String getName() {
         return "where";
     }
 
+    @Override
     public void perform(CommandContext context, CommandArguments arguments)
             throws CommandException, MissingArgumentsException {
 
@@ -105,8 +107,8 @@ public class WhereCommand extends AbstractCommand {
      * @throws  CommandException
      *          if something goes wrong.
      */
-    protected void printStack(ThreadReference thread, PrintWriter writer,
-                              DebuggingContext dc) throws CommandException {
+    private void printStack(ThreadReference thread, PrintWriter writer,
+            DebuggingContext dc) throws CommandException {
         List stack = null;
         try {
             stack = thread.frames();
@@ -149,7 +151,8 @@ public class WhereCommand extends AbstractCommand {
             } else {
                 sb.append("  [");
             }
-            sb.append(i + 1);
+            // Leave the stack frame index as zero-based.
+            sb.append(i);
             sb.append("] ");
             sb.append(method.declaringType().name());
             sb.append('.');
@@ -178,6 +181,7 @@ public class WhereCommand extends AbstractCommand {
         writer.print(sb.toString());
     }
 
+    @Override
     public boolean requiresDebuggee() {
         return true;
     }
