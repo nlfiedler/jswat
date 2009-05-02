@@ -14,6 +14,7 @@ com.bluemarsh.jswat.command.commands.EnableCollectionCommand
 com.bluemarsh.jswat.command.commands.EventTraceCommand
 com.bluemarsh.jswat.command.commands.HelpCommand
 com.bluemarsh.jswat.command.commands.HistoryCommand
+com.bluemarsh.jswat.command.commands.LocalsCommand
 com.bluemarsh.jswat.command.commands.MethodsCommand
 com.bluemarsh.jswat.command.commands.ObjectLocksCommand
 com.bluemarsh.jswat.command.commands.PropertiesCommand
