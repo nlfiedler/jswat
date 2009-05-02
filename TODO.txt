@@ -12,11 +12,10 @@ $Id$
     - catch
     - commands: assign monitors to breakpoints (list if no arguments)
     - condition: assign condition to breakpoints (list if no arguments)
-    - ignore
     - classes
     - exclude (manage stepping excludes)
     - fields
-    - filters: assign thread/class filters to breakpoints (list if no args)
+    - filter: assign thread/class filters to breakpoints (list if no args)
     - methods
     - up [n]
     - down [n]

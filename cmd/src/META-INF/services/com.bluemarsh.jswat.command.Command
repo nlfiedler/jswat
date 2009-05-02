@@ -30,7 +30,8 @@ com.bluemarsh.jswat.command.commands.StepInstructionCommand
 com.bluemarsh.jswat.command.commands.StepOverCommand
 com.bluemarsh.jswat.command.commands.SuspendCommand
 com.bluemarsh.jswat.command.commands.ThreadCommand
-com.bluemarsh.jswat.command.commands.ThreadsCommand
+com.bluemarsh.jswat.command.commands.ThreadGroupsCommand
 com.bluemarsh.jswat.command.commands.ThreadLocksCommand
+com.bluemarsh.jswat.command.commands.ThreadsCommand
 com.bluemarsh.jswat.command.commands.UnaliasCommand
 com.bluemarsh.jswat.command.commands.WhereCommand

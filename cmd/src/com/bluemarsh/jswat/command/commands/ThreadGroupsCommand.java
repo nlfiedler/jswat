@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2009. All Rights Reserved.
+ * are Copyright (C) 2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -28,12 +28,10 @@ import com.bluemarsh.jswat.command.CommandArguments;
 import com.bluemarsh.jswat.command.CommandContext;
 import com.bluemarsh.jswat.command.CommandException;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
-import com.bluemarsh.jswat.core.context.DebuggingContext;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.util.Threads;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.ThreadGroupReference;
-import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VirtualMachine;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -44,15 +42,15 @@ import java.util.regex.Pattern;
 import org.openide.util.NbBundle;
 
 /**
- * Displays all of the threads in the debuggee.
+ * Displays all of the thread groups in the debuggee.
  *
  * @author Nathan Fiedler
  */
-public class ThreadsCommand extends AbstractCommand {
+public class ThreadGroupsCommand extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "threads";
+        return "threadgroups";
     }
 
     @Override
@@ -62,8 +60,6 @@ public class ThreadsCommand extends AbstractCommand {
         Session session = context.getSession();
         PrintWriter writer = context.getWriter();
         VirtualMachine vm = session.getConnection().getVM();
-        DebuggingContext dc = context.getDebuggingContext();
-        ThreadReference current = dc.getThread();
 
         if (arguments.hasMoreTokens()) {
             long tid = -1;
@@ -75,43 +71,46 @@ public class ThreadsCommand extends AbstractCommand {
                 // It's not a thread id then.
             }
 
-            List<ThreadReference> threadsList = null;
+            List<ThreadGroupReference> groupsList = null;
             // Look for a thread group with this name or id.
-            Iterator iter = Threads.iterateGroups(vm.topLevelThreadGroups());
+            Iterator<ThreadGroupReference> iter =
+                    Threads.iterateGroups(vm.topLevelThreadGroups());
             if (tid > -1) {
                 while (iter.hasNext()) {
-                    ThreadGroupReference group =
-                        (ThreadGroupReference) iter.next();
+                    ThreadGroupReference group = iter.next();
                     if (group.uniqueID() == tid) {
-                        threadsList = group.threads();
+                        groupsList = group.threadGroups();
                         break;
                     }
                 }
 
             } else {
-                threadsList = new ArrayList<ThreadReference>();
+                groupsList = new ArrayList<ThreadGroupReference>();
                 Pattern patt = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
                 while (iter.hasNext()) {
-                    ThreadGroupReference group =
-                        (ThreadGroupReference) iter.next();
+                    ThreadGroupReference group = iter.next();
                     Matcher matcher = patt.matcher(group.name());
                     if (matcher.find()) {
-                        threadsList.addAll(group.threads());
+                        groupsList.addAll(group.threadGroups());
                     } else {
                         String idstr = String.valueOf(group.uniqueID());
                         matcher = patt.matcher(idstr);
                         if (matcher.find()) {
-                            threadsList.addAll(group.threads());
+                            groupsList.addAll(group.threadGroups());
                         }
                     }
                 }
             }
 
-            if (threadsList == null || threadsList.size() == 0) {
+            if (groupsList == null || groupsList.size() == 0) {
                 writer.println(NbBundle.getMessage(getClass(),
-                        "CTL_threads_noThreadsInGroup"));
-            } else if (threadsList.size() > 0) {
-                writer.println(printThreads(threadsList.iterator(), "  ", current));
+                        "CTL_threadgroups_NoGroupsInGroup"));
+            } else if (groupsList.size() > 0) {
+                iter = groupsList.iterator();
+                while (iter.hasNext()) {
+                    ThreadGroupReference group = iter.next();
+                    printGroup(group, writer, "");
+                }
             }
 
         } else {
@@ -119,13 +118,13 @@ public class ThreadsCommand extends AbstractCommand {
             List topGroups = vm.topLevelThreadGroups();
             if (topGroups == null || topGroups.size() == 0) {
                 writer.println(NbBundle.getMessage(getClass(),
-                        "CTL_threads_noThreads"));
+                        "CTL_threadgroups_NoGroups"));
             } else if (topGroups.size() > 0) {
                 Iterator iter = topGroups.iterator();
                 while (iter.hasNext()) {
                     ThreadGroupReference group =
                         (ThreadGroupReference) iter.next();
-                    printGroup(group, current, writer, "");
+                    printGroup(group, writer, "");
                 }
             }
         }
@@ -141,8 +140,8 @@ public class ThreadsCommand extends AbstractCommand {
      * @param  writer   writer to print to.
      * @param  prefix   string to display before each line.
      */
-    protected void printGroup(ThreadGroupReference group, ThreadReference current,
-                              PrintWriter writer, String prefix) {
+    private void printGroup(ThreadGroupReference group, PrintWriter writer,
+            String prefix) {
         ReferenceType clazz = group.referenceType();
         String id = String.valueOf(group.uniqueID());
         if (clazz == null) {
@@ -156,43 +155,8 @@ public class ThreadsCommand extends AbstractCommand {
         Iterator<ThreadGroupReference> iter = groups.iterator();
         while (iter.hasNext()) {
             ThreadGroupReference subgrp = iter.next();
-            printGroup(subgrp, current, writer, prefix + "  ");
+            printGroup(subgrp, writer, prefix + "  ");
         }
-
-        // Print this threadgroup's threads.
-        List<ThreadReference> threads = group.threads();
-        writer.print(printThreads(threads.iterator(), prefix + "  ", current));
-    }
-
-    /**
-     * Print the threads in the given iterator. Indicate which thread is
-     * the current one by comparing to the given current.
-     *
-     * @param  iter     threads iterator.
-     * @param  prefix   prefix for each output line.
-     * @param  current  current thread.
-     * @return  output from printing the threads.
-     */
-    protected String printThreads(Iterator<ThreadReference> iter,
-            String prefix, ThreadReference current) {
-        StringBuilder sb = new StringBuilder(256);
-        String starfix = prefix.substring(1);
-        while (iter.hasNext()) {
-            ThreadReference thrd = iter.next();
-            if (thrd.equals(current)) {
-                sb.append('*');
-                sb.append(starfix);
-            } else {
-                sb.append(prefix);
-            }
-            sb.append(thrd.uniqueID());
-            sb.append(' ');
-            sb.append(thrd.name());
-            sb.append(": ");
-            sb.append(Threads.threadStatus(thrd));
-            sb.append('\n');
-        }
-        return sb.toString();
     }
 
     @Override

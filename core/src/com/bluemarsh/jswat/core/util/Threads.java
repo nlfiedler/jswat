@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2006. All Rights Reserved.
+ * are Copyright (C) 2002-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,11 +23,14 @@
 
 package com.bluemarsh.jswat.core.util;
 
+import com.sun.jdi.ThreadGroupReference;
 import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VMDisconnectedException;
 import com.sun.jdi.VirtualMachine;
+import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -157,6 +160,19 @@ public class Threads {
     }
 
     /**
+     * Creates an iterator over the thread groups that are contained in
+     * the given set of thread groups. The initial set itself will also
+     * be returned. The groups are returned in depth first order.
+     *
+     * @param  groups  initial set of groups to iterate.
+     * @return  thread group iterator.
+     */
+    public static Iterator<ThreadGroupReference> iterateGroups(
+            List<ThreadGroupReference> groups) {
+        return new ThreadGroupIterator(groups);
+    }
+
+    /**
      * Return a one-word description of the thread status.
      *
      * @param  thread  thread from which to get status.
@@ -188,5 +204,78 @@ public class Threads {
             break;
         }
         return desc;
+    }
+
+    /**
+     * Class ThreadGroupIterator has special functionality for iterating
+     * over a list of thread group references. Since thread groups are
+     * often assembled in trees, this iterator uses a stack to traverse
+     * that tree in depth-first order.
+     *
+     * @author  Nathan Fiedler
+     */
+    private static class ThreadGroupIterator implements Iterator<ThreadGroupReference> {
+        /** Stack of thread group iterators. */
+        private Stack<Iterator<ThreadGroupReference>> stack =
+                new Stack<Iterator<ThreadGroupReference>>();
+
+        /**
+         * Constructs a new ThreadGroupIterator with an initial set
+         * of thread group iterators.
+         *
+         * @param  groups  ThreadGroup list.
+         */
+        public ThreadGroupIterator(List<ThreadGroupReference> groups) {
+            push(groups);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !stack.isEmpty();
+        }
+
+        @Override
+        public ThreadGroupReference next() {
+            // Ask the top iterator for the next thread group reference.
+            ThreadGroupReference group = (ThreadGroupReference) peek().next();
+            // If this group has more groups, add them to the stack.
+            push(group.threadGroups());
+            // Return the thread group.
+            return group;
+        }
+
+        /**
+         * Looks at the object at the top of this stack without removing
+         * it from the stack.
+         *
+         * @return  First iterator on the stack, or null if none.
+         */
+        private Iterator peek() {
+            try {
+                return (Iterator) stack.peek();
+            } catch (EmptyStackException ese) {
+                return null;
+            }
+        }
+
+        /**
+         * Push the given list of thread group iterators onto the stack.
+         *
+         * @param  groups  List of ThreadGroup iterators.
+         */
+        private void push(List<ThreadGroupReference> groups) {
+            // Add this list's iterator to the stack.
+            stack.push(groups.iterator());
+            // While the top iterator is empty, pop it off the stack.
+            // This ensures that the top iterator has something to iterate.
+            while (!stack.isEmpty() && !peek().hasNext()) {
+                stack.pop();
+            }
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 }
