@@ -3,6 +3,7 @@ com.bluemarsh.jswat.command.commands.AproposCommand
 com.bluemarsh.jswat.command.commands.AttachCommand
 com.bluemarsh.jswat.command.commands.BreakpointClearCommand
 com.bluemarsh.jswat.command.commands.BreakpointSetCommand
+com.bluemarsh.jswat.command.commands.ClassesCommand
 com.bluemarsh.jswat.command.commands.ClasspathCommand
 com.bluemarsh.jswat.command.commands.CodeLinesCommand
 com.bluemarsh.jswat.command.commands.ContinueCommand
