@@ -14,8 +14,6 @@ $Id$
     - condition: assign condition to breakpoints (list if no arguments)
     - exclude (manage stepping excludes)
     - filter: assign thread/class filters to breakpoints (list if no args)
-    - up [n]
-    - down [n]
     - watch
     - session create|copy|rename|delete
     - redefine

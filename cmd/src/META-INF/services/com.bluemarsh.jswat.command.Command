@@ -14,6 +14,9 @@ com.bluemarsh.jswat.command.commands.ElementsCommand
 com.bluemarsh.jswat.command.commands.EnableCollectionCommand
 com.bluemarsh.jswat.command.commands.EventTraceCommand
 com.bluemarsh.jswat.command.commands.FieldsCommand
+com.bluemarsh.jswat.command.commands.FrameDownCommand
+com.bluemarsh.jswat.command.commands.FrameJumpCommand
+com.bluemarsh.jswat.command.commands.FrameUpCommand
 com.bluemarsh.jswat.command.commands.HelpCommand
 com.bluemarsh.jswat.command.commands.HistoryCommand
 com.bluemarsh.jswat.command.commands.LocalsCommand
