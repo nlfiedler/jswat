@@ -3,6 +3,7 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
+  - Output from debuggee doesn't always come out right away
   - Show a few lines of source code each time a breakpoint is hit
   - Show a single line of source code for each single step
   - Lacking a way to send input to the debuggee stdin stream
@@ -17,7 +18,6 @@ $Id$
     - watch
     - session create|copy|rename|delete
     - redefine
-    - interrupt
     - send (sends input to debuggee)
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints

@@ -20,6 +20,7 @@ com.bluemarsh.jswat.command.commands.FrameJumpCommand
 com.bluemarsh.jswat.command.commands.FrameUpCommand
 com.bluemarsh.jswat.command.commands.HelpCommand
 com.bluemarsh.jswat.command.commands.HistoryCommand
+com.bluemarsh.jswat.command.commands.InterruptCommand
 com.bluemarsh.jswat.command.commands.LocalsCommand
 com.bluemarsh.jswat.command.commands.MethodsCommand
 com.bluemarsh.jswat.command.commands.ObjectLocksCommand
