@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -48,10 +48,12 @@ import org.openide.util.NbBundle;
  */
 public class MethodsCommand extends AbstractCommand {
 
+    @Override
     public String getName() {
         return "methods";
     }
 
+    @Override
     public void perform(CommandContext context, CommandArguments arguments)
             throws CommandException, MissingArgumentsException {
 
@@ -76,8 +78,8 @@ public class MethodsCommand extends AbstractCommand {
             }
             writer.print(sb.toString());
         } else {
-            throw new CommandException(NbBundle.getMessage(getClass(),
-                "ERR_ClassNotFound", cname));
+            throw new CommandException(NbBundle.getMessage(
+                    MethodsCommand.class, "ERR_ClassNotFound", cname));
         }
     }
 
@@ -116,10 +118,12 @@ public class MethodsCommand extends AbstractCommand {
         }
     }
 
+    @Override
     public boolean requiresArguments() {
         return true;
     }
 
+    @Override
     public boolean requiresDebuggee() {
         return true;
     }
@@ -131,15 +135,7 @@ public class MethodsCommand extends AbstractCommand {
      */
     private static class MethodComparator implements Comparator<Method> {
 
-        /**
-         * Compares its two arguments for order. Returns a negative integer,
-         * zero, or a positive integer as the first argument is less than,
-         * equal to, or greater than the second.
-         *
-         * @param  o1  first Method.
-         * @param  o2  second Method.
-         * @return  zero if equal, -1 if o1 less than o2, otherwise +1.
-         */
+        @Override
         public int compare(Method o1, Method o2) {
             String n1 = o1.name();
             String n2 = o2.name();
