@@ -37,20 +37,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 
 /**
- * Bootstrap class for the console interface of JSwat.
+ * Bootstrap class for the console interface of JSwat. Initializes all
+ * of the necessary services and registers event listeners. Enters a
+ * loop to process using input.
  *
  * @author  Nathan Fiedler
  */
 public class Main {
+    /** Logger for gracefully reporting unexpected errors. */
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     /**
-     * My class, private.
+     * Creates a new instance of Main.
      */
     private Main() {
-        // None shall construct us.
     }
 
     /**
@@ -60,9 +65,11 @@ public class Main {
      */
     public static void main(String[] args) {
         //
-        // Briefly attempted to use Console in java.io, but that
-        // is not designed to handle asynchronous output from
-        // multiple threads.
+        // An attempt was made early on to use the Console class in java.io,
+        // but that is not designed to handle asynchronous output from
+        // multiple threads, so we just use the usual System.out for output
+        // and System.in for input. Note that automatic flushing is used to
+        // ensure output is shown in a timely fashion.
         //
 
         //
@@ -71,7 +78,8 @@ public class Main {
         // - emacs
         //
         // Where console mode does not seem to work:
-        // - NetBeans: output from other threads is never shown
+        // - NetBeans: output from event listeners is never shown and the
+        //   cursor sometimes lags behind the output
         //
 
         // Turn on flushing so printing the prompt will flush
@@ -164,7 +172,9 @@ public class Main {
                     performCommand(output, parser, command);
                 }
             } catch (IOException ioe) {
-                output.println(ioe);
+                logger.log(Level.SEVERE, null, ioe);
+                output.println(NbBundle.getMessage(Main.class,
+                        "ERR_Main_IOError", ioe));
             }
         }
     }
