@@ -98,11 +98,17 @@ public class RunCommand extends AbstractCommand {
             // Create a connection, connect and resume the session
             PathManager pm = PathProvider.getPathManager(session);
             String cp = Strings.listToString(pm.getClassPath());
-            String javaParams = "-cp " + cp;
+            String javaParams = session.getProperty(Session.PROP_JAVA_PARAMS);
+            // Add on the classpath. If the user already had one in the JVM
+            // options, this will likely fail, but the run help indicates
+            // this already, so just let it fail.
+            javaParams += " -cp " + cp;
             ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
             // This may throw an IllegalArgumentException.
             JvmConnection connection = factory.createLaunching(runtime,
                     javaParams, className + ' ' + classParams);
+            writer.format("%s %s %s %s %s\n", runtime.getBase(), runtime.getExec(),
+                    javaParams, className, classParams);
             try {
                 connection.connect();
                 session.connect(connection);

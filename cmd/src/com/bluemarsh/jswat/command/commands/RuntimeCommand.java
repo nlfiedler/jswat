@@ -103,6 +103,13 @@ public class RuntimeCommand extends AbstractCommand {
                 } else {
                     throw new MissingArgumentsException();
                 }
+            } else if (cmd.equals("opt")) {
+                String opts = "";
+                if (arguments.hasMoreTokens()) {
+                    arguments.returnAsIs(true);
+                    opts = arguments.rest();
+                }
+                session.setProperty(Session.PROP_JAVA_PARAMS, opts);
             } else {
                 throw new CommandException(NbBundle.getMessage(
                         RuntimeCommand.class, "ERR_runtime_Subcommand", cmd));
