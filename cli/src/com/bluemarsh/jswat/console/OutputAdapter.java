@@ -78,11 +78,11 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             Process process = conn.getVM().process();
             InputStream is = process.getInputStream();
             OutputReader or = new OutputReader(is, outputSink);
-            Threads.getThreadPool(true).submit(or);
+            Threads.getThreadPool().submit(or);
 
             is = process.getErrorStream();
             or = new OutputReader(is, outputSink);
-            Threads.getThreadPool(true).submit(or);
+            Threads.getThreadPool().submit(or);
 
             // TODO: should get a reader from which to get user input
             StringReader sr = new StringReader("");
@@ -169,11 +169,9 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                 while (len != -1) {
                     String str = new String(buf, 0, len);
                     printWriter.print(str);
-                    Thread.sleep(1);
+                    printWriter.flush();
                     len = isr.read(buf);
                 }
-            } catch (InterruptedException ex) {
-                // Just stop reading.
             } catch (InterruptedIOException iioe) {
                 // Just stop reading.
             } catch (IOException ioe) {
@@ -219,13 +217,9 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                 int len = reader.read(buf);
                 while (len != -1) {
                     osw.write(buf, 0, len);
-                    // Must flush each time.
                     osw.flush();
-                    Thread.sleep(1);
                     len = reader.read(buf);
                 }
-            } catch (InterruptedException ex) {
-                // Just stop reading.
             } catch (InterruptedIOException iioe) {
                 // Just stop reading.
             } catch (IOException ioe) {
