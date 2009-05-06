@@ -171,6 +171,12 @@ public class Main {
                 if (command != null) {
                     performCommand(output, parser, command);
                 }
+                // Sleep briefly to give the event processing threads,
+                // and the automatic output flushing, a chance to catch
+                // up before printing the input prompt again.
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                logger.log(Level.WARNING, null, ie);
             } catch (IOException ioe) {
                 logger.log(Level.SEVERE, null, ioe);
                 output.println(NbBundle.getMessage(Main.class,

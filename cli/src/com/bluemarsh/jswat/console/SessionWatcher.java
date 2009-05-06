@@ -24,14 +24,9 @@
 package com.bluemarsh.jswat.console;
 
 import com.bluemarsh.jswat.core.connect.JvmConnection;
-import com.bluemarsh.jswat.core.context.ContextEvent;
-import com.bluemarsh.jswat.core.context.ContextListener;
-import com.bluemarsh.jswat.core.context.ContextProvider;
-import com.bluemarsh.jswat.core.context.DebuggingContext;
 import com.bluemarsh.jswat.core.output.OutputProvider;
 import com.bluemarsh.jswat.core.output.OutputWriter;
 import com.bluemarsh.jswat.core.session.Session;
-import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionEvent;
 import com.bluemarsh.jswat.core.session.SessionListener;
 import com.bluemarsh.jswat.core.session.SessionManagerEvent;
@@ -39,19 +34,18 @@ import com.bluemarsh.jswat.core.session.SessionManagerListener;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.bluemarsh.jswat.core.util.Strings;
 import com.sun.jdi.Location;
+import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.Event;
-import java.util.Iterator;
+import com.sun.jdi.event.LocatableEvent;
 import org.openide.util.NbBundle;
 
 /**
- * Displays a message for each session event. If the session suspends,
- * the main window is brought forward to make it visible. This class
- * manages the program counter annotation in the source editor.
+ * Indicates when a session is launched, attached, dies, or is detached,
+ * as well as interesting events that occur in relation to the sessions.
  *
  * @author  Nathan Fiedler
  */
-public class SessionWatcher implements ContextListener, SessionListener,
-        SessionManagerListener {
+public class SessionWatcher implements SessionListener, SessionManagerListener {
     /** Place where messages are written. */
     private OutputWriter outputWriter;
 
@@ -61,33 +55,6 @@ public class SessionWatcher implements ContextListener, SessionListener,
      */
     public SessionWatcher() {
         outputWriter = OutputProvider.getWriter();
-        Session session = SessionProvider.getCurrentSession();
-        DebuggingContext dc = ContextProvider.getContext(session);
-        dc.addContextListener(this);
-    }
-
-    @Override
-    public void changedFrame(ContextEvent ce) {
-        // Ignore suspending events, that's handled in suspended().
-        if (!ce.isSuspending()) {
-            contextChanged(ce.getSession());
-        }
-    }
-
-    @Override
-    public void changedLocation(ContextEvent ce) {
-        // Ignore suspending events, that's handled in suspended().
-        if (!ce.isSuspending()) {
-            contextChanged(ce.getSession());
-        }
-    }
-
-    @Override
-    public void changedThread(ContextEvent ce) {
-        // Ignore suspending events, that's handled in suspended().
-        if (!ce.isSuspending()) {
-            contextChanged(ce.getSession());
-        }
     }
 
     @Override
@@ -96,18 +63,11 @@ public class SessionWatcher implements ContextListener, SessionListener,
         String name = session.getProperty(Session.PROP_SESSION_NAME);
         JvmConnection connection = session.getConnection();
         if (connection.isRemote()) {
-            showStatus(NbBundle.getMessage(
-                    SessionWatcher.class, "SessionWatcher.vmAttached", name));
+            showStatus(NbBundle.getMessage(SessionWatcher.class,
+                    "SessionWatcher.vmAttached", name));
         } else {
-            showStatus(NbBundle.getMessage(
-                    SessionWatcher.class, "SessionWatcher.vmLoaded", name));
-        }
-    }
-
-    private void contextChanged(Session session) {
-        Session current = SessionProvider.getSessionManager().getCurrent();
-        if (session.equals(current)) {
-            showProgramCounter(session, true, false);
+            showStatus(NbBundle.getMessage(SessionWatcher.class,
+                    "SessionWatcher.vmLoaded", name));
         }
     }
 
@@ -121,11 +81,11 @@ public class SessionWatcher implements ContextListener, SessionListener,
         String name = session.getProperty(Session.PROP_SESSION_NAME);
         JvmConnection connection = session.getConnection();
         if (connection.isRemote()) {
-            showStatus(NbBundle.getMessage(
-                    SessionWatcher.class, "SessionWatcher.vmDetached", name));
+            showStatus(NbBundle.getMessage(SessionWatcher.class,
+                    "SessionWatcher.vmDetached", name));
         } else {
-            showStatus(NbBundle.getMessage(
-                    SessionWatcher.class, "SessionWatcher.vmClosed", name));
+            showStatus(NbBundle.getMessage(SessionWatcher.class,
+                    "SessionWatcher.vmClosed", name));
         }
     }
 
@@ -136,89 +96,75 @@ public class SessionWatcher implements ContextListener, SessionListener,
     @Override
     public void resuming(SessionEvent sevt) {
         Session session = sevt.getSession();
-        String name = session.getProperty(Session.PROP_SESSION_NAME);
-        showStatus(NbBundle.getMessage(
-                SessionWatcher.class, "SessionWatcher.vmResumed", name));
+        Session current = SessionProvider.getSessionManager().getCurrent();
+        if (!session.equals(current)) {
+            // Some other session resumed, inform the user.
+            String name = session.getProperty(Session.PROP_SESSION_NAME);
+            showStatus(NbBundle.getMessage(SessionWatcher.class,
+                    "SessionWatcher.vmResumed", name));
+        }
     }
 
     @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
-        DebuggingContext dc = ContextProvider.getContext(session);
-        dc.addContextListener(this);
     }
 
     @Override
     public void sessionRemoved(SessionManagerEvent e) {
         // the session will discard its listeners
-        Session session = e.getSession();
-        DebuggingContext dc = ContextProvider.getContext(session);
-        dc.removeContextListener(this);
     }
 
     @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
-        Session current = e.getSession();
-        SessionManager sm = (SessionManager) e.getSource();
-        Iterator<Session> iter = sm.iterateSessions();
-        while (iter.hasNext()) {
-            Session session = iter.next();
-            if (session.equals(current)) {
-                showProgramCounter(session, false, false);
-            }
-        }
     }
 
     /**
-     * Adds the program counter annotation to the source file corresponding
-     * to the current program counter.
-     *
-     * @param  session   Session for which to show program counter.
-     * @param  source    true to open source and scroll to line.
-     * @param  location  true to show the location details.
-     */
-    private void showProgramCounter(Session session, boolean source,
-            boolean location) {
-        DebuggingContext dc = ContextProvider.getContext(session);
-        Location loc = dc.getLocation();
-        if (loc != null) {
-            if (location) {
-                // Show the location details in the output window.
-                String args = Strings.listToString(loc.method().argumentTypeNames());
-                Object[] params = {
-                    loc.declaringType().name(),
-                    loc.method().name(),
-                    args,
-                    String.valueOf(loc.lineNumber())
-                };
-                String msg = NbBundle.getMessage(SessionWatcher.class,
-                        "SessionWatcher.location", params);
-                showStatus(msg);
-            }
-        }
-    }
-
-    /**
-     * Indicate the current the status of the session with a message.
+     * Indicate the current state of the session with a message.
      *
      * @param  status  short message indicating program status.
      */
-    private void showStatus(final String status) {
+    private void showStatus(String status) {
         outputWriter.printOutput(status);
     }
 
     @Override
     public void suspended(SessionEvent sevt) {
         Session session = sevt.getSession();
-        String name = session.getProperty(Session.PROP_SESSION_NAME);
-        showStatus(NbBundle.getMessage(
-                SessionWatcher.class, "SessionWatcher.vmSuspended", name));
         Session current = SessionProvider.getSessionManager().getCurrent();
-        Event event = sevt.getEvent();
-        if (session.equals(current) && event != null) {
-            // Suspended due to a JDI event.
-            showProgramCounter(session, true, true);
+        if (session.equals(current)) {
+            Event event = sevt.getEvent();
+            // Only respond to locatable events that are _not_ breakpoint
+            // events, as those are handled by the breakpoint watcher.
+            if (event != null && event instanceof LocatableEvent &&
+                    !(event instanceof BreakpointEvent)) {
+                LocatableEvent le = (LocatableEvent) event;
+                Location loc = le.location();
+                if (loc != null) {
+                    // Show the location details in the output window.
+                    String threadId = le.thread().name();
+                    if (threadId == null || threadId.isEmpty()) {
+                        threadId = String.valueOf(le.thread().uniqueID());
+                    }
+                    String args = Strings.listToString(loc.method().argumentTypeNames());
+                    Object[] params = {
+                        loc.declaringType().name(),
+                        loc.method().name(),
+                        args,
+                        String.valueOf(loc.lineNumber()),
+                        threadId
+                    };
+                    String msg = NbBundle.getMessage(SessionWatcher.class,
+                            "SessionWatcher.location", params);
+                    showStatus(msg);
+                }
+            }
+        } else {
+            // Some other session suspended, let the user know.
+            String name = session.getProperty(Session.PROP_SESSION_NAME);
+            showStatus(NbBundle.getMessage(SessionWatcher.class,
+                    "SessionWatcher.vmSuspended", name));
         }
     }
 }
