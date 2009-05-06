@@ -36,9 +36,9 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PipedReader;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -84,10 +84,9 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             or = new OutputReader(is, outputSink);
             Threads.getThreadPool().submit(or);
 
-            // TODO: should get a reader from which to get user input
-            StringReader sr = new StringReader("");
+            PipedReader pr = PipeProvider.getPipedReader(session);
             OutputStream os = process.getOutputStream();
-            InputReader ir = new InputReader(sr, os, outputSink);
+            InputReader ir = new InputReader(pr, os, outputSink);
             Future future = Threads.getThreadPool(true).submit(ir);
             inputFutures.put(session, future);
         }

@@ -28,6 +28,11 @@ import com.bluemarsh.jswat.command.CommandArguments;
 import com.bluemarsh.jswat.command.CommandContext;
 import com.bluemarsh.jswat.command.CommandException;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
+import com.bluemarsh.jswat.console.PipeProvider;
+import com.bluemarsh.jswat.core.session.Session;
+import java.io.IOException;
+import java.io.PipedWriter;
+import org.openide.util.NbBundle;
 
 /**
  * Sends input to the debuggee through its input stream.
@@ -45,6 +50,19 @@ public class SendCommand extends AbstractCommand {
     public void perform(CommandContext context, CommandArguments arguments)
             throws CommandException, MissingArgumentsException {
 
-        // TODO: implement send command
+        Session session = context.getSession();
+        PipedWriter pw = PipeProvider.getPipedWriter(session);
+        try {
+            if (arguments.hasMoreTokens()) {
+                arguments.returnAsIs(true);
+                String input = arguments.rest();
+                pw.write(input);
+            }
+            pw.write('\n');
+            pw.flush();
+        } catch (IOException ioe) {
+            throw new CommandException(NbBundle.getMessage(SendCommand.class,
+                    "ERR_send_Failed"), ioe);
+        }
     }
 }
