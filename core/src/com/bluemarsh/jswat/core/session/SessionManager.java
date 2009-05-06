@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -66,6 +66,14 @@ public interface SessionManager {
      * @return  new session instance.
      */
     Session copy(Session session, String name);
+
+    /**
+     * Find a Session instance by the given identifier.
+     *
+     * @param  id  session identifier.
+     * @return  matching Session, or null if not found.
+     */
+    Session findById(String id);
 
     /**
      * Generates a new, unique session identifier.

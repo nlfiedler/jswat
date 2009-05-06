@@ -92,19 +92,18 @@ public class DefaultSessionManager extends AbstractSessionManager {
             String value = session.getProperty(key);
             copy.setProperty(key, value);
         }
+        if (name == null) {
+            name = generateName();
+        }
+        copy.setProperty(Session.PROP_SESSION_NAME, name);
         openSessions.add(copy);
         fireEvent(new SessionManagerEvent(this, copy,
                 SessionManagerEvent.Type.ADDED));
         return copy;
     }
 
-    /**
-     * Find a Session instance by the given identifier.
-     *
-     * @param  id  session identifier.
-     * @return  matching Session, or null if not found.
-     */
-    private Session findById(String id) {
+    @Override
+    public Session findById(String id) {
         Iterator<Session> sessions = iterateSessions();
         while (sessions.hasNext()) {
             Session session = sessions.next();
