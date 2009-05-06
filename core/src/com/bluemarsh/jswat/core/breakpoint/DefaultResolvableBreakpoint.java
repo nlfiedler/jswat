@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2007. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -72,6 +72,7 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
         eventRequests = new LinkedList<EventRequest>();
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         BreakpointGroup group = getBreakpointGroup();
         Session session = BreakpointProvider.getSession(group);
@@ -123,6 +124,7 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     protected void deleteRequests() {
         // Delete only the non-class-prepare event requests here.
         if (!eventRequests.isEmpty()) {
@@ -140,11 +142,13 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void destroy() {
         super.destroy();
         deletePrepareRequest();
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         // Like the other breakpoint types, delete the requests. This
         // covers the case where the breakpoint is being removed (as a
@@ -155,6 +159,7 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
         deleteRequests();
     }
 
+    @Override
     public boolean eventOccurred(Event event) {
         if (event instanceof ClassPrepareEvent) {
             try {
@@ -177,10 +182,12 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public String getClassName() {
         return className;
     }
 
+    @Override
     public boolean isResolved() {
         return !eventRequests.isEmpty();
     }
@@ -203,6 +210,7 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void reset() {
         super.reset();
         propSupport.firePropertyChange(PROP_RESOLVED, true, false);
@@ -312,6 +320,7 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
     protected abstract boolean resolveReference(ReferenceType refType,
             List<EventRequest> requests) throws ResolveException;
 
+    @Override
     public void setClassName(String name) throws MalformedClassNameException {
         // Do strict checking of class name validity because if the
         // name is invalid, it will never match a future loaded class.
@@ -342,6 +351,7 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         if (!eventRequests.isEmpty()) {
@@ -359,6 +369,7 @@ public abstract class DefaultResolvableBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setSuspendPolicy(int policy) {
         super.setSuspendPolicy(policy);
         // Update the existing event request suspend policy.

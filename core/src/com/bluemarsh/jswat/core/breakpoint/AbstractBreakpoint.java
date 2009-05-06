@@ -67,9 +67,9 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
      * If value is zero, breakpoint will not skip. */
     private int skipCount;
     /** List of conditions this breakpoint depends on. */
-    private List<Condition> conditionList;
+    private final List<Condition> conditionList;
     /** List of monitors this breakpoint executes when it stops. */
-    private List<Monitor> monitorList;
+    private final List<Monitor> monitorList;
     /** Class filter, appropriate for JDI event requests. */
     private String classFilter;
     /** Thread filter, appropriate for JDI event requests. */
@@ -94,6 +94,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         propertiesMap = new HashMap<String, Object>();
     }
 
+    @Override
     public void addBreakpointListener(BreakpointListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -103,6 +104,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         }
     }
 
+    @Override
     public void addCondition(Condition condition) {
         if (condition == null) {
             throw new IllegalArgumentException("null condition not permitted");
@@ -112,6 +114,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         }
     }
 
+    @Override
     public void addMonitor(Monitor monitor) {
         if (monitor == null) {
             throw new IllegalArgumentException("null monitor not permitted");
@@ -123,6 +126,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         setSuspendPolicy(getSuspendPolicy());
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propSupport.addPropertyChangeListener(listener);
     }
@@ -139,6 +143,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
             getSuspendPolicy());
     }
 
+    @Override
     public ListIterator<Condition> conditions() {
         return conditionList.listIterator();
     }
@@ -149,12 +154,14 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
      */
     protected abstract void deleteRequests();
 
+    @Override
     public void destroy() {
         deleteRequests();
         conditionList.clear();
         monitorList.clear();
     }
 
+    @Override
     public boolean eventOccurred(Event event) {
         //
         // This method exists here because the logic of evaluating the event
@@ -206,40 +213,49 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         }
     }
 
+    @Override
     public BreakpointGroup getBreakpointGroup() {
         return breakpointGroup;
     }
 
+    @Override
     public String getClassFilter() {
         return classFilter;
     }
 
+    @Override
     public int getExpireCount() {
         return expireCount;
     }
 
+    @Override
     public Object getProperty(String name) {
         return propertiesMap.get(name);
     }
 
+    @Override
     public int getSkipCount() {
         return skipCount;
     }
 
+    @Override
     public int getSuspendPolicy() {
         // Return the suspend policy selected by the user, regardless
         // of the attached monitors and their requirements.
         return suspendPolicy;
     }
 
+    @Override
     public String getThreadFilter() {
         return threadFilter;
     }
 
+    @Override
     public boolean isDeleteOnExpire() {
         return deleteOnExpire;
     }
 
+    @Override
     public boolean isExpired() {
         return (expireCount > 0) && (stoppedCount >= expireCount);
     }
@@ -263,6 +279,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         }
     }
 
+    @Override
     public boolean isEnabled() {
         BreakpointGroup parent = getBreakpointGroup();
         if (parent != null) {
@@ -272,12 +289,15 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         }
     }
 
+    @Override
     public abstract boolean isResolved();
 
+    @Override
     public boolean isSkipping() {
         return (skipCount > 0) && (stoppedCount <= skipCount);
     }
 
+    @Override
     public ListIterator<Monitor> monitors() {
         return monitorList.listIterator();
     }
@@ -323,6 +343,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         }
     }
 
+    @Override
     public void removeBreakpointListener(BreakpointListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -332,12 +353,14 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         }
     }
 
+    @Override
     public void removeCondition(Condition condition) {
         synchronized (conditionList) {
             conditionList.remove(condition);
         }
     }
 
+    @Override
     public void removeMonitor(Monitor monitor) {
         synchronized (monitorList) {
             monitorList.remove(monitor);
@@ -346,10 +369,12 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         setSuspendPolicy(getSuspendPolicy());
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propSupport.removePropertyChangeListener(listener);
     }
 
+    @Override
     public void reset() {
         boolean wasExpired = isExpired();
         boolean wasSkipping = isSkipping();
@@ -382,12 +407,14 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         getBreakpointGroup().runMonitors(event);
     }
 
+    @Override
     public void setBreakpointGroup(BreakpointGroup group) {
         BreakpointGroup old = breakpointGroup;
         breakpointGroup = group;
         propSupport.firePropertyChange(PROP_BREAKPOINTGROUP, old, group);
     }
 
+    @Override
     public void setClassFilter(String filter) {
         if (!canFilterClass() && filter != null && filter.length() > 0) {
             throw new IllegalArgumentException(
@@ -403,18 +430,21 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         propSupport.firePropertyChange(PROP_CLASSFILTER, old, filter);
     }
 
+    @Override
     public void setDeleteOnExpire(boolean delete) {
         boolean old = deleteOnExpire;
         deleteOnExpire = delete;
         propSupport.firePropertyChange(PROP_DELETEONEXPIRE, old, delete);
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         boolean old = isEnabled;
         isEnabled = enabled;
         propSupport.firePropertyChange(PROP_ENABLED, old, enabled);
     }
 
+    @Override
     public void setExpireCount(int expireCount) {
         int old = this.expireCount;
         boolean wasExpired = isExpired();
@@ -427,12 +457,14 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         propSupport.firePropertyChange(PROP_EXPIRECOUNT, old, expireCount);
     }
 
+    @Override
     public Object setProperty(String name, Object value) {
         Object rv = propertiesMap.put(name, value);
         propSupport.firePropertyChange(name, rv, value);
         return rv;
     }
 
+    @Override
     public void setSkipCount(int skipCount) {
         int old = this.skipCount;
         boolean wasSkipping = isSkipping();
@@ -445,6 +477,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         propSupport.firePropertyChange(PROP_SKIPCOUNT, old, skipCount);
     }
 
+    @Override
     public void setSuspendPolicy(int policy) {
         if ((policy != EventRequest.SUSPEND_ALL) &&
                 (policy != EventRequest.SUSPEND_EVENT_THREAD) &&
@@ -465,6 +498,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         propSupport.firePropertyChange(PROP_SUSPENDPOLICY, old, policy);
     }
 
+    @Override
     public void setThreadFilter(String filter) {
         if (!canFilterThread() && filter != null && filter.length() > 0) {
             throw new IllegalArgumentException(
@@ -532,6 +566,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         }
     }
 
+    @Override
     public String toString() {
         return getDescription();
     }
