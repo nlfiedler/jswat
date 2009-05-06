@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -57,5 +57,8 @@ public class InAndOut {
             System.err.println("This is standard error message number " + ii);
         }
         System.out.println("END TRANSMISSION");
+    }
+
+    private InAndOut() {
     }
 }
