@@ -3,16 +3,14 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
-  - Show a few lines of source code each time a breakpoint is hit
-  - Show a single line of source code for each single step
   - Commands to be implemented
+    - view: show source code
     - catch
     - commands: assign monitors to breakpoints (list if no arguments)
     - condition: assign condition to breakpoints (list if no arguments)
     - exclude (manage stepping excludes)
     - filter: assign thread/class filters to breakpoints (list if no args)
     - watch
-    - session create|copy|rename|delete
     - redefine
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
