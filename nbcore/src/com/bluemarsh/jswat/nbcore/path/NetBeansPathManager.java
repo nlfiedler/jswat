@@ -23,6 +23,8 @@
 
 package com.bluemarsh.jswat.nbcore.path;
 
+import com.bluemarsh.jswat.core.PlatformProvider;
+import com.bluemarsh.jswat.core.PlatformService;
 import com.bluemarsh.jswat.core.connect.JvmConnection;
 import com.bluemarsh.jswat.core.path.AbstractPathManager;
 import com.bluemarsh.jswat.core.path.PathEntry;
@@ -95,6 +97,11 @@ public class NetBeansPathManager extends AbstractPathManager {
         return findFile(filename, false);
     }
 
+    @Override
+    public PathEntry findFile(String filename) {
+        return findFile(filename, false);
+    }
+
     /**
      * Find the named file in the sourcepath or classpath. If at first the
      * file cannot be found, any leading path will be trimmed and the search
@@ -124,34 +131,32 @@ public class NetBeansPathManager extends AbstractPathManager {
         return new FileObjectPathEntry(fo);
     }
 
-// Turns out nothing in JSwat was calling this method, but keeping in
-// case it comes up again.
-//    @Override
-//    public FileObject findSource(String name) {
-//        String filename = Names.classnameToFilename(name);
-//        FileObject fo = findFile(filename, true);
-//        if (fo == null) {
-//            try {
-//                // Try to locate the .class file and read the source name
-//                // attribute from the bytecode, then get that source file.
-//                // (note ClassPath wants / for all platforms)
-//                filename = name.replace('.', '/') + ".class";
-//                fo = findFile(filename, false);
-//                if (fo != null) {
-//                    File file = FileUtil.toFile(fo);
-//                    // This is using the NetBeans classfile reader module.
-//                    // Should use BCEL instead to avoid NB dependency.
-//                    ClassFile cf = new ClassFile(file, false);
-//                    String srcname = cf.getSourceFileName();
-//                    filename = Names.classnameToFilename(name, srcname);
-//                    fo = findFile(filename, true);
-//                }
-//            } catch (IOException ioe) {
-//                // fall through...
-//            }
-//        }
-//        return fo;
-//    }
+    @Override
+    public PathEntry findSource(String name) {
+        String filename = Names.classnameToFilename(name);
+        PathEntry pe = findFile(filename, true);
+        if (pe == null) {
+            try {
+                // Try to locate the .class file and read the source name
+                // attribute from the bytecode, then get that source file.
+                // (note ClassPath wants / for all platforms)
+                filename = name.replace('.', '/') + ".class";
+                pe = findFile(filename, false);
+                if (pe != null) {
+                    PlatformService platform = PlatformProvider.getPlatformService();
+                    InputStream is = pe.getInputStream();
+                    String srcname = platform.getSourceName(is, name);
+                    if (srcname != null) {
+                        filename = Names.classnameToFilename(name, srcname);
+                        pe = findFile(filename, true);
+                    }
+                }
+            } catch (IOException ioe) {
+                // fall through...
+            }
+        }
+        return pe;
+    }
 
     @Override
     public PathEntry findSource(Location location) {
