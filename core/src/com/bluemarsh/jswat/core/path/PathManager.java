@@ -78,6 +78,15 @@ public interface PathManager {
     PathEntry findByteCode(ReferenceType clazz);
 
     /**
+     * Find the named file in the sourcepath or classpath. The name
+     * is assumed to be a relative path and file name.
+     *
+     * @param  filename  relative path and name of file to locate.
+     * @return  file object, or null if not found.
+     */
+    PathEntry findFile(String filename);
+
+    /**
      * Scan the sourcepath and classpath to find the source file for the
      * named class. Any inner-class names will be removed and the default
      * extension will be appended in order to locate the source file.
@@ -85,7 +94,7 @@ public interface PathManager {
      * @param  name  name of the class to find source for.
      * @return  source file object, or null if not found.
      */
-    //PathEntry findSource(String name); Nothing was calling this method.
+    PathEntry findSource(String name);
 
     /**
      * Find the source file for the declaring type of the given location.

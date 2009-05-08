@@ -23,6 +23,8 @@
 
 package com.bluemarsh.jswat.core.path;
 
+import com.bluemarsh.jswat.core.PlatformProvider;
+import com.bluemarsh.jswat.core.PlatformService;
 import com.bluemarsh.jswat.core.connect.JvmConnection;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.util.Names;
@@ -38,10 +40,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -81,6 +86,11 @@ public class DefaultPathManager extends AbstractPathManager {
         return findFile(filename, false);
     }
 
+    @Override
+    public PathEntry findFile(String filename) {
+        return findFile(filename, false);
+    }
+
     /**
      * Find the named file in the sourcepath or classpath. If at first the
      * file cannot be found, any leading path will be trimmed and the search
@@ -109,7 +119,7 @@ public class DefaultPathManager extends AbstractPathManager {
             }
         }
         if (pe == null && fuzzy) {
-            int last = filename.lastIndexOf('/');
+            int last = filename.lastIndexOf(File.separatorChar);
             if (last > 0) {
                 filename = filename.substring(last + 1);
                 pe = findFile(filename, false);
@@ -128,6 +138,15 @@ public class DefaultPathManager extends AbstractPathManager {
      * @return  new path entry if found, null otherwise.
      */
     private PathEntry findResource(String path, String file) {
+        // Look for our special marker that indicates there is an
+        // extra path element in the archive that needs to be taken
+        // into consideration when searching for entries.
+        int idx = path.indexOf('!');
+        String prefix = null;
+        if (idx > 0) {
+            prefix = path.substring(idx + 1);
+            path = path.substring(0, idx);
+        }
         File f = new File(path);
         if (f.isFile()) {
             // Chances are this is some form of archive, let's check.
@@ -137,6 +156,9 @@ public class DefaultPathManager extends AbstractPathManager {
             } catch (IOException ioe) {
                 // Well maybe it wasn't an archive after all.
                 return null;
+            }
+            if (prefix != null) {
+                file = prefix + File.separator + file;
             }
             Enumeration entries = zipFile.entries();
             while (entries.hasMoreElements()) {
@@ -157,6 +179,32 @@ public class DefaultPathManager extends AbstractPathManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public PathEntry findSource(String name) {
+        String filename = Names.classnameToFilename(name);
+        PathEntry pe = findFile(filename, true);
+        if (pe == null) {
+            try {
+                // Try to locate the .class file and read the source name
+                // attribute from the bytecode, then get that source file.
+                filename = name.replace('.', File.separatorChar) + ".class";
+                pe = findFile(filename, false);
+                if (pe != null) {
+                    PlatformService platform = PlatformProvider.getPlatformService();
+                    InputStream is = pe.getInputStream();
+                    String srcname = platform.getSourceName(is, name);
+                    if (srcname != null) {
+                        filename = Names.classnameToFilename(name, srcname);
+                        pe = findFile(filename, true);
+                    }
+                }
+            } catch (IOException ioe) {
+                // fall through...
+            }
+        }
+        return pe;
     }
 
     @Override
@@ -302,7 +350,44 @@ public class DefaultPathManager extends AbstractPathManager {
         if (roots == null || roots.size() == 0) {
             sourcePath = null;
         } else {
-            sourcePath = Collections.unmodifiableList(roots);
+            // Determine if root is an archive with a superfluous
+            // parent folder (e.g. 'src' as in some JDKs). If the
+            // input already has the special ! marker, then the
+            // is-file test will fail and we'll just use the value
+            // as given when searching for entries.
+            List<String> temp = new ArrayList<String>(roots);
+            for (int ii = 0; ii < temp.size(); ii++) {
+                String root = temp.get(ii);
+                if (new File(root).isFile()) {
+                    // Check if this is an archive or not.
+                    ZipFile zipFile = null;
+                    try {
+                        zipFile = new ZipFile(root);
+                    } catch (IOException ioe) {
+                        // Well maybe it wasn't an archive after all.
+                        continue;
+                    }
+                    // See if there is a single directory at the top level,
+                    // and if so, indicate that to make searching for archive
+                    // entries accurate and fast.
+                    Set<String> ruuts = new HashSet<String>();
+                    Enumeration entries = zipFile.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+                        String entryName = zipEntry.getName();
+                        // Zip file always uses slash as separator.
+                        int si = entryName.indexOf('/');
+                        if (si > 0) {
+                            ruuts.add(entryName.substring(0, si));
+                        }
+                    }
+                    if (ruuts.size() == 1) {
+                        // There was a superfluous parent folder in the archive.
+                        temp.set(ii, root + '!' + ruuts.iterator().next());
+                    }
+                }
+            }
+            sourcePath = Collections.unmodifiableList(temp);
         }
         firePropertyChange(PROP_SOURCEPATH, oldPath, sourcePath);
     }

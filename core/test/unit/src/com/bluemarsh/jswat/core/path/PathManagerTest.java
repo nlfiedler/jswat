@@ -113,10 +113,16 @@ public class PathManagerTest extends TestCase {
                 pe = pm.findSource(loc.declaringType());
                 assertNotNull("source for class not found", pe);
                 assertEquals("PathManagerTestCode.java", pe.getName());
-// Nothing was using that findSource(String) method, so it's commented out.
-//                pe = pm.findSource(loc.declaringType().name());
-//                assertNotNull("source for name not found", pe);
-//                assertEquals("PathManagerTestCode.java", pe.getName());
+                pe = pm.findSource(loc.declaringType().name());
+                assertNotNull("source for name not found", pe);
+                // Finding source by name for a class that is not the
+                // public class in the source file doesn't work if we
+                // cannot read the byte code, so expect one of two
+                // possible values for this unit test.
+                if ((!pe.getName().equals("PathManagerTestCode.java")) &&
+                        !pe.getName().equals("PMSecond.class")) {
+                    fail("source by name faild");
+                }
                 pe = pm.findByteCode(loc.declaringType());
                 assertNotNull("byte code for class not found", pe);
                 String cname = String.format("%s.class", classes[ii]);
