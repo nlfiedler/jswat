@@ -38,7 +38,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.openide.util.Cancellable;
 
 /**
- * Default implementation of the platform service which works independently
+ * Console implementation of the platform service which works independently
  * of any supporting framework or platform.
  *
  * @author  Nathan Fiedler
@@ -50,7 +50,7 @@ public class ConsolePlatformService implements PlatformService {
     private File userDirectory;
 
     /**
-     * Creates a new instance of DefaultPlatformService.
+     * Creates a new instance of ConsolePlatformService.
      */
     public ConsolePlatformService() {
         userDirectory = new File(System.getProperty("user.home"), USER_DIR);
