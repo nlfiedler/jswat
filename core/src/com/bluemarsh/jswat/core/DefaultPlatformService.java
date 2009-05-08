@@ -35,13 +35,14 @@ import org.openide.util.Cancellable;
 
 /**
  * Default implementation of the platform service which works independently
- * of any supporting framework or platform.
+ * of any supporting framework or platform. This is used only by the unit
+ * testing framework.
  *
  * @author  Nathan Fiedler
  */
 public class DefaultPlatformService implements PlatformService {
     /** Name of the user directory where files are stored by default. */
-    private static final String USER_DIR = ".jswat-console";
+    private static final String USER_DIR = ".jswat-test";
     /** The path to the user's home directory. */
     private File userDirectory;
 
@@ -58,6 +59,11 @@ public class DefaultPlatformService implements PlatformService {
         if (file.exists()) {
             file.delete();
         }
+    }
+
+    @Override
+    public String getSourceName(InputStream clazz, String name) throws IOException {
+        return null;
     }
 
     @Override
@@ -78,12 +84,12 @@ public class DefaultPlatformService implements PlatformService {
 
     @Override
     public Object startProgress(String label, Cancellable callback) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void stopProgress(Object handle) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException();
     }
 
     @Override

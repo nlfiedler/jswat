@@ -31,6 +31,9 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.Preferences;
+import org.apache.bcel.classfile.ClassFormatException;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileLock;
@@ -69,6 +72,17 @@ public class NetBeansPlatformService implements PlatformService {
     @Override
     public Preferences getPreferences(Class clazz) {
         return NbPreferences.forModule(clazz);
+    }
+
+    @Override
+    public String getSourceName(InputStream clazz, String name) throws IOException {
+        ClassParser parser = new ClassParser(clazz, name);
+        try {
+            JavaClass jc = parser.parse();
+            return jc.getSourceFileName();
+        } catch (ClassFormatException cfe) {
+            throw new IOException(cfe.toString());
+        }
     }
 
     @Override

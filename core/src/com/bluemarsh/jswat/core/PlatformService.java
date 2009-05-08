@@ -56,6 +56,16 @@ public interface PlatformService {
     Preferences getPreferences(Class clazz);
 
     /**
+     * Retrieve the source file name from the class file.
+     *
+     * @param  clazz  input stream representing class file.
+     * @param  name   name of the class to be read.
+     * @return  the source name from the class file, or null if missing.
+     * @throws  IOException  if reading stream fails.
+     */
+    String getSourceName(InputStream clazz, String name) throws IOException;
+
+    /**
      * Opens an input stream for the named file (with optional leading path).
      * <p>The caller is responsible for closing the stream when finished.</p>
      *
