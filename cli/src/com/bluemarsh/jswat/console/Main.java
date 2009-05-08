@@ -34,10 +34,13 @@ import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.sun.jdi.Bootstrap;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 
@@ -93,6 +96,19 @@ public class Main {
             output.println(NbBundle.getMessage(Main.class, "MSG_Main_NoJPDA"));
             System.exit(1);
         }
+
+        // Define the logging configuration.
+        LogManager manager = LogManager.getLogManager();
+        InputStream is = Main.class.getResourceAsStream("logging.properties");
+        try {
+            manager.readConfiguration(is);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            System.exit(1);
+        }
+
+        // Print out some useful debugging information.
+        logSystemDetails();
 
         // Add a shutdown hook to make sure we exit cleanly.
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -214,5 +230,31 @@ public class Main {
                 }
             }
         }
+    }
+
+    /**
+     * Sends system information to the log for debugging purposes.
+     */
+    private static void logSystemDetails() {
+        logger.info(String.format("Log Session: %tc", new Date()));
+        // TODO: how to get version number here?
+        logger.info(String.format("Product version: %s", "4.5"));
+        logger.info(String.format("Operating System: %s %s on %s",
+                System.getProperty("os.name"),
+                System.getProperty("os.version"),
+                System.getProperty("os.arch")));
+        logger.info(String.format("Java; VM; Vendor: %s; %s %s; %s",
+                System.getProperty("java.version"),
+                System.getProperty("java.vm.name"),
+                System.getProperty("java.vm.version"),
+                System.getProperty("java.vendor")));
+        logger.info(String.format("Java Home: %s",
+                System.getProperty("java.home")));
+        logger.info(String.format("Home Directory: %s",
+                System.getProperty("user.home")));
+        logger.info(String.format("Current Directory: %s",
+                System.getProperty("user.dir")));
+        logger.info(String.format("Class Path: %s",
+                System.getProperty("java.class.path")));
     }
 }

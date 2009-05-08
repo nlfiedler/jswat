@@ -15,8 +15,6 @@ $Id$
     - Setting thread start/stop breakpoints
   - Read commands from RC-like file during startup
     - Look for .jswatrc and jswat.ini in user.home and user.dir
-  - Define logging properties for the console mode so log messages are
-    saved to the userdir
   - Add help categories, as in gdb, for describing sets of commands
 
 - Search for all TODO/XXX items and resolve or file bugs
