@@ -42,4 +42,5 @@ com.bluemarsh.jswat.command.commands.ThreadGroupsCommand
 com.bluemarsh.jswat.command.commands.ThreadLocksCommand
 com.bluemarsh.jswat.command.commands.ThreadsCommand
 com.bluemarsh.jswat.command.commands.UnaliasCommand
+com.bluemarsh.jswat.command.commands.ViewCommand
 com.bluemarsh.jswat.command.commands.WhereCommand

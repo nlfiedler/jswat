@@ -4,7 +4,6 @@ $Id$
 
 - Console mode
   - Commands to be implemented
-    - view: show source code
     - catch
     - commands: assign monitors to breakpoints (list if no arguments)
     - condition: assign condition to breakpoints (list if no arguments)
@@ -21,11 +20,11 @@ $Id$
   - Add help categories, as in gdb, for describing sets of commands
 
 - Search for all TODO/XXX items and resolve or file bugs
-
 - Make sure tools.jar is in the classpath of all of the projects
   - Mac has it in the classes.jar already
   - Test in another OS in VirtualBox
-
+- Run all of the unit tests on all of the platforms.
+- Test view java.lang.String on all platforms
 - Fix distributable/installer build
 
 - Documentation updates
