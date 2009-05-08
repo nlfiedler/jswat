@@ -166,8 +166,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                 char[] buf = new char[8192];
                 int len = isr.read(buf);
                 while (len != -1) {
-                    String str = new String(buf, 0, len);
-                    printWriter.print(str);
+                    printWriter.write(buf, 0, len);
                     printWriter.flush();
                     len = isr.read(buf);
                 }
