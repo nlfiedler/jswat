@@ -33,6 +33,8 @@ import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.sun.jdi.Bootstrap;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -159,6 +161,13 @@ public class Main {
         // Display a helpful greeting.
         output.println(NbBundle.getMessage(Main.class, "MSG_Main_Welcome"));
 
+        // Find and run the RC file.
+        try {
+            runStartupFile(output, parser);
+        } catch (IOException ioe) {
+            logger.log(Level.SEVERE, null, ioe);
+        }
+
         // If command line arguments were given, assume that they are
         // commands to be run by the command parser.
         if (args.length > 0) {
@@ -256,5 +265,42 @@ public class Main {
                 System.getProperty("user.dir")));
         logger.info(String.format("Class Path: %s",
                 System.getProperty("java.class.path")));
+    }
+
+    /**
+     * Find the startup file in one of several locations and by one
+     * of several names, then run the commands found therein.
+     *
+     * @param  output  where to write error messages.
+     * @param  parser  the command interpreter.
+     * @throws  IOException  if reading file fails.
+     */
+    private static void runStartupFile(PrintWriter output,
+            CommandParser parser) throws IOException {
+        File[] files = {
+            new File(System.getProperty("user.dir"), ".jswatrc"),
+            new File(System.getProperty("user.dir"), "jswat.ini"),
+            new File(System.getProperty("user.home"), ".jswatrc"),
+            new File(System.getProperty("user.home"), "jswat.ini"),
+        };
+        for (File file : files) {
+            if (file.canRead()) {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                try {
+                    String line = br.readLine();
+                    while (line != null) {
+                        line = line.trim();
+                        if (!line.isEmpty() && !line.startsWith("#")) {
+                            performCommand(output, parser, line);
+                        }
+                        line = br.readLine();
+                    }
+                } finally {
+                    br.close();
+                }
+                // We just read the first file we find and stop.
+                break;
+            }
+        }
     }
 }

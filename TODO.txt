@@ -13,8 +13,6 @@ $Id$
     - redefine
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
-  - Read commands from RC-like file during startup
-    - Look for .jswatrc and jswat.ini in user.home and user.dir
   - Add help categories, as in gdb, for describing sets of commands
 
 - Search for all TODO/XXX items and resolve or file bugs
