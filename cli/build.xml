@@ -71,4 +71,18 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <!-- Incorporate the version number into the resources. -->
+    <property name="version" value="4.x"/>
+    <!-- Need to do this before the compile, otherwise Ant won't copy the file
+         because it is already up to date (it's copied during -do-compile). -->
+    <target name="-pre-compile">
+        <copy todir="${build.classes.dir}" filtering="true">
+            <filterset>
+                <!-- Put the application version into the resource file. -->
+                <filter token="version" value="${version}"/>
+            </filterset>
+            <fileset dir="${src.dir}" includes="**/Bundle.properties"/>
+        </copy>
+    </target>
 </project>

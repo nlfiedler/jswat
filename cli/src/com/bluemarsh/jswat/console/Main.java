@@ -246,8 +246,8 @@ public class Main {
      */
     private static void logSystemDetails() {
         logger.info(String.format("Log Session: %tc", new Date()));
-        // TODO: how to get version number here?
-        logger.info(String.format("Product version: %s", "4.5"));
+        String version = NbBundle.getMessage(Main.class, "MSG_Main_version");
+        logger.info(String.format("Product version: %s", version));
         logger.info(String.format("Operating System: %s %s on %s",
                 System.getProperty("os.name"),
                 System.getProperty("os.version"),
