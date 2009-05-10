@@ -60,10 +60,12 @@
 
     <!-- Fix the version number in the branding resources. -->
     <target name="-pre-branding">
-        <!-- Put the application version into the resource file. -->
-        <filter token="version" value="${version}"/>
         <!-- Have to copy everything to make the filtering work. -->
         <copy todir="${branding.dir}" filtering="true">
+            <filterset>
+                <!-- Put the application version into the resource file. -->
+                <filter token="version" value="${version}"/>
+            </filterset>
             <!-- Cannot filter images otherwise they get munged. -->
             <fileset dir="branding" excludes="**/*.gif"/>
         </copy>
