@@ -24,6 +24,7 @@
 package com.bluemarsh.jswat.core.breakpoint;
 
 import java.awt.Toolkit;
+import org.openide.util.NbBundle;
 
 /**
  * Produces a beep sound.
@@ -44,6 +45,11 @@ public class BeepMonitor implements Monitor {
     private BeepMonitor() {
     }
 
+    @Override
+    public String describe() {
+        return NbBundle.getMessage(BeepMonitor.class, "BeepMonitor.desc");
+    }
+
     /**
      * Returns the single instance of this class.
      *
@@ -53,12 +59,14 @@ public class BeepMonitor implements Monitor {
         return theInstance;
     }
 
+    @Override
     public void perform(BreakpointEvent event) {
         // This does not always make a sound, even though audio may be
         // configured on the system (e.g. Fedora Core Linux).
         Toolkit.getDefaultToolkit().beep();
     }
 
+    @Override
     public boolean requiresThread() {
         return false;
     }

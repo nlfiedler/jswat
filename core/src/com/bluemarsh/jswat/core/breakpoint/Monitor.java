@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -22,8 +22,6 @@
  */
 
 package com.bluemarsh.jswat.core.breakpoint;
-
-import com.bluemarsh.jswat.core.session.Session;
 
 /**
  * Interface Monitor defines a breakpoint monitor. A monitor is an action
@@ -34,6 +32,13 @@ import com.bluemarsh.jswat.core.session.Session;
  * @author  Nathan Fiedler
  */
 public interface Monitor {
+
+    /**
+     * Return a string describing this monitor.
+     *
+     * @return  string description.
+     */
+    String describe();
 
     /**
      * Perform the action that this monitor is defined to do. The given

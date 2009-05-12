@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -56,6 +56,11 @@ public class StackTraceMonitor implements Monitor {
     private StackTraceMonitor() {
     }
 
+    @Override
+    public String describe() {
+        return NbBundle.getMessage(BeepMonitor.class, "StackTraceMonitor.desc");
+    }
+
     /**
      * Returns the single instance of this class.
      *
@@ -65,6 +70,7 @@ public class StackTraceMonitor implements Monitor {
         return theInstance;
     }
 
+    @Override
     public void perform(BreakpointEvent event) {
         Event evt = event.getEvent();
         if (!(evt instanceof LocatableEvent)) {
@@ -134,6 +140,7 @@ public class StackTraceMonitor implements Monitor {
         writer.printOutput(sb.toString());
     }
 
+    @Override
     public boolean requiresThread() {
         return true;
     }

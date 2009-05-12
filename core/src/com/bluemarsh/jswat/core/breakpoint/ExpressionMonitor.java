@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -48,6 +48,12 @@ public class ExpressionMonitor implements Monitor {
     public ExpressionMonitor() {
     }
 
+    @Override
+    public String describe() {
+        return NbBundle.getMessage(BeepMonitor.class,
+                "ExpressionMonitor.desc", expression);
+    }
+
     /**
      * Retrieves the expression this monitor evaluates.
      *
@@ -57,6 +63,7 @@ public class ExpressionMonitor implements Monitor {
         return expression;
     }
 
+    @Override
     public void perform(BreakpointEvent event) {
         Event evt = event.getEvent();
         if (!(evt instanceof LocatableEvent)) {
@@ -82,6 +89,7 @@ public class ExpressionMonitor implements Monitor {
         }
     }
 
+    @Override
     public boolean requiresThread() {
         return true;
     }
