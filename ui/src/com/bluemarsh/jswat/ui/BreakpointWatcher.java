@@ -26,6 +26,7 @@ package com.bluemarsh.jswat.ui;
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
+import com.bluemarsh.jswat.core.breakpoint.ConditionException;
 import com.bluemarsh.jswat.core.breakpoint.LineBreakpoint;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointListener;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointEvent;
@@ -137,12 +138,16 @@ public class BreakpointWatcher implements BreakpointListener,
             @Override
             public void run() {
                 Breakpoint bp = event.getBreakpoint();
+                Exception ex = event.getException();
                 outputWriter.ensureVisible();
                 outputWriter.printError(NbBundle.getMessage(
                         BreakpointWatcher.class, "BreakpointWatcher.error",
                         bp.getDescription()));
-                outputWriter.printError(Strings.exceptionToString(
-                        event.getException()));
+                if (ex instanceof ConditionException) {
+                    outputWriter.printError(ex.getMessage());
+                } else {
+                    outputWriter.printError(Strings.exceptionToString(ex));
+                }
             }
         };
         EventQueue.invokeLater(runner);
