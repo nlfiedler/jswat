@@ -71,12 +71,17 @@ public class BreakpointClearCommand extends AbstractCommand {
             return;
         }
 
-        String spec = arguments.rest();
+        String spec = arguments.peek();
         if (spec.equals("all")) {
             int removed = 0;
+            // Collect the matching breakpoints in a list, otherwise
+            // we risk a concurrent modification exception.
+            List<Breakpoint> killring = new ArrayList<Breakpoint>();
             Iterator<Breakpoint> iter = brkman.getDefaultGroup().breakpoints(true);
             while (iter.hasNext()) {
-                Breakpoint bp = iter.next();
+                killring.add(iter.next());
+            }
+            for (Breakpoint bp : killring) {
                 brkman.removeBreakpoint(bp);
                 removed++;
             }
@@ -106,8 +111,8 @@ public class BreakpointClearCommand extends AbstractCommand {
                     writer.println(NbBundle.getMessage(BreakpointClearCommand.class,
                             "CTL_Clear_Removed", killring.size()));
                 } else {
-                    writer.println(NbBundle.getMessage(BreakpointClearCommand.class,
-                            "CTL_Clear_NotFound"));
+                    throw new CommandException(NbBundle.getMessage(
+                            BreakpointClearCommand.class, "ERR_Clear_NotFound"));
                 }
             } catch (NumberFormatException nfe) {
                 // This must come before IllegalArgumentException.
