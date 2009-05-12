@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -124,6 +124,11 @@ public class SuspendPolicyTest extends TestCase {
             requiresThread = thread;
         }
 
+        @Override
+        public String describe() {
+            return "suspend";
+        }
+
         /**
          * @return  true if the monitor suspended the debuggee, as expected.
          */
@@ -131,6 +136,7 @@ public class SuspendPolicyTest extends TestCase {
             return suspended;
         }
 
+        @Override
         public void perform(BreakpointEvent event) {
             Event evt = event.getEvent();
             if (evt instanceof LocatableEvent) {
@@ -150,6 +156,7 @@ public class SuspendPolicyTest extends TestCase {
             }
         }
 
+        @Override
         public boolean requiresThread() {
             return requiresThread;
         }

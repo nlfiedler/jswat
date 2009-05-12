@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -324,6 +324,7 @@ public class PackRat {
         final int i = 10;
         final String s = "synth";
         Runnable r = new Runnable() {
+            @Override
             public void run() {
                 // Should see the i and s fields but for some reason they
                 // are not in any of the field lists.
