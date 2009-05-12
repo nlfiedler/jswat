@@ -3,6 +3,7 @@ com.bluemarsh.jswat.command.commands.AproposCommand
 com.bluemarsh.jswat.command.commands.AttachCommand
 com.bluemarsh.jswat.command.commands.BreakpointClearCommand
 com.bluemarsh.jswat.command.commands.BreakpointSetCommand
+com.bluemarsh.jswat.command.commands.CatchExceptionCommand
 com.bluemarsh.jswat.command.commands.ClassesCommand
 com.bluemarsh.jswat.command.commands.ClasspathCommand
 com.bluemarsh.jswat.command.commands.CodeLinesCommand
@@ -44,4 +45,5 @@ com.bluemarsh.jswat.command.commands.ThreadLocksCommand
 com.bluemarsh.jswat.command.commands.ThreadsCommand
 com.bluemarsh.jswat.command.commands.UnaliasCommand
 com.bluemarsh.jswat.command.commands.ViewCommand
+com.bluemarsh.jswat.command.commands.WatchFieldCommand
 com.bluemarsh.jswat.command.commands.WhereCommand

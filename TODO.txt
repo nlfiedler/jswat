@@ -4,11 +4,9 @@ $Id$
 
 - Console mode
   - Commands to be implemented
-    - catch
     - monitor: assign monitors to breakpoints (list if no arguments)
     - condition: assign condition to breakpoints (list if no arguments)
     - filter: assign thread/class filters to breakpoints (list if no args)
-    - watch
     - redefine
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
