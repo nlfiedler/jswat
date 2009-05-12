@@ -253,7 +253,7 @@ public class DefaultCommandParser extends AbstractCommandParser {
                 } catch (Exception e) {
                     // Everything else, report it and encapsulate it.
                     logger.log(Level.SEVERE, null, e);
-                    throw new CommandException("Unexpected exception", e);
+                    throw new CommandException(e.toString());
                 }
             } else {
                 throw new CommandException(NbBundle.getMessage(getClass(),
