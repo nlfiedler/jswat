@@ -7,6 +7,7 @@ com.bluemarsh.jswat.command.commands.CatchExceptionCommand
 com.bluemarsh.jswat.command.commands.ClassesCommand
 com.bluemarsh.jswat.command.commands.ClasspathCommand
 com.bluemarsh.jswat.command.commands.CodeLinesCommand
+com.bluemarsh.jswat.command.commands.ConditionCommand
 com.bluemarsh.jswat.command.commands.ContinueCommand
 com.bluemarsh.jswat.command.commands.DebuggeeInfoCommand
 com.bluemarsh.jswat.command.commands.DetachCommand
@@ -25,6 +26,7 @@ com.bluemarsh.jswat.command.commands.HistoryCommand
 com.bluemarsh.jswat.command.commands.InterruptCommand
 com.bluemarsh.jswat.command.commands.LocalsCommand
 com.bluemarsh.jswat.command.commands.MethodsCommand
+com.bluemarsh.jswat.command.commands.MonitorCommand
 com.bluemarsh.jswat.command.commands.ObjectLocksCommand
 com.bluemarsh.jswat.command.commands.PropertiesCommand
 com.bluemarsh.jswat.command.commands.RequestsCommand

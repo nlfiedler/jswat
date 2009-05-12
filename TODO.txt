@@ -4,8 +4,6 @@ $Id$
 
 - Console mode
   - Commands to be implemented
-    - monitor: assign monitors to breakpoints (list if no arguments)
-    - condition: assign condition to breakpoints (list if no arguments)
     - filter: assign thread/class filters to breakpoints (list if no args)
     - redefine
     - Setting class load/unload breakpoints
