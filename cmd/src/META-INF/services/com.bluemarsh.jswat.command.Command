@@ -2,6 +2,7 @@ com.bluemarsh.jswat.command.commands.AliasCommand
 com.bluemarsh.jswat.command.commands.AproposCommand
 com.bluemarsh.jswat.command.commands.AttachCommand
 com.bluemarsh.jswat.command.commands.BreakpointClearCommand
+com.bluemarsh.jswat.command.commands.BreakpointFilterCommand
 com.bluemarsh.jswat.command.commands.BreakpointSetCommand
 com.bluemarsh.jswat.command.commands.CatchExceptionCommand
 com.bluemarsh.jswat.command.commands.ClassesCommand

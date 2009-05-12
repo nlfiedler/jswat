@@ -4,7 +4,6 @@ $Id$
 
 - Console mode
   - Commands to be implemented
-    - filter: assign thread/class filters to breakpoints (list if no args)
     - redefine
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
