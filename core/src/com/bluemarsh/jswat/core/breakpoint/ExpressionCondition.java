@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -47,6 +47,12 @@ public class ExpressionCondition implements Condition {
     public ExpressionCondition() {
     }
 
+    @Override
+    public String describe() {
+        return NbBundle.getMessage(ExpressionCondition.class,
+                "ExpressionCondition.describe", expression);
+    }
+
     /**
      * Retrieves the expression this condition tests for.
      *
@@ -56,7 +62,9 @@ public class ExpressionCondition implements Condition {
         return expression;
     }
 
-    public boolean isSatisfied(Breakpoint bp, Event event) throws Exception {
+    @Override
+    public boolean isSatisfied(Breakpoint bp, Event event)
+            throws ConditionException {
         if (!(event instanceof LocatableEvent)) {
             // Cannot evaluate condition without a thread.
             return false;
@@ -70,20 +78,26 @@ public class ExpressionCondition implements Condition {
         }
 
         Evaluator eval = new Evaluator(expression);
-        Object o = eval.evaluate(thread, 0);
+        Object o = null;
+        try {
+            o = eval.evaluate(thread, 0);
+        } catch (EvaluationException ee) {
+            throw new ConditionException(ee.getMessage(), ee);
+        }
         if (o instanceof BooleanValue) {
             return ((BooleanValue) o).value();
         } else if (o instanceof Boolean) {
             return ((Boolean) o).booleanValue();
         } else {
-            throw new EvaluationException(
-                NbBundle.getMessage(ExpressionCondition.class,
+            throw new ConditionException(
+                    NbBundle.getMessage(ExpressionCondition.class,
                     "ExpressionCondition.notBoolean"));
         }
     }
 
+    @Override
     public boolean isVisible() {
-        return false;
+        return true;
     }
 
     /**

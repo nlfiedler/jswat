@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2009. All Rights Reserved.
+ * are Copyright (C) 2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,39 +23,48 @@
 
 package com.bluemarsh.jswat.core.breakpoint;
 
-import com.sun.jdi.event.Event;
-
 /**
- * Interface Condition defines a breakpoint conditional. Conditionals may
- * be added to breakpoints, in which case the breakpoint will not stop
- * the debuggee unless all of its conditions are satisfied.
+ * Thrown if a condition cannot be evaluated properly.
  *
  * @author  Nathan Fiedler
  */
-public interface Condition {
+public class ConditionException extends Exception {
+    /** silence the compiler warnings */
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Return a string describing this condition.
-     *
-     * @return  string description.
+     * Constructs a ConditionException with no message or cause.
      */
-    String describe();
+    public ConditionException() {
+        super();
+    }
 
     /**
-     * Returns true if this condition is satisfied.
+     * Constructs a ConditionException with the given message.
      *
-     * @param  bp     breakpoint instance.
-     * @param  event  event that brought us here.
-     * @return  true if satisfied, false otherwise.
-     * @throws  ConditionException
-     *          if the condition has a problem.
+     * @param  msg  exception message.
      */
-    boolean isSatisfied(Breakpoint bp, Event event) throws ConditionException;
+    public ConditionException(String msg) {
+        super(msg);
+    }
 
     /**
-     * Indicates if this condition is one meant to be seen by the user.
+     * Constructs a ConditionException with the given message
+     * and cause.
      *
-     * @return  true if this condition should be visible to the user.
+     * @param  msg    exception message.
+     * @param  cause  cause of this exception.
      */
-    boolean isVisible();
+    public ConditionException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
+    /**
+     * Constructs a ConditionException with the given cause.
+     *
+     * @param  cause  cause of this exception.
+     */
+    public ConditionException(Throwable cause) {
+        super(cause);
+    }
 }
