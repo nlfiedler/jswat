@@ -114,6 +114,42 @@ public class SessionCommand extends AbstractCommand {
                 } else {
                     throw new MissingArgumentsException();
                 }
+            } else if (cmd.equals("prop")) {
+                if (arguments.hasMoreTokens()) {
+                    String id = arguments.nextToken();
+                    Session session = manager.findById(id);
+                    if (session == null) {
+                        throw new CommandException(NbBundle.getMessage(
+                                SessionCommand.class, "ERR_session_Unknown", id));
+                    }
+                    if (arguments.hasMoreTokens()) {
+                        String name = arguments.nextToken();
+                        if (arguments.hasMoreTokens()) {
+                            String value = arguments.nextToken();
+                            if (value.equals("null")) {
+                                value = null;
+                            }
+                            session.setProperty(name, value);
+                        } else {
+                            writer.println(String.format("%s = %s", name,
+                                    session.getProperty(name)));
+                        }
+                    } else {
+                        StringBuilder sb = new StringBuilder();
+                        Iterator<String> names = session.propertyNames();
+                        while (names.hasNext()) {
+                            String name = names.next();
+                            String value = session.getProperty(name);
+                            sb.append(name);
+                            sb.append(" = ");
+                            sb.append(value);
+                            sb.append('\n');
+                        }
+                        writer.print(sb.toString());
+                    }
+                } else {
+                    throw new MissingArgumentsException();
+                }
             } else if (cmd.equals("use")) {
                 if (arguments.hasMoreTokens()) {
                     String id = arguments.nextToken();
