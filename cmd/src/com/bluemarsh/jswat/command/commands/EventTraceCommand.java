@@ -20,7 +20,6 @@
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command.commands;
 
 import com.bluemarsh.jswat.command.AbstractCommand;
@@ -43,7 +42,7 @@ public class EventTraceCommand extends AbstractCommand {
 
     @Override
     public String getName() {
-        return "trace";
+        return "events";
     }
 
     @Override
@@ -72,11 +71,11 @@ public class EventTraceCommand extends AbstractCommand {
             imode = VirtualMachine.TRACE_SENDS;
         } else {
             throw new CommandException(NbBundle.getMessage(
-                    EventTraceCommand.class, "ERR_trace_UnknownMode", smode));
+                    EventTraceCommand.class, "ERR_events_UnknownMode", smode));
         }
         vm.setDebugTraceMode(imode);
-        writer.write(NbBundle.getMessage(
-                EventTraceCommand.class, "CTL_trace_ModeSet", smode));
+        writer.println(NbBundle.getMessage(
+                EventTraceCommand.class, "CTL_events_ModeSet", smode));
     }
 
     @Override
