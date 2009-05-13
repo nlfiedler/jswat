@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -51,10 +51,12 @@ import org.openide.util.NbBundle;
  */
 public class CodeLinesCommand extends AbstractCommand {
 
+    @Override
     public String getName() {
         return "lines";
     }
 
+    @Override
     public void perform(CommandContext context, CommandArguments arguments)
             throws CommandException, MissingArgumentsException {
 
@@ -119,6 +121,8 @@ public class CodeLinesCommand extends AbstractCommand {
      * @param  writer      where to write line information.
      * @throws  AbsentInformationException
      *          if class was not compiled with debugging information.
+     * @throws  CommandException
+     *          if something goes wrong.
      */
     protected void printLines(ReferenceType clazz, String methodName,
             PrintWriter writer) throws AbsentInformationException, CommandException {
@@ -169,10 +173,12 @@ public class CodeLinesCommand extends AbstractCommand {
         writer.print(sb.toString());
     }
 
+    @Override
     public boolean requiresArguments() {
         return true;
     }
 
+    @Override
     public boolean requiresDebuggee() {
         return true;
     }
@@ -189,6 +195,7 @@ public class CodeLinesCommand extends AbstractCommand {
          *          first argument is less than, equal to, or greater than
          *          the second.
          */
+        @Override
         public int compare(Location o1, Location o2) {
             return o1.lineNumber() - o2.lineNumber();
         }
