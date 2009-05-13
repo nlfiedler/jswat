@@ -4,7 +4,6 @@ $Id$
 
 - Console mode
   - Commands to be implemented
-    - Enable/disable breakpoints
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
     - Setting method entry/exit breakpoints
