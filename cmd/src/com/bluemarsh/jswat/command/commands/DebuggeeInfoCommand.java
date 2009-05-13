@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command.commands;
 
 import com.bluemarsh.jswat.command.AbstractCommand;
@@ -28,20 +27,11 @@ import com.bluemarsh.jswat.command.CommandArguments;
 import com.bluemarsh.jswat.command.CommandContext;
 import com.bluemarsh.jswat.command.CommandException;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
-import com.bluemarsh.jswat.core.context.DebuggingContext;
 import com.bluemarsh.jswat.core.session.Session;
-import com.bluemarsh.jswat.core.util.Classes;
-import com.sun.jdi.ClassType;
-import com.sun.jdi.Method;
-import com.sun.jdi.ObjectReference;
+import com.bluemarsh.jswat.core.util.Strings;
 import com.sun.jdi.PathSearchingVirtualMachine;
-import com.sun.jdi.ThreadReference;
-import com.sun.jdi.Value;
 import com.sun.jdi.VirtualMachine;
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import org.openide.util.NbBundle;
 
 /**
@@ -51,132 +41,58 @@ import org.openide.util.NbBundle;
  */
 public class DebuggeeInfoCommand extends AbstractCommand {
 
+    @Override
     public String getName() {
         return "vminfo";
     }
 
-    /**
-     * Returns a string comprised of the desired prefix, followed by
-     * a newline, and each path element on a separate line.
-     *
-     * @param  prefix  path display prefix.
-     * @param  path    list of Strings to display.
-     * @return  resultant string.
-     */
-    private static String pathToString(String prefix, List path) {
-        StringBuilder sb = new StringBuilder(prefix);
-        sb.append('\n');
-        Iterator iter = path.iterator();
-        if (iter.hasNext()) {
-            sb.append(iter.next());
-            while (iter.hasNext()) {
-                sb.append('\n');
-                sb.append(iter.next());
-            }
-        }
-        return sb.toString();
-    }
-
+    @Override
     public void perform(CommandContext context, CommandArguments arguments)
             throws CommandException, MissingArgumentsException {
 
         Session session = context.getSession();
         PrintWriter writer = context.getWriter();
         VirtualMachine vm = session.getConnection().getVM();
+        StringBuilder sb = new StringBuilder();
 
-        //
+        // Display the Java VM version.
+        sb.append(NbBundle.getMessage(DebuggeeInfoCommand.class,
+                "CTL_vminfo_version"));
+        sb.append(' ');
+        sb.append(vm.version());
+        sb.append("\n\n");
+
         // Display classpath information.
-        //
         if (vm instanceof PathSearchingVirtualMachine) {
             PathSearchingVirtualMachine psvm =
-                (PathSearchingVirtualMachine) vm;
-            writer.print(NbBundle.getMessage(getClass(), "CTL_vminfo_basedir"));
-            writer.println();
-            writer.println(psvm.baseDirectory());
-
-            writer.println();
-
-            List cpath = psvm.classPath();
-            writer.println(pathToString(NbBundle.getMessage(getClass(), "CTL_vminfo_cpath"), cpath));
-
-            writer.println();
-
-            cpath = psvm.bootClassPath();
-            writer.println(pathToString(
-                            NbBundle.getMessage(getClass(), "CTL_vminfo_bcpath"), cpath));
+                    (PathSearchingVirtualMachine) vm;
+            sb.append(NbBundle.getMessage(DebuggeeInfoCommand.class,
+                    "CTL_vminfo_basedir"));
+            sb.append('\n');
+            sb.append(psvm.baseDirectory());
+            sb.append("\n\n");
+            sb.append(NbBundle.getMessage(DebuggeeInfoCommand.class,
+                    "CTL_vminfo_cpath"));
+            sb.append('\n');
+            sb.append(Strings.listToString(psvm.classPath(), "\n"));
+            sb.append("\n\n");
+            sb.append(NbBundle.getMessage(DebuggeeInfoCommand.class,
+                    "CTL_vminfo_bcpath"));
+            sb.append('\n');
+            sb.append(Strings.listToString(psvm.bootClassPath(), "\n"));
+            sb.append('\n');
         }
 
-        //
         // Display the default stratum.
-        //
-        writer.println();
-        writer.print(NbBundle.getMessage(getClass(), "CTL_vminfo_stratum"));
-        writer.print(" ");
-        writer.println(vm.getDefaultStratum());
-
-        //
-        // Display debuggee memory sizes.
-        //
-
-        // We need the current thread.
-        DebuggingContext dc = context.getDebuggingContext();
-        ThreadReference thread = dc.getThread();
-        if (thread == null) {
-            writer.println();
-            writer.println(NbBundle.getMessage(getClass(), "ERR_vminfo_nothread"));
-            return;
-        }
-
-        // We assume this class exists in the debuggee.
-        List runtimeTypes = vm.classesByName("java.lang.Runtime");
-        ClassType clazz = (ClassType) runtimeTypes.get(0);
-        // We assume this class has just one of each of these methods.
-        List methods = clazz.methodsByName("getRuntime",
-                                            "()Ljava/lang/Runtime;");
-        Method method = (Method) methods.get(0);
-        List<Value> emptyList = Collections.emptyList();
-        try {
-            ObjectReference oref = (ObjectReference) Classes.invokeMethod(
-                null, clazz, thread, method, emptyList);
-
-            methods = clazz.methodsByName("availableProcessors", "()I");
-            method = (Method) methods.get(0);
-            Object rval = Classes.invokeMethod(
-                oref, clazz, thread, method, emptyList);
-            writer.println();
-            writer.print(NbBundle.getMessage(getClass(), "CTL_vminfo_numprocs"));
-            writer.print(" ");
-            writer.println(rval.toString());
-
-            methods = clazz.methodsByName("freeMemory", "()J");
-            method = (Method) methods.get(0);
-            rval = Classes.invokeMethod(
-                oref, clazz, thread, method, emptyList);
-            writer.print(NbBundle.getMessage(getClass(), "CTL_vminfo_freemem"));
-            writer.print(" ");
-            writer.println(rval.toString());
-
-            methods = clazz.methodsByName("maxMemory", "()J");
-            method = (Method) methods.get(0);
-            rval = Classes.invokeMethod(
-                oref, clazz, thread, method, emptyList);
-            writer.print(NbBundle.getMessage(getClass(), "CTL_vminfo_maxmem"));
-            writer.print(" ");
-            writer.println(rval.toString());
-
-            methods = clazz.methodsByName("totalMemory", "()J");
-            method = (Method) methods.get(0);
-            rval = Classes.invokeMethod(
-                oref, clazz, thread, method, emptyList);
-            writer.print(NbBundle.getMessage(getClass(), "CTL_vminfo_totalmem"));
-            writer.print(" ");
-            writer.println(rval.toString());
-        } catch (Exception e) {
-            throw new CommandException(NbBundle.getMessage(getClass(),
-                    "ERR_vminfo_InvocationFailed"), e);
-        }
+        sb.append('\n');
+        sb.append(NbBundle.getMessage(DebuggeeInfoCommand.class,
+                "CTL_vminfo_stratum"));
+        sb.append(' ');
+        sb.append(vm.getDefaultStratum());
+        writer.println(sb.toString());
     }
 
+    @Override
     public boolean requiresDebuggee() {
         return true;
     }

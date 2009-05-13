@@ -59,20 +59,28 @@ public class CatchExceptionCommand extends AbstractCommand {
         BreakpointManager brkman = BreakpointProvider.getBreakpointManager(session);
 
         // See if user provided the go or thread option.
-        String peek = arguments.peek();
+        String token = arguments.nextToken();
         int suspendPolicy = EventRequest.SUSPEND_ALL;
-        if (peek.equals("go")) {
-            suspendPolicy = EventRequest.SUSPEND_NONE;
-            arguments.nextToken();
-        } else if (peek.equals("thread")) {
-            suspendPolicy = EventRequest.SUSPEND_EVENT_THREAD;
-            arguments.nextToken();
+        boolean caught = true;
+        boolean uncaught = true;
+        while (true) {
+            if (token.equals("go")) {
+                suspendPolicy = EventRequest.SUSPEND_NONE;
+            } else if (token.equals("thread")) {
+                suspendPolicy = EventRequest.SUSPEND_EVENT_THREAD;
+            } else if (token.equals("caught")) {
+                uncaught = false;
+            } else if (token.equals("uncaught")) {
+                caught = false;
+            } else {
+                break;
+            }
+            token = arguments.nextToken();
         }
 
         BreakpointFactory brkfac = BreakpointProvider.getBreakpointFactory();
-        String spec = arguments.rest();
         try {
-            Breakpoint bp = brkfac.createExceptionBreakpoint(spec, true, true);
+            Breakpoint bp = brkfac.createExceptionBreakpoint(token, caught, uncaught);
             bp.setEnabled(false);
             bp.setSuspendPolicy(suspendPolicy);
             bp.setEnabled(true);
@@ -82,7 +90,7 @@ public class CatchExceptionCommand extends AbstractCommand {
         } catch (MalformedClassNameException mcne) {
             throw new CommandException(
                 NbBundle.getMessage(CatchExceptionCommand.class,
-                "ERR_MalformedClass", spec), mcne);
+                "ERR_MalformedClass", token), mcne);
         }
     }
 

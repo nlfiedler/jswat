@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -29,6 +29,7 @@ import com.bluemarsh.jswat.command.CommandContext;
 import com.bluemarsh.jswat.command.CommandException;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
 import com.bluemarsh.jswat.core.session.Session;
+import com.bluemarsh.jswat.core.util.Classes;
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.VirtualMachine;
@@ -44,10 +45,12 @@ import org.openide.util.NbBundle;
  */
 public class SourceNamesCommand extends AbstractCommand {
 
+    @Override
     public String getName() {
         return "source";
     }
 
+    @Override
     public void perform(CommandContext context, CommandArguments arguments)
             throws CommandException, MissingArgumentsException {
 
@@ -57,83 +60,66 @@ public class SourceNamesCommand extends AbstractCommand {
 
         // Prepare for the search.
         String cname = arguments.nextToken();
-        List<ReferenceType> classes = vm.allClasses();
+        List<ReferenceType> classes = Classes.findClasses(vm, cname);
 
-        // Perform the search.
-        Iterator<ReferenceType> iter = classes.iterator();
-        boolean found = false;
-        StringBuilder sb = new StringBuilder(512);
-        while (iter.hasNext()) {
-            ReferenceType clazz = iter.next();
-            if (cname.equals(clazz.name())) {
-                found = true;
-                printClass(clazz, sb);
-                break;
-            }
-        }
-        if (!found) {
-            throw new CommandException(NbBundle.getMessage(getClass(),
-                    "ERR_source_NoMatch", cname));
-        }
-        writer.write(sb.toString());
-    }
-
-    /**
-     * Print information about the sources for a class.
-     *
-     * @param  type  ReferenceType to display.
-     * @param  sb    sink for output.
-     */
-    private static void printClass(ReferenceType type, StringBuilder sb) {
-        String absent = NbBundle.getMessage(SourceNamesCommand.class,
-                "CTL_source_AbsentInfo");
-        String val;
-        try {
-            val = type.sourceName();
-        } catch (AbsentInformationException aie) {
-            val = absent;
-        }
-        sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                "CTL_source_SourceName", val));
-        sb.append('\n');
-        VirtualMachine vm = type.virtualMachine();
-        if (vm.canGetSourceDebugExtension()) {
-            sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                "CTL_source_DefaultStratum", type.defaultStratum()));
-            sb.append('\n');
+        if (classes.size() > 0) {
+            ReferenceType type = classes.get(0);
+            StringBuilder sb = new StringBuilder();
+            String absent = NbBundle.getMessage(SourceNamesCommand.class,
+                    "CTL_source_AbsentInfo");
+            String val;
             try {
-                val = type.sourceDebugExtension();
+                val = type.sourceName();
             } catch (AbsentInformationException aie) {
                 val = absent;
             }
             sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                    "CTL_source_DebugExt", val));
+                    "CTL_source_SourceName", val));
             sb.append('\n');
-            sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                    "CTL_source_SourcePaths"));
-            try {
-                List paths = type.sourcePaths(null);
-                Iterator iter = paths.iterator();
-                while (iter.hasNext()) {
-                    sb.append("   ");
-                    sb.append(iter.next().toString());
+            if (vm.canGetSourceDebugExtension()) {
+                sb.append(NbBundle.getMessage(SourceNamesCommand.class,
+                        "CTL_source_DefaultStratum", type.defaultStratum()));
+                sb.append('\n');
+                try {
+                    val = type.sourceDebugExtension();
+                } catch (AbsentInformationException aie) {
+                    val = absent;
+                }
+                sb.append(NbBundle.getMessage(SourceNamesCommand.class,
+                        "CTL_source_DebugExt", val));
+                sb.append('\n');
+                sb.append(NbBundle.getMessage(SourceNamesCommand.class,
+                        "CTL_source_SourcePaths"));
+                try {
+                    List paths = type.sourcePaths(null);
+                    Iterator iter = paths.iterator();
+                    while (iter.hasNext()) {
+                        sb.append("   ");
+                        sb.append(iter.next().toString());
+                        sb.append('\n');
+                    }
+                } catch (AbsentInformationException aie) {
+                    sb.append(absent);
                     sb.append('\n');
                 }
-            } catch (AbsentInformationException aie) {
-                sb.append(absent);
+            } else {
+                sb.append(NbBundle.getMessage(SourceNamesCommand.class,
+                        "CTL_source_cannotGetSourceExtension"));
                 sb.append('\n');
             }
+            writer.write(sb.toString());
         } else {
-            sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                "CTL_source_cannotGetSourceExtension"));
-            sb.append('\n');
+            throw new CommandException(NbBundle.getMessage(getClass(),
+                    "ERR_source_NoMatch", cname));
         }
     }
 
+    @Override
     public boolean requiresArguments() {
         return true;
     }
 
+    @Override
     public boolean requiresDebuggee() {
         return true;
     }

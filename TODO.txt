@@ -4,8 +4,13 @@ $Id$
 
 - Console mode
   - Commands to be implemented
+    - Enable/disable breakpoints
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
+    - Setting method entry/exit breakpoints
+    - kill <thread id> <throwable>
+    - lines <class>.<method>: show locations for matching methods
+    - session prop
   - Add help categories, as in gdb, for describing sets of commands
 
 - Search for all TODO/XXX items and resolve or file bugs
