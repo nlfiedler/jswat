@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -29,12 +29,8 @@ import com.bluemarsh.jswat.command.CommandContext;
 import com.bluemarsh.jswat.command.CommandException;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
 import com.bluemarsh.jswat.core.session.Session;
-import com.sun.jdi.AbsentInformationException;
-import com.sun.jdi.ReferenceType;
 import com.sun.jdi.VirtualMachine;
 import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.List;
 import org.openide.util.NbBundle;
 
 /**
@@ -45,10 +41,12 @@ import org.openide.util.NbBundle;
  */
 public class EventTraceCommand extends AbstractCommand {
 
+    @Override
     public String getName() {
         return "trace";
     }
 
+    @Override
     public void perform(CommandContext context, CommandArguments arguments)
             throws CommandException, MissingArgumentsException {
 
@@ -81,10 +79,12 @@ public class EventTraceCommand extends AbstractCommand {
                 EventTraceCommand.class, "CTL_trace_ModeSet", smode));
     }
 
+    @Override
     public boolean requiresArguments() {
         return true;
     }
 
+    @Override
     public boolean requiresDebuggee() {
         return true;
     }
