@@ -56,7 +56,7 @@ public class ExcludeCommand extends AbstractCommand {
         CoreSettings settings = CoreSettings.getDefault();
         if (arguments.hasMoreTokens()) {
             String token = arguments.rest();
-            if (token.equals("-")) {
+            if (token.equals("none")) {
                 // Remove all exclusions.
                 settings.setSteppingExcludes(null);
             } else {
