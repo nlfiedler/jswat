@@ -94,7 +94,8 @@ public class BreakpointClearCommand extends AbstractCommand {
                 // we risk a concurrent modification exception.
                 List<Breakpoint> killring = new ArrayList<Breakpoint>();
                 while (arguments.hasMoreTokens()) {
-                    int n = Integer.parseInt(arguments.nextToken());
+                    spec = arguments.nextToken();
+                    int n = Integer.parseInt(spec);
                     Iterator<Breakpoint> iter = brkman.getDefaultGroup().breakpoints(true);
                     while (iter.hasNext()) {
                         Breakpoint bp = iter.next();
