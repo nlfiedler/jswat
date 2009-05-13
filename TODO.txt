@@ -7,7 +7,6 @@ $Id$
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
     - Setting method entry/exit breakpoints
-    - kill <thread id> <throwable>
   - Add help categories, as in gdb, for describing sets of commands
 
 - Search for all TODO/XXX items and resolve or file bugs
