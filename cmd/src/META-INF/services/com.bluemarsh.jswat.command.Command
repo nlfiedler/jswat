@@ -30,6 +30,7 @@ com.bluemarsh.jswat.command.commands.MethodsCommand
 com.bluemarsh.jswat.command.commands.MonitorCommand
 com.bluemarsh.jswat.command.commands.ObjectLocksCommand
 com.bluemarsh.jswat.command.commands.PropertiesCommand
+com.bluemarsh.jswat.command.commands.RedefineClassCommand
 com.bluemarsh.jswat.command.commands.RequestsCommand
 com.bluemarsh.jswat.command.commands.ResumeCommand
 com.bluemarsh.jswat.command.commands.RunCommand

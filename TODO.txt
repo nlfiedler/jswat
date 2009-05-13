@@ -4,7 +4,6 @@ $Id$
 
 - Console mode
   - Commands to be implemented
-    - redefine
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
   - Add help categories, as in gdb, for describing sets of commands
