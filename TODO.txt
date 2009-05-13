@@ -3,6 +3,8 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
+  - Change break to show enabled state of breakpoints
+  - Change clear and others to require arguments, not list breakpoints
   - Commands to be implemented
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints

@@ -29,6 +29,7 @@ com.bluemarsh.jswat.command.commands.HistoryCommand
 com.bluemarsh.jswat.command.commands.InterruptCommand
 com.bluemarsh.jswat.command.commands.LocalsCommand
 com.bluemarsh.jswat.command.commands.MethodsCommand
+com.bluemarsh.jswat.command.commands.MethodTraceCommand
 com.bluemarsh.jswat.command.commands.MonitorCommand
 com.bluemarsh.jswat.command.commands.ObjectLocksCommand
 com.bluemarsh.jswat.command.commands.PropertiesCommand
