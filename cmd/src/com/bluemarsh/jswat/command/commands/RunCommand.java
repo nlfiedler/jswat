@@ -99,6 +99,9 @@ public class RunCommand extends AbstractCommand {
             PathManager pm = PathProvider.getPathManager(session);
             String cp = Strings.listToString(pm.getClassPath());
             String javaParams = session.getProperty(Session.PROP_JAVA_PARAMS);
+            if (javaParams == null) {
+                javaParams = "";
+            }
             // Add on the classpath. If the user already had one in the JVM
             // options, this will likely fail, but the run help indicates
             // this already, so just let it fail.
