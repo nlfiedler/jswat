@@ -86,13 +86,13 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
                 }
             }
             // Even for Windows, need to use slash for the URL.
-            spec.replace(File.separatorChar, '/');
+            spec = spec.replace(File.separatorChar, '/');
             // This is kind of a hack, but the url is not really used
             // as a URL in most places, just the last part has to match
             // the resolved class information. In any case, there is no
             // good solution since the user may be setting a breakpoint
             // in code for which they have no source available.
-            String url = "file://foo/" + spec;
+            String url = "file://root/" + spec;
             try {
                 return createLineBreakpoint(url, null, line);
             } catch (MalformedURLException mue) {
