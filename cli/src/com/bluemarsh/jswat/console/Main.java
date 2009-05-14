@@ -26,6 +26,7 @@ import com.bluemarsh.jswat.command.CommandException;
 import com.bluemarsh.jswat.command.CommandParser;
 import com.bluemarsh.jswat.command.CommandProvider;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
+import com.bluemarsh.jswat.core.PlatformProvider;
 import com.bluemarsh.jswat.core.runtime.RuntimeManager;
 import com.bluemarsh.jswat.core.runtime.RuntimeProvider;
 import com.bluemarsh.jswat.core.session.Session;
@@ -98,6 +99,10 @@ public class Main {
             output.println(NbBundle.getMessage(Main.class, "MSG_Main_NoJPDA"));
             System.exit(1);
         }
+
+        // Ensure we can create the user directory by requesting the
+        // platform service. Simply asking for it has the desired effect.
+        PlatformProvider.getPlatformService();
 
         // Define the logging configuration.
         LogManager manager = LogManager.getLogManager();

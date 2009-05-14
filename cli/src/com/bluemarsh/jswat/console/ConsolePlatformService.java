@@ -54,6 +54,10 @@ public class ConsolePlatformService implements PlatformService {
      */
     public ConsolePlatformService() {
         userDirectory = new File(System.getProperty("user.home"), USER_DIR);
+        // Ensure the user directory exists to avoid exceptions in logging.
+        if (!userDirectory.exists()) {
+            userDirectory.mkdirs();
+        }
     }
 
     @Override

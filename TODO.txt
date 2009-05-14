@@ -2,15 +2,15 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
-- Search for all TODO/XXX items and resolve or file bugs
-- Make sure tools.jar is in the classpath of all of the projects
-  - Mac has it in the classes.jar already
-  - Test in another OS in VirtualBox
-- Run all of the unit tests on all of the platforms.
-- Test view java.lang.String on all platforms
+- Test the following on +Solaris, -Windows, -Linux
+  - Run the unit tests
+  - Test view java.lang.String on all platforms
+- Fix the branding that seems to work but the build file says otherwise
 - Fix distributable/installer build
 
 - Documentation updates
+  - Document how to get the JDK tools.jar into the classpath of the projects
+    - Add the path to tools.jar to the private project properties?
   - Explain how the modules build and how the suite is set up
     - Link to http://wiki.netbeans.org/DevFaqWrapperModules
   - For each new external library added, need to add a class-path-extension
@@ -19,6 +19,7 @@ $Id$
     - Copy new org-openide-util.jar from NetBeans/platform
     - The org-openide-util.jar is not used when running in NetBeans
   - Write a tutorial on using the console interface
+    - Prompt may become separated from cursor due to asynchronous output
     - Command line arguments are interpreted as command input
     - A unique prefix for a command will invoke that command (e.g. hi => history)
     - RC-like file for commands that are executed at startup
