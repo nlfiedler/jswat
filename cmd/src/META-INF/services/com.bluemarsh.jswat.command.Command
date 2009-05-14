@@ -7,6 +7,7 @@ com.bluemarsh.jswat.command.commands.BreakpointEnableCommand
 com.bluemarsh.jswat.command.commands.BreakpointFilterCommand
 com.bluemarsh.jswat.command.commands.BreakpointSetCommand
 com.bluemarsh.jswat.command.commands.CatchExceptionCommand
+com.bluemarsh.jswat.command.commands.ClassBreakpointCommand
 com.bluemarsh.jswat.command.commands.ClassesCommand
 com.bluemarsh.jswat.command.commands.ClasspathCommand
 com.bluemarsh.jswat.command.commands.CodeLinesCommand
@@ -47,6 +48,7 @@ com.bluemarsh.jswat.command.commands.StepInstructionCommand
 com.bluemarsh.jswat.command.commands.StepOverCommand
 com.bluemarsh.jswat.command.commands.SuspendCommand
 com.bluemarsh.jswat.command.commands.ThreadCommand
+com.bluemarsh.jswat.command.commands.ThreadBreakpointCommand
 com.bluemarsh.jswat.command.commands.ThreadGroupsCommand
 com.bluemarsh.jswat.command.commands.ThreadKillCommand
 com.bluemarsh.jswat.command.commands.ThreadLocksCommand

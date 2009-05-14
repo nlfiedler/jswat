@@ -2,12 +2,6 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
-- Console mode
-  - Commands to be implemented
-    - Setting class load/unload breakpoints
-    - Setting thread start/stop breakpoints
-  - Add help categories, as in gdb, for describing sets of commands
-
 - Search for all TODO/XXX items and resolve or file bugs
 - Make sure tools.jar is in the classpath of all of the projects
   - Mac has it in the classes.jar already
