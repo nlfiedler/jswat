@@ -73,7 +73,12 @@ public class BreakpointSetCommand extends AbstractCommand {
                 if (n == null) {
                     n = -1;
                 }
-                writer.format("[%d] %s\n", n, bp.getDescription());
+                String d = bp.getDescription();
+                if (bp.isEnabled()) {
+                    writer.format("[%d] * %s\n", n, d);
+                } else {
+                    writer.format("[%d] - %s\n", n, d);
+                }
             }
             return;
         }

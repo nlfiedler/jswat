@@ -55,19 +55,6 @@ public class BreakpointEnableCommand extends AbstractCommand {
         PrintWriter writer = context.getWriter();
         BreakpointManager brkman = BreakpointProvider.getBreakpointManager(session);
 
-        if (!arguments.hasMoreTokens()) {
-            Iterator<Breakpoint> iter = brkman.getDefaultGroup().breakpoints(true);
-            while (iter.hasNext()) {
-                Breakpoint bp = iter.next();
-                Integer n = (Integer) bp.getProperty(Breakpoint.PROP_NUMBER);
-                if (n == null) {
-                    n = -1;
-                }
-                writer.format("[%d] %s\n", n, bp.getDescription());
-            }
-            return;
-        }
-
         int count = 0;
         String spec = arguments.peek();
         if (spec.equals("all")) {
@@ -107,5 +94,10 @@ public class BreakpointEnableCommand extends AbstractCommand {
             throw new CommandException(NbBundle.getMessage(
                     BreakpointEnableCommand.class, "ERR_enable_NotFound"));
         }
+    }
+
+    @Override
+    public boolean requiresArguments() {
+        return true;
     }
 }

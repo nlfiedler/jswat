@@ -3,12 +3,9 @@ JSWAT TASK LIST
 $Id$
 
 - Console mode
-  - Change break to show enabled state of breakpoints
-  - Change clear and others to require arguments, not list breakpoints
   - Commands to be implemented
     - Setting class load/unload breakpoints
     - Setting thread start/stop breakpoints
-    - Setting method entry/exit breakpoints
   - Add help categories, as in gdb, for describing sets of commands
 
 - Search for all TODO/XXX items and resolve or file bugs

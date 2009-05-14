@@ -58,19 +58,6 @@ public class BreakpointClearCommand extends AbstractCommand {
         PrintWriter writer = context.getWriter();
         BreakpointManager brkman = BreakpointProvider.getBreakpointManager(session);
 
-        if (!arguments.hasMoreTokens()) {
-            Iterator<Breakpoint> iter = brkman.getDefaultGroup().breakpoints(true);
-            while (iter.hasNext()) {
-                Breakpoint bp = iter.next();
-                Integer n = (Integer) bp.getProperty(Breakpoint.PROP_NUMBER);
-                if (n == null) {
-                    n = -1;
-                }
-                writer.format("[%d] %s\n", n, bp.getDescription());
-            }
-            return;
-        }
-
         String spec = arguments.peek();
         if (spec.equals("all")) {
             int removed = 0;
@@ -122,5 +109,10 @@ public class BreakpointClearCommand extends AbstractCommand {
                         "ERR_InvalidNumber", spec), nfe);
             }
         }
+    }
+
+    @Override
+    public boolean requiresArguments() {
+        return true;
     }
 }
