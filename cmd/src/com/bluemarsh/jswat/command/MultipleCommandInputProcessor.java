@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -33,30 +33,19 @@ import java.util.List;
  */
 public class MultipleCommandInputProcessor implements InputProcessor {
     /** Separate of multiple commands in a single input string. */
-    private static final String COMMAND_SEPARATOR = ";";
-    /** Separate of multiple commands in a single input string. */
     private static final char COMMAND_SEPARATOR_CHAR = ';';
 
+    @Override
     public boolean canProcess(String input, CommandParser parser) {
-        return input.contains(COMMAND_SEPARATOR);
-    }
-
-    public boolean expandsInput() {
-        return false;
-    }
-
-    public List<String> process(String input, CommandParser parser)
-            throws CommandException {
-        List<String> output = new LinkedList<String>();
-        // The input could be multiple commands, or there could just be
-        // a spurious separator embedded in one of the command arguments.
+        // Check if there is a command separator that is not
+        // inside a quoted string.
+        boolean processable = false;
         int strlen = input.length();
-        int start = 0;
         int index = 0;
         byte state = 0;
-        char ch = '\0';
-        while (index < strlen) {
-            ch = input.charAt(index);
+        byte previousState = 0;
+        while (index < strlen && !processable) {
+            char ch = input.charAt(index);
             switch (state) {
             case 0:
                 // Not inside a quoted string.
@@ -65,6 +54,74 @@ public class MultipleCommandInputProcessor implements InputProcessor {
                 } else if (ch == '\'') {
                     state = 2;
                 } else if (ch == '\\') {
+                    previousState = state;
+                    state = 3;
+                } else if (ch == COMMAND_SEPARATOR_CHAR) {
+                    processable = true;
+                }
+                break;
+
+            case 1:
+                // Inside a double-quoted string.
+                if (ch == '"') {
+                    state = 0;
+                } else if (ch == '\\') {
+                    previousState = state;
+                    state = 3;
+                }
+                break;
+
+            case 2:
+                // Inside a single-quoted string.
+                if (ch == '\'') {
+                    state = 0;
+                } else if (ch == '\\') {
+                    previousState = state;
+                    state = 3;
+                }
+                break;
+
+            case 3:
+                // Previous character was a slash.
+                // Simply skip the character and return to previous state.
+                state = previousState;
+                break;
+
+            default:
+                throw new IllegalStateException("I am confused: " + input);
+            }
+            index++;
+        }
+        return processable;
+    }
+
+    @Override
+    public boolean expandsInput() {
+        return false;
+    }
+
+    @Override
+    public List<String> process(String input, CommandParser parser)
+            throws CommandException {
+        List<String> output = new LinkedList<String>();
+        // The input could be multiple commands, or there could be
+        // a separator embedded in one of the command arguments.
+        int strlen = input.length();
+        int start = 0;
+        int index = 0;
+        byte state = 0;
+        byte previousState = 0;
+        while (index < strlen) {
+            char ch = input.charAt(index);
+            switch (state) {
+            case 0:
+                // Not inside a quoted string.
+                if (ch == '"') {
+                    state = 1;
+                } else if (ch == '\'') {
+                    state = 2;
+                } else if (ch == '\\') {
+                    previousState = state;
                     state = 3;
                 } else if (ch == COMMAND_SEPARATOR_CHAR) {
                     String cmd = input.substring(start, index);
@@ -78,7 +135,8 @@ public class MultipleCommandInputProcessor implements InputProcessor {
                 if (ch == '"') {
                     state = 0;
                 } else if (ch == '\\') {
-                    state = 4;
+                    previousState = state;
+                    state = 3;
                 }
                 break;
 
@@ -87,27 +145,17 @@ public class MultipleCommandInputProcessor implements InputProcessor {
                 if (ch == '\'') {
                     state = 0;
                 } else if (ch == '\\') {
-                    state = 5;
+                    previousState = state;
+                    state = 3;
                 }
                 break;
 
             case 3:
                 // Previous character was a slash.
-                // Simply skip the character and move on.
-                state = 0;
+                // Simply skip the character and return to previous state.
+                state = previousState;
                 break;
 
-            case 4:
-                // Previous character was a slash.
-                // Simply skip the character and move on.
-                state = 1;
-                break;
-
-            case 5:
-                // Previous character was a slash.
-                // Simply skip the character and move on.
-                state = 2;
-                break;
             default:
                 throw new IllegalStateException("I am confused: " + input);
             }

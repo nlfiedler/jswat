@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -60,7 +60,7 @@ public class BasicParserTest extends TestCase {
         };
         CommandParser parser = new DefaultCommandParser();
         ParserHelper helper = new ParserHelper();
-        helper.performTest(this, parser, datum);
+        helper.performTest(parser, datum);
 
         // Ensure the duplicated commands did not impact the history.
         Iterator<String> history = parser.getHistory(true);
@@ -87,12 +87,13 @@ public class BasicParserTest extends TestCase {
             // the following !! is invoking the test above this line
             new TestData("1 echo hello;ohce1;!!", "hello\nhello\nhello\nhello\nhello\n"),
             // multiple command input processor
+            new TestData("echo \"this;is;a;test\"", "this;is;a;test\n"),
             new TestData("echo hello ; echo hello;echo hello", "hello\nhello\nhello\n"),
             new TestData("ohce1 ; ohce1;ohce1", "hello\nhello\nhello\n"),
             new TestData("ohce3", "hello\nhello\nhello\n"),
             // bang-bang input processor
             new TestData("!!", "hello\nhello\nhello\n"),
         };
-        helper.performTest(this, parser, datum);
+        helper.performTest(parser, datum);
     }
 }

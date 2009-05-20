@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -37,11 +37,10 @@ public class ParserHelper {
     /**
      * Runs the given command parser tests.
      *
-     * @param  tcase   test case running this tester.
      * @param  parser  command parser to which input is sent.
      * @param  datum   array of test data.
      */
-    public void performTest(TestCase tcase, CommandParser parser, TestData[] datum) {
+    public void performTest(CommandParser parser, TestData[] datum) {
         for (TestData data : datum) {
             StringWriter sw = new StringWriter(80);
             PrintWriter pw = new PrintWriter(sw);
@@ -56,7 +55,7 @@ public class ParserHelper {
                     buf.append(data.getInput());
                     buf.append(" <<should have failed -- result>> ");
                     buf.append(result);
-                    tcase.fail(buf.toString());
+                    TestCase.fail(buf.toString());
                 }
             } catch (CommandException ce) {
                 // This handles missing arguments, too.
@@ -69,7 +68,7 @@ public class ParserHelper {
                     pw = new PrintWriter(sw);
                     ce.printStackTrace(pw);
                     buf.append(sw.toString());
-                    tcase.fail(buf.toString());
+                    TestCase.fail(buf.toString());
                 }
             } catch (Exception e) {
                 StringBuilder buf = new StringBuilder();
@@ -79,7 +78,7 @@ public class ParserHelper {
                 pw = new PrintWriter(sw);
                 e.printStackTrace(pw);
                 buf.append(sw.toString());
-                tcase.fail(buf.toString());
+                TestCase.fail(buf.toString());
             }
 
             boolean equals;
@@ -99,7 +98,7 @@ public class ParserHelper {
                     buf.append(data.getResult());
                     buf.append(" <<but got>> ");
                     buf.append(result);
-                    tcase.fail(buf.toString());
+                    TestCase.fail(buf.toString());
 
                 } else {
                     StringBuilder buf = new StringBuilder();
@@ -108,7 +107,7 @@ public class ParserHelper {
                     buf.append(data.getResult());
                     buf.append(" <<but got>> ");
                     buf.append(result);
-                    tcase.fail(buf.toString());
+                    TestCase.fail(buf.toString());
                 }
             }
         }
