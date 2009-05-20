@@ -25,7 +25,6 @@ package com.bluemarsh.jswat.command;
 
 import com.bluemarsh.jswat.core.context.DebuggingContext;
 import com.bluemarsh.jswat.core.session.Session;
-import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.sun.jdi.ThreadReference;
 import java.io.PrintWriter;
@@ -229,8 +228,7 @@ public class DefaultCommandParser extends AbstractCommandParser {
                 if (command.requiresArguments() && !args.hasMoreTokens()) {
                     throw new MissingArgumentsException();
                 }
-                SessionManager sm = SessionProvider.getSessionManager();
-                Session session = sm.getCurrent();
+                Session session = SessionProvider.getCurrentSession();
                 if (command.requiresDebuggee() && !session.isConnected()) {
                     throw new CommandException(NbBundle.getMessage(getClass(),
                             "ERR_NotConnected"));
