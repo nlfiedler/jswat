@@ -26,6 +26,7 @@ package com.bluemarsh.jswat.command;
 import com.bluemarsh.jswat.core.path.PathManager;
 import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.runtime.JavaRuntime;
+import com.bluemarsh.jswat.core.runtime.RuntimeFactory;
 import com.bluemarsh.jswat.core.runtime.RuntimeManager;
 import com.bluemarsh.jswat.core.runtime.RuntimeProvider;
 import com.bluemarsh.jswat.core.session.Session;
@@ -60,6 +61,10 @@ public class ViewCommandTest extends TestCase {
         RuntimeManager rm = RuntimeProvider.getRuntimeManager();
         String base = System.getProperty("java.home");
         JavaRuntime rt = rm.findByBase(base);
+        if (rt == null) {
+            RuntimeFactory rf = RuntimeProvider.getRuntimeFactory();
+            rt = rf.createRuntime(base, rm.generateIdentifier());
+        }
         assertNotNull(rt);
         List<String> sources = rt.getSources();
         assertTrue(sources.size() > 0);
