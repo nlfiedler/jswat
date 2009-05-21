@@ -30,6 +30,8 @@
     <description>Builds the module suite JSwat.</description>
     <import file="nbproject/build-impl.xml"/>
 
+    <property name="version" value="4.x"/>
+
     <target name="testuserdir-delete">
         <!-- Do nothing in the hopes that our userdir will stick around. -->
     </target>
@@ -37,10 +39,12 @@
     <!-- TODO: fix the broken branding -->
     <!-- Fix the version number in the branding resources. -->
     <!-- target name="-pre-branding" -->
-        <!-- Put the application version into the resource file. -->
-        <!-- filter token="version" value="${version}"/ -->
         <!-- Have to copy everything to make the filtering work. -->
         <!-- copy todir="${branding.dir}" filtering="true" -->
+            <!--filterset-->
+                <!-- Put the application version into the resource file. -->
+                <!--filter token="version" value="${version}"/-->
+            <!--/filterset-->
             <!-- Cannot filter images otherwise they get munged. -->
             <!-- fileset dir="../branding" excludes="**/*.gif"/ -->
         <!-- /copy -->
@@ -49,6 +53,9 @@
         <!-- /copy -->
     <!-- /target -->
     <!-- target name="branding" -->
+        <!-- Where branding files will be found by build harness.
+             Set this here so it is inherited by the following targets. -->
+        <!--property name="branding.dir" location="build/branding"/-->
         <!-- antcall target="-pre-branding"/ -->
         <!-- antcall target="suite.branding"/ -->
     <!-- /target -->

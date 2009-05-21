@@ -34,7 +34,7 @@
     <property file="build.properties"/>
     <property name="version" value="4.x"/>
     <property name="required.jdk.version" value="1.6"/>
-    <import file="nbproject/build-impl.xml"/>
+
     <!-- Use the following code to locate unused bundle resources.
     <taskdef name="checkbundles" classname="org.netbeans.nbbuild.CheckBundles"
              classpath="/opt/nbplatform/netbeans-src/nbbuild/nbantext.jar"/>
@@ -43,43 +43,13 @@
     </target>
     -->
 
-    <target name="testuserdir-delete">
-        <!-- Do nothing in the hopes that our userdir will stick around. -->
-    </target>
-
-    <target name="-pre-clean">
+    <target name="clean">
+        <ant dir="installer" target="clean"/>
         <delete>
             <fileset dir="." includes="*.zip"/>
             <fileset dir="." includes="*installer.jar"/>
             <fileset dir="." includes="version.properties"/>
         </delete>
-    </target>
-    <target name="clean" depends="-init,-pre-clean,suite.clean">
-        <ant dir="installer" target="clean"/>
-    </target>
-
-    <!-- Fix the version number in the branding resources. -->
-    <target name="-pre-branding">
-        <!-- Have to copy everything to make the filtering work. -->
-        <copy todir="${branding.dir}" filtering="true">
-            <filterset>
-                <!-- Put the application version into the resource file. -->
-                <filter token="version" value="${version}"/>
-            </filterset>
-            <!-- Cannot filter images otherwise they get munged. -->
-            <fileset dir="branding" excludes="**/*.gif"/>
-        </copy>
-        <copy todir="${branding.dir}">
-            <fileset dir="branding" includes="**/*.gif"/>
-        </copy>
-    </target>
-    <!-- The branding only happens for the standalone build. -->
-    <target name="branding" unless="building.plugin">
-        <!-- Where branding files will be found by build harness.
-             Set this here so it is inherited by the following targets. -->
-        <property name="branding.dir" location="build/branding"/>
-        <antcall target="-pre-branding"/>
-        <antcall target="suite.branding"/>
     </target>
 
     <target name="dist" description="Make the distributables.">
@@ -302,11 +272,5 @@
     <target name="checksum">
         <checksum file="${file}" algorithm="SHA" property="sum"/>
         <echo level="info">${sum}  ${file}</echo>
-    </target>
-
-    <target name="test" description="Run all unit tests">
-        <!-- Used by Hudson as part of auto-build process. -->
-        <ant dir="cmd" target="test"/>
-        <ant dir="core" target="test"/>
     </target>
 </project>
