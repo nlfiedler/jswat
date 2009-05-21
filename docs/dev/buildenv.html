@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id$ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
+
+  <title>JSwat - Build Environment Setup</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>Setting up the Build Environment</h2>
+
+  <h3>Installing Required Software</h3>
+
+  <h4>Java Development Kit</h4>
+
+  <p>JSwat is written in the Java language, version 6.0. Visit the
+  <a href="http://java.sun.com/javase/">Java SE</a> page and download
+  the release appropriate for your system. <em>It is possible, though
+  not recommended, to use compatible software from other vendors. In
+  this case, make sure that software includes the <a href=
+  "http://java.sun.com/javase/technologies/core/toolsapis/jpda/">Java
+  Platform Debugger Architecture</a> (JPDA) library.</em></p>
+
+  <h4>Apache Ant</h4>
+
+  <p>Building JSwat requires the use of Apache <a href=
+  "http://ant.apache.org/">Ant</a>, a build tool written in Java. In
+  general you should use the latest stable release, but you may find
+  that a slightly older release will work as well. Chances are you will
+  have to set the <code>JAVA_HOME</code> environment variable to point
+  to the JDK installation, and possibly also <code>ANT_HOME</code>,
+  which points to the Ant installation directory.</p>
+
+  <p><em>Alternatively, you can use the <a href=
+  "http://www.netbeans.org/">NetBeans IDE</a> and rely on its built-in
+  Ant, rather than installing a separate version.</em></p>
+
+  <h3>Project Settings</h3>
+
+  <p>In order for the Java projects (core, cmd, and cli) to compile,
+  you will need to tell Ant where to find the Java Debug Interface
+  (JDI) classes. Normally these are located in a file called
+  <code>tools.jar</code> in the JDK <code>lib</code> directory. That
+  jar will contain classes in a package called <code>com.sun.jdi</code>
+  and those are needed by JSwat. On the Mac, these classes are in the
+  main <code>classes.jar</code> archive, so no extra setup is needed,
+  just build the projects.</p>
+
+  <p>For all other systems, you will need to set the classpath for the
+  three Java projects to include the jar for the JDI classes. See below
+  for the details. Note that if your JDK does not have a
+  <code>tools.jar</code>, or that archive does not contain the JDI
+  classes, then you will need to locate those classes and specify that
+  file and path in place of all the references to
+  <code>tools.jar</code> below.</p>
+
+  <h4>Core Project</h4>
+
+  <p>Create the file
+  <code>core/nbproject/private/private.properties</code> with the
+  following contents, creating any missing parent directories:</p>
+  <pre>
+javac.classpath=\
+    lib/org-openide-util.jar:\
+    lib/com-bluemarsh-jswat-parser.jar:\
+    ${java.home}/../lib/tools.jar
+</pre>
+
+  <h4>Commands Project</h4>
+
+  <p>Create the file
+  <code>cmd/nbproject/private/private.properties</code> with the
+  following contents, creating any missing parent directories:</p>
+  <pre>
+javac.classpath=\
+    ../core/dist/com-bluemarsh-jswat-core.jar:\
+    ../core/lib/org-openide-util.jar:\
+    ${java.home}/../lib/tools.jar
+</pre>
+
+  <h4>Console Project</h4>
+
+  <p>Create the file
+  <code>cli/nbproject/private/private.properties</code> with the
+  following contents, creating any missing parent directories:</p>
+  <pre>
+javac.classpath=\
+    ../core/dist/com-bluemarsh-jswat-core.jar:\
+    ../cmd/dist/com-bluemarsh-jswat-cmd.jar:\
+    ../core/lib/org-openide-util.jar:\
+    ../core/lib/com-bluemarsh-jswat-parser.jar:\
+    ../bcel/release/modules/ext/bcel-5.2.jar:\
+    ${java.home}/../lib/tools.jar
+</pre>
+</body>
+</html>

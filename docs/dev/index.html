@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
 
   <title>JSwat Development Documentation</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -17,6 +17,8 @@
   <h3>Development Table of Contents</h3>
 
   <ul>
+    <li><a href="buildenv.html">Setting up the Build Environment</a></li>
+
     <li><a href="compile.html">Compile, Run, and Debug JSwat</a></li>
 
     <li><a href="plugin.html">Building JSwat as a Plugin</a></li>
@@ -47,25 +49,5 @@
     <li><a href="netbeans.html">The Great Refactoring of
     2004/2005</a></li>
   </ul>
-
-  <h3>Output and Logging</h3>
-
-  <p>Output from JSwat is generally displayed using the graphical
-  interface, via dialogs, top components, or the NetBeans Output
-  window. This is the normal means by which the program transmits
-  messages to the user. Output to the console is forbidden since in
-  most cases the console will not be visible to the user.</p>
-
-  <p>The use of the <code>java.util.logging.Logger</code> class to
-  report errors or warnings is forbidden. Instead, use the logging
-  facility provided by the NetBeans Open API (e.g.
-  <code>org.openide.ErrorManager</code>).</p>
-
-  <h3>Storing Settings</h3>
-
-  <p>All of the user preferences in JSwat are now stored using the
-  mechanism provided by the NetBeans Platform. Using the Java
-  Preferences API is to be avoided as that complicates the situation
-  unnecessarily.</p>
 </body>
 </html>
