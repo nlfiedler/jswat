@@ -2,15 +2,11 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
-- Test the following on +Solaris, -Windows, -Linux
-  - Run the unit tests
-  - Test view java.lang.String on all platforms
+- Test the core and cmd unit tests on Windows XP
 - Fix the branding that seems to work but the build file says otherwise
 - Fix distributable/installer build
 
 - Documentation updates
-  - Document how to get the JDK tools.jar into the classpath of the projects
-    - Add the path to tools.jar to the private project properties?
   - Explain how the modules build and how the suite is set up
     - Link to http://wiki.netbeans.org/DevFaqWrapperModules
   - For each new external library added, need to add a class-path-extension

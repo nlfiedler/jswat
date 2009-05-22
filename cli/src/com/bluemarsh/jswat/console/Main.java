@@ -27,11 +27,19 @@ import com.bluemarsh.jswat.command.CommandParser;
 import com.bluemarsh.jswat.command.CommandProvider;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
 import com.bluemarsh.jswat.core.PlatformProvider;
+import com.bluemarsh.jswat.core.connect.ConnectionEvent;
+import com.bluemarsh.jswat.core.connect.ConnectionFactory;
+import com.bluemarsh.jswat.core.connect.ConnectionListener;
+import com.bluemarsh.jswat.core.connect.ConnectionProvider;
+import com.bluemarsh.jswat.core.connect.JvmConnection;
+import com.bluemarsh.jswat.core.path.PathManager;
+import com.bluemarsh.jswat.core.path.PathProvider;
 import com.bluemarsh.jswat.core.runtime.RuntimeManager;
 import com.bluemarsh.jswat.core.runtime.RuntimeProvider;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
+import com.bluemarsh.jswat.core.util.Strings;
 import com.sun.jdi.Bootstrap;
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,11 +48,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.openide.util.NbBundle;
 
 /**
@@ -132,12 +149,8 @@ public class Main {
                 // close down in preparation to exit.
                 SessionManager sm = SessionProvider.getSessionManager();
                 sm.saveSessions(true);
-                System.out.println(NbBundle.getMessage(Main.class, "MSG_Main_Goodbye"));
             }
         }));
-
-        // Initialize the default session instance.
-        Session session = SessionProvider.getCurrentSession();
 
         // Initialize the command parser and load the aliases.
         CommandParser parser = CommandProvider.getCommandParser();
@@ -163,38 +176,33 @@ public class Main {
             s.addSessionListener(swatcher);
         }
 
-        // Display a helpful greeting.
-        output.println(NbBundle.getMessage(Main.class, "MSG_Main_Welcome"));
-
         // Find and run the RC file.
         try {
-            runStartupFile(output, parser);
+            runStartupFile(parser);
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
         }
 
-        // If command line arguments were given, assume that they are
-        // commands to be run by the command parser.
-        if (args.length > 0) {
-            StringBuilder sb = new StringBuilder();
-            for (String arg : args) {
-                sb.append(arg);
-                sb.append(' ');
-            }
-            // Show what the user entered so the subsequent output makes sense.
-            String input = sb.toString().trim();
-            output.format("[%s] > %s\n", session.getProperty(
-                    Session.PROP_SESSION_NAME), input);
-            // Run the command the user provided.
-            performCommand(output, parser, input);
+        // Process command line arguments.
+        try {
+            processArguments(args);
+        } catch (ParseException pe) {
+            // Report the problem and keep going.
+            System.err.println("Option parsing failed: " + pe.getMessage());
+            logger.log(Level.SEVERE, null, pe);
         }
+
+        // Display a helpful greeting.
+        output.println(NbBundle.getMessage(Main.class, "MSG_Main_Welcome"));
 
         // Enter the main loop of processing user input.
         BufferedReader input = new BufferedReader(
                 new InputStreamReader(System.in));
         while (true) {
-            output.format("[%s] > ",
-                    session.getProperty(Session.PROP_SESSION_NAME));
+            // Keep the prompt format identical to jdb for compatibility
+            // with emacs and other possible wrappers.
+            output.print("> ");
+            output.flush();
             try {
                 String command = input.readLine();
                 // A null value indicates end of stream.
@@ -276,36 +284,117 @@ public class Main {
      * Find the startup file in one of several locations and by one
      * of several names, then run the commands found therein.
      *
-     * @param  output  where to write error messages.
      * @param  parser  the command interpreter.
      * @throws  IOException  if reading file fails.
      */
-    private static void runStartupFile(PrintWriter output,
-            CommandParser parser) throws IOException {
+    private static void runStartupFile(CommandParser parser) throws IOException {
+        StringWriter sw = new StringWriter();
+        PrintWriter output = new PrintWriter(sw);
+        PrintWriter savedOutput = parser.getOutput();
+        parser.setOutput(output);
         File[] files = {
             new File(System.getProperty("user.dir"), ".jswatrc"),
             new File(System.getProperty("user.dir"), "jswat.ini"),
             new File(System.getProperty("user.home"), ".jswatrc"),
-            new File(System.getProperty("user.home"), "jswat.ini"),
+            new File(System.getProperty("user.home"), "jswat.ini")
         };
-        for (File file : files) {
-            if (file.canRead()) {
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                try {
-                    String line = br.readLine();
-                    while (line != null) {
-                        line = line.trim();
-                        if (!line.isEmpty() && !line.startsWith("#")) {
-                            performCommand(output, parser, line);
+        try {
+            for (File file : files) {
+                if (file.canRead()) {
+                    BufferedReader br = new BufferedReader(new FileReader(file));
+                    try {
+                        String line = br.readLine();
+                        while (line != null) {
+                            line = line.trim();
+                            if (!line.isEmpty() && !line.startsWith("#")) {
+                                performCommand(output, parser, line);
+                            }
+                            line = br.readLine();
                         }
-                        line = br.readLine();
+                    } finally {
+                        br.close();
                     }
-                } finally {
-                    br.close();
+                    // We just read the first file we find and stop.
+                    break;
                 }
-                // We just read the first file we find and stop.
-                break;
             }
+        } finally {
+            // Show what happened when running the commands.
+            logger.log(Level.INFO, sw.toString());
+            parser.setOutput(savedOutput);
+        }
+    }
+
+    /**
+     * Process the given command line arguments.
+     *
+     * @param  args  command line arguments.
+     * @throws  ParseException  if argument parsing fails.
+     */
+    private static void processArguments(String[] args) throws ParseException {
+        Options options = new Options();
+        // Option: h/help
+        OptionBuilder.withDescription(NbBundle.getMessage(
+                Main.class, "MSG_Main_Option_help"));
+        OptionBuilder.withLongOpt("help");
+        options.addOption(OptionBuilder.create("h"));
+        // Option: attach <port>
+        OptionBuilder.hasArg();
+        OptionBuilder.withArgName("port");
+        OptionBuilder.withDescription(NbBundle.getMessage(
+                Main.class, "MSG_Main_Option_attach"));
+        options.addOption(OptionBuilder.create("attach"));
+        // Option: sourcepath <path>
+        OptionBuilder.hasArg();
+        OptionBuilder.withArgName("path");
+        OptionBuilder.withDescription(NbBundle.getMessage(
+                Main.class, "MSG_Main_Option_sourcepath"));
+        options.addOption(OptionBuilder.create("sourcepath"));
+
+        // Parse the command line arguments.
+        CommandLineParser parser = new GnuParser();
+        CommandLine line = parser.parse(options, args);
+
+        // Interrogate the command line options.
+        if (line.hasOption("help")) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("java com.bluemarsh.jswat.console.Main", options);
+            System.exit(0);
+        }
+        if (line.hasOption("sourcepath")) {
+            Session session = SessionProvider.getCurrentSession();
+            PathManager pm = PathProvider.getPathManager(session);
+            String path = line.getOptionValue("sourcepath");
+            List<String> roots = Strings.stringToList(path, File.pathSeparator);
+            pm.setSourcePath(roots);
+        }
+        if (line.hasOption("attach")) {
+            final Session session = SessionProvider.getCurrentSession();
+            String port = line.getOptionValue("attach");
+            ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
+            final JvmConnection connection;
+            try {
+                connection = factory.createSocket("localhost", port);
+                // The actual connection may be made some time from now,
+                // so set up a listener to be notified at that time.
+                connection.addConnectionListener(new ConnectionListener() {
+                    @Override
+                    public void connected(ConnectionEvent event) {
+                        if (session.isConnected()) {
+                            // The user already connected to something else.
+                            JvmConnection c = event.getConnection();
+                            c.getVM().dispose();
+                            c.disconnect();
+                        } else {
+                            session.connect(connection);
+                        }
+                    }
+                });
+                connection.connect();
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, null, e);
+            }
+
         }
     }
 }
