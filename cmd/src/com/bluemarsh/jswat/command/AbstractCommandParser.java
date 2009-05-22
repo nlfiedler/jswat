@@ -146,12 +146,8 @@ public abstract class AbstractCommandParser implements CommandParser {
         }
     }
 
-    /**
-     * Returns the writer to which commands send their output.
-     *
-     * @return  output writer.
-     */
-    protected PrintWriter getOutput() {
+    @Override
+    public PrintWriter getOutput() {
         return outputWriter;
     }
 

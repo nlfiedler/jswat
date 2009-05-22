@@ -96,6 +96,13 @@ public interface CommandParser {
     String getHistoryPrev();
 
     /**
+     * Retrieve the currently defined output writer, if any.
+     *
+     * @return  output writer, or null if none.
+     */
+    PrintWriter getOutput();
+
+    /**
      * Hook in which to load the persistent settings from storage.
      */
     void loadSettings();
