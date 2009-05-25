@@ -102,7 +102,6 @@
                 <include name="org-netbeans-modules-editor-lib.jar"/>
                 <include name="org-netbeans-modules-editor-lib2.jar"/>
                 <include name="org-netbeans-modules-editor-plain-lib.jar"/>
-                <include name="org-netbeans-modules-editor-plain.jar"/>
                 <include name="org-netbeans-modules-editor-settings-storage.jar"/>
                 <include name="org-netbeans-modules-editor-settings.jar"/>
                 <include name="org-netbeans-modules-editor-util.jar"/>
@@ -141,7 +140,6 @@
                 <include name="org-netbeans-modules-editor-lib.xml"/>
                 <include name="org-netbeans-modules-editor-lib2.xml"/>
                 <include name="org-netbeans-modules-editor-plain-lib.xml"/>
-                <include name="org-netbeans-modules-editor-plain.xml"/>
                 <include name="org-netbeans-modules-editor-settings-storage.xml"/>
                 <include name="org-netbeans-modules-editor-settings.xml"/>
                 <include name="org-netbeans-modules-editor-util.xml"/>

@@ -19,7 +19,6 @@ org.netbeans.modules.editor.highlights
 org.netbeans.modules.editor.indent
 org.netbeans.modules.editor.lib
 org.netbeans.modules.editor.lib2
-org.netbeans.modules.editor.plain
 org.netbeans.modules.editor.plain.lib
 org.netbeans.modules.editor.settings
 org.netbeans.modules.editor.settings.storage

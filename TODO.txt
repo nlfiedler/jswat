@@ -2,9 +2,8 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
-- Test the core and cmd unit tests on Windows XP
-- Fix the branding that seems to work but the build file says otherwise
 - Fix distributable/installer build
+- Fix the branding that seems to work but the build file says otherwise
 
 - Documentation updates
   - Explain how the modules build and how the suite is set up
@@ -17,7 +16,7 @@ $Id$
   - Write a tutorial on using the console interface
     - Prompt may become separated from cursor due to asynchronous output
     - Command line arguments are interpreted as command input
-    - A unique prefix for a command will invoke that command (e.g. hi => history)
+    - A unique command prefix will invoke that command (e.g. hi => history)
     - RC-like file for commands that are executed at startup
       - Looks for .jswatrc and jswat.ini in user.home and user.dir
     - Using runtime command to set Java runtimes for session
