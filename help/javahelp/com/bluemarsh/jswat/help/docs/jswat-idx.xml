@@ -29,7 +29,6 @@
     <indexitem text="attaching" target="jswat-attach-debuggee"/>
 
     <indexitem text="breakpoints" target="jswat-breakpoints-view"/>
-    <indexitem text="byte codes" target="jswat-bytecodes-view"/>
 
     <indexitem text="call stack" target="jswat-stack-view"/>
     <indexitem text="classes" target="jswat-classes-view"/>

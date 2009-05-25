@@ -30,7 +30,6 @@
 
     <mapID target="jswat-breakpoint-monitors" url="breakpoint/monitors.html"/>
     <mapID target="jswat-breakpoints-view" url="view/breakpoints.html"/>
-    <mapID target="jswat-bytecodes-view" url="view/bytecodes.html"/>
 
     <mapID target="jswat-classes-view" url="view/classes.html"/>
     <mapID target="jswat-create-breakpoint" url="breakpoint/create.html"/>

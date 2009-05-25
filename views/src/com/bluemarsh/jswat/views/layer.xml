@@ -15,7 +15,7 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2007. All Rights Reserved.
+  are Copyright (C) 2007-2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
@@ -29,7 +29,6 @@
         <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.views.Bundle"/>
         <folder name="Window">
             <file name="com-bluemarsh-jswat-views-actions-BreakpointsViewAction.instance"/>
-            <file name="com-bluemarsh-jswat-views-actions-ByteCodesViewAction.instance"/>
             <file name="com-bluemarsh-jswat-views-actions-ClassesViewAction.instance"/>
             <file name="com-bluemarsh-jswat-views-actions-EvaluatorViewAction.instance"/>
             <file name="com-bluemarsh-jswat-views-actions-SessionsViewAction.instance"/>
@@ -38,13 +37,6 @@
             <file name="com-bluemarsh-jswat-views-actions-ThreadsViewAction.instance"/>
             <file name="com-bluemarsh-jswat-views-actions-VariablesViewAction.instance"/>
             <file name="com-bluemarsh-jswat-views-actions-WatchesViewAction.instance"/>
-        </folder>
-    </folder>
-    <folder name="Editors">
-        <folder name="text">
-            <folder name="bytecode">
-                <file name="com-bluemarsh-jswat-ui-views-ByteCodesView$ByteCodesEditorKit.instance"/>
-            </folder>
         </folder>
     </folder>
     <folder name="Menu">
@@ -73,10 +65,6 @@
                 <file name="com-bluemarsh-jswat-views-actions-BreakpointsViewAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-BreakpointsViewAction.instance"/>
                     <attr name="position" intvalue="500"/>
-                </file>
-                <file name="com-bluemarsh-jswat-views-actions-ByteCodesViewAction.shadow">
-                    <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-ByteCodesViewAction.instance"/>
-                    <attr name="position" intvalue="900"/>
                 </file>
                 <file name="com-bluemarsh-jswat-views-actions-ClassesViewAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-ClassesViewAction.instance"/>
@@ -150,7 +138,6 @@
     <folder name="Windows2">
         <folder name="Components">
             <file name="breakpoints.settings" url="resources/breakpoints_settings.xml"/>
-            <file name="bytecodes.settings" url="resources/bytecodes_settings.xml"/>
             <file name="classes.settings" url="resources/classes_settings.xml"/>
             <file name="command.settings" url="resources/command_settings.xml"/>
             <file name="evaluator.settings" url="resources/evaluator_settings.xml"/>
@@ -174,9 +161,6 @@
                 <file name="variables.wstcref" url="resources/variables_wstcref.xml"/>
                 <file name="watches.wstcref" url="resources/watches_wstcref.xml"/>
             </folder>
-            <folder name="editor">
-                <file name="bytecodes.wstcref" url="resources/bytecodes_wstcref.xml"/>
-            </folder>
             <folder name="explorer">
                 <file name="classes.wstcref" url="resources/classes_wstcref.xml"/>
                 <file name="sources.wstcref" url="resources/sources_wstcref.xml"/>
@@ -191,7 +175,6 @@
             <file name="debugger.wsgrp" url="resources/debugger_wsgrp.xml"/>
             <folder name="debugger">
                 <file name="breakpoints.wstcgrp" url="resources/breakpoints_wstcgrp.xml"/>
-                <file name="bytecodes.wstcgrp" url="resources/bytecodes_wstcgrp.xml"/>
                 <file name="classes.wstcgrp" url="resources/classes_wstcgrp.xml"/>
                 <file name="command.wstcgrp" url="resources/command_wstcgrp.xml"/>
                 <file name="evaluator.wstcgrp" url="resources/evaluator_wstcgrp.xml"/>
