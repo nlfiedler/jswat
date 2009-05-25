@@ -32,11 +32,6 @@
     <property file="../build.properties"/>
     <import file="nbproject/build-impl.xml"/>
 
-    <!-- Do not build the 'product' if building plugin. -->
-    <target name="netbeans" unless="building.plugin">
-        <antcall target="projectized-common.netbeans"/>
-    </target>
-
     <target name="testuserdir-delete">
         <!-- Do nothing in the hopes that our userdir will stick around. -->
     </target>

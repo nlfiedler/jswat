@@ -15,7 +15,7 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2006. All Rights Reserved.
+  are Copyright (C) 2006-2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
@@ -245,17 +245,4 @@
             <attr name="instanceClass" stringvalue="com.bluemarsh.jswat.ui.actions.StepOutAction"/>
         </file>
     </folder>
-
-    <!-- Disable the unused update center...
-    <folder name="Services">
-        <folder name="AutoupdateType">
-            <file name="AutoupdateType.settings" url="AutoupdateType.xml">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/autoupdate/resources/updateAction.gif"/>
-                <attr name="url_key" stringvalue="Default_URL"/>
-                <attr name="enabled" boolvalue="true"/>
-            </file>
-        </folder>
-    </folder>
-    -->
 </filesystem>
