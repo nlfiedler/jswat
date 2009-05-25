@@ -23,6 +23,8 @@
 -->
 <project name="JSwat NetBeans" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project JSwat NetBeans.</description>
+    <!-- Permit external customizations. -->
+    <property file="../build.properties"/>
     <import file="nbproject/build-impl.xml"/>
 
     <property name="core.project.dir" value="../core"/>
@@ -46,5 +48,9 @@
     <target name="clean" depends="projectized-common.clean">
         <ant antfile="${cmd.project.dir}/build.xml" target="clean" inheritall="false"/>
         <ant antfile="${core.project.dir}/build.xml" target="clean" inheritall="false"/>
+    </target>
+
+    <target name="testuserdir-delete">
+        <!-- Do nothing in the hopes that our userdir will stick around. -->
     </target>
 </project>
