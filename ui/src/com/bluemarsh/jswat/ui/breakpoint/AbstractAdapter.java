@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -36,13 +36,20 @@ public abstract class AbstractAdapter extends JPanel implements BreakpointAdapte
     /** Manages property change listeners. */
     private PropertyChangeSupport propSupport;
 
+    {
+        // Initialize before the constructor is called because some
+        // LAF implementations will add listeners before the object
+        // is completely constructed.
+        propSupport = new PropertyChangeSupport(this);
+    }
+
     /**
      * Creates a new instance of AbstractAdapter.
      */
     public AbstractAdapter() {
-        propSupport = new PropertyChangeSupport(this);
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         super.addPropertyChangeListener(listener);
         propSupport.addPropertyChangeListener(listener);
@@ -60,6 +67,7 @@ public abstract class AbstractAdapter extends JPanel implements BreakpointAdapte
         propSupport.firePropertyChange(PROP_INPUTVALID, "DummyValue", msg);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         super.removePropertyChangeListener(listener);
         propSupport.removePropertyChangeListener(listener);
