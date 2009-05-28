@@ -224,7 +224,7 @@
                 <exclude name="*installer.jar"/>
                 <exclude name="**/build.properties"/>
                 <exclude name="**/nbproject/private/**"/>
-                <!-- Exclude suite/build because testuserdir is not cleaned. -->
+                <exclude name="suite/branding/**"/>
                 <exclude name="suite/build/**"/>
                 <exclude name="version.properties"/>
             </zipfileset>
