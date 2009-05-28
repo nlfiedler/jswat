@@ -36,27 +36,24 @@
         <!-- Do nothing in the hopes that our userdir will stick around. -->
     </target>
 
-    <!-- TODO: fix the broken branding -->
     <!-- Fix the version number in the branding resources. -->
-    <!-- target name="-pre-branding" -->
+    <target name="-pre-branding">
         <!-- Have to copy everything to make the filtering work. -->
-        <!-- copy todir="${branding.dir}" filtering="true" -->
-            <!--filterset-->
+        <copy todir="${branding.dir}" filtering="true">
+            <filterset>
                 <!-- Put the application version into the resource file. -->
-                <!--filter token="version" value="${version}"/-->
-            <!--/filterset-->
+                <filter token="version" value="${version}"/>
+            </filterset>
             <!-- Cannot filter images otherwise they get munged. -->
-            <!-- fileset dir="../branding" excludes="**/*.gif"/ -->
-        <!-- /copy -->
-        <!-- copy todir="${branding.dir}" -->
-            <!-- fileset dir="../branding" includes="**/*.gif"/ -->
-        <!-- /copy -->
-    <!-- /target -->
-    <!-- target name="branding" -->
-        <!-- Where branding files will be found by build harness.
-             Set this here so it is inherited by the following targets. -->
-        <!--property name="branding.dir" location="build/branding"/-->
-        <!-- antcall target="-pre-branding"/ -->
-        <!-- antcall target="suite.branding"/ -->
-    <!-- /target -->
+            <fileset dir="../branding" excludes="**/*.gif"/>
+        </copy>
+        <copy todir="${branding.dir}">
+            <fileset dir="../branding" includes="**/*.gif"/>
+        </copy>
+    </target>
+
+    <target name="branding">
+        <antcall target="-pre-branding"/>
+        <antcall target="suite.branding"/>
+    </target>
 </project>

@@ -27,7 +27,7 @@
    If you delete this file and reopen the project it will be recreated.
 -->
 <project name="jswat" default="dist" basedir=".">
-    <description>Builds the module suite jswat.</description>
+    <description>Builds the source and binary distributables for JSwat.</description>
 
     <!-- Please read the build instructions in docs/dev/compile.html -->
 
@@ -58,12 +58,16 @@
             <contains string="${java.version}" substring="${required.jdk.version}"/>
         </condition>
         <fail unless="supported.jdk" message="Must use JDK 1.6 to build JSwat."/>
+        <input message="Enter path to NetBeans IDE installation: " addproperty="netbeans.dest.dir"/>
         <!-- Must clean first so the version number gets applied. -->
-        <antcall target="clean"/>
-        <antcall target="build"/>
+        <ant antfile="suite/build.xml" inheritall="false">
+            <property name="version" value="${version}"/>
+            <target name="clean"/>
+            <target name="build"/>
+        </ant>
         <!-- Make the binary distribution. -->
         <zip destfile="jswat.zip">
-            <zipfileset dir="build/cluster" prefix="jswat5">
+            <zipfileset dir="suite/build/cluster" prefix="jswat5">
                 <exclude name="**/*_hidden"/>
             </zipfileset>
             <zipfileset dir="docs/release"/>
@@ -73,7 +77,7 @@
                 <include name="*.cmd"/>
                 <include name="*.exe"/>
             </zipfileset>
-            <zipfileset file="branding/core/core.jar/org/netbeans/core/startup/frame48.gif"
+            <zipfileset file="suite/branding/core/core.jar/org/netbeans/core/startup/frame48.gif"
                         fullpath="bin/jswat.gif"/>
             <zipfileset dir="launcher" prefix="etc">
                 <include name="*.conf"/>
@@ -199,6 +203,8 @@
         <ant dir="installer" target="jar"/>
         <move file="installer/dist/installer.jar" tofile="jswat-${version}-installer.jar"/>
 
+        <!-- Clean before packaging the source code. -->
+        <ant target="clean" antfile="suite/build.xml" inheritall="false"/>
         <antcall target="dist-src"/>
 
         <!-- Calculate the file checksums. -->
@@ -214,54 +220,12 @@
         <!-- Make the source distribution. -->
         <zip destfile="jswat-src-${version}.zip">
             <zipfileset dir="." prefix="jswat-src-${version}">
-                <exclude name="bcel/*.nbm"/>
-                <exclude name="bcel/build/**"/>
-                <exclude name="bcel/Info/**"/>
-                <exclude name="bcel/netbeans/**"/>
-
-                <exclude name="cmd/*.nbm"/>
-                <exclude name="cmd/build/**"/>
-                <exclude name="cmd/Info/**"/>
-                <exclude name="cmd/netbeans/**"/>
-                <exclude name="cmd/test/unit/build/**"/>
-
-                <exclude name="core/*.nbm"/>
-                <exclude name="core/build/**"/>
-                <exclude name="core/Info/**"/>
-                <exclude name="core/netbeans/**"/>
-                <exclude name="core/test/integration/build/**"/>
-                <exclude name="core/test/unit/build/**"/>
-
-                <exclude name="help/*.nbm"/>
-                <exclude name="help/build/**"/>
-                <exclude name="help/Info/**"/>
-                <exclude name="help/netbeans/**"/>
-                <exclude name="help/javahelp/com/bluemarsh/jswat/help/docs/SearchData/**"/>
-
-                <exclude name="installer/build/**"/>
-                <exclude name="installer/dist/**"/>
-
-                <exclude name="parser/*.nbm"/>
-                <exclude name="parser/build/**"/>
-                <exclude name="parser/Info/**"/>
-                <exclude name="parser/netbeans/**"/>
-
-                <exclude name="product/*.nbm"/>
-                <exclude name="product/build/**"/>
-                <exclude name="product/Info/**"/>
-                <exclude name="product/netbeans/**"/>
-
-                <exclude name="ui/*.nbm"/>
-                <exclude name="ui/build/**"/>
-                <exclude name="ui/Info/**"/>
-                <exclude name="ui/netbeans/**"/>
-
-                <exclude name="build/**"/>
                 <exclude name="*.zip"/>
                 <exclude name="*installer.jar"/>
                 <exclude name="**/build.properties"/>
-                <exclude name="nbproject/private/**"/>
                 <exclude name="**/nbproject/private/**"/>
+                <!-- Exclude suite/build because testuserdir is not cleaned. -->
+                <exclude name="suite/build/**"/>
                 <exclude name="version.properties"/>
             </zipfileset>
         </zip>

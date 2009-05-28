@@ -2,9 +2,6 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
-- Fix distributable/installer build
-- Fix the branding that seems to work but the build file says otherwise
-
 - Documentation updates
   - Explain how the modules build and how the suite is set up
     - Link to http://wiki.netbeans.org/DevFaqWrapperModules
