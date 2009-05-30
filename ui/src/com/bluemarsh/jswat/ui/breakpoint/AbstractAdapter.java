@@ -36,13 +36,6 @@ public abstract class AbstractAdapter extends JPanel implements BreakpointAdapte
     /** Manages property change listeners. */
     private PropertyChangeSupport propSupport;
 
-    {
-        // Initialize before the constructor is called because some
-        // LAF implementations will add listeners before the object
-        // is completely constructed.
-        propSupport = new PropertyChangeSupport(this);
-    }
-
     /**
      * Creates a new instance of AbstractAdapter.
      */
@@ -52,6 +45,7 @@ public abstract class AbstractAdapter extends JPanel implements BreakpointAdapte
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         super.addPropertyChangeListener(listener);
+        initPropSupport();
         propSupport.addPropertyChangeListener(listener);
     }
 
@@ -64,12 +58,26 @@ public abstract class AbstractAdapter extends JPanel implements BreakpointAdapte
      * @param  msg  invalid input message, or null if input is valid.
      */
     protected void fireInputPropertyChange(String msg) {
+        initPropSupport();
         propSupport.firePropertyChange(PROP_INPUTVALID, "DummyValue", msg);
+    }
+
+    /**
+     * Create the PropertyChangeSupport instance on demand.
+     */
+    private synchronized void initPropSupport() {
+        // For some reason, the Synth LAF causes problems with invoking
+        // methods before the object is completely constructed, so need
+        // to ensure propery support is built on demand.
+        if (propSupport == null) {
+            propSupport = new PropertyChangeSupport(this);
+        }
     }
 
     @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         super.removePropertyChangeListener(listener);
+        initPropSupport();
         propSupport.removePropertyChangeListener(listener);
     }
 }
