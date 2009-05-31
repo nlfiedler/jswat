@@ -110,10 +110,10 @@
 
     <target name="dist" depends="jar">
         <zip destfile="jswat-cli-${version}.zip">
-            <zipfileset dir="dist" prefix="jswat-${version}">
+            <zipfileset dir="dist" prefix="jswat-cli-${version}">
                 <exclude name="README.TXT"/>
             </zipfileset>
-            <zipfileset dir="../docs/release" prefix="jswat-${version}">
+            <zipfileset dir="../docs/release" prefix="jswat-cli-${version}">
                 <include name="README.txt"/>
             </zipfileset>
         </zip>
