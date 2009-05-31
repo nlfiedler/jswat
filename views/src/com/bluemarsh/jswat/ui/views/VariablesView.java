@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -144,6 +144,9 @@ public class VariablesView extends AbstractView
             if (thread != null) {
                 try {
                     StackFrame frame = dc.getStackFrame();
+                    if (frame.location().codeIndex() == -1) {
+                        throw new NativeMethodException("work around JPDA bug");
+                    }
                     ReferenceType clazz = frame.location().declaringType();
                     ObjectReference thisObj = frame.thisObject();
 
@@ -228,6 +231,7 @@ public class VariablesView extends AbstractView
 
         // Must expand the nodes on the AWT event thread.
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 // Need to refetch the root in case it was replaced.
                 Node rootNode = explorerManager.getRootContext();
@@ -236,27 +240,32 @@ public class VariablesView extends AbstractView
         });
     }
 
+    @Override
     public void changedFrame(ContextEvent ce) {
         if (!ce.isSuspending() && isCurrent(ce.getSession())) {
             buildTree();
         }
     }
 
+    @Override
     public void changedLocation(ContextEvent ce) {
         if (!ce.isSuspending() && isCurrent(ce.getSession())) {
             buildTree();
         }
     }
 
+    @Override
     public void changedThread(ContextEvent ce) {
         if (!ce.isSuspending() && isCurrent(ce.getSession())) {
             buildTree();
         }
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         // Clear the tree to release resources.
@@ -273,6 +282,7 @@ public class VariablesView extends AbstractView
         }
     }
 
+    @Override
     protected void componentOpened() {
         super.componentOpened();
         // Build out the tree.
@@ -289,45 +299,55 @@ public class VariablesView extends AbstractView
         }
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
         }
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
         }
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(VariablesView.class, "CTL_VariablesView_Name");
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-variables-view");
     }
 
+    @Override
     public int getPersistenceType() {
         return PERSISTENCE_ALWAYS;
     }
 
+    @Override
     public String getToolTipText() {
         return NbBundle.getMessage(VariablesView.class, "CTL_VariablesView_Tooltip");
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     protected String preferredID() {
         return getClass().getName();
     }
 
+    @Override
     public void readExternal(ObjectInput in)
     throws IOException, ClassNotFoundException {
         super.readExternal(in);
@@ -336,9 +356,11 @@ public class VariablesView extends AbstractView
         nodeView.restoreColumnWidths(in);
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
@@ -346,6 +368,7 @@ public class VariablesView extends AbstractView
         dc.addContextListener(this);
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         Session session = e.getSession();
         session.removeSessionListener(this);
@@ -353,16 +376,19 @@ public class VariablesView extends AbstractView
         dc.removeContextListener(this);
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         buildTree();
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
         }
     }
 
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         saveColumns(out, columns);
@@ -397,6 +423,7 @@ public class VariablesView extends AbstractView
             setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
         }
 
+        @Override
         public Object getValue() throws IllegalAccessException,
                 InvocationTargetException {
             return key;
