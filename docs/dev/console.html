@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id$ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
+
+  <title>JSwat - Console Refactoring</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>Console Refactoring</h2>
+
+  <p>In early 2009 a convincing request to make JSwat suitable as a
+  drop-in replacement for jdb was made by Steve Yegge. The goal was to
+  exchange jdb for JSwat when debugging Java within emacs. Given that
+  after 2005 the entire JSwat code base was now dependennt on the
+  NetBeans Platform, this was not going to be a quick fix. While it is
+  easy to run the NetBeans Platform without any graphical interface,
+  it&#39;s startup and shutdown time was simply much too long. For
+  JSwat to be a suitable jdb replacement, it would need to start up and
+  shut down quickly, and NetBeans just couldn&#39;t do that.</p>
+
+  <p>The principal goal was to expose the command input and processing
+  portion of JSwat, already available in the <code>cmd</code> module,
+  as a console-based application. This would entail removing anything
+  to do with NetBeans from both the <code>core</code> and
+  <code>cmd</code> modules, leaving perhaps only a few dependencies on
+  the base libraries within NetBeans. These libraries are in fact just
+  plain jar files that can be easily used in any Java application. They
+  provide core functionality that every piece of JSwat was dependent
+  on.</p>
+
+  <p>To achieve the goal of separating the higher level NetBeans
+  dependencies from the core JSwat projects, a new service was created
+  to interface with the platform. It turned out that only a few basic
+  operations were needed, from reading and writing files to starting
+  and stopping a progress indicator. The actual separation did not take
+  long at all. The trick was in getting the newly minted Java projects
+  to be included in the NetBeans version of JSwat. Fortunately the
+  NetBeans module system has a simple solution in the form of library
+  <a href="http://wiki.netbeans.org/DevFaqWrapperModules">wrapper
+  modules</a>. Once such a wrapper was created, the original NetBeans
+  based verson of JSwat could again be built, this time from a set of
+  plain Java projects and a set of NetBeans module projects.</p>
+
+  <p>The more time consuming effort was filling in the gaps in terms of
+  commands that had not been written because they would be redundant
+  with the graphical equivalents in the NetBeans based version. As a
+  console application, the console version of JSwat would need all of
+  the commands necessary for debugging. Thankfully most of these
+  already existed in the ancient versions of JSwat, last updated in
+  early 2004. For the most part, it was simply a process of copying and
+  updating the old code to work in the new infrastructure.</p>
+
+  <p>After a relatively short time, about a month, JSwat had both a
+  console and graphical version once again.</p>
+</body>
+</html>

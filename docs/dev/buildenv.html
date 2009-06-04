@@ -49,46 +49,61 @@
   jar will contain classes in a package called <code>com.sun.jdi</code>
   and those are needed by JSwat. On the Mac, these classes are in the
   main <code>classes.jar</code> archive, so no extra setup is needed,
-  just build the projects.</p>
+  just build the projects. In fact, attempting to specify the path to a
+  non-existent <code>tools.jar</code> on a Mac would cause the build to
+  fail, thus this setup must be done on a per developer basis.</p>
 
   <p>For all other systems, you will need to set the classpath for the
   three Java projects to include the jar for the JDI classes. See below
   for the details. Note that if your JDK does not have a
   <code>tools.jar</code>, or that archive does not contain the JDI
   classes, then you will need to locate those classes and specify that
-  file and path in place of all the references to
-  <code>tools.jar</code> below.</p>
+  file and path in place of all references to <code>tools.jar</code>
+  below.</p>
 
   <h4>Core Project</h4>
 
-  <p>Create the file
-  <code>core/nbproject/private/private.properties</code> with the
-  following contents, creating any missing parent directories:</p>
-  <pre>
+  <ol>
+    <li>Create the directory <code>core/nbproject/private</code></li>
+
+    <li>Create the file
+    <code>core/nbproject/private/private.properties</code> with the
+    following contents:
+      <pre>
 javac.classpath=\
     lib/org-openide-util.jar:\
     lib/com-bluemarsh-jswat-parser.jar:\
     ${java.home}/../lib/tools.jar
 </pre>
+    </li>
+  </ol>
 
   <h4>Commands Project</h4>
 
-  <p>Create the file
-  <code>cmd/nbproject/private/private.properties</code> with the
-  following contents, creating any missing parent directories:</p>
-  <pre>
+  <ol>
+    <li>Create the directory <code>cmd/nbproject/private</code></li>
+
+    <li>Create the file
+    <code>cmd/nbproject/private/private.properties</code> with the
+    following contents:
+      <pre>
 javac.classpath=\
     ../core/dist/com-bluemarsh-jswat-core.jar:\
     ../core/lib/org-openide-util.jar:\
     ${java.home}/../lib/tools.jar
 </pre>
+    </li>
+  </ol>
 
   <h4>Console Project</h4>
 
-  <p>Create the file
-  <code>cli/nbproject/private/private.properties</code> with the
-  following contents, creating any missing parent directories:</p>
-  <pre>
+  <ol>
+    <li>Create the directory <code>cli/nbproject/private</code></li>
+
+    <li>Create the file
+    <code>cli/nbproject/private/private.properties</code> with the
+    following contents:
+      <pre>
 javac.classpath=\
     ../core/dist/com-bluemarsh-jswat-core.jar:\
     ../cmd/dist/com-bluemarsh-jswat-cmd.jar:\
@@ -98,5 +113,7 @@ javac.classpath=\
     lib/commons-cli-1.2.jar:\
     ${java.home}/../lib/tools.jar
 </pre>
+    </li>
+  </ol>
 </body>
 </html>

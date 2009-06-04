@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- $Id$ -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
+
+  <title>JSwat - Adding a new Library</title>
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>Adding a new Library</h2>
+
+  <p>When adding a new jar to one of the core Java projects in JSwat,
+  it is necessary to update the project configuration for the
+  <code>nbcore</code> project. The <code>nbcore</code> project is a
+  library wrapper module project, which happens to contain several jar
+  libraries instead of the usual one. See the explanation on the
+  <a href="http://wiki.netbeans.org/DevFaqWrapperModules">NetBeans
+  wiki</a> for the details. We are using the second method, and have
+  added several <code>class-path-extension</code> elements to the
+  <code>nbcore/nbproject/project.xml</code> file.</p>
+
+  <p>Thus, adding a new jar library requires simply following through
+  with the instructions given on the NetBeans wiki, and ensuring that a
+  new <code>class-path-extension</code> element is add to the
+  <code>nbcore/nbproject/project.xml</code> file.</p>
+</body>
+</html>

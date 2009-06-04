@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!-- $Id: platform.html 6 2007-05-16 07:14:24Z nfiedler $ -->
+<!-- $Id$ -->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Linux (vers 1 September 2005), see www.w3.org" />
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
 
   <title>JSwat - Updating the Platform</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -22,6 +22,11 @@
   <h3>Update Process</h3>
 
   <ol>
+    <li>Copy the new <code>org-openide-util.jar</code> from NetBeans
+    <code>platform</code> directory to the <code>core/lib</code> folder
+    of the core project. <em>Note that this file is not used when
+    running in NetBeans.</em></li>
+
     <li>Update cluster values ide*, platform*, jswat* (e.g. ide7 to
     ide8):
 

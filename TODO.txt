@@ -1,12 +1,3 @@
 JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
-
-- Documentation updates
-  - Explain how the modules build and how the suite is set up
-    - Link to http://wiki.netbeans.org/DevFaqWrapperModules
-  - For each new external library added, need to add a class-path-extension
-    to the nbcore/nbproject/project.xml so that it can be found
-  - docs/dev/platform.html
-    - Copy new org-openide-util.jar from NetBeans/platform
-    - The org-openide-util.jar is not used when running in NetBeans
