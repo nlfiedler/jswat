@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -68,11 +68,7 @@ public class EvaluatorPanel extends javax.swing.JPanel implements ActionListener
         resultView = view;
     }
 
-    /**
-     * Performs the evaluate action.
-     *
-     * @param  event  action event
-     */
+    @Override
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
         if (!cmd.equals(expressionComboBox.getActionCommand())) {

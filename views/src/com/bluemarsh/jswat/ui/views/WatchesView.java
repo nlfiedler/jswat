@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -207,6 +207,7 @@ public class WatchesView extends AbstractView
 
         // Must expand the nodes on the AWT event thread.
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 // Need to refetch the root in case it was replaced.
                 Node rootNode = explorerManager.getRootContext();
@@ -215,24 +216,28 @@ public class WatchesView extends AbstractView
         });
     }
 
+    @Override
     public void changedFrame(ContextEvent ce) {
         if (!ce.isSuspending() && isCurrent(ce.getSession())) {
             buildTree();
         }
     }
 
+    @Override
     public void changedLocation(ContextEvent ce) {
         if (!ce.isSuspending() && isCurrent(ce.getSession())) {
             buildTree();
         }
     }
 
+    @Override
     public void changedThread(ContextEvent ce) {
         if (!ce.isSuspending() && isCurrent(ce.getSession())) {
             buildTree();
         }
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
@@ -274,6 +279,7 @@ public class WatchesView extends AbstractView
         }
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
@@ -324,6 +330,7 @@ public class WatchesView extends AbstractView
         return msg;
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
@@ -439,6 +446,7 @@ public class WatchesView extends AbstractView
         return NbBundle.getMessage(WatchesView.class, "CTL_WatchesView_Name");
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
@@ -458,6 +466,7 @@ public class WatchesView extends AbstractView
         return NbBundle.getMessage(WatchesView.class, "CTL_WatchesView_Tooltip");
     }
 
+    @Override
     public void opened(Session session) {
     }
 
@@ -475,9 +484,11 @@ public class WatchesView extends AbstractView
         nodeView.restoreColumnWidths(in);
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
@@ -487,6 +498,7 @@ public class WatchesView extends AbstractView
         wm.addWatchListener(this);
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         Session session = e.getSession();
         session.removeSessionListener(this);
@@ -496,21 +508,25 @@ public class WatchesView extends AbstractView
         wm.removeWatchListener(this);
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         buildTree();
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
         }
     }
 
+    @Override
     public void watchAdded(WatchEvent event) {
         // Likely this is for the current session, so don't bother checking.
         buildTree();
     }
 
+    @Override
     public void watchRemoved(WatchEvent event) {
         // Likely this is for the current session, so don't bother checking.
         buildTree();
@@ -551,6 +567,7 @@ public class WatchesView extends AbstractView
             setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
         }
 
+        @Override
         public Object getValue() throws IllegalAccessException,
                 InvocationTargetException {
             return key;
@@ -766,19 +783,23 @@ public class WatchesView extends AbstractView
             return false;
         }
 
+        @Override
         protected boolean enable(Node[] activatedNodes) {
             return true;
         }
 
+        @Override
         public HelpCtx getHelpCtx() {
             return HelpCtx.DEFAULT_HELP;
         }
 
+        @Override
         public String getName() {
             return NbBundle.getMessage(NewWatchAction.class,
                     "LBL_WatchesView_NewWatchAction");
         }
 
+        @Override
         protected void performAction(Node[] activatedNodes) {
             String title = NbBundle.getMessage(NewWatchAction.class,
                     "CTL_WatchesView_NewWatchTitle");
@@ -816,6 +837,7 @@ public class WatchesView extends AbstractView
             return false;
         }
 
+        @Override
         protected boolean enable(Node[] activatedNodes) {
             if (activatedNodes != null && activatedNodes.length == 1 &&
                     activatedNodes[0] instanceof WatchNode) {
@@ -824,15 +846,18 @@ public class WatchesView extends AbstractView
             return false;
         }
 
+        @Override
         public HelpCtx getHelpCtx() {
             return HelpCtx.DEFAULT_HELP;
         }
 
+        @Override
         public String getName() {
             return NbBundle.getMessage(NewFixedWatchAction.class,
                     "LBL_WatchesView_NewFixedWatchAction");
         }
 
+        @Override
         protected void performAction(Node[] activatedNodes) {
             if (activatedNodes != null && activatedNodes.length == 1 &&
                     activatedNodes[0] instanceof WatchNode) {

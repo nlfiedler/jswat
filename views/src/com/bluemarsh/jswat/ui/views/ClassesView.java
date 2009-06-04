@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -154,6 +154,7 @@ public class ClassesView extends AbstractView
         // Use a simple root node for which we can set the display name;
         // otherwise the logical root's properties affect the table headers.
         Node rootNode = new AbstractNode(kids) {
+            @Override
             public Action[] getActions(boolean b) {
                 return new Action[] {
                     SystemAction.get(RefreshAction.class),
@@ -236,6 +237,7 @@ public class ClassesView extends AbstractView
 
         // Must expand the nodes on the AWT event thread.
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 // Need to refetch the root in case it was replaced.
                 Node rootNode = explorerManager.getRootContext();
@@ -244,9 +246,11 @@ public class ClassesView extends AbstractView
         });
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         // Clear the tree to release resources.
@@ -261,6 +265,7 @@ public class ClassesView extends AbstractView
         }
     }
 
+    @Override
     protected void componentOpened() {
         super.componentOpened();
         // Build out the tree.
@@ -275,12 +280,14 @@ public class ClassesView extends AbstractView
         }
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
         }
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
@@ -345,33 +352,41 @@ public class ClassesView extends AbstractView
         return theInstance;
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(ClassesView.class, "CTL_ClassesView_Name");
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-classes-view");
     }
 
+    @Override
     public int getPersistenceType() {
         return PERSISTENCE_ALWAYS;
     }
 
+    @Override
     public String getToolTipText() {
         return NbBundle.getMessage(ClassesView.class, "CTL_ClassesView_Tooltip");
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     protected String preferredID() {
         return PREFERRED_ID;
     }
 
+    @Override
     public void readExternal(ObjectInput in)
             throws IOException, ClassNotFoundException {
         super.readExternal(in);
@@ -380,33 +395,40 @@ public class ClassesView extends AbstractView
         nodeView.restoreColumnWidths(in);
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void run() {
         buildTree();
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         Session session = e.getSession();
         session.removeSessionListener(this);
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         buildTree();
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
         }
     }
 
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         saveColumns(out, columns);
@@ -420,6 +442,7 @@ public class ClassesView extends AbstractView
      */
     private static class LoaderComparator implements Comparator<ClassLoaderReference> {
 
+        @Override
         public int compare(ClassLoaderReference o1, ClassLoaderReference o2) {
             // Boot classloader is represented as a null.
             if (o1 == null) {
@@ -481,8 +504,8 @@ public class ClassesView extends AbstractView
             setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
         }
 
-        public Object getValue()
-                throws IllegalAccessException, InvocationTargetException {
+        @Override
+        public Object getValue() throws IllegalAccessException, InvocationTargetException {
             return key;
         }
     }
@@ -512,6 +535,7 @@ public class ClassesView extends AbstractView
             this.view = view;
         }
 
+        @Override
         public void actionPerformed(ActionEvent event) {
             if (panel == null) {
                 panel = new FindPanel(this);
@@ -524,12 +548,14 @@ public class ClassesView extends AbstractView
             view.repaint();
         }
 
+        @Override
         public void dismiss() {
             view.remove(panel);
             view.revalidate();
             view.repaint();
         }
 
+        @Override
         public boolean findNext(String query) {
             query = query.toLowerCase();
             Session session = SessionProvider.getSessionManager().getCurrent();
@@ -586,6 +612,7 @@ public class ClassesView extends AbstractView
             return false;
         }
 
+        @Override
         public boolean findPrevious(String query) {
             query = query.toLowerCase();
             Session session = SessionProvider.getSessionManager().getCurrent();
@@ -676,23 +703,28 @@ public class ClassesView extends AbstractView
         /** silence the compiler warnings */
         private static final long serialVersionUID = 1L;
 
+        @Override
         protected boolean asynchronous() {
             return false;
         }
 
+        @Override
         protected boolean enable(Node[] activatedNodes) {
             return true;
         }
 
+        @Override
         public HelpCtx getHelpCtx() {
             return HelpCtx.DEFAULT_HELP;
         }
 
+        @Override
         public String getName() {
             return NbBundle.getMessage(RefreshAction.class,
                     "LBL_RefreshAction_Name");
         }
 
+        @Override
         protected void performAction(Node[] activatedNodes) {
             ClassesView view = ClassesView.findInstance();
             view.buildTree();

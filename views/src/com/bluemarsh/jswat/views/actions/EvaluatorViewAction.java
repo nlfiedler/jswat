@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -39,36 +39,22 @@ public class EvaluatorViewAction extends CallableSystemAction {
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Indicates if this action can be invoked on any thread.
-     *
-     * @return  true if asynchronous, false otherwise.
-     */
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
-    /**
-     * Returns the help context for this action.
-     *
-     * @return  help context.
-     */
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
-    /**
-     * Returns the name of this action.
-     *
-     * @return  name of action.
-     */
+    @Override
     public String getName() {
         return NbBundle.getMessage(getClass(), "LBL_EvaluatorViewAction");
     }
 
-    /**
-     * Performs the action.
-     */
+    @Override
     public void performAction() {
         WindowManager wm = WindowManager.getDefault();
         TopComponent tc = wm.findTopComponent("evaluator");

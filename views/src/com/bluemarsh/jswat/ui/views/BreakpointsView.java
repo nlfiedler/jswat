@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -112,6 +112,7 @@ public class BreakpointsView extends AbstractView
         add(nodeView, BorderLayout.CENTER);
     }
 
+    @Override
     public void breakpointAdded(BreakpointEvent event) {
         // Find the group node and add a new breakpoint node to it.
         Breakpoint bp = event.getBreakpoint();
@@ -126,6 +127,7 @@ public class BreakpointsView extends AbstractView
         // Else, this is an event for a different session.
     }
 
+    @Override
     public void breakpointRemoved(BreakpointEvent event) {
         // Find the breakpoint node and remove it from the parent node.
         Breakpoint bp = event.getBreakpoint();
@@ -138,6 +140,7 @@ public class BreakpointsView extends AbstractView
         // Else, this is an event for a different session.
     }
 
+    @Override
     public void breakpointStopped(BreakpointEvent event) {
     }
 
@@ -172,6 +175,7 @@ public class BreakpointsView extends AbstractView
         children.add(new Node[] { groupNode });
         buildRoot(children);
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 nodeView.expandAll();
             }
@@ -212,9 +216,11 @@ public class BreakpointsView extends AbstractView
         }
     }
 
+    @Override
     public void errorOccurred(BreakpointEvent event) {
     }
 
+    @Override
     public void errorOccurred(BreakpointGroupEvent event) {
     }
 
@@ -279,6 +285,7 @@ public class BreakpointsView extends AbstractView
         return NbBundle.getMessage(BreakpointsView.class, "CTL_BreakpointsView_Name");
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
@@ -293,6 +300,7 @@ public class BreakpointsView extends AbstractView
         return NbBundle.getMessage(BreakpointsView.class, "CTL_BreakpointsView_Tooltip");
     }
 
+    @Override
     public void groupAdded(BreakpointGroupEvent event) {
         // Find the group's parent and add a new group node to it.
         BreakpointGroup bg = event.getBreakpointGroup();
@@ -309,6 +317,7 @@ public class BreakpointsView extends AbstractView
         // Else, there is something wrong if there was no parent.
     }
 
+    @Override
     public void groupRemoved(BreakpointGroupEvent event) {
         // Find the group's parent and remove the group node.
         BreakpointGroup bg = event.getBreakpointGroup();
@@ -326,6 +335,7 @@ public class BreakpointsView extends AbstractView
         return BreakpointsView.class.getName();
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
         // In general the nodes listen for property changes to the
         // breakpoints and groups, but for the parent changes, we
@@ -376,6 +386,7 @@ public class BreakpointsView extends AbstractView
         nodeView.restoreColumnWidths(in);
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
@@ -383,6 +394,7 @@ public class BreakpointsView extends AbstractView
         bm.addBreakpointGroupListener(this);
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         Session session = e.getSession();
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
@@ -390,6 +402,7 @@ public class BreakpointsView extends AbstractView
         bm.removeBreakpointGroupListener(this);
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         Session session = e.getSession();
         buildTree(session);
@@ -431,6 +444,7 @@ public class BreakpointsView extends AbstractView
             setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
         }
 
+        @Override
         public Object getValue()
                 throws IllegalAccessException, InvocationTargetException {
             return key;

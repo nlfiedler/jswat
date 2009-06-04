@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -121,6 +121,7 @@ public class SessionsView extends AbstractView
         // Use a simple root node for which we can set the display name;
         // otherwise the logical root's properties affect the table headers.
         Node rootNode = new AbstractNode(kids) {
+            @Override
             public Action[] getActions(boolean b) {
                 return new Action[] {
                     SystemAction.get(CreateSessionAction.class),
@@ -219,6 +220,7 @@ public class SessionsView extends AbstractView
         return NbBundle.getMessage(SessionsView.class, "CTL_SessionsView_Name");
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
@@ -252,6 +254,7 @@ public class SessionsView extends AbstractView
         nodeView.restoreColumnWidths(in);
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         NodeFactory factory = NodeFactory.getDefault();
         Session session = e.getSession();
@@ -261,6 +264,7 @@ public class SessionsView extends AbstractView
         children.add(nodes);
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         Session session = e.getSession();
         // Find the corresponding session node.
@@ -279,6 +283,7 @@ public class SessionsView extends AbstractView
         children.remove(remove);
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
     }
 
@@ -315,6 +320,7 @@ public class SessionsView extends AbstractView
             setValue("ComparableColumnTTV", Boolean.valueOf(sortable));
         }
 
+        @Override
         public Object getValue()
                 throws IllegalAccessException, InvocationTargetException {
             return key;

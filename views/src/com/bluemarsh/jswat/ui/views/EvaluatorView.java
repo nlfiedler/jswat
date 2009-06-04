@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -98,6 +98,7 @@ public class EvaluatorView extends AbstractView implements ExplorerManager.Provi
         explorerManager.setRootContext(rootNode);
     }
 
+    @Override
     protected void componentOpened() {
         super.componentOpened();
         if (evaluatorPanel == null) {
@@ -106,30 +107,37 @@ public class EvaluatorView extends AbstractView implements ExplorerManager.Provi
         }
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(EvaluatorView.class, "CTL_EvaluatorView_Name");
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-evaluator-view");
     }
 
+    @Override
     public int getPersistenceType() {
         return PERSISTENCE_ALWAYS;
     }
 
+    @Override
     public String getToolTipText() {
         return NbBundle.getMessage(EvaluatorView.class, "CTL_EvaluatorView_Tooltip");
     }
 
+    @Override
     protected String preferredID() {
         return getClass().getName();
     }
 
+    @Override
     public void readExternal(ObjectInput in)
             throws IOException, ClassNotFoundException {
         super.readExternal(in);
@@ -138,6 +146,7 @@ public class EvaluatorView extends AbstractView implements ExplorerManager.Provi
         nodeView.restoreColumnWidths(in);
     }
 
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         saveColumns(out, columns);
@@ -172,6 +181,7 @@ public class EvaluatorView extends AbstractView implements ExplorerManager.Provi
             setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
         }
 
+        @Override
         public Object getValue()
                 throws IllegalAccessException, InvocationTargetException {
             return key;

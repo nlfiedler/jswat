@@ -54,15 +54,6 @@ public class CommandViewAction extends CallableSystemAction {
         return NbBundle.getMessage(getClass(), "LBL_CommandViewAction");
     }
 
-    /**
-     * Specify the proper resource name for the action's icon.
-     *
-     * @return  the resource name for the icon.
-     */
-//    protected String iconResource() {
-//        return NbBundle.getMessage(getClass(), "IMG_BreakpointsViewAction");
-//    }
-
     @Override
     public void performAction() {
         WindowManager wm = WindowManager.getDefault();

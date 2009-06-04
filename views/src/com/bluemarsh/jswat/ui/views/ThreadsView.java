@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -120,6 +120,7 @@ public class ThreadsView extends AbstractView
         // Use a simple root node for which we can set the display name;
         // otherwise the logical root's properties affect the table headers.
         Node rootNode = new AbstractNode(kids) {
+            @Override
             public Action[] getActions(boolean b) {
                 return new Action[] {
                     SystemAction.get(RefreshAction.class),
@@ -144,6 +145,7 @@ public class ThreadsView extends AbstractView
             buildTreeInAWTThread();
         } else {
             EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     buildTreeInAWTThread();
                 }
@@ -191,9 +193,11 @@ public class ThreadsView extends AbstractView
         }
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     protected void componentClosed() {
         super.componentClosed();
         // Clear the tree to release resources.
@@ -208,6 +212,7 @@ public class ThreadsView extends AbstractView
         }
     }
 
+    @Override
     protected void componentOpened() {
         super.componentOpened();
         // Build out the tree.
@@ -222,12 +227,14 @@ public class ThreadsView extends AbstractView
         }
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
         }
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
@@ -299,33 +306,41 @@ public class ThreadsView extends AbstractView
         return theInstance;
     }
 
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(ThreadsView.class, "CTL_ThreadsView_Name");
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-thread-view");
     }
 
+    @Override
     public int getPersistenceType() {
         return PERSISTENCE_ALWAYS;
     }
 
+    @Override
     public String getToolTipText() {
         return NbBundle.getMessage(ThreadsView.class, "CTL_ThreadsView_Tooltip");
     }
 
+    @Override
     protected String preferredID() {
         return PREFERRED_ID;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void readExternal(ObjectInput in)
             throws IOException, ClassNotFoundException {
         super.readExternal(in);
@@ -334,29 +349,35 @@ public class ThreadsView extends AbstractView
         nodeView.restoreColumnWidths(in);
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
         Session session = e.getSession();
         session.addSessionListener(this);
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         Session session = e.getSession();
         session.removeSessionListener(this);
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         buildTree();
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
         if (isCurrent(sevt)) {
             buildTree();
         }
     }
 
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         saveColumns(out, columns);
@@ -392,6 +413,7 @@ public class ThreadsView extends AbstractView
             setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
         }
 
+        @Override
         public Object getValue()
                 throws IllegalAccessException, InvocationTargetException {
             return key;
@@ -407,23 +429,28 @@ public class ThreadsView extends AbstractView
         /** silence the compiler warnings */
         private static final long serialVersionUID = 1L;
 
+        @Override
         protected boolean asynchronous() {
             return false;
         }
 
+        @Override
         protected boolean enable(Node[] activatedNodes) {
             return true;
         }
 
+        @Override
         public HelpCtx getHelpCtx() {
             return HelpCtx.DEFAULT_HELP;
         }
 
+        @Override
         public String getName() {
             return NbBundle.getMessage(RefreshAction.class,
                     "LBL_RefreshAction_Name");
         }
 
+        @Override
         protected void performAction(Node[] activatedNodes) {
             ThreadsView view = ThreadsView.findInstance();
             view.buildTree();

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -27,7 +27,6 @@ import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionEvent;
 import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
-import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -67,6 +66,7 @@ public abstract class AbstractView extends TopComponent {
      */
     protected void addSelectionListener(ExplorerManager em) {
         em.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 // As nodes are selected, make them the activated nodes for
                 // the owning top component.

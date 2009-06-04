@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -72,6 +72,7 @@ public class PersistentTreeTableView extends TreeTableView {
 
         // Changing Swing widgets must be done on the AWT event thread.
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 // TreeTableView prohibits moving the tree
                 // column, so it is always offset zero.
