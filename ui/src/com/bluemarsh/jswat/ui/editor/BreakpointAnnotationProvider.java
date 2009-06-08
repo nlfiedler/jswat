@@ -98,14 +98,15 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
                         LineBreakpoint lb = (LineBreakpoint) bp;
                         if (lb.getURL().equals(url)) {
                             Annotation ann;
-                            if (lb.isEnabled()) {
-                                ann = es.annotate(
-                                        url, lb.getLineNumber(),
-                                        DebugAnnotation.BREAKPOINT_TYPE, lb);
-                            } else {
-                                ann = es.annotate(
-                                        url, lb.getLineNumber(),
+                            if (!lb.isEnabled()) {
+                                ann = es.annotate(url, lb.getLineNumber(),
                                         DebugAnnotation.DISABLED_BREAKPOINT_TYPE, lb);
+                            } else if (!lb.isResolved()) {
+                                ann = es.annotate(url, lb.getLineNumber(),
+                                        DebugAnnotation.BROKEN_BREAKPOINT_TYPE, lb);
+                            } else {
+                                ann = es.annotate(url, lb.getLineNumber(),
+                                        DebugAnnotation.BREAKPOINT_TYPE, lb);
                             }
                             // Check if annotation is null, which indicates the
                             // source line no longer exists (file shrank).

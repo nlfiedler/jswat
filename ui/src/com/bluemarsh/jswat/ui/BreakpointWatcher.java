@@ -240,12 +240,15 @@ public class BreakpointWatcher implements BreakpointListener,
         removeAnnotation(bp);
         EditorSupport es = EditorSupport.getDefault();
         Annotation ann = null;
-        if (bp.isEnabled()) {
+        if (!bp.isEnabled()) {
             ann = es.annotate(bp.getURL(), bp.getLineNumber(),
-                DebugAnnotation.BREAKPOINT_TYPE, bp);
+                    DebugAnnotation.DISABLED_BREAKPOINT_TYPE, bp);
+        } else if (!bp.isResolved()) {
+            ann = es.annotate(bp.getURL(), bp.getLineNumber(),
+                    DebugAnnotation.BROKEN_BREAKPOINT_TYPE, bp);
         } else {
             ann = es.annotate(bp.getURL(), bp.getLineNumber(),
-                DebugAnnotation.DISABLED_BREAKPOINT_TYPE, bp);
+                    DebugAnnotation.BREAKPOINT_TYPE, bp);
         }
         bp.setProperty(EditorConstants.PROP_ANNOTATION, ann);
     }

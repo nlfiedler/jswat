@@ -35,6 +35,8 @@ import org.openide.util.NbBundle;
 public class DebugAnnotation extends Annotation {
     /** Type of annotation representing an enabled breakpoint. */
     public static final String BREAKPOINT_TYPE = "Breakpoint";
+    /** Type of annotation representing a breakpoint that failed to resolve. */
+    public static final String BROKEN_BREAKPOINT_TYPE = "BrokenBreakpoint";
     /** Type of annotation representing the current program counter. */
     public static final String CURRENT_PC_TYPE = "CurrentPC";
     /** Type of annotation representing a disabled breakpoint. */
@@ -86,11 +88,13 @@ public class DebugAnnotation extends Annotation {
     @Override
     public String getShortDescription () {
         if (type.equals(BREAKPOINT_TYPE)) {
-            return NbBundle.getMessage(getClass(), "HINT_BREAKPOINT");
+            return NbBundle.getMessage(DebugAnnotation.class, "HINT_BREAKPOINT");
         } else if (type.equals(CURRENT_PC_TYPE)) {
-            return NbBundle.getMessage(getClass(), "HINT_CURRENT_PC");
+            return NbBundle.getMessage(DebugAnnotation.class, "HINT_CURRENT_PC");
+        } else if (type.equals(BROKEN_BREAKPOINT_TYPE)) {
+            return NbBundle.getMessage(DebugAnnotation.class, "HINT_BROKEN_BREAKPOINT");
         } else if (type.equals(DISABLED_BREAKPOINT_TYPE)) {
-            return NbBundle.getMessage(getClass(), "HINT_DISABLED_BREAKPOINT");
+            return NbBundle.getMessage(DebugAnnotation.class, "HINT_DISABLED_BREAKPOINT");
         } else {
             return "";
         }

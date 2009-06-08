@@ -15,7 +15,7 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2005-2009. All Rights Reserved.
+  are Copyright (C) 2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
@@ -26,15 +26,15 @@
   PUBLIC "-//NetBeans//DTD annotation type 1.0//EN"
          "http://www.netbeans.org/dtds/annotation-type-1_0.dtd">
 
-<type name='BreakpointPC'
-      description_key='HINT_BREAKPOINT_PC'
+<type name='BrokenBreakpointPC'
+      description_key='HINT_BROKEN_BREAKPOINT_PC'
       localizing_bundle='com.bluemarsh.jswat.ui.editor.Bundle'
       visible='true'
-      glyph='nbresloc:/com/bluemarsh/jswat/ui/resources/editor/Breakpoint+PC.png'
-      highlight='0xBDE6AA'
+      glyph='nbresloc:/com/bluemarsh/jswat/ui/resources/editor/BrokenBreakpoint+PC.png'
+      highlight='0xBDE6AA' 
       type='line'>
     <combination>
-        <combine annotationtype='Breakpoint'/>
+        <combine annotationtype='BrokenBreakpoint'/>
         <combine annotationtype='CurrentPC'/>
     </combination>
 </type>

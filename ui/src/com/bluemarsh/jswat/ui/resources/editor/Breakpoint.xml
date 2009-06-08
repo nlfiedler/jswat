@@ -15,7 +15,7 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2005. All Rights Reserved.
+  are Copyright (C) 2005-2009. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
@@ -30,6 +30,6 @@
       description_key='HINT_BREAKPOINT'
       localizing_bundle='com.bluemarsh.jswat.ui.editor.Bundle'
       visible='true'
-      glyph='nbresloc:/com/bluemarsh/jswat/ui/resources/editor/Breakpoint.gif'
+      glyph='nbresloc:/com/bluemarsh/jswat/ui/resources/editor/Breakpoint.png'
       highlight='0xFC9D9F'
       type='line'/>

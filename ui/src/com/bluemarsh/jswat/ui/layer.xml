@@ -88,10 +88,12 @@
         </folder>
         <folder name="AnnotationTypes">
             <file name="Breakpoint.xml" url="resources/editor/Breakpoint.xml"/>
+            <file name="BrokenBreakpoint.xml" url="resources/editor/BrokenBreakpoint.xml"/>
             <file name="DisabledBreakpoint.xml" url="resources/editor/DisabledBreakpoint.xml"/>
             <file name="CurrentPC.xml" url="resources/editor/CurrentPC.xml"/>
             <!-- The following are combination annotations. -->
             <file name="BreakpointPC.xml" url="resources/editor/Breakpoint+PC.xml"/>
+            <file name="BrokenBreakpointPC.xml" url="resources/editor/BrokenBreakpoint+PC.xml"/>
             <file name="DisabledBreakpointPC.xml" url="resources/editor/DisabledBreakpoint+PC.xml"/>
         </folder>
     </folder>
