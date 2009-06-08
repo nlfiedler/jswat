@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2008. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -147,6 +147,7 @@ public class DefaultBreakpointNode extends BreakpointNode implements
         super.destroy();
     }
 
+    @Override
     public Breakpoint getBreakpoint() {
         return breakpoint;
     }
@@ -171,6 +172,7 @@ public class DefaultBreakpointNode extends BreakpointNode implements
         return ImageUtilities.loadImage(url);
     }
 
+    @Override
     protected Action[] getNodeActions() {
         return new Action[] {
             SystemAction.get(NewAction.class),
@@ -194,6 +196,7 @@ public class DefaultBreakpointNode extends BreakpointNode implements
         return true;
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String name = evt.getPropertyName();
         if (name.equals("annotation") || name.equals("breakpointGroup")) {
@@ -206,6 +209,7 @@ public class DefaultBreakpointNode extends BreakpointNode implements
         fireDisplayNameChange(null, null);
     }
 
+    @Override
     public void showSource() {
         if (breakpoint instanceof LineBreakpoint) {
             LineBreakpoint lb = (LineBreakpoint) breakpoint;
