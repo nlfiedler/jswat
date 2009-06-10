@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -76,17 +76,21 @@ public class ActionsPanel extends AbstractAdapter
         suspendComboBox.setModel(suspendModel);
     }
 
+    @Override
     public boolean canCreateBreakpoint() {
         return false;
     }
 
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         return null;
     }
 
+    @Override
     public void focusGained(FocusEvent e) {
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -95,9 +99,10 @@ public class ActionsPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getSource() == expressionCheckBox) {
-            expressionTextField.setEnabled(e.getStateChange() == e.SELECTED);
+            expressionTextField.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
         }
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -106,6 +111,7 @@ public class ActionsPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public void loadParameters(Breakpoint bp) {
         int suspendPolicy = bp.getSuspendPolicy();
         Policy policy;
@@ -159,6 +165,7 @@ public class ActionsPanel extends AbstractAdapter
         breakpoint = bp;
     }
 
+    @Override
     public void saveParameters(Breakpoint bp) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) suspendComboBox.getSelectedItem();
@@ -220,6 +227,7 @@ public class ActionsPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public String validateInput() {
         // We have nothing to validate.
         return null;
