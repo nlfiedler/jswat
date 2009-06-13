@@ -97,8 +97,7 @@ public class RunToCursorAction extends CallableSystemAction {
                     name = null;
                 }
                 Breakpoint bp = bf.createLineBreakpoint(url, name, line);
-                bp.setExpireCount(1);
-                bp.setDeleteOnExpire(true);
+                bp.setDeleteWhenHit(true);
                 bm.addBreakpoint(bp);
                 session.resumeVM();
             } catch (MalformedClassNameException mcne) {

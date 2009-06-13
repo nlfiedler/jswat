@@ -29,12 +29,6 @@ import java.util.ListIterator;
 
 /**
  * Interface Breakpoint defines the methods applicable to a breakpoint.
- * Breakpoints have several states, including enabled, disabled,
- * expired, and resolved. Breakpoints have several optional elements.
- * First they have a "skip" count, which tells the breakpoint not to
- * stop until it has been hit a certain number of times. Then
- * breakpoints may expire after a number of hits, in which case they
- * will no longer stop.
  *
  * @author  Nathan Fiedler
  */
@@ -43,22 +37,12 @@ public interface Breakpoint {
     public static final String PROP_BREAKPOINTGROUP = "breakpointGroup";
     /** Name of 'classFilter' property. */
     public static final String PROP_CLASSFILTER = "classFilter";
-    /** Name of 'deleteOnExpire' property. */
-    public static final String PROP_DELETEONEXPIRE = "deleteOnExpire";
     /** Name of 'description' property. */
     public static final String PROP_DESCRIPTION = "description";
     /** Name of 'enabled' property. */
     public static final String PROP_ENABLED = "enabled";
-    /** Name of 'expireCount' property. */
-    public static final String PROP_EXPIRECOUNT = "expireCount";
-    /** Name of 'expired' property. */
-    public static final String PROP_EXPIRED = "expired";
     /** Name of 'resolved' property. */
     public static final String PROP_RESOLVED = "resolved";
-    /** Name of 'skipCount' property. */
-    public static final String PROP_SKIPCOUNT = "skipCount";
-    /** Name of 'skipping' property. */
-    public static final String PROP_SKIPPING = "skipping";
     /** Name of 'suspendPolicy' property. */
     public static final String PROP_SUSPENDPOLICY = "suspendPolicy";
     /** Name of 'threadFilter' property. */
@@ -161,13 +145,11 @@ public interface Breakpoint {
     String getDescription();
 
     /**
-     * Return the number of times this breakpoint can be hit before it
-     * expires and no longer stops.
+     * Returns the number of times this breakpoint has been hit.
      *
-     * @return  number of times this breakpoint can be hit
-     *          before it expires; zero means it will never expire.
+     * @return  hit count.
      */
-    int getExpireCount();
+    int getHitCount();
 
     /**
      * Returns the property value previously set using the method
@@ -177,16 +159,6 @@ public interface Breakpoint {
      * @return  the value of the property, or null if not found.
      */
     Object getProperty(String name);
-
-    /**
-     * Return the number of times this breakpoint can be hit before it
-     * starts stopping the debuggee VM. That is, the breakpoint will be
-     * hit N times before it stops.
-     *
-     * @return  number of times this breakpoint will be hit
-     *          before it stops; zero means it will not skip.
-     */
-    int getSkipCount();
 
     /**
      * Retrieve the suspend policy for this breakpoint. The returned value
@@ -208,22 +180,6 @@ public interface Breakpoint {
     String getThreadFilter();
 
     /**
-     * Returns true if this breakpoint is to be deleted when it has expired,
-     * false if it will be retained.
-     *
-     * @return  true if deleting, false otherwise.
-     */
-    boolean isDeleteOnExpire();
-
-    /**
-     * Returns true if the breakpoint has expired and will no longer
-     * cause execution to halt.
-     *
-     * @return  true if this breakpoint has expired, false otherwise.
-     */
-    boolean isExpired();
-
-    /**
      * Returns true if and only if the breakpoint is enabled and the
      * group containing this breakpoint is also enabled.
      *
@@ -240,15 +196,6 @@ public interface Breakpoint {
      * @return  true if this breakpoint has resolved, false otherwise.
      */
     boolean isResolved();
-
-    /**
-     * Returns true if this breakpoint is currently skipping. That is,
-     * the skipCount is greater than zero and the stoppedCount is less
-     * than the skipCount.
-     *
-     * @return  true if the breakpoint is skipping hits.
-     */
-    boolean isSkipping();
 
     /**
      * Returns an iterator of the monitors associated with this
@@ -312,11 +259,11 @@ public interface Breakpoint {
     void setClassFilter(String filter);
 
     /**
-     * Cause this breakpoint to be deleted when it has expired.
+     * Cause this breakpoint to be deleted when it has been hit.
      *
-     * @param  delete  true to delete at expiration, false to retain.
+     * @param  delete  true to delete when hit, false to retain.
      */
-    void setDeleteOnExpire(boolean delete);
+    void setDeleteWhenHit(boolean delete);
 
     /**
      * Enables or disables this breakpoint, according to the parameter.
@@ -328,11 +275,9 @@ public interface Breakpoint {
     void setEnabled(boolean enabled);
 
     /**
-     * Set the number of times this breakpoint can be hit before it
-     * expires and no longer stops.
+     * No longer supported. See setDeleteWhenHit(boolean) instead.
      *
-     * @param  expireCount  number of times this breakpoint can be hit
-     *                      before it expires; zero to never expire
+     * @param  expireCount  unused value.
      */
     void setExpireCount(int expireCount);
 
@@ -347,12 +292,9 @@ public interface Breakpoint {
     Object setProperty(String name, Object value);
 
     /**
-     * Set the number of times this breakpoint can be hit before it
-     * starts stopping the debuggee VM. That is, the breakpoint will be
-     * hit <code>skipCount</code> times before it stops.
+     * No longer supported. Use HitCountCondition instead.
      *
-     * @param  skipCount  number of times this breakpoint will be hit
-     *                    before it stops; zero to disable skipping
+     * @param  skipCount  unused value.
      */
     void setSkipCount(int skipCount);
 

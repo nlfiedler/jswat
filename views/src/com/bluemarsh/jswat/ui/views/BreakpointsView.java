@@ -102,8 +102,6 @@ public class BreakpointsView extends AbstractView
             new Column(Breakpoint.PROP_DESCRIPTION, String.class, true, true, false),
             new Column(Breakpoint.PROP_ENABLED, Boolean.TYPE, false, true, false),
             new Column(Breakpoint.PROP_RESOLVED, Boolean.TYPE, false, true, true),
-            new Column(Breakpoint.PROP_SKIPPING, Boolean.TYPE, false, true, true),
-            new Column(Breakpoint.PROP_EXPIRED, Boolean.TYPE, false, true, true),
         };
         nodeView.setProperties(columns);
         // This, oddly enough, enables the column hiding feature.

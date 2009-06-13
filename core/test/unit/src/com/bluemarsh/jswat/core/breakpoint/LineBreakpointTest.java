@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -66,9 +66,6 @@ public class LineBreakpointTest extends TestCase {
                 BreakpointHelper.prepareBreakpoint(bp, session);
                 if (line == tfLine) {
                     bp.setThreadFilter("thread1");
-                    bp.setExpireCount(0);
-                    // Note that this breakpoint will not be automatically
-                    // deleted since the expiration count is zero.
                 }
             }
         } catch (MalformedClassNameException mcne) {

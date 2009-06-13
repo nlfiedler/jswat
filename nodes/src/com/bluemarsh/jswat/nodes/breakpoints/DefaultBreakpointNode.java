@@ -100,7 +100,8 @@ public class DefaultBreakpointNode extends BreakpointNode implements
                     continue;
                 }
                 String name = prop.getName();
-                if (name.equals("class") || name.equals("breakpointGroup")) {
+                if (name.equals("class") || name.equals("breakpointGroup") ||
+                        name.equals("hitCount")) {
                     // Ignore these useless properties.
                     continue;
                 }

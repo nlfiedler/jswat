@@ -78,8 +78,7 @@ public class JdiEvaluatorTest extends TestCase {
             String url = srcfile.toURI().toURL().toString();
             for (int line : lines) {
                 Breakpoint bp = bf.createLineBreakpoint(url, null, line);
-                bp.setDeleteOnExpire(true);
-                bp.setExpireCount(1);
+                bp.setDeleteWhenHit(true);
                 bm.addBreakpoint(bp);
             }
         } catch (MalformedClassNameException mcne) {

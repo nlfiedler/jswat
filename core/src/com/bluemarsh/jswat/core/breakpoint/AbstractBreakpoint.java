@@ -58,14 +58,8 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     private boolean isEnabled;
     /** Breakpoint group that contains us (always non-null). */
     private BreakpointGroup breakpointGroup;
-    /** Number of times this breakpoint has stopped. */
-    private int stoppedCount;
-    /** Number of times this breakpoint can be hit before it expires.
-     * If value is zero, breakpoint will not expire. */
-    private int expireCount;
-    /** Number of times this breakpoint will be hit before it stops.
-     * If value is zero, breakpoint will not skip. */
-    private int skipCount;
+    /** Number of times this breakpoint has been hit. */
+    private int hitCount;
     /** List of conditions this breakpoint depends on. */
     private final List<Condition> conditionList;
     /** List of monitors this breakpoint executes when it stops. */
@@ -74,8 +68,8 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     private String classFilter;
     /** Thread filter, appropriate for JDI event requests. */
     private String threadFilter;
-    /** True if the breakpoint should be deleted on expiration. */
-    private boolean deleteOnExpire;
+    /** True if the breakpoint should be deleted after being hit. */
+    private boolean deleteWhenHit;
     /** Handles property change listeners and sending events. */
     protected PropertyChangeSupport propSupport;
     /** Map of the properties set in this breakpoint. */
@@ -164,28 +158,25 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     @Override
     public boolean eventOccurred(Event event) {
         //
-        // This method exists here because the logic of evaluating the event
+        // This method lives here because the logic of evaluating the event
         // and processing it is common for all of the breakpoint types. Each
         // breakpoint type creates its requests and registers the request
         // with the event dispatcher. When the event for the corresponding
         // request occurs, this method does the standard processing.
         //
-        boolean shouldResume = true;
-        if (isEnabled() && !isExpired()) {
+        boolean resume = true;
+        if (isEnabled()) {
+            // Only count hits for enabled breakpoints. Each hit must be
+            // counted so the hit count condition evaluation can work.
+            hitCount++;
             // Check the filters and conditions.
-            shouldResume = shouldResume(event);
-            if (!shouldResume) {
-                // Good so far, now count this as a 'stop'.
-                incrementStoppedCount();
-                if (isSkipping()) {
-                    shouldResume = true;
-                } else {
-                    shouldResume = performStop(event);
-                }
-                // Do nothing else now that we may be expired and deleted.
+            resume = shouldResume(event);
+            if (!resume) {
+                resume = performStop(event);
+                // Do nothing else as we may have just been deleted.
             }
         }
-        return shouldResume;
+        return resume;
     }
 
     /**
@@ -224,18 +215,13 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     }
 
     @Override
-    public int getExpireCount() {
-        return expireCount;
+    public int getHitCount() {
+        return hitCount;
     }
 
     @Override
     public Object getProperty(String name) {
         return propertiesMap.get(name);
-    }
-
-    @Override
-    public int getSkipCount() {
-        return skipCount;
     }
 
     @Override
@@ -251,35 +237,6 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     }
 
     @Override
-    public boolean isDeleteOnExpire() {
-        return deleteOnExpire;
-    }
-
-    @Override
-    public boolean isExpired() {
-        return (expireCount > 0) && (stoppedCount >= expireCount);
-    }
-
-    /**
-     * Increments the <code>stoppedCount</code> value and possibly fires
-     * an event that the breakpoint has been modified. That is, an event
-     * is fired if the expireCount or skipCount are non-zero.
-     */
-    private void incrementStoppedCount() {
-        boolean wasExpired = isExpired();
-        boolean wasSkipping = isSkipping();
-        stoppedCount++;
-        boolean isExpired = isExpired();
-        boolean isSkipping = isSkipping();
-        if (wasExpired != isExpired) {
-            propSupport.firePropertyChange(PROP_EXPIRED, wasExpired, isExpired);
-        }
-        if (wasSkipping != isSkipping) {
-            propSupport.firePropertyChange(PROP_SKIPPING, wasSkipping, isSkipping);
-        }
-    }
-
-    @Override
     public boolean isEnabled() {
         BreakpointGroup parent = getBreakpointGroup();
         if (parent != null) {
@@ -291,11 +248,6 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
 
     @Override
     public abstract boolean isResolved();
-
-    @Override
-    public boolean isSkipping() {
-        return (skipCount > 0) && (stoppedCount <= skipCount);
-    }
 
     @Override
     public ListIterator<Monitor> monitors() {
@@ -314,7 +266,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
                 BreakpointEvent.Type.STOPPED, e);
         fireEvent(be);
         runMonitors(be);
-        if (isDeleteOnExpire() && isExpired()) {
+        if (deleteWhenHit) {
             // Let listeners know we should be deleted. Hopefully one of
             // them (e.g. breakpoint manager) will actually remove us.
             fireEvent(new BreakpointEvent(this, BreakpointEvent.Type.REMOVED, e));
@@ -376,17 +328,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
 
     @Override
     public void reset() {
-        boolean wasExpired = isExpired();
-        boolean wasSkipping = isSkipping();
-        stoppedCount = 0;
-        boolean isExpired = isExpired();
-        boolean isSkipping = isSkipping();
-        if (wasExpired != isExpired) {
-            propSupport.firePropertyChange(PROP_EXPIRED, wasExpired, isExpired);
-        }
-        if (wasSkipping != isSkipping) {
-            propSupport.firePropertyChange(PROP_SKIPPING, wasSkipping, isSkipping);
-        }
+        hitCount = 0;
     }
 
     /**
@@ -431,10 +373,8 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     }
 
     @Override
-    public void setDeleteOnExpire(boolean delete) {
-        boolean old = deleteOnExpire;
-        deleteOnExpire = delete;
-        propSupport.firePropertyChange(PROP_DELETEONEXPIRE, old, delete);
+    public void setDeleteWhenHit(boolean delete) {
+        deleteWhenHit = delete;
     }
 
     @Override
@@ -446,15 +386,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
 
     @Override
     public void setExpireCount(int expireCount) {
-        int old = this.expireCount;
-        boolean wasExpired = isExpired();
-        this.expireCount = expireCount;
-        boolean isExpired = isExpired();
-        if (wasExpired != isExpired) {
-            // The expiration status has changed, notify the listeners.
-            propSupport.firePropertyChange(PROP_EXPIRED, wasExpired, isExpired);
-        }
-        propSupport.firePropertyChange(PROP_EXPIRECOUNT, old, expireCount);
+        // Take no action, for backward compatibility.
     }
 
     @Override
@@ -466,15 +398,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
 
     @Override
     public void setSkipCount(int skipCount) {
-        int old = this.skipCount;
-        boolean wasSkipping = isSkipping();
-        this.skipCount = skipCount;
-        boolean isSkipping = isSkipping();
-        if (wasSkipping != isSkipping) {
-            // The skipping status has changed, notify the listeners.
-            propSupport.firePropertyChange(PROP_SKIPPING, wasSkipping, isSkipping);
-        }
-        propSupport.firePropertyChange(PROP_SKIPCOUNT, old, skipCount);
+        // Take no action, for backward compatibility.
     }
 
     @Override

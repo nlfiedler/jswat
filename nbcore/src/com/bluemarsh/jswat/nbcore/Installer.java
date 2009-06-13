@@ -295,8 +295,7 @@ public class Installer extends ModuleInstall implements Runnable, WindowListener
             try {
                 Breakpoint bp = bf.createMethodBreakpoint(klass, method, args);
                 BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
-                bp.setExpireCount(1);
-                bp.setDeleteOnExpire(true);
+                bp.setDeleteWhenHit(true);
                 bm.addBreakpoint(bp);
                 session.resumeVM();
             } catch (Exception e) {

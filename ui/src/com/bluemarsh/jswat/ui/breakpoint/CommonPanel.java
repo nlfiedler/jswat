@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -30,17 +30,20 @@ import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
 import com.bluemarsh.jswat.core.breakpoint.Condition;
 import com.bluemarsh.jswat.core.breakpoint.ExpressionCondition;
+import com.bluemarsh.jswat.core.breakpoint.HitCountCondition;
 import com.bluemarsh.jswat.core.session.Session;
-import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
+import com.bluemarsh.jswat.core.util.NameValuePair;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Iterator;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.util.NbBundle;
 
 /**
  * CommonPanel edits the common breakpoint attributes.
@@ -53,6 +56,8 @@ public class CommonPanel extends AbstractAdapter
     private static final long serialVersionUID = 1L;
     /** Breakpoint to update. */
     private Breakpoint breakpoint;
+    /** Model for hit count combo box. */
+    private DefaultComboBoxModel hitCountModel;
 
     /**
      * Creates new form CommonPanel.
@@ -60,44 +65,43 @@ public class CommonPanel extends AbstractAdapter
     public CommonPanel() {
         initComponents();
         enabledCheckBox.setSelected(true);
-        SpinnerNumberModel snm = (SpinnerNumberModel) expireSpinner.getModel();
-        snm.setMinimum(new Integer(0));
-        snm = (SpinnerNumberModel) skipSpinner.getModel();
-        snm.setMinimum(new Integer(0));
-        SessionManager sm = SessionProvider.getSessionManager();
-        Session session = sm.getCurrent();
+        Session session = SessionProvider.getCurrentSession();
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
         BreakpointGroup group = bm.getDefaultGroup();
         Breakpoints.buildGroupList(group, groupComboBox);
+        // Populate the hit count combobox.
+        hitCountModel = new DefaultComboBoxModel();
+        String label = NbBundle.getMessage(CommonPanel.class, "CTL_Common_HitCount_Equal");
+        NameValuePair<HitCountCondition.Type> pair =
+                new NameValuePair<HitCountCondition.Type>(label, HitCountCondition.Type.EQUAL);
+        hitCountModel.addElement(pair);
+        label = NbBundle.getMessage(CommonPanel.class, "CTL_Common_HitCount_Greater");
+        pair = new NameValuePair<HitCountCondition.Type>(label, HitCountCondition.Type.GREATER);
+        hitCountModel.addElement(pair);
+        label = NbBundle.getMessage(CommonPanel.class, "CTL_Common_HitCount_Multiple");
+        pair = new NameValuePair<HitCountCondition.Type>(label, HitCountCondition.Type.MULTIPLE);
+        hitCountModel.addElement(pair);
+        hitCountComboBox.setModel(hitCountModel);
+        // Set hit count spinner minimum value.
+        SpinnerNumberModel snm = (SpinnerNumberModel) hitCountSpinner.getModel();
+        snm.setMinimum(new Integer(0));
     }
 
-    /**
-     * Indicates if this adapter is the sort that can construct a new
-     * Breakpoint instance from the user-provided information.
-     *
-     * @return  true if breakpoint creation is possible, false otherwise.
-     */
+    @Override
     public boolean canCreateBreakpoint() {
         return false;
     }
 
-    /**
-     * Create a Breakpoint instance that encapsulates the information
-     * provided by the user. This may not be entirely complete since
-     * some of the information is contained in other adapters. The caller
-     * is responsible for invoking <code>saveParameters(Breakpoint)</code>
-     * on the other adapters to make the Breakpoint instance complete.
-     *
-     * @param  factory  breakpoint factory to construct breakpoint.
-     * @return  new Breakpoint, or null if creation not supported.
-     */
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         return null;
     }
 
+    @Override
     public void focusGained(FocusEvent e) {
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -106,7 +110,13 @@ public class CommonPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
+        if (e.getSource() == hitCountCheckBox) {
+            boolean enabled = e.getStateChange() == ItemEvent.SELECTED;
+            hitCountSpinner.setEnabled(enabled);
+            hitCountComboBox.setEnabled(enabled);
+        }
         String msg = validateInput();
         fireInputPropertyChange(msg);
         if (msg == null) {
@@ -114,18 +124,14 @@ public class CommonPanel extends AbstractAdapter
         }
     }
 
-    /**
-     * Read the values from the given Breakpoint to populate the fields
-     * of this editor.
-     *
-     * @param  bp  Breakpoint to edit.
-     */
+    @Override
     public void loadParameters(Breakpoint bp) {
         enabledCheckBox.setSelected(bp.isEnabled());
-        expireSpinner.setValue(new Integer(bp.getExpireCount()));
-        skipSpinner.setValue(new Integer(bp.getSkipCount()));
         Breakpoints.findAndSelectGroup(groupComboBox, bp);
-        // Find expression condition, if any, and get its value.
+        // Process breakpoint conditions, if any.
+        hitCountCheckBox.setSelected(false);
+        hitCountComboBox.setEnabled(false);
+        hitCountSpinner.setEnabled(false);
         Iterator<Condition> citer = bp.conditions();
         while (citer.hasNext()) {
             Condition cond = citer.next();
@@ -133,6 +139,21 @@ public class CommonPanel extends AbstractAdapter
                 ExpressionCondition ec = (ExpressionCondition) cond;
                 conditionTextField.setText(ec.getExpression());
                 break;
+            } else if (cond instanceof HitCountCondition) {
+                HitCountCondition hcc = (HitCountCondition) cond;
+                hitCountCheckBox.setSelected(true);
+                hitCountComboBox.setEnabled(true);
+                hitCountSpinner.setEnabled(true);
+                hitCountSpinner.setValue(hcc.getCount());
+                HitCountCondition.Type hct = hcc.getType();
+                for (int ii = hitCountModel.getSize() - 1; ii >= 0; ii--) {
+                    NameValuePair<?> pair =
+                            (NameValuePair<?>) hitCountModel.getElementAt(ii);
+                    HitCountCondition.Type hcp = (HitCountCondition.Type) pair.getValue();
+                    if (hcp.equals(hct)) {
+                        hitCountModel.setSelectedItem(pair);
+                    }
+                }
             }
         }
 
@@ -141,24 +162,17 @@ public class CommonPanel extends AbstractAdapter
             conditionTextField.addFocusListener(this);
             enabledCheckBox.addItemListener(this);
             groupComboBox.addItemListener(this);
-            expireSpinner.addChangeListener(this);
-            skipSpinner.addChangeListener(this);
+            hitCountCheckBox.addItemListener(this);
+            hitCountComboBox.addItemListener(this);
+            hitCountSpinner.addChangeListener(this);
         }
         breakpoint = bp;
     }
 
-    /**
-     * Saves the values from the fields of this editor to the given Breakpoint.
-     *
-     * @param  bp  Breakpoint to modify.
-     */
+    @Override
     public void saveParameters(Breakpoint bp) {
         // Update enabled state, expire count, and skip count.
         bp.setEnabled(enabledCheckBox.isSelected());
-        Integer i = (Integer) expireSpinner.getValue();
-        bp.setExpireCount(i.intValue());
-        i = (Integer) skipSpinner.getValue();
-        bp.setSkipCount(i.intValue());
 
         // Update parent breakpoint group, if changed.
         BreakpointGroup newGroup = Breakpoints.getSelectedGroup(groupComboBox);
@@ -170,17 +184,21 @@ public class CommonPanel extends AbstractAdapter
             newGroup.addBreakpoint(bp);
         }
 
-        // Update the expression condition, if any (may be added or removed).
+        // Find the breakpoint conditions that we support.
         ExpressionCondition ec = null;
-        String condition = conditionTextField.getText();
+        HitCountCondition hcc = null;
         Iterator<Condition> citer = bp.conditions();
         while (citer.hasNext()) {
             Condition cond = citer.next();
             if (cond instanceof ExpressionCondition) {
                 ec = (ExpressionCondition) cond;
-                break;
+            } else if (cond instanceof HitCountCondition) {
+                hcc = (HitCountCondition) cond;
             }
         }
+
+        // Handle addition/removal of expression condition.
+        String condition = conditionTextField.getText();
         if (condition.length() > 0) {
             if (ec == null) {
                 ec = new ExpressionCondition();
@@ -190,8 +208,25 @@ public class CommonPanel extends AbstractAdapter
         } else if (ec != null) {
             bp.removeCondition(ec);
         }
+
+        // Handle addition/removal of hit count condition.
+        if (hitCountCheckBox.isSelected()) {
+            if (hcc == null) {
+                hcc = new HitCountCondition();
+                bp.addCondition(hcc);
+            }
+            NameValuePair<?> pair =
+                    (NameValuePair<?>) hitCountComboBox.getSelectedItem();
+            HitCountCondition.Type hct = (HitCountCondition.Type) pair.getValue();
+            hcc.setType(hct);
+            Integer count = (Integer) hitCountSpinner.getValue();
+            hcc.setCount(count);
+        } else if (hcc != null) {
+            bp.removeCondition(hcc);
+        }
     }
 
+    @Override
     public void stateChanged(ChangeEvent e) {
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -200,11 +235,7 @@ public class CommonPanel extends AbstractAdapter
         }
     }
 
-    /**
-     * Validate the user-provided input.
-     *
-     * @return  error message if input invalid, null if valid.
-     */
+    @Override
     public String validateInput() {
         // We have nothing to validate.
         return null;
@@ -215,107 +246,94 @@ public class CommonPanel extends AbstractAdapter
      * WARNING: Do NOT modify this code. The content of this method is
      * always regenerated by the Form Editor.
      */
-    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         enabledCheckBox = new javax.swing.JCheckBox();
         groupLabel = new javax.swing.JLabel();
         groupComboBox = new javax.swing.JComboBox();
-        skipLabel = new javax.swing.JLabel();
-        skipSpinner = new javax.swing.JSpinner();
-        expireLabel = new javax.swing.JLabel();
-        expireSpinner = new javax.swing.JSpinner();
         conditionLabel = new javax.swing.JLabel();
         conditionTextField = new javax.swing.JTextField();
+        hitCountCheckBox = new javax.swing.JCheckBox();
+        hitCountComboBox = new javax.swing.JComboBox();
+        hitCountSpinner = new javax.swing.JSpinner();
 
-        setLayout(new java.awt.GridBagLayout());
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form"); // NOI18N
+        setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("LBL_Common_Border_Title"))); // NOI18N
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("LBL_Common_Border_Title")));
-        enabledCheckBox.setText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("LBL_CommonEnabled"));
-        enabledCheckBox.setToolTipText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("HINT_Common_Enabled"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
-        add(enabledCheckBox, gridBagConstraints);
+        enabledCheckBox.setText(bundle.getString("LBL_CommonEnabled")); // NOI18N
+        enabledCheckBox.setToolTipText(bundle.getString("HINT_Common_Enabled")); // NOI18N
 
         groupLabel.setLabelFor(groupComboBox);
-        groupLabel.setText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("LBL_CommonGroup"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 12);
-        add(groupLabel, gridBagConstraints);
+        groupLabel.setText(bundle.getString("LBL_CommonGroup")); // NOI18N
 
-        groupComboBox.setToolTipText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("HINT_Common_Group"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
-        add(groupComboBox, gridBagConstraints);
-
-        skipLabel.setLabelFor(skipSpinner);
-        skipLabel.setText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("LBL_CommonSkip"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 12);
-        add(skipLabel, gridBagConstraints);
-
-        skipSpinner.setToolTipText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("HINT_Common_Skip"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
-        add(skipSpinner, gridBagConstraints);
-
-        expireLabel.setLabelFor(expireSpinner);
-        expireLabel.setText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("LBL_CommonExpire"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 12);
-        add(expireLabel, gridBagConstraints);
-
-        expireSpinner.setToolTipText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("HINT_Common_Expire"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
-        add(expireSpinner, gridBagConstraints);
+        groupComboBox.setToolTipText(bundle.getString("HINT_Common_Group")); // NOI18N
 
         conditionLabel.setLabelFor(conditionTextField);
-        conditionLabel.setText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("LBL_Common_Condition"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 12);
-        add(conditionLabel, gridBagConstraints);
+        conditionLabel.setText(bundle.getString("LBL_Common_Condition")); // NOI18N
 
-        conditionTextField.setToolTipText(java.util.ResourceBundle.getBundle("com/bluemarsh/jswat/ui/breakpoint/Form").getString("HINT_Common_Condition"));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
-        add(conditionTextField, gridBagConstraints);
+        conditionTextField.setColumns(20);
+        conditionTextField.setToolTipText(bundle.getString("HINT_Common_Condition")); // NOI18N
 
+        hitCountCheckBox.setText(bundle.getString("LBL_Common_HitCountLabel")); // NOI18N
+
+        hitCountComboBox.setToolTipText(bundle.getString("HINT_Common_HitCountType")); // NOI18N
+
+        hitCountSpinner.setToolTipText(bundle.getString("HINT_Common_HitCountValue")); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(enabledCheckBox)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(conditionLabel)
+                            .addComponent(groupLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(groupComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(conditionTextField)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(hitCountCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(hitCountComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(hitCountSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(enabledCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(groupLabel)
+                    .addComponent(groupComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(conditionLabel)
+                    .addComponent(conditionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(hitCountSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(hitCountComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(hitCountCheckBox))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel conditionLabel;
     private javax.swing.JTextField conditionTextField;
     private javax.swing.JCheckBox enabledCheckBox;
-    private javax.swing.JLabel expireLabel;
-    private javax.swing.JSpinner expireSpinner;
     private javax.swing.JComboBox groupComboBox;
     private javax.swing.JLabel groupLabel;
-    private javax.swing.JLabel skipLabel;
-    private javax.swing.JSpinner skipSpinner;
+    private javax.swing.JCheckBox hitCountCheckBox;
+    private javax.swing.JComboBox hitCountComboBox;
+    private javax.swing.JSpinner hitCountSpinner;
     // End of variables declaration//GEN-END:variables
 }
