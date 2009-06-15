@@ -38,6 +38,8 @@
 
     <!-- Fix the version number in the branding resources. -->
     <target name="-pre-branding">
+        <!-- Force the token filtering to happen every single time. -->
+        <delete dir="${branding.dir}" quiet="true"/>
         <!-- Have to copy everything to make the filtering work. -->
         <copy todir="${branding.dir}" filtering="true">
             <filterset>
