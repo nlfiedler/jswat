@@ -26,7 +26,7 @@
          "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
 
 <settings version="1.0">
-  <module name="com.bluemarsh.jswat.command.view/1" spec="1.0"/>
+  <module name="com.bluemarsh.jswat.views/1" spec="1.0"/>
   <instanceof class="org.openide.windows.TopComponent"/>
   <instance class="com.bluemarsh.jswat.command.view.CommandView"/>
 </settings>

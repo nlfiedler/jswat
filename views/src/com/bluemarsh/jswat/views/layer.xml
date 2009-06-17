@@ -154,20 +154,42 @@
         <folder name="Modes">
             <file name="debugger.wsmode" url="resources/debugger_wsmode.xml"/>
             <folder name="debugger">
-                <file name="breakpoints.wstcref" url="resources/breakpoints_wstcref.xml"/>
-                <file name="command.wstcref" url="resources/command_wstcref.xml"/>
-                <file name="evaluator.wstcref" url="resources/evaluator_wstcref.xml"/>
-                <file name="sessions.wstcref" url="resources/sessions_wstcref.xml"/>
-                <file name="variables.wstcref" url="resources/variables_wstcref.xml"/>
-                <file name="watches.wstcref" url="resources/watches_wstcref.xml"/>
+                <file name="breakpoints.wstcref" url="resources/breakpoints_wstcref.xml">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="command.wstcref" url="resources/command_wstcref.xml">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="evaluator.wstcref" url="resources/evaluator_wstcref.xml">
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="sessions.wstcref" url="resources/sessions_wstcref.xml">
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="variables.wstcref" url="resources/variables_wstcref.xml">
+                    <attr name="position" intvalue="500"/>
+                </file>
+                <file name="watches.wstcref" url="resources/watches_wstcref.xml">
+                    <attr name="position" intvalue="600"/>
+                </file>
             </folder>
             <folder name="explorer">
-                <file name="classes.wstcref" url="resources/classes_wstcref.xml"/>
-                <file name="sources.wstcref" url="resources/sources_wstcref.xml"/>
-                <file name="threads.wstcref" url="resources/threads_wstcref.xml"/>
+                <!-- Try to position with respect to the platform windows. -->
+                <file name="classes.wstcref" url="resources/classes_wstcref.xml">
+                    <attr name="position" intvalue="1000"/>
+                </file>
+                <file name="sources.wstcref" url="resources/sources_wstcref.xml">
+                    <attr name="position" intvalue="1100"/>
+                </file>
+                <file name="threads.wstcref" url="resources/threads_wstcref.xml">
+                    <attr name="position" intvalue="1200"/>
+                </file>
             </folder>
             <folder name="navigator">
-                <file name="stack.wstcref" url="resources/stack_wstcref.xml"/>
+                <!-- Try to position with respect to the platform windows. -->
+                <file name="stack.wstcref" url="resources/stack_wstcref.xml">
+                    <attr name="position" intvalue="1000"/>
+                </file>
             </folder>
         </folder>
 
