@@ -381,9 +381,15 @@ public class DefaultPathManager extends AbstractPathManager {
                             ruuts.add(entryName.substring(0, si));
                         }
                     }
+                    // Not only must there be a single entry, but it must
+                    // also be called "src", otherwise we clobber archives
+                    // that contain a single root like "org" or "com".
                     if (ruuts.size() == 1) {
-                        // There was a superfluous parent folder in the archive.
-                        temp.set(ii, root + '!' + ruuts.iterator().next());
+                        String ruut = ruuts.iterator().next();
+                        if (ruut.equals("src")) {
+                            // There was a 'src' parent folder in the archive.
+                            temp.set(ii, root + '!' + ruut);
+                        }
                     }
                 }
             }

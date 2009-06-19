@@ -145,7 +145,11 @@ public class SourcesView extends AbstractView
         List<String> roots = pm.getSourcePath();
         if (roots != null) {
             for (String root : roots) {
-                FileObject fo = PathConverter.toFileObject(root);
+                FileObject fo = FileUtil.toFileObject(new File(root));
+                if (fo != null) {
+                    // If archive, get the root of the archive.
+                    fo = PathConverter.convertToRoot(fo);
+                }
                 Node node = new SourceRootNode(fo);
                 list.add(node);
             }

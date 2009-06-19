@@ -23,7 +23,6 @@
 
 package com.bluemarsh.jswat.nbcore.path;
 
-import com.bluemarsh.jswat.core.util.Strings;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class PathConverter {
      * Converts a path and file name to a FileObject.
      *
      * @param  path  path and file name.
-     * @return  FileObject.
+     * @return  FileObject, or null if file does not exist.
      */
     public static FileObject toFileObject(String path) {
         File file = new File(path);
@@ -60,8 +59,10 @@ public class PathConverter {
     }
 
     /**
-     * Check if the file is actually an archive, and get the
-     * root of the archive as a file object.
+     * Check if the file is actually an archive, and get the root of the
+     * archive as a file object. Additionally, if the archive contains a
+     * superfluous root directory named "src", that directory is returned
+     * (some versions of the JDK ship with a src.jar like this).
      * 
      * @param  file  file object to possibly be converted.
      * @return  the converted file object.
@@ -69,42 +70,13 @@ public class PathConverter {
     public static FileObject convertToRoot(FileObject file) {
         if (FileUtil.isArchiveFile(file)) {
             file = FileUtil.getArchiveRoot(file);
+            FileObject[] children = file.getChildren();
+            if (children.length == 1 && children[0].getName().equals("src")) {
+                // There was a "src" parent folder in the archive.
+                file = children[0];
+            }
         }
         return file;
-    }
-
-    /**
-     * Splits the given string by the File.pathSeparator character and
-     * returns a list of FileObjects that represent each path entry.
-     * Non-existent paths are not returned.
-     *
-     * @param  path  path entries separated by File.pathSeparator characters.
-     * @return  list of FileObjects.
-     */
-    public static List<FileObject> pathToFileObject(String path) {
-        List<String> paths = Strings.stringToList(path, File.pathSeparator);
-        List<FileObject> spath = new LinkedList<FileObject>();
-        // Convert the strings into FileObjects on the local system.
-        for (String apath : paths) {
-            FileObject fo = toFileObject(apath);
-            if (fo != null) {
-                spath.add(fo);
-            }
-            // Silently leave out any missing path elements.
-        }
-        return spath;
-    }
-
-    /**
-     * Converts the given list of FileObject instances into a String of
-     * path entries separated by File.pathSeparator.
-     *
-     * @param  path  list of paths.
-     * @return  path as a String separated by File.pathSeparator.
-     */
-    public static String toStringPath(List<FileObject> path) {
-        List<String> paths = toStrings(path);
-        return Strings.listToString(paths, File.pathSeparator);
     }
 
     /**
@@ -117,11 +89,10 @@ public class PathConverter {
     public static List<String> toStrings(List<FileObject> path) {
         List<String> paths = new LinkedList<String>();
         for (FileObject fo : path) {
-            // Check if file is the root of an archive FS -- an archive
-            // file will never be the root of a file system.
-            if (fo.isRoot()) {
-                // It was, get the actual archive file.
-                fo = FileUtil.getArchiveFile(fo);
+            // Check if the entry is inside an archive.
+            FileObject arc = FileUtil.getArchiveFile(fo);
+            if (arc != null) {
+                fo = arc;
             }
             File file = FileUtil.toFile(fo);
             String fpath = file.getAbsolutePath();
