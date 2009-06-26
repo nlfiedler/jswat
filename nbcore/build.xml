@@ -19,7 +19,7 @@
 
   Contributor(s): Nathan L. Fiedler.
 
-  $Id: $
+  $Id$
 -->
 <project name="JSwat NetBeans" default="netbeans" basedir=".">
     <description>Builds, tests, and runs the project JSwat NetBeans.</description>
