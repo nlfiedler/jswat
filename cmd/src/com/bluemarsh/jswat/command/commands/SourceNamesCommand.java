@@ -20,7 +20,6 @@
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command.commands;
 
 import com.bluemarsh.jswat.command.AbstractCommand;
@@ -39,7 +38,7 @@ import java.util.List;
 import org.openide.util.NbBundle;
 
 /**
- * Displays source file related information for a class.
+ * Displays source file related information for one or more classes.
  *
  * @author Nathan Fiedler
  */
@@ -63,49 +62,48 @@ public class SourceNamesCommand extends AbstractCommand {
         List<ReferenceType> classes = Classes.findClasses(vm, cname);
 
         if (classes.size() > 0) {
-            ReferenceType type = classes.get(0);
             StringBuilder sb = new StringBuilder();
-            String absent = NbBundle.getMessage(SourceNamesCommand.class,
-                    "CTL_source_AbsentInfo");
-            String val;
-            try {
-                val = type.sourceName();
-            } catch (AbsentInformationException aie) {
-                val = absent;
-            }
-            sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                    "CTL_source_SourceName", val));
-            sb.append('\n');
-            if (vm.canGetSourceDebugExtension()) {
+            for (ReferenceType type : classes) {
                 sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                        "CTL_source_DefaultStratum", type.defaultStratum()));
-                sb.append('\n');
+                        "CTL_source_ClassName", type.name()));
+                String absent = NbBundle.getMessage(SourceNamesCommand.class,
+                        "CTL_source_AbsentInfo");
+                String val;
                 try {
-                    val = type.sourceDebugExtension();
+                    val = type.sourceName();
                 } catch (AbsentInformationException aie) {
                     val = absent;
                 }
                 sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                        "CTL_source_DebugExt", val));
-                sb.append('\n');
-                sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                        "CTL_source_SourcePaths"));
-                try {
-                    List paths = type.sourcePaths(null);
-                    Iterator iter = paths.iterator();
-                    while (iter.hasNext()) {
-                        sb.append("   ");
-                        sb.append(iter.next().toString());
+                        "CTL_source_SourceName", val));
+                if (vm.canGetSourceDebugExtension()) {
+                    sb.append(NbBundle.getMessage(SourceNamesCommand.class,
+                            "CTL_source_DefaultStratum", type.defaultStratum()));
+                    try {
+                        val = type.sourceDebugExtension();
+                    } catch (AbsentInformationException aie) {
+                        val = absent;
+                    }
+                    sb.append(NbBundle.getMessage(SourceNamesCommand.class,
+                            "CTL_source_DebugExt", val));
+                    sb.append(NbBundle.getMessage(SourceNamesCommand.class,
+                            "CTL_source_SourcePaths"));
+                    try {
+                        List<String> paths = type.sourcePaths(null);
+                        Iterator<String> iter = paths.iterator();
+                        while (iter.hasNext()) {
+                            sb.append("   ");
+                            sb.append(iter.next().toString());
+                            sb.append('\n');
+                        }
+                    } catch (AbsentInformationException aie) {
+                        sb.append(absent);
                         sb.append('\n');
                     }
-                } catch (AbsentInformationException aie) {
-                    sb.append(absent);
-                    sb.append('\n');
+                } else {
+                    sb.append(NbBundle.getMessage(SourceNamesCommand.class,
+                            "CTL_source_cannotGetSourceExtension"));
                 }
-            } else {
-                sb.append(NbBundle.getMessage(SourceNamesCommand.class,
-                        "CTL_source_cannotGetSourceExtension"));
-                sb.append('\n');
             }
             writer.write(sb.toString());
         } else {
