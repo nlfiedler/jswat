@@ -67,9 +67,9 @@ public class MethodsCommand extends AbstractCommand {
         if (classes != null && classes.size() > 0) {
             // For each matching class, print its methods.
             StringBuilder sb = new StringBuilder(256);
-            Iterator iter = classes.iterator();
+            Iterator<ReferenceType> iter = classes.iterator();
             while (iter.hasNext()) {
-                printMethods((ReferenceType) iter.next(), sb);
+                printMethods(iter.next(), sb);
                 if (iter.hasNext()) {
                     // Print a separator between the classes.
                     sb.append("---");
@@ -102,9 +102,9 @@ public class MethodsCommand extends AbstractCommand {
             sb.append(method.name());
             sb.append('(');
             // For each parameter, show the parameter type.
-            Iterator iter = method.argumentTypeNames().iterator();
+            Iterator<String> iter = method.argumentTypeNames().iterator();
             while (iter.hasNext()) {
-                sb.append((String) iter.next());
+                sb.append(iter.next());
                 if (iter.hasNext()) {
                     sb.append(", ");
                 }

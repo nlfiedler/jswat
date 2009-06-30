@@ -125,7 +125,7 @@ public class Classes {
      *          if the method could not be found.
      */
     public static Method findMethod(ReferenceType clazz, String methodName,
-                                    List argumentTypes, boolean fuzzySearch)
+                                    List<String> argumentTypes, boolean fuzzySearch)
         throws AmbiguousMethodException,
                InvalidTypeException,
                NoSuchMethodException {
@@ -138,14 +138,14 @@ public class Classes {
         }
         // Need to perform our own method name matching since JDI is broken
         // (does not differentiate constructors from initializers).
-        List methods = clazz.methods();
+        List<Method> methods = clazz.methods();
         // The 'best' matching method found (and how many).
         Method bestMethod = null;
         int bestScore = -1;
         int bestCount = 0;
-        Iterator iter = methods.iterator();
+        Iterator<Method> iter = methods.iterator();
         while (iter.hasNext()) {
-            Method candidate = (Method) iter.next();
+            Method candidate = iter.next();
             if (constructor) {
                 // User specified a constructor, don't bother checking the
                 // name since it may be <init> instead of the class name.
@@ -165,7 +165,7 @@ public class Classes {
             }
             int score = 0;
             for (int ii = 0; ii < candidateTypes.size(); ii++) {
-                String givenSig = (String) argumentTypes.get(ii);
+                String givenSig = argumentTypes.get(ii);
                 if (givenSig.equals("*")) {
                     // Allow '*' to match any argument type for breakpoints.
                     score += 5;
