@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -49,11 +49,11 @@ import org.openide.util.actions.SystemAction;
 public class DefaultThreadGroupNode extends ThreadGroupNode
         implements ContextListener, ThreadConstants {
     /** The thread group reference we represent. */
-    private ThreadGroupReference threadGroup;
+    private final ThreadGroupReference threadGroup;
     /** The name of the thread group. */
-    private String groupName;
+    private final String groupName;
     /** Debugging context we are associated with. */
-    private DebuggingContext debugContext;
+    private final DebuggingContext debugContext;
 
     /**
      * Constructs a GroupNode to represent the given thread group.
@@ -70,14 +70,19 @@ public class DefaultThreadGroupNode extends ThreadGroupNode
         debugContext = context;
         context.addContextListener(WeakListeners.create(
                 ContextListener.class, this, context));
+        setName(groupName);
+        setDisplayName(groupName);
     }
 
+    @Override
     public void changedFrame(ContextEvent ce) {
     }
 
+    @Override
     public void changedLocation(ContextEvent ce) {
     }
 
+    @Override
     public void changedThread(ContextEvent ce) {
         if (!ce.isSuspending() && ce.isCurrentSession()) {
             // Update our visual representation to reflect thread status.
@@ -116,10 +121,6 @@ public class DefaultThreadGroupNode extends ThreadGroupNode
     }
 
     @Override
-    public String getDisplayName() {
-        return groupName;
-    }
-
     public ThreadGroupReference getThreadGroup() {
         return threadGroup;
     }
@@ -147,6 +148,7 @@ public class DefaultThreadGroupNode extends ThreadGroupNode
         return ImageUtilities.loadImage(url);
     }
 
+    @Override
     protected Action[] getNodeActions() {
         return new Action[] {
             SystemAction.get(ResumeAction.class),

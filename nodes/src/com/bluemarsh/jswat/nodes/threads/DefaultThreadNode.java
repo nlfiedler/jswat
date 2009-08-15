@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -48,11 +48,11 @@ import org.openide.util.actions.SystemAction;
 public class DefaultThreadNode extends ThreadNode
         implements ContextListener, ThreadConstants {
     /** The thread reference we represent. */
-    private ThreadReference threadReference;
+    private final ThreadReference threadReference;
     /** The name of the thread. */
-    private String threadName;
+    private final String threadName;
     /** Debugging context we are associated with. */
-    private DebuggingContext debugContext;
+    private final DebuggingContext debugContext;
 
     /**
      * Constructs a ThreadNode to represent the given ThreadReference.
@@ -66,14 +66,19 @@ public class DefaultThreadNode extends ThreadNode
         debugContext = context;
         context.addContextListener(WeakListeners.create(
                 ContextListener.class, this, context));
+        setName(threadName);
+        setDisplayName(threadName);
     }
 
+    @Override
     public void changedFrame(ContextEvent ce) {
     }
 
+    @Override
     public void changedLocation(ContextEvent ce) {
     }
 
+    @Override
     public void changedThread(ContextEvent ce) {
         if (!ce.isSuspending() && ce.isCurrentSession()) {
             // Update our visual representation to reflect thread status.
@@ -149,11 +154,6 @@ public class DefaultThreadNode extends ThreadNode
     }
 
     @Override
-    public String getDisplayName() {
-        return threadName;
-    }
-
-    @Override
     public String getHtmlDisplayName() {
         if (threadReference.equals(debugContext.getThread())) {
             return Nodes.toHTML(threadName, true, false, null);
@@ -178,6 +178,7 @@ public class DefaultThreadNode extends ThreadNode
         return ImageUtilities.loadImage(url);
     }
 
+    @Override
     protected Action[] getNodeActions() {
         return new Action[] {
             SystemAction.get(SetCurrentAction.class),
@@ -193,6 +194,7 @@ public class DefaultThreadNode extends ThreadNode
         return SystemAction.get(SetCurrentAction.class);
     }
 
+    @Override
     public ThreadReference getThread() {
         return threadReference;
     }
