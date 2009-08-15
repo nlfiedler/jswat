@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -37,7 +37,7 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author  Nathan Fiedler
  */
-public abstract class BaseNode extends AbstractNode {
+public abstract class BaseNode extends AbstractNode implements Comparable {
     /** Where objects can be registered for lookup. */
     private InstanceContent lookupContent;
 
@@ -86,6 +86,14 @@ public abstract class BaseNode extends AbstractNode {
     private BaseNode(Children children, Lookup lookup, InstanceContent content) {
         super(children, createLookup(lookup, content));
         lookupContent = content;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        // Default implementation so that some nodes can delay the
+        // invocation of Children.SortedArray.setComparator() since
+        // that can lead to the readAccess/writeAccess upgrade error.
+        return 0;
     }
 
     /**

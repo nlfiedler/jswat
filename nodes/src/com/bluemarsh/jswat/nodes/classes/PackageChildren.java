@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -59,7 +59,6 @@ public class PackageChildren extends Children.SortedArray {
     public PackageChildren(VirtualMachine vm) {
         super();
         this.vm = vm;
-        setComparator(new PackageComparator());
     }
 
     @Override
@@ -119,6 +118,7 @@ public class PackageChildren extends Children.SortedArray {
      */
     private static class ClassComparator implements Comparator<ReferenceType> {
 
+        @Override
         public int compare(ReferenceType o1, ReferenceType o2) {
             String n1 = o1.name();
             String n2 = o2.name();
@@ -126,25 +126,24 @@ public class PackageChildren extends Children.SortedArray {
         }
     }
 
-    /**
-     * Compares ClassNode and PackageNode objects for order.
-     *
-     * @author  Nathan Fiedler
-     */
-    private static class PackageComparator implements Comparator<Node> {
+    @Override
+    public Comparator<? super Node> getComparator() {
+        return new Comparator<Node>() {
 
-        public int compare(Node o1, Node o2) {
-            // Sort package nodes before class nodes.
-            if (o1 instanceof PackageNode && o2 instanceof ClassNode) {
-                return -1;
-            } else if (o1 instanceof ClassNode && o2 instanceof PackageNode) {
-                return 1;
+            @Override
+            public int compare(Node o1, Node o2) {
+                // Sort package nodes before class nodes.
+                if (o1 instanceof PackageNode && o2 instanceof ClassNode) {
+                    return -1;
+                } else if (o1 instanceof ClassNode && o2 instanceof PackageNode) {
+                    return 1;
+                }
+                // Else sort by name alone.
+                String n1 = o1.getDisplayName();
+                String n2 = o2.getDisplayName();
+                return n1.compareTo(n2);
             }
-            // Else sort by name alone.
-            String n1 = o1.getDisplayName();
-            String n2 = o2.getDisplayName();
-            return n1.compareTo(n2);
-        }
+        };
     }
 
     /**
@@ -228,6 +227,7 @@ public class PackageChildren extends Children.SortedArray {
             return shortName;
         }
 
+        @Override
         protected Action[] getNodeActions() {
             return null;
         }

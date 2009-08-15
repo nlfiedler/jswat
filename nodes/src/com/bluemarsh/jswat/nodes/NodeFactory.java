@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2009. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -53,6 +53,7 @@ import com.sun.jdi.StackFrame;
 import com.sun.jdi.ThreadGroupReference;
 import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VirtualMachine;
+import java.awt.EventQueue;
 import org.openide.nodes.Children;
 
 /**
@@ -124,6 +125,7 @@ public abstract class NodeFactory {
      *
      * @param  index  the frame index.
      * @param  frame  the stack frame.
+     * @return  stack frame node.
      */
     public abstract StackFrameNode createStackFrameNode(int index,
             StackFrame frame);
@@ -168,13 +170,29 @@ public abstract class NodeFactory {
         @Override
         public ClassLoaderNode createClassLoaderNode(VirtualMachine vm,
                 ClassLoaderReference loader) {
-            Children ch = new PackageChildren(vm);
+            final Children.SortedArray ch = new PackageChildren(vm);
+            // Set the comparator later to avoid NB issue 10778.
+            EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    ch.setComparator(ch.getComparator());
+                }
+            });
             return new DefaultClassLoaderNode(ch, loader);
         }
 
         @Override
         public ClassNode createClassNode(ReferenceType type) {
-            Children ch = new ClassChildren(type);
+            final Children.SortedArray ch = new ClassChildren(type);
+            // Set the comparator later to avoid NB issue 10778.
+            EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    ch.setComparator(ch.getComparator());
+                }
+            });
             return new DefaultClassNode(ch, type);
         }
 

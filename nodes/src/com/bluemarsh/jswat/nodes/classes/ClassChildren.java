@@ -66,7 +66,6 @@ public class ClassChildren extends Children.SortedArray {
     public ClassChildren(ReferenceType type) {
         super();
         this.type = type;
-        setComparator(new MethodComparator());
     }
 
     @Override
@@ -82,19 +81,17 @@ public class ClassChildren extends Children.SortedArray {
         add(kids);
     }
 
-    /**
-     * Compares MethodNode objects for order.
-     *
-     * @author  Nathan Fiedler
-     */
-    private static class MethodComparator implements Comparator<Node> {
+    @Override
+    public Comparator<? super Node> getComparator() {
+        return new Comparator<Node>() {
 
-        @Override
-        public int compare(Node o1, Node o2) {
-            String n1 = o1.getDisplayName();
-            String n2 = o2.getDisplayName();
-            return n1.compareTo(n2);
-        }
+            @Override
+            public int compare(Node o1, Node o2) {
+                String n1 = o1.getDisplayName();
+                String n2 = o2.getDisplayName();
+                return n1.compareTo(n2);
+            }
+        };
     }
 
     /**
