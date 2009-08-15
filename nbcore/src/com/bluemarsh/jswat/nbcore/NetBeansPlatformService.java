@@ -38,8 +38,7 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
-import org.openide.filesystems.Repository;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.NbPreferences;
 
@@ -62,8 +61,7 @@ public class NetBeansPlatformService implements PlatformService {
 
     @Override
     public void deleteFile(String name) throws IOException {
-        FileSystem fs = Repository.getDefault().getDefaultFileSystem();
-        FileObject fo = fs.findResource(name);
+        FileObject fo = FileUtil.getConfigFile(name);
         if (fo != null && fo.isData()) {
             fo.delete();
         }
@@ -87,8 +85,7 @@ public class NetBeansPlatformService implements PlatformService {
 
     @Override
     public InputStream readFile(String name) throws FileNotFoundException {
-        FileSystem fs = Repository.getDefault().getDefaultFileSystem();
-        FileObject fo = fs.findResource(name);
+        FileObject fo = FileUtil.getConfigFile(name);
         if (fo != null && fo.isData()) {
             return fo.getInputStream();
         }
@@ -121,10 +118,9 @@ public class NetBeansPlatformService implements PlatformService {
 
     @Override
     public OutputStream writeFile(String name) throws IOException {
-        FileSystem fs = Repository.getDefault().getDefaultFileSystem();
-        FileObject fo = fs.findResource(name);
+        FileObject fo = FileUtil.getConfigFile(name);
         if (fo == null) {
-            fo = fs.getRoot().createData(name);
+            fo = FileUtil.getConfigRoot().createData(name);
         }
         FileLock lock = fo.lock();
         locks.put(name, lock);
