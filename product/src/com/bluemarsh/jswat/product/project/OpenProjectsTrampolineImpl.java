@@ -51,10 +51,6 @@ public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
     }
 
     @Override
-    public void openAPI(Project[] project, boolean b) {
-    }
-
-    @Override
     public void removePropertyChangeListenerAPI(PropertyChangeListener propertyChangeListener) {
     }
 
@@ -68,6 +64,11 @@ public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
 
     @Override
     public Future<Project[]> openProjectsAPI() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void openAPI(Project[] arg0, boolean arg1, boolean arg2) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

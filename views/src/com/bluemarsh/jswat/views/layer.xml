@@ -61,7 +61,7 @@
             <folder name="Debugging">
                 <attr name="position" intvalue="50"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.product.Bundle"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:org/openide/resources/actions/empty.gif"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/openide/resources/actions/empty.gif"/>
                 <file name="com-bluemarsh-jswat-views-actions-BreakpointsViewAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/Window/com-bluemarsh-jswat-views-actions-BreakpointsViewAction.instance"/>
                     <attr name="position" intvalue="500"/>

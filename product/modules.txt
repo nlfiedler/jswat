@@ -36,6 +36,7 @@ org.netbeans.modules.lexer
 org.netbeans.modules.lexer.editorbridge
 org.netbeans.modules.lexer.nbbridge
 org.netbeans.modules.options.editor
+org.netbeans.modules.parsing.api
 org.netbeans.modules.project.libraries
 org.netbeans.modules.projectapi
 org.netbeans.modules.projectuiapi
