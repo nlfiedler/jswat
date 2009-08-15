@@ -128,7 +128,7 @@ public class NetBeansPathManager extends AbstractPathManager {
                 return findFile(filename, false);
             }
         }
-        return new FileObjectPathEntry(fo);
+        return fo != null ? new FileObjectPathEntry(fo) : null;
     }
 
     @Override
@@ -414,7 +414,7 @@ public class NetBeansPathManager extends AbstractPathManager {
      */
     private class FileObjectPathEntry implements PathEntry {
         /** The FileObject representing this path entry. */
-        private FileObject fileObject;
+        private final FileObject fileObject;
 
         /**
          * Constructs a new instance of FileObjectPathEntry.
