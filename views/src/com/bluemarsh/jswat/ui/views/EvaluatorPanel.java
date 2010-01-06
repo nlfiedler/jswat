@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -55,6 +55,10 @@ public class EvaluatorPanel extends javax.swing.JPanel implements ActionListener
     private static final long serialVersionUID = 1L;
     /** Where the evaluation result is displayed. */
     private EvaluatorView resultView;
+    /** JComboBox changes the action command when firing events so it is
+     * impossible to distinquish between a "changed" and an "edited" event.
+     * So, save the original command so we can detect which is which. */
+    private final String comboActionCmd;
 
     /**
      * Creates new form EvaluatorPanel.
@@ -65,13 +69,14 @@ public class EvaluatorPanel extends javax.swing.JPanel implements ActionListener
         initComponents();
         evaluateButton.addActionListener(this);
         expressionComboBox.addActionListener(this);
+        comboActionCmd = expressionComboBox.getActionCommand();
         resultView = view;
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
         String cmd = event.getActionCommand();
-        if (!cmd.equals(expressionComboBox.getActionCommand())) {
+        if (!cmd.equals(comboActionCmd)) {
             // The combobox was edited or the evaluate button was invoked.
             SessionManager sm = SessionProvider.getSessionManager();
             Session session = sm.getCurrent();
