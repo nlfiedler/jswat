@@ -14,17 +14,15 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.sessions;
 
 import com.bluemarsh.jswat.core.session.Session;
-import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
@@ -37,6 +35,7 @@ import org.openide.util.actions.NodeAction;
  * @author  Nathan Fiedler
  */
 public class SetCurrentAction extends NodeAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -45,37 +44,39 @@ public class SetCurrentAction extends NodeAction {
         return false;
     }
 
+    @Override
     protected boolean enable(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length == 1) {
-            // Make sure selected sessions are not marked as current.
-            SessionManager sm = SessionProvider.getSessionManager();
-            Session current = sm.getCurrent();
-            Node n = activatedNodes[0];
-            if (n instanceof SessionNode) {
-                SessionNode sessionNode = (SessionNode) n;
-                Session session = sessionNode.getSession();
+            // Make sure selected session is not marked as current.
+            Session current = SessionProvider.getCurrentSession();
+            GetSessionCookie gsc = activatedNodes[0].getCookie(
+                    GetSessionCookie.class);
+            if (gsc != null) {
+                Session session = gsc.getSession();
                 return session != current;
             }
         }
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(SetCurrentAction.class,
                 "LBL_SetCurrentSessionAction");
     }
 
+    @Override
     protected void performAction(Node[] activatedNodes) {
-        SessionManager sm = SessionProvider.getSessionManager();
-        Node n = activatedNodes[0];
-        if (n instanceof SessionNode) {
-            SessionNode sn = (SessionNode) n;
-            Session session = sn.getSession();
-            sm.setCurrent(session);
+        GetSessionCookie gsc = activatedNodes[0].getCookie(
+                GetSessionCookie.class);
+        if (gsc != null) {
+            Session session = gsc.getSession();
+            SessionProvider.getSessionManager().setCurrent(session);
         }
     }
 }

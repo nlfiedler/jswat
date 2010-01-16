@@ -14,30 +14,28 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id$
+ * $Id: $
  */
-package com.bluemarsh.jswat.nodes.stack;
+package com.bluemarsh.jswat.nodes.threads;
 
-import com.bluemarsh.jswat.nodes.BaseNode;
+import com.sun.jdi.ThreadReference;
+import org.openide.nodes.Node;
 
 /**
- * Represents a strack frame in the node tree.
+ * Cookie for getting the JDI thread associated with a node.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
-public abstract class StackFrameNode extends BaseNode implements GetFrameCookie {
+public interface GetThreadCookie extends Node.Cookie {
 
-    /** Name of the location property. */
-    public static final String PROP_LOCATION = "location";
-    /** Name of the source property. */
-    public static final String PROP_SOURCE = "source";
-    /** Name of the code index property. */
-    public static final String PROP_CODEINDEX = "codeIndex";
-
-    @Override
-    public abstract int getFrameIndex();
+    /**
+     * Retrieve the JDI thread associated with this cookie (node).
+     *
+     * @return  associated debuggee thread.
+     */
+    ThreadReference getThread();
 }

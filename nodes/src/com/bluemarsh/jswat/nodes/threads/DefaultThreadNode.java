@@ -68,6 +68,7 @@ public class DefaultThreadNode extends ThreadNode
                 ContextListener.class, this, context));
         setName(threadName);
         setDisplayName(threadName);
+        getCookieSet().add(this);
     }
 
     @Override

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.breakpoints;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -64,6 +63,7 @@ import org.openide.util.actions.SystemAction;
  */
 public class DefaultBreakpointNode extends BreakpointNode implements
         PropertyChangeListener, ShowSourceCookie {
+
     /** The breakpoint we represent. */
     private Breakpoint breakpoint;
 
@@ -77,7 +77,7 @@ public class DefaultBreakpointNode extends BreakpointNode implements
         breakpoint = bp;
         bp.addPropertyChangeListener(this);
         if (bp instanceof LineBreakpoint) {
-            getLookupContent().add(this);
+            getCookieSet().add(this);
         }
     }
 
@@ -100,8 +100,8 @@ public class DefaultBreakpointNode extends BreakpointNode implements
                     continue;
                 }
                 String name = prop.getName();
-                if (name.equals("class") || name.equals("breakpointGroup") ||
-                        name.equals("hitCount")) {
+                if (name.equals("class") || name.equals("breakpointGroup")
+                        || name.equals("hitCount")) {
                     // Ignore these useless properties.
                     continue;
                 }
@@ -130,10 +130,10 @@ public class DefaultBreakpointNode extends BreakpointNode implements
                 }
                 set.put(node);
             }
-        }  catch (IntrospectionException ie) {
+        } catch (IntrospectionException ie) {
             ErrorManager.getDefault().notify(ie);
             set.put(new ExceptionProperty(ie));
-        }  catch (MissingResourceException mre) {
+        } catch (MissingResourceException mre) {
             ErrorManager.getDefault().notify(mre);
             set.put(new ExceptionProperty(mre));
         }
@@ -175,12 +175,12 @@ public class DefaultBreakpointNode extends BreakpointNode implements
 
     @Override
     protected Action[] getNodeActions() {
-        return new Action[] {
-            SystemAction.get(NewAction.class),
-            SystemAction.get(DeleteAction.class),
-            SystemAction.get(EnableAction.class),
-            SystemAction.get(DisableAction.class),
-        };
+        return new Action[]{
+                    SystemAction.get(NewAction.class),
+                    SystemAction.get(DeleteAction.class),
+                    SystemAction.get(EnableAction.class),
+                    SystemAction.get(DisableAction.class)
+                };
     }
 
     @Override

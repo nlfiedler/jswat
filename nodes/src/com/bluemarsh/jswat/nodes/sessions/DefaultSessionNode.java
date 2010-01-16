@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2008. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.sessions;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -58,6 +57,7 @@ import org.openide.util.actions.SystemAction;
  */
 public class DefaultSessionNode extends SessionNode implements
         PropertyChangeListener, SessionListener, SessionManagerListener {
+
     /** Our Session. */
     private Session session;
 
@@ -74,6 +74,7 @@ public class DefaultSessionNode extends SessionNode implements
         SessionManager sm = SessionProvider.getSessionManager();
         sm.addSessionManagerListener(WeakListeners.create(
                 SessionManagerListener.class, this, sm));
+        getCookieSet().add(this);
     }
 
     @Override
@@ -106,7 +107,7 @@ public class DefaultSessionNode extends SessionNode implements
                     SessionNode.class, "CTL_SessionsView_Column_Name_" + key));
             prop.setShortDescription(NbBundle.getMessage(
                     SessionNode.class, "CTL_SessionsView_Column_Desc_" + key));
-        }  catch (NoSuchMethodException nsme) {
+        } catch (NoSuchMethodException nsme) {
             ErrorManager.getDefault().notify(nsme);
             prop = new ExceptionProperty(nsme);
         }
@@ -160,6 +161,7 @@ public class DefaultSessionNode extends SessionNode implements
         return ImageUtilities.loadImage(url);
     }
 
+    @Override
     public Session getSession() {
         return session;
     }
@@ -169,6 +171,7 @@ public class DefaultSessionNode extends SessionNode implements
         return true;
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String name = evt.getPropertyName();
         if (name.equals(Session.PROP_SESSION_NAME)) {
@@ -178,26 +181,29 @@ public class DefaultSessionNode extends SessionNode implements
         // in our "defined property set".
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         firePropertyChange(PROP_STATE, null, null);
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         firePropertyChange(PROP_STATE, null, null);
     }
 
+    @Override
     protected Action[] getNodeActions() {
-        return new Action[] {
-            SystemAction.get(CopySessionAction.class),
-            SystemAction.get(DeleteAction.class),
-            SystemAction.get(SetCurrentAction.class),
-            SystemAction.get(FinishSessionAction.class),
-            SystemAction.get(FinishAllAction.class),
-            SystemAction.get(DescribeDebuggeeAction.class),
-        };
+        return new Action[]{
+                    SystemAction.get(CopySessionAction.class),
+                    SystemAction.get(DeleteAction.class),
+                    SystemAction.get(SetCurrentAction.class),
+                    SystemAction.get(FinishSessionAction.class),
+                    SystemAction.get(FinishAllAction.class),
+                    SystemAction.get(DescribeDebuggeeAction.class),};
     }
 
     @Override
@@ -205,24 +211,30 @@ public class DefaultSessionNode extends SessionNode implements
         return SystemAction.get(SetCurrentAction.class);
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
         firePropertyChange(PROP_STATE, null, null);
     }
 
+    @Override
     public void sessionAdded(SessionManagerEvent e) {
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
         // Our "current" status may have changed.
         fireIconChange();
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
         firePropertyChange(PROP_STATE, null, null);
     }
@@ -244,10 +256,12 @@ public class DefaultSessionNode extends SessionNode implements
                     "CTL_SessionsView_Column_Desc_" + PROP_NAME));
         }
 
+        @Override
         public Object getValue() {
             return session.getProperty(Session.PROP_SESSION_NAME);
         }
 
+        @Override
         public void setValue(Object val) {
             String name = val.toString();
             session.setProperty(Session.PROP_SESSION_NAME, name);

@@ -14,19 +14,17 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.threads;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
 import com.bluemarsh.jswat.core.context.DebuggingContext;
 import com.bluemarsh.jswat.core.session.Session;
-import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.sun.jdi.ThreadReference;
 import org.openide.nodes.Node;
@@ -40,36 +38,39 @@ import org.openide.util.actions.NodeAction;
  * @author  Nathan Fiedler
  */
 public class SetCurrentAction extends NodeAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
-    protected boolean enable(Node[] activatedNodes) {
-        if (activatedNodes != null && activatedNodes.length == 1) {
-            return activatedNodes[0] instanceof ThreadNode;
-        }
-        return false;
+    @Override
+    protected boolean enable(Node[] nodes) {
+        return nodes != null && nodes.length == 1;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(SetCurrentAction.class,
                 "LBL_SetCurrentThreadAction_Name");
     }
 
+    @Override
     protected void performAction(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length == 1) {
-            Node n = activatedNodes[0];
-            if (n instanceof ThreadNode) {
-                ThreadReference tr = ((ThreadNode) n).getThread();
-                SessionManager sm = SessionProvider.getSessionManager();
-                Session session = sm.getCurrent();
+            GetThreadCookie gtc = activatedNodes[0].getCookie(
+                    GetThreadCookie.class);
+            if (gtc != null) {
+                ThreadReference tr = gtc.getThread();
+                Session session = SessionProvider.getCurrentSession();
                 DebuggingContext dc = ContextProvider.getContext(session);
                 dc.setThread(tr, false);
             }

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.sessions;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -31,7 +30,8 @@ import com.bluemarsh.jswat.nodes.BaseNode;
  *
  * @author  Nathan Fiedler
  */
-public abstract class SessionNode extends BaseNode {
+public abstract class SessionNode extends BaseNode implements GetSessionCookie {
+
     /** Name of the debuggee address property. */
     public static final String PROP_HOST = "host";
     /** Name of the session state property. */
@@ -39,10 +39,6 @@ public abstract class SessionNode extends BaseNode {
     /** Name of the session stratum property. */
     public static final String PROP_LANG = "lang";
 
-    /**
-     * Returns the Session this node represents.
-     *
-     * @return  session.
-     */
+    @Override
     public abstract Session getSession();
 }

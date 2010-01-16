@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.stack;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
@@ -66,6 +65,7 @@ import org.openide.util.actions.SystemAction;
  */
 public class DefaultStackFrameNode extends StackFrameNode
         implements ShowSourceCookie, SessionListener {
+
     /** The stack frame index for the frame we represent (zero-based). */
     private int frameIndex;
     /** The class and method of the frame location. */
@@ -113,7 +113,7 @@ public class DefaultStackFrameNode extends StackFrameNode
         Session session = sm.getCurrent();
         DebuggingContext dc = ContextProvider.getContext(session);
         if (dc.getThread() != null) {
-            getLookupContent().add(this);
+            getCookieSet().add(this);
             // Need to listen for when the session resumes, after which this
             // frame will be invalid and we cannot show the source anymore.
             session.addSessionListener(WeakListeners.create(
@@ -198,12 +198,11 @@ public class DefaultStackFrameNode extends StackFrameNode
 
     @Override
     protected Action[] getNodeActions() {
-        return new Action[] {
-            SystemAction.get(SetCurrentAction.class),
-            SystemAction.get(ShowSourceAction.class),
-            SystemAction.get(PopFramesAction.class),
-            SystemAction.get(SetBreakpointAction.class),
-        };
+        return new Action[]{
+                    SystemAction.get(SetCurrentAction.class),
+                    SystemAction.get(ShowSourceAction.class),
+                    SystemAction.get(PopFramesAction.class),
+                    SystemAction.get(SetBreakpointAction.class),};
     }
 
     @Override
@@ -217,7 +216,7 @@ public class DefaultStackFrameNode extends StackFrameNode
 
     @Override
     public void resuming(SessionEvent sevt) {
-        getLookupContent().remove(this);
+        getCookieSet().remove(this);
     }
 
     @Override

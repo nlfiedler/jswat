@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.classes;
 
 import com.bluemarsh.jswat.core.path.PathEntry;
@@ -52,6 +51,7 @@ import org.openide.util.actions.SystemAction;
  * @author  Nathan Fiedler
  */
 public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
+
     /** The class reference we represent. */
     private ReferenceType clazz;
     /** The name of the class. */
@@ -70,7 +70,7 @@ public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
         this.clazz = clazz;
         name = clazz.name();
         shortName = Names.getShortClassName(name);
-        getLookupContent().add(this);
+        getCookieSet().add(this);
     }
 
     /**
@@ -124,11 +124,10 @@ public class DefaultClassNode extends ClassNode implements ShowSourceCookie {
 
     @Override
     protected Action[] getNodeActions() {
-        return new Action[] {
-            SystemAction.get(ShowSourceAction.class),
-            SystemAction.get(HotSwapAction.class),
-            SystemAction.get(TraceAction.class),
-        };
+        return new Action[]{
+                    SystemAction.get(ShowSourceAction.class),
+                    SystemAction.get(HotSwapAction.class),
+                    SystemAction.get(TraceAction.class),};
     }
 
     @Override

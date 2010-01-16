@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.stack;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
@@ -40,14 +39,16 @@ import org.openide.util.actions.NodeAction;
  * @author  Nathan Fiedler
  */
 public class SetCurrentAction extends NodeAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected boolean asynchronous() {
-        // performAction() should run in event thread
         return false;
     }
 
+    @Override
     protected boolean enable(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length == 1) {
             Session session = SessionProvider.getCurrentSession();
@@ -59,21 +60,24 @@ public class SetCurrentAction extends NodeAction {
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(SetCurrentAction.class,
                 "LBL_StackView_SetCurrentFrameAction");
     }
 
+    @Override
     protected void performAction(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length == 1) {
-            Node n = activatedNodes[0];
-            if (n instanceof StackFrameNode) {
-                StackFrameNode fn = (StackFrameNode) n;
-                int frame = fn.getFrameIndex();
+            GetFrameCookie gfc = activatedNodes[0].getCookie(
+                    GetFrameCookie.class);
+            if (gfc != null) {
+                int frame = gfc.getFrameIndex();
                 Session session = SessionProvider.getCurrentSession();
                 DebuggingContext dc = ContextProvider.getContext(session);
                 try {

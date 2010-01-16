@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007-2009. All Rights Reserved.
+ * are Copyright (C) 2007-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.classes;
 
 import com.bluemarsh.jswat.core.path.PathEntry;
@@ -55,6 +54,7 @@ import org.openide.util.actions.SystemAction;
  * @author Nathan Fiedler
  */
 public class ClassChildren extends Children.SortedArray {
+
     /** The reference type from which to get class members. */
     private ReferenceType type;
 
@@ -104,6 +104,7 @@ public class ClassChildren extends Children.SortedArray {
 //        private static final String INITIALIZER = UNUSED?
 //                "org/netbeans/modules/java/source/resources/icons/initializer.png";
         // For these references to work, need dependency on "Java Source" NetBeans module.
+
         private static final String INITIALIZER_ST =
                 "org/netbeans/modules/java/source/resources/icons/initializerStatic.png";
         private static final String CONSTRUCTOR_PUBLIC =
@@ -143,7 +144,7 @@ public class ClassChildren extends Children.SortedArray {
         public DefaultMethodNode(Method method) {
             super();
             this.method = method;
-            getLookupContent().add(this);
+            getCookieSet().add(this);
 
             // Build out the long description of this method.
             StringBuilder sb = new StringBuilder();
@@ -245,10 +246,10 @@ public class ClassChildren extends Children.SortedArray {
 
         @Override
         protected Action[] getNodeActions() {
-            return new Action[] {
-                SystemAction.get(ShowSourceAction.class),
-                SystemAction.get(MethodBreakpointAction.class),
-            };
+            return new Action[]{
+                        SystemAction.get(ShowSourceAction.class),
+                        SystemAction.get(MethodBreakpointAction.class)
+                    };
         }
 
         @Override
