@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -31,6 +30,7 @@ import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.bluemarsh.jswat.nodes.NodeFactory;
 import com.bluemarsh.jswat.nodes.sessions.CreateSessionAction;
 import com.bluemarsh.jswat.nodes.sessions.FinishAllAction;
+import com.bluemarsh.jswat.nodes.sessions.GetSessionCookie;
 import com.bluemarsh.jswat.nodes.sessions.SessionNode;
 import java.awt.BorderLayout;
 import java.io.IOException;
@@ -67,6 +67,7 @@ import org.openide.windows.WindowManager;
  */
 public class SessionsView extends AbstractView
         implements ExplorerManager.Provider, SessionManagerListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The singleton instance of this class. */
@@ -99,12 +100,12 @@ public class SessionsView extends AbstractView
         // Create the session view.
         nodeView = new PersistentTreeTableView();
         nodeView.setRootVisible(false);
-        columns = new Node.Property[] {
-            new Column(SessionNode.PROP_NAME, true, true),
-            new Column(SessionNode.PROP_HOST, false, true),
-            new Column(SessionNode.PROP_STATE, false, true),
-            new Column(SessionNode.PROP_LANG, false, true),
-        };
+        columns = new Node.Property[]{
+                    new Column(SessionNode.PROP_NAME, true, true),
+                    new Column(SessionNode.PROP_HOST, false, true),
+                    new Column(SessionNode.PROP_STATE, false, true),
+                    new Column(SessionNode.PROP_LANG, false, true)
+                };
         nodeView.setProperties(columns);
         // This, oddly enough, enables the column hiding feature.
         nodeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -121,12 +122,13 @@ public class SessionsView extends AbstractView
         // Use a simple root node for which we can set the display name;
         // otherwise the logical root's properties affect the table headers.
         Node rootNode = new AbstractNode(kids) {
+
             @Override
             public Action[] getActions(boolean b) {
-                return new Action[] {
-                    SystemAction.get(CreateSessionAction.class),
-                    SystemAction.get(FinishAllAction.class),
-                };
+                return new Action[]{
+                            SystemAction.get(CreateSessionAction.class),
+                            SystemAction.get(FinishAllAction.class)
+                        };
             }
         };
         // Surprisingly, this becomes the name and description of the first column.
@@ -189,16 +191,16 @@ public class SessionsView extends AbstractView
                 PREFERRED_ID);
         if (win == null) {
             ErrorManager.getDefault().log(ErrorManager.WARNING,
-                    "Cannot find '" + PREFERRED_ID +
-                    "' component in the window system");
+                    "Cannot find '" + PREFERRED_ID
+                    + "' component in the window system");
             return getDefault();
         }
         if (win instanceof SessionsView) {
             return (SessionsView) win;
         }
         ErrorManager.getDefault().log(ErrorManager.WARNING,
-                "There seem to be multiple components with the '" +
-                PREFERRED_ID + "' ID, this a potential source of errors");
+                "There seem to be multiple components with the '"
+                + PREFERRED_ID + "' ID, this a potential source of errors");
         return getDefault();
     }
 
@@ -260,7 +262,7 @@ public class SessionsView extends AbstractView
         Session session = e.getSession();
         SessionNode node = factory.createSessionNode(session);
         Children children = explorerManager.getRootContext().getChildren();
-        Node[] nodes = { node };
+        Node[] nodes = {node};
         children.add(nodes);
     }
 
@@ -272,12 +274,10 @@ public class SessionsView extends AbstractView
         Node[] nodes = children.getNodes();
         Node[] remove = new Node[1];
         for (Node n : nodes) {
-            if (n instanceof SessionNode) {
-                SessionNode sn = (SessionNode) n;
-                if (sn.getSession() == session) {
-                    remove[0] = sn;
-                    break;
-                }
+            GetSessionCookie gsc = n.getCookie(GetSessionCookie.class);
+            if (gsc != null && gsc.getSession().equals(session)) {
+                remove[0] = n;
+                break;
             }
         }
         children.remove(remove);
@@ -300,6 +300,7 @@ public class SessionsView extends AbstractView
      * @author  Nathan Fiedler
      */
     protected class Column extends PropertySupport.ReadOnly {
+
         /** The keyword for this column. */
         private String key;
 
@@ -313,8 +314,8 @@ public class SessionsView extends AbstractView
         @SuppressWarnings("unchecked")
         public Column(String key, boolean tree, boolean sortable) {
             super(key, String.class,
-                  NbBundle.getMessage(Column.class, "CTL_SessionsView_Column_Name_" + key),
-                  NbBundle.getMessage(Column.class, "CTL_SessionsView_Column_Desc_" + key));
+                    NbBundle.getMessage(Column.class, "CTL_SessionsView_Column_Name_" + key),
+                    NbBundle.getMessage(Column.class, "CTL_SessionsView_Column_Desc_" + key));
             this.key = key;
             setValue("TreeColumnTTV", Boolean.valueOf(tree));
             setValue("ComparableColumnTTV", Boolean.valueOf(sortable));

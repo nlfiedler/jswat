@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -110,6 +110,7 @@ public class PersistentTreeTableView extends TreeTableView {
      * @param  node  node to be selected.
      */
     public void scrollAndSelectNode(Node node) {
+// XXX: this is not working at all!
         // It is basically guaranteed that the model is a NodeTreeModel.
         NodeTreeModel model = (NodeTreeModel) tree.getModel();
         TreeNode tn = Visualizer.findVisualizer(node);

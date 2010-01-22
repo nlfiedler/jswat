@@ -18,23 +18,41 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: $
+ * $Id$
  */
-package com.bluemarsh.jswat.nodes.stack;
+package com.bluemarsh.jswat.nodes.variables;
 
+import com.bluemarsh.jswat.nodes.variables.VariableNode.Kind;
+import com.sun.jdi.Field;
+import com.sun.jdi.ObjectReference;
 import org.openide.nodes.Node;
 
 /**
- * Cookie for returning the stack frame index associated with the cookie (node).
+ * Cookie for getting the JDI variable information associated with a node.
  *
  * @author Nathan Fiedler
  */
-public interface GetFrameCookie extends Node.Cookie {
+public interface GetVariableCookie extends Node.Cookie {
 
     /**
-     * Returns the index of the frame this node represents.
+     * Returns the field this node represents, if it is not a local variable.
      *
-     * @return  frame index for this node (zero-based).
+     * @return  field, or null if local variable.
      */
-    int getFrameIndex();
+    Field getField();
+
+    /**
+     * Returns the kind of variable this node represents.
+     *
+     * @return  kind of variable.
+     * @see #Kind
+     */
+    Kind getKind();
+
+    /**
+     * Returns the object reference this node is associated with.
+     *
+     * @return  object reference.
+     */
+    ObjectReference getObjectReference();
 }

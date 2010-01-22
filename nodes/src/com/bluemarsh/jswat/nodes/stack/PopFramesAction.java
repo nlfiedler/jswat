@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.stack;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
@@ -29,6 +28,7 @@ import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.sun.jdi.IncompatibleThreadStateException;
+import com.sun.jdi.InvalidStackFrameException;
 import com.sun.jdi.NativeMethodException;
 import com.sun.jdi.StackFrame;
 import com.sun.jdi.ThreadReference;
@@ -47,6 +47,7 @@ import org.openide.util.actions.NodeAction;
  * @author  Nathan Fiedler
  */
 public class PopFramesAction extends NodeAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -55,53 +56,72 @@ public class PopFramesAction extends NodeAction {
         return false;
     }
 
-    protected boolean enable(Node[] activatedNodes) {
-        if (activatedNodes != null && activatedNodes.length == 1) {
+    @Override
+    protected boolean enable(Node[] nodes) {
+        if (nodes != null && nodes.length == 1) {
             SessionManager sm = SessionProvider.getSessionManager();
             Session session = sm.getCurrent();
-            if (session.isSuspended()) {
-                DebuggingContext dc = ContextProvider.getContext(session);
-                if (dc.getThread() != null) {
-                    VirtualMachine vm = session.getConnection().getVM();
-                    return vm.canPopFrames() && vm.canBeModified();
+            try {
+                if (session.isSuspended()) {
+                    DebuggingContext dc = ContextProvider.getContext(session);
+                    if (dc.getThread() != null) {
+                        GetFrameCookie gfc = nodes[0].getCookie(GetFrameCookie.class);
+                        if (gfc != null) {
+                            // Add one for easy comparison to check if this is
+                            // the earliest frame, which can never be popped.
+                            int frame = gfc.getFrameIndex() + 1;
+                            if (frame < dc.getThread().frameCount()) {
+                                VirtualMachine vm = session.getConnection().getVM();
+                                return vm.canPopFrames() && vm.canBeModified();
+                            }
+                        }
+                    }
                 }
+            } catch (IncompatibleThreadStateException itse) {
+                ErrorManager.getDefault().notify(itse);
             }
         }
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(PopFramesAction.class,
                 "LBL_StackView_PopFramesAction");
     }
 
-    protected void performAction(Node[] activatedNodes) {
-        if (activatedNodes != null && activatedNodes.length == 1) {
-            Node n = activatedNodes[0];
-            if (n instanceof StackFrameNode) {
-                StackFrameNode fn = (StackFrameNode) n;
-                int index = fn.getFrameIndex();
+    @Override
+    protected void performAction(Node[] nodes) {
+        if (nodes != null && nodes.length == 1) {
+            GetFrameCookie gfc = nodes[0].getCookie(GetFrameCookie.class);
+            if (gfc != null) {
+                int index = gfc.getFrameIndex();
                 Session session = SessionProvider.getCurrentSession();
                 DebuggingContext dc = ContextProvider.getContext(session);
                 ThreadReference thread = dc.getThread();
                 try {
                     StackFrame frame = thread.frame(index);
                     thread.popFrames(frame);
-                    // Cause the context to be reset.
-                    dc.setThread(thread, false);
-                }  catch (NativeMethodException nme) {
+                } catch (NativeMethodException nme) {
                     NotifyDescriptor desc = new NotifyDescriptor.Message(
                             NbBundle.getMessage(PopFramesAction.class,
                             "ERR_StackView_PoppingNativeMethod"),
                             NotifyDescriptor.ERROR_MESSAGE);
                     DialogDisplayer.getDefault().notify(desc);
-                }  catch (IncompatibleThreadStateException itse) {
+                } catch (IncompatibleThreadStateException itse) {
                     // view should have been cleared already
                     ErrorManager.getDefault().notify(itse);
+                } catch (InvalidStackFrameException isfe) {
+                    // This happens if user tries to pop all of the frames.
+                    ErrorManager.getDefault().notify(isfe);
+                } finally {
+                    // Cause the context to be reset no matter what happens.
+                    dc.setThread(thread, false);
                 }
             }
         }

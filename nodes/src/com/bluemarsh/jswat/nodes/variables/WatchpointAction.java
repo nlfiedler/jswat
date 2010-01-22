@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.variables;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -45,60 +44,64 @@ import org.openide.util.actions.NodeAction;
  * @author  Nathan Fiedler
  */
 public class WatchpointAction extends NodeAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected boolean asynchronous() {
-        // performAction() should run in event thread
         return false;
     }
 
+    @Override
     protected boolean enable(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length > 0) {
-            boolean enable = true;
             for (Node n : activatedNodes) {
-                if (n instanceof VariableNode) {
-                    VariableNode vn = (VariableNode) n;
-                    Field f = vn.getField();
+                GetVariableCookie gvc = n.getCookie(GetVariableCookie.class);
+                if (gvc == null) {
+                    return false;
+                } else {
+                    Field f = gvc.getField();
                     if (f == null) {
-                        enable = false;
-                        break;
+                        return false;
                     } else {
                         VirtualMachine vm = f.virtualMachine();
-                        if (!vm.canWatchFieldModification() ||
-                                vn.getObjectReference() != null &&
-                                !vm.canUseInstanceFilters()) {
-                            enable = false;
-                            break;
+                        if (!vm.canWatchFieldModification()
+                                || gvc.getObjectReference() != null
+                                && !vm.canUseInstanceFilters()) {
+                            return false;
                         }
                     }
                 }
             }
-            return enable;
+            return true;
         } else {
             return false;
         }
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(WatchpointAction.class,
                 "LBL_BreakpointAction_Name");
     }
 
+    @Override
     protected void performAction(Node[] activatedNodes) {
         Session session = SessionProvider.getCurrentSession();
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
         for (Node n : activatedNodes) {
-            VariableNode vn = n.getCookie(VariableNode.class);
-            if (vn != null) {
-                Field field = vn.getField();
+            GetVariableCookie gvc = n.getCookie(GetVariableCookie.class);
+            if (gvc != null) {
+                Field field = gvc.getField();
                 if (field != null) {
-                    ObjectReference obj = vn.getObjectReference();
+                    ObjectReference obj = gvc.getObjectReference();
                     Breakpoint bp = null;
                     if (obj != null) {
                         bp = bf.createWatchBreakpoint(

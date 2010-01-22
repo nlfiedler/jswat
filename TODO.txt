@@ -1,3 +1,27 @@
 JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
+
+- Issue 41: expanded nodes in tree/table views collapse on refresh
+- Make sure the faded tree/table columns are visible in Linux/Solaris/Windows
+- Classes view find action needs a keyboard shortcut
+- Our tree-table view does not scroll and show nodes properly
+- Fix all XXX/TODO issues in the code
+- Issue 51: breakpoints sometimes fail to suspend debuggee
+  - Look at how this might happen, that a resolved breakpoint doesn't suspend
+  - Add unit tests to test for a breakpoint being hit multiple times
+  - Use Cobertura to improve code coverage in unit tests
+- Issue 52: update build instructions to mention updating installed IDE
+  prior to building JSwat, since dependencies may require the absolute
+  latest modules
+- Document all the areas to test when upgrading to new NetBeans version
+  - node double-click
+  - node right-click actions
+  - expanded node refresh
+- Add to the release sanity test checklist
+  - Install previous release version, run it, create something of everything
+    (sessions, breakpoints, watches)
+  - Install the new version and start it, watching the log for any issues
+  - Make sure everything appears as before (sessions, breakpoints, watches)
+- Update the splash and about image copyright years
+- Task 42: make a release based on NetBeans 6.8

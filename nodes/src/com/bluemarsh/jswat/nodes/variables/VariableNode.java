@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2008. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.variables;
 
 import com.bluemarsh.jswat.core.util.Arrays;
@@ -44,7 +43,8 @@ import org.openide.util.actions.SystemAction;
  * @author Nathan Fiedler
  */
 public class VariableNode extends AbstractNode implements
-        Comparable<Node>, Node.Cookie {
+        Comparable<Node>, GetVariableCookie {
+
     /** Name of the type property. */
     public static final String PROP_TYPE = "type";
     /** Name of the fully-qualified typename property. */
@@ -53,10 +53,6 @@ public class VariableNode extends AbstractNode implements
     public static final String PROP_VALUE = "value";
     /** Name of the declaring type property. */
     public static final String PROP_DECLARING_TYPE = "declaringType";
-    /** What kind of variable this is. */
-    public static enum Kind {
-        FIELD, LOCAL, STATIC_FIELD, THIS
-    }
     /** The name of the variable. */
     private String name;
     /** The type of the variable (usually a fully-qualified class name). */
@@ -69,6 +65,12 @@ public class VariableNode extends AbstractNode implements
     private ObjectReference object;
     /** Array of actions for our node. */
     private Action[] nodeActions;
+
+    /** What kind of variable this is. */
+    public static enum Kind {
+
+        FIELD, LOCAL, STATIC_FIELD, THIS
+    }
 
     /**
      * Creates a VariableNode to represent the given class loader.
@@ -83,13 +85,14 @@ public class VariableNode extends AbstractNode implements
         this.name = name;
         this.type = type;
         this.kind = kind;
-        nodeActions = new Action[] {
-            SystemAction.get(WatchpointAction.class),
-            SystemAction.get(AddWatchAction.class),
-        };
+        nodeActions = new Action[]{
+                    SystemAction.get(WatchpointAction.class),
+                    SystemAction.get(AddWatchAction.class)
+                };
         getCookieSet().add(this);
     }
 
+    @Override
     public int compareTo(Node o) {
         // Keep 'this' above the others, and 'referents' below.
         if (name.equals("this") || o.getName().equals(ReferentsNode.NAME)) {
@@ -107,11 +110,12 @@ public class VariableNode extends AbstractNode implements
      * @return  new property.
      */
     protected Node.Property createProperty(String key, String value) {
+// XXX: view shows these properties as faded, check other platforms to make sure it's visible
         String desc = NbBundle.getMessage(
                 VariableNode.class, "CTL_VariableNode_Property_Desc_" + key);
-        String name = NbBundle.getMessage(
+        String pname = NbBundle.getMessage(
                 VariableNode.class, "CTL_VariableNode_Property_Name_" + key);
-        return new ReadOnlyProperty(key, String.class, name, desc, value);
+        return new ReadOnlyProperty(key, String.class, pname, desc, value);
     }
 
     @Override
@@ -170,21 +174,12 @@ public class VariableNode extends AbstractNode implements
         }
     }
 
-    /**
-     * Returns the field this node represents, if it is not a local variable.
-     *
-     * @return  field, or null if local variable.
-     */
+    @Override
     public Field getField() {
         return field;
     }
 
-    /**
-     * Returns the kind of variable this node represents.
-     *
-     * @return  kind of variable.
-     * @see #Kind
-     */
+    @Override
     public Kind getKind() {
         return kind;
     }
@@ -194,11 +189,7 @@ public class VariableNode extends AbstractNode implements
         return name;
     }
 
-    /**
-     * Returns the object reference this node is associated with.
-     *
-     * @return  object reference.
-     */
+    @Override
     public ObjectReference getObjectReference() {
         return object;
     }

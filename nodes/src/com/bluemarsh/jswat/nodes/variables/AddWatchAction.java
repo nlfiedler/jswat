@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nodes.variables;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -42,56 +41,60 @@ import org.openide.util.actions.NodeAction;
  * @author  Nathan Fiedler
  */
 public class AddWatchAction extends NodeAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected boolean asynchronous() {
-        // performAction() should run in event thread
         return false;
     }
 
+    @Override
     protected boolean enable(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length > 0) {
-            boolean enable = true;
-            // For now, just allow watching objects.
             for (Node n : activatedNodes) {
-                if (!(n instanceof VariableNode)) {
-                    enable = false;
-                    break;
+                GetVariableCookie gvc = n.getCookie(GetVariableCookie.class);
+                if (gvc == null) {
+                    return false;
                 }
             }
-            return enable;
+            return true;
         } else {
             return false;
         }
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(AddWatchAction.class,
                 "LBL_WatchAction_Name");
     }
 
+    @Override
     protected void performAction(Node[] activatedNodes) {
         Session session = SessionProvider.getCurrentSession();
         WatchManager wm = WatchProvider.getWatchManager(session);
         WatchFactory wf = WatchProvider.getWatchFactory();
         for (Node n : activatedNodes) {
-            if (n instanceof VariableNode) {
-                VariableNode vn = (VariableNode) n;
+            GetVariableCookie gvc = n.getCookie(GetVariableCookie.class);
+            if (gvc != null) {
                 StringBuilder name = new StringBuilder();
-                if (vn.getKind() == Kind.THIS) {
+                if (gvc.getKind() == Kind.THIS) {
                     // Shortcut for 'this' node.
                     name.append("this");
                 } else {
                     // Otherwise, build out a complete reference.
-                    name.insert(0, vn.getName());
-                    Node node = vn.getParentNode();
-                    while (node != null && node instanceof VariableNode &&
-                            ((VariableNode) node).getKind() != Kind.THIS) {
+                    name.insert(0, n.getName());
+                    Node node = n.getParentNode();
+                    while (node != null
+                            && node.getCookie(GetVariableCookie.class) != null
+                            && node.getCookie(GetVariableCookie.class).getKind() != Kind.THIS) {
                         // Add period separator for all but array access.
                         if (name.charAt(0) != '[') {
                             name.insert(0, '.');

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -515,7 +515,7 @@ public class ClassesView extends AbstractView
      *
      * @author  Nathan Fiedler
      */
-    private static class ClassesFindAction extends AbstractAction
+    private static class ClassesFindAction extends AbstractAction // TODO: needs a keyboard shortcut
             implements Findable {
         /** The associated view for this finder. */
         private ClassesView view;
