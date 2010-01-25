@@ -404,7 +404,7 @@ public class Types {
      *          "java.lang.String", "int[][]"), or null if not recognized.
      */
     public static String jniToTypeName(String jni, boolean nb) {
-        if (jni == null || jni.length() == 0) {
+        if (jni == null || jni.trim().isEmpty()) {
             return null;
         }
 
@@ -504,7 +504,7 @@ public class Types {
      * @return  type for signature, or null if unrecognized.
      */
     public static Type signatureToType(String sig, VirtualMachine vm) {
-        if (sig == null || sig.length() == 0) {
+        if (sig == null || sig.trim().isEmpty()) {
             return null;
         }
 
@@ -550,7 +550,7 @@ public class Types {
      *          "Ljava/lang/String;"), or null if not recognized.
      */
     public static String typeNameToJNI(String type) {
-        if (type == null || type.length() == 0) {
+        if (type == null || type.trim().isEmpty()) {
             return null;
         }
 

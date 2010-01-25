@@ -14,74 +14,100 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import com.bluemarsh.jswat.core.SessionHelper;
 import java.io.File;
 import java.io.IOException;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class ProcessesTest extends TestCase {
+/**
+ * Unit tests for the Processes class.
+ *
+ * @author Nathan Fiedler
+ */
+public class ProcessesTest {
 
-    public ProcessesTest(String name) {
-        super(name);
-    }
+    /** The classpath for the unit test code. */
+    private static String classpath;
+    /** Full pathname for the Java executable. */
+    private static String javabin;
 
-    public static Test suite() {
-        return new TestSuite(ProcessesTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
-    public void test_Processes_waitFor() {
+    @BeforeClass
+    public static void setUpClass() {
         // Establish a proper testing environment.
-        String clspath = SessionHelper.getTestClasspath();
+        classpath = SessionHelper.getTestClasspath();
         String jre = System.getProperty("java.home");
         File bindir = new File(jre, "bin");
-        File javabin = new File(bindir, "java");
-        if (!javabin.exists()) {
-            javabin = new File(bindir, "java.exe");
-            if (!javabin.exists()) {
+        File java = new File(bindir, "java");
+        if (!java.exists()) {
+            java = new File(bindir, "java.exe");
+            if (!java.exists()) {
                 fail("cannot find java executable in " + jre);
             }
         }
+        javabin = java.getAbsolutePath();
+    }
 
-        // Start the JVM running our test code and collect its output.
-        String[] cmd = new String[] {
-            javabin.getAbsolutePath(), "-cp", clspath, "ProcessesTestCode"
+    @Test
+    public void testWaitForBoth() throws IOException {
+        String[] cmd = new String[]{
+            javabin, "-cp", classpath, "ProcessesTestCode"
         };
-        java.lang.Runtime rt = java.lang.Runtime.getRuntime();
-        try {
-            Process proc = rt.exec(cmd);
-            String output = Processes.waitFor(proc);
-            // Output comes before error.
-            assertTrue(output.startsWith("output 1"));
-            assertTrue(output.trim().endsWith("error 4"));
-        } catch (IOException ioe) {
-            fail(ioe.toString());
-        }
+        Process proc = Runtime.getRuntime().exec(cmd);
+        String output = Processes.waitFor(proc);
+        // Output comes before error.
+        assertTrue(output.startsWith("output 1"));
+        assertTrue(output.trim().endsWith("error 4"));
+    }
 
-        // Ask the JVM what version it is, and verify the output.
-        cmd = new String[] {
-            javabin.getAbsolutePath(), "-version"
+    @Test
+    public void testWaitForOutput() throws IOException {
+        String[] cmd = new String[]{
+            javabin, "-cp", classpath, "ProcessesTestCode", "--out"
         };
-        try {
-            Process proc = rt.exec(cmd);
-            String output = Processes.waitFor(proc);
-            assertTrue(output.startsWith("java version"));
-        } catch (IOException ioe) {
-            fail(ioe.toString());
-        }
+        Process proc = Runtime.getRuntime().exec(cmd);
+        String output = Processes.waitFor(proc);
+        assertTrue(output.startsWith("output 1"));
+        assertTrue(output.trim().endsWith("output 4"));
+    }
+
+    @Test
+    public void testWaitForError() throws IOException {
+        String[] cmd = new String[]{
+            javabin, "-cp", classpath, "ProcessesTestCode", "--err"
+        };
+        Process proc = Runtime.getRuntime().exec(cmd);
+        String output = Processes.waitFor(proc);
+        assertTrue(output.startsWith("error 1"));
+        assertTrue(output.trim().endsWith("error 4"));
+    }
+
+    @Test
+    public void testWaitForNoOutput() throws IOException {
+        String[] cmd = new String[]{
+            javabin, "-cp", classpath, "ProcessesTestCode", "--nop"
+        };
+        Process proc = Runtime.getRuntime().exec(cmd);
+        String output = Processes.waitFor(proc);
+        assertNull(output);
+    }
+
+    @Test
+    public void testWaitForJavaVersion() throws IOException {
+        String[] cmd = new String[]{
+                    javabin, "-version"
+                };
+        Process proc = Runtime.getRuntime().exec(cmd);
+        String output = Processes.waitFor(proc);
+        assertTrue(output.startsWith("java version"));
     }
 }

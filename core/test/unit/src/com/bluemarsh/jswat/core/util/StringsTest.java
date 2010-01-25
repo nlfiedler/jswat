@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2007. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -25,38 +25,29 @@ package com.bluemarsh.jswat.core.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- * Tests the Strings class.
+ * Unit tests for the Strings class.
+ *
+ * @author  Nathan Fiedler
  */
-public class StringsTest extends TestCase {
+public class StringsTest {
 
-    public StringsTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(StringsTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Strings_cleanForPrinting() {
-        // String cleanForPrinting(String, int);
         assertEquals("null", Strings.cleanForPrinting(null, 0));
         assertEquals("blah", Strings.cleanForPrinting("blah", 0));
+        assertEquals("blah", Strings.cleanForPrinting("blah", 10));
         assertEquals("this<...>tring", Strings.cleanForPrinting(
                 "this is a very long string", 15));
         assertEquals("abc\\rdef", Strings.cleanForPrinting("abc\rdef", 0));
+        assertEquals("\\t\\n\\b\\f", Strings.cleanForPrinting("\t\n\b\f", 0));
     }
 
+    @Test
     public void test_Strings_listToString() {
-        // String listToString(List list);
         assertNull(Strings.listToString(null));
         List<String> list = new ArrayList<String>(3);
         assertEquals("", Strings.listToString(list));
@@ -69,8 +60,8 @@ public class StringsTest extends TestCase {
         assertEquals("abc;def;ghi", Strings.listToString(list, ";"));
     }
 
+    @Test
     public void test_Strings_stringToList() {
-        // List stringToList(String str);
         List list = Strings.stringToList(null);
         assertNull(list);
         list = Strings.stringToList("");
@@ -89,8 +80,8 @@ public class StringsTest extends TestCase {
         assertEquals("ghi", list.get(2));
     }
 
+    @Test
     public void test_Strings_toHexString() {
-        // String toHexString(int i);
         assertEquals("0001", Strings.toHexString(1));
         assertEquals("0080", Strings.toHexString(128));
         assertEquals("04d2", Strings.toHexString(1234));
@@ -102,8 +93,11 @@ public class StringsTest extends TestCase {
                      Strings.toHexString(-1, 32));
     }
 
+    @Test
     public void test_Strings_trimQuotes() {
-        // String trimQuotes(String str);
+        assertNull(Strings.trimQuotes(null));
+        assertEquals("", Strings.trimQuotes(""));
+        assertEquals("  ", Strings.trimQuotes("  "));
         assertEquals("abc", Strings.trimQuotes("abc"));
         assertEquals("abc", Strings.trimQuotes("'abc'"));
         assertEquals("abc'", Strings.trimQuotes("abc'"));
@@ -111,5 +105,13 @@ public class StringsTest extends TestCase {
         assertEquals("abc\"", Strings.trimQuotes("abc\""));
         assertEquals("'abc", Strings.trimQuotes("'abc"));
         assertEquals("\"abc", Strings.trimQuotes("\"abc"));
+    }
+
+    @Test
+    public void testExceptionToString() {
+        assertEquals("", Strings.exceptionToString(null));
+        RuntimeException re = new RuntimeException();
+        String actual = Strings.exceptionToString(re);
+        assertTrue(actual.contains("RuntimeException"));
     }
 }

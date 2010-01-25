@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,34 +23,23 @@
 
 package com.bluemarsh.jswat.core.util;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
 
 /**
- * Tests the Arrays class.
+ * Unit tests for the Arrays class.
  */
-public class ArraysTest extends TestCase {
+public class ArraysTest {
 
-    public ArraysTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ArraysTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Arrays_join() {
         assertNull(Arrays.join(null, null));
         assertNotNull(Arrays.join(new Object[0], null));
         assertNotNull(Arrays.join(null, new Object[0]));
         Object[] arr = new Object[] { System.out };
-        assertEquals(Arrays.join(null, arr), arr);
-        assertEquals(Arrays.join(arr, null), arr);
+        assertEqual(Arrays.join(null, arr), arr);
+        assertEqual(Arrays.join(arr, null), arr);
         Integer[] i1 = new Integer[] { Integer.MIN_VALUE, Integer.MAX_VALUE };
         Integer[] i2 = new Integer[] { Integer.valueOf(10), Integer.valueOf(100) };
         arr = Arrays.join(i1, i2);
@@ -60,5 +49,12 @@ public class ArraysTest extends TestCase {
         assertEquals(arr[1], Integer.MAX_VALUE);
         assertEquals(arr[2], Integer.valueOf(10));
         assertEquals(arr[3], Integer.valueOf(100));
+    }
+
+    private static void assertEqual(Object[] a, Object[] b) {
+        assertEquals(a.length, b.length);
+        for (int ii = 0; ii < a.length; ii++) {
+            assertEquals(a[ii], b[ii]);
+        }
     }
 }

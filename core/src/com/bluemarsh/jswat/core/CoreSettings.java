@@ -195,7 +195,7 @@ public class CoreSettings {
      * @param  extension  default file extension for source files.
      */
     public void setSourceExtension(String extension) {
-        if (extension == null || extension.trim().length() == 0) {
+        if (extension == null || extension.trim().isEmpty()) {
             throw new IllegalArgumentException("extension cannot be blank");
         }
         // Ensure extension includes the leading period.

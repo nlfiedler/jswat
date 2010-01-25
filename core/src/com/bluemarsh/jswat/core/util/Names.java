@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2005. All Rights Reserved.
+ * are Copyright (C) 2003-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import com.bluemarsh.jswat.core.CoreSettings;
@@ -136,7 +135,7 @@ public class Names {
         if (id == null) {
             return false;
         }
-        if (id.length() == 0) {
+        if (id.trim().isEmpty()) {
             return false;
         }
         if (!Character.isJavaIdentifierStart(id.charAt(0))) {
@@ -157,7 +156,7 @@ public class Names {
      * @return  true if string is a valid method identifier.
      */
     public static boolean isMethodIdentifier(String s) {
-        if (s == null || s.length() == 0) {
+        if (s == null || s.trim().isEmpty()) {
             return false;
         }
         return isJavaIdentifier(s) || s.equals("<init>") || s.equals("<clinit>");
@@ -175,7 +174,7 @@ public class Names {
      * @return  true if name is valid, false otherwise.
      */
     public static boolean isValidClassname(String s, boolean allowWild) {
-        if (s == null || s.length() == 0) {
+        if (s == null || s.trim().isEmpty()) {
             return false;
         }
         boolean valid = true;

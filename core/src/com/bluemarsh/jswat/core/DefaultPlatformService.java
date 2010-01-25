@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core;
 
 import java.io.File;
@@ -41,6 +40,7 @@ import org.openide.util.Cancellable;
  * @author  Nathan Fiedler
  */
 public class DefaultPlatformService implements PlatformService {
+
     /** Name of the user directory where files are stored by default. */
     private static final String USER_DIR = ".jswat-test";
     /** The path to the user's home directory. */
@@ -95,10 +95,7 @@ public class DefaultPlatformService implements PlatformService {
     @Override
     public OutputStream writeFile(String name) throws IOException {
         File file = new File(userDirectory, name);
-        File parent = file.getParentFile();
-        if (parent != null) {
-            parent.mkdirs();
-        }
+        file.getParentFile().mkdirs();
         return new FileOutputStream(file);
     }
 }

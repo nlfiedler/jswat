@@ -14,63 +14,63 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2004. All Rights Reserved.
+ * are Copyright (C) 2003-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import java.util.ArrayList;
-import junit.extensions.*;
-import junit.framework.*;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests the Types utility class.
  */
-public class TypesTest extends TestCase {
+public class TypesTest {
 
-    public TypesTest(String name) {
-        super(name);
+    @Test
+    public void testCanWiden() {
+        assertFalse(Types.canWiden("V", Integer.class));
+        assertFalse(Types.canWiden("B", ArrayList.class));
+        assertFalse(Types.canWiden("B", Integer.class));
+        assertFalse(Types.canWiden("I", Double.class));
+        assertFalse(Types.canWiden("S", Integer.class));
+        assertTrue(Types.canWiden("I", Byte.class));
+        assertTrue(Types.canWiden("S", Byte.class));
+        assertTrue(Types.canWiden("J", Integer.class));
+        assertTrue(Types.canWiden("D", Float.class));
     }
 
-    public static Test suite() {
-        return new TestSuite(TypesTest.class);
+    @Test
+    public void testCast() {
+        assertNull(Types.cast("B", "foobar"));
+        assertNull(Types.cast("C", "foobar"));
+        assertNull(Types.cast("D", "foobar"));
+        assertNull(Types.cast("F", "foobar"));
+        assertNull(Types.cast("I", "foobar"));
+        assertNull(Types.cast("J", "foobar"));
+        assertNull(Types.cast("S", "foobar"));
+        assertTrue(Types.cast("B", new Integer(100)) instanceof Byte);
+        assertTrue(Types.cast("Ljava/lang/Byte;", new Integer(100)) instanceof Byte);
+        assertTrue(Types.cast("C", new Integer(100)) instanceof Character);
+        assertTrue(Types.cast("Ljava/lang/Character;", new Integer(100)) instanceof Character);
+        assertTrue(Types.cast("I", new Long(100)) instanceof Integer);
+        assertTrue(Types.cast("Ljava/lang/Integer;", new Long(100)) instanceof Integer);
+        assertTrue(Types.cast("S", new Integer(100)) instanceof Short);
+        assertTrue(Types.cast("Ljava/lang/Short;", new Integer(100)) instanceof Short);
+        assertTrue(Types.cast("J", new Integer(100)) instanceof Long);
+        assertTrue(Types.cast("Ljava/lang/Long;", new Integer(100)) instanceof Long);
+        assertTrue(Types.cast("F", new Double(1.234)) instanceof Float);
+        assertTrue(Types.cast("Ljava/lang/Float;", new Double(1.234)) instanceof Float);
+        assertTrue(Types.cast("D", new Float(1.234)) instanceof Double);
+        assertTrue(Types.cast("Ljava/lang/Double;", new Float(1.234)) instanceof Double);
     }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
-    public void test_Types_canWiden() {
-        boolean widen = Types.canWiden("B", ArrayList.class);
-        assertFalse("ArrayList cannot be widened to byte", widen);
-        widen = Types.canWiden("B", Integer.class);
-        assertFalse("Integer cannot be widened to byte", widen);
-        widen = Types.canWiden("I", Double.class);
-        assertFalse("Double cannot be widened to int", widen);
-        widen = Types.canWiden("I", Byte.class);
-        assertTrue("Byte should be widened to int", widen);
-        widen = Types.canWiden("J", Integer.class);
-        assertTrue("Integer should be widened to long", widen);
-        widen = Types.canWiden("D", Float.class);
-        assertTrue("Float should be widened to double", widen);
-    }
-
-    public void test_Types_cast() {
-        Object rval = Types.cast("B", new Integer(100));
-        assertTrue("rval is not a Byte", rval instanceof Byte);
-        rval = Types.cast("Ljava/lang/Byte;", new Integer(100));
-        assertTrue("rval is not a Byte", rval instanceof Byte);
-        rval = Types.cast("F", new Double(1.234));
-        assertTrue("rval is not a Float", rval instanceof Float);
-        rval = Types.cast("Ljava/lang/Float;", new Double(1.234));
-        assertTrue("rval is not a Float", rval instanceof Float);
-    }
-
-    public void test_Types_isCompatible() {
+    @Test
+    public void testIsCompatible() {
         // abstract class case
         boolean isit = Types.isCompatible("Ljava/lang/Number;", Byte.class);
         assertTrue("Byte is not a Number", isit);
@@ -79,7 +79,8 @@ public class TypesTest extends TestCase {
         assertTrue("ArrayList is not a List", isit);
     }
 
-    public void test_Types_jniToName() {
+    @Test
+    public void testJniToName() {
         String jni = Types.jniToName("Ljava/lang/String;");
         assertEquals("java.lang.String", jni);
         jni = Types.jniToName("Ljava/net/URL;");
@@ -88,26 +89,31 @@ public class TypesTest extends TestCase {
         assertEquals("com.bluemarsh.jswat.Main", jni);
     }
 
-    public void test_Types_jniToTypeName() {
-        String jni = Types.jniToTypeName("Ljava/lang/String;", false);
-        assertEquals("java.lang.String", jni);
-        jni = Types.jniToTypeName("Z", false);
-        assertEquals("boolean", jni);
-        jni = Types.jniToTypeName("F", false);
-        assertEquals("float", jni);
-        jni = Types.jniToTypeName("V", false);
-        assertEquals("void", jni);
-        jni = Types.jniToTypeName("[[I", false);
-        assertEquals("int[][]", jni);
-        jni = Types.jniToTypeName("[[I", true);
-        assertEquals("int", jni);
-        jni = Types.jniToTypeName("[Ljava/lang/String;", false);
-        assertEquals("java.lang.String[]", jni);
-        jni = Types.jniToTypeName("[Ljava/lang/String;", true);
-        assertEquals("java.lang.String", jni);
+    @Test
+    public void testJniToTypeName() {
+        assertNull(Types.jniToTypeName(null, false));
+        assertNull(Types.jniToTypeName("", false));
+        assertNull(Types.jniToTypeName("  ", false));
+        assertNull(Types.jniToTypeName("Q", false));
+
+        assertEquals("java.lang.String", Types.jniToTypeName("Ljava/lang/String;", false));
+        assertEquals("byte", Types.jniToTypeName("B", false));
+        assertEquals("char", Types.jniToTypeName("C", false));
+        assertEquals("double", Types.jniToTypeName("D", false));
+        assertEquals("float", Types.jniToTypeName("F", false));
+        assertEquals("int", Types.jniToTypeName("I", false));
+        assertEquals("long", Types.jniToTypeName("J", false));
+        assertEquals("short", Types.jniToTypeName("S", false));
+        assertEquals("void", Types.jniToTypeName("V", false));
+        assertEquals("boolean", Types.jniToTypeName("Z", false));
+        assertEquals("int[][]", Types.jniToTypeName("[[I", false));
+        assertEquals("int", Types.jniToTypeName("[[I", true));
+        assertEquals("java.lang.String[]", Types.jniToTypeName("[Ljava/lang/String;", false));
+        assertEquals("java.lang.String", Types.jniToTypeName("[Ljava/lang/String;", true));
     }
 
-    public void test_Types_nameToJni() {
+    @Test
+    public void testNameToJni() {
         String jni = Types.nameToJni("java.lang.String");
         assertEquals("Ljava/lang/String;", jni);
         jni = Types.nameToJni("java.net.URL");
@@ -116,87 +122,61 @@ public class TypesTest extends TestCase {
         assertEquals("Lcom/bluemarsh/jswat/Main;", jni);
     }
 
-    public void test_Types_typeNameToJNI() {
+    @Test
+    public void testTypeNameToJNI() {
+        assertNull(Types.typeNameToJNI(null));
+        assertNull(Types.typeNameToJNI(""));
+        assertNull(Types.typeNameToJNI("  "));
+
         // Primivite types
-        String jni = Types.typeNameToJNI("boolean");
-        assertEquals("Z", jni);
-        jni = Types.typeNameToJNI("byte");
-        assertEquals("B", jni);
-        jni = Types.typeNameToJNI("char");
-        assertEquals("C", jni);
-        jni = Types.typeNameToJNI("double");
-        assertEquals("D", jni);
-        jni = Types.typeNameToJNI("float");
-        assertEquals("F", jni);
-        jni = Types.typeNameToJNI("int");
-        assertEquals("I", jni);
-        jni = Types.typeNameToJNI("long");
-        assertEquals("J", jni);
-        jni = Types.typeNameToJNI("short");
-        assertEquals("S", jni);
-        jni = Types.typeNameToJNI("void");
-        assertEquals("V", jni);
+        assertEquals("Z", Types.typeNameToJNI("boolean"));
+        assertEquals("B", Types.typeNameToJNI("byte"));
+        assertEquals("C", Types.typeNameToJNI("char"));
+        assertEquals("D", Types.typeNameToJNI("double"));
+        assertEquals("F", Types.typeNameToJNI("float"));
+        assertEquals("I", Types.typeNameToJNI("int"));
+        assertEquals("J", Types.typeNameToJNI("long"));
+        assertEquals("S", Types.typeNameToJNI("short"));
+        assertEquals("V", Types.typeNameToJNI("void"));
 
         // Primivite array types
-        jni = Types.typeNameToJNI("boolean[]");
-        assertEquals("[Z", jni);
-        jni = Types.typeNameToJNI("byte[]");
-        assertEquals("[B", jni);
-        jni = Types.typeNameToJNI("char[]");
-        assertEquals("[C", jni);
-        jni = Types.typeNameToJNI("double[]");
-        assertEquals("[D", jni);
-        jni = Types.typeNameToJNI("float[]");
-        assertEquals("[F", jni);
-        jni = Types.typeNameToJNI("int[]");
-        assertEquals("[I", jni);
-        jni = Types.typeNameToJNI("long[]");
-        assertEquals("[J", jni);
-        jni = Types.typeNameToJNI("short[]");
-        assertEquals("[S", jni);
-        jni = Types.typeNameToJNI("void[]");
-        assertEquals("[V", jni);
+        assertEquals("[Z", Types.typeNameToJNI("boolean[]"));
+        assertEquals("[B", Types.typeNameToJNI("byte[]"));
+        assertEquals("[C", Types.typeNameToJNI("char[]"));
+        assertEquals("[D", Types.typeNameToJNI("double[]"));
+        assertEquals("[F", Types.typeNameToJNI("float[]"));
+        assertEquals("[I", Types.typeNameToJNI("int[]"));
+        assertEquals("[J", Types.typeNameToJNI("long[]"));
+        assertEquals("[S", Types.typeNameToJNI("short[]"));
+        assertEquals("[V", Types.typeNameToJNI("void[]"));
 
         // Core classes
-        jni = Types.typeNameToJNI("String");
-        assertEquals("Ljava/lang/String;", jni);
-        jni = Types.typeNameToJNI("Class");
-        assertEquals("Ljava/lang/Class;", jni);
-        jni = Types.typeNameToJNI("Math");
-        assertEquals("Ljava/lang/Math;", jni);
+        assertEquals("Ljava/lang/String;", Types.typeNameToJNI("String"));
+        assertEquals("Ljava/lang/Class;", Types.typeNameToJNI("Class"));
+        assertEquals("Ljava/lang/Math;", Types.typeNameToJNI("Math"));
 
         // Core class arrays
-        jni = Types.typeNameToJNI("String[]");
-        assertEquals("[Ljava/lang/String;", jni);
-        jni = Types.typeNameToJNI("Class[]");
-        assertEquals("[Ljava/lang/Class;", jni);
-        jni = Types.typeNameToJNI("Math[]");
-        assertEquals("[Ljava/lang/Math;", jni);
+        assertEquals("[Ljava/lang/String;", Types.typeNameToJNI("String[]"));
+        assertEquals("[Ljava/lang/Class;", Types.typeNameToJNI("Class[]"));
+        assertEquals("[Ljava/lang/Math;", Types.typeNameToJNI("Math[]"));
 
         // Multi-dimensional arrays
-        jni = Types.typeNameToJNI("int[][]");
-        assertEquals("[[I", jni);
-        jni = Types.typeNameToJNI("String[][][]");
-        assertEquals("[[[Ljava/lang/String;", jni);
+        assertEquals("[[I", Types.typeNameToJNI("int[][]"));
+        assertEquals("[[[Ljava/lang/String;", Types.typeNameToJNI("String[][][]"));
 
         // Other classes
-        jni = Types.typeNameToJNI("com.pkg.MyClass");
-        assertEquals("Lcom/pkg/MyClass;", jni);
-        jni = Types.typeNameToJNI("com.bluemarsh.jswat.Main");
-        assertEquals("Lcom/bluemarsh/jswat/Main;", jni);
-        jni = Types.typeNameToJNI("org.gnu.regex.Pattern");
-        assertEquals("Lorg/gnu/regex/Pattern;", jni);
+        assertEquals("Lcom/pkg/MyClass;", Types.typeNameToJNI("com.pkg.MyClass"));
+        assertEquals("Lcom/bluemarsh/jswat/Main;", Types.typeNameToJNI("com.bluemarsh.jswat.Main"));
+        assertEquals("Lorg/gnu/regex/Pattern;", Types.typeNameToJNI("org.gnu.regex.Pattern"));
 
         // Other class arrays
-        jni = Types.typeNameToJNI("com.pkg.MyClass[]");
-        assertEquals("[Lcom/pkg/MyClass;", jni);
-        jni = Types.typeNameToJNI("com.bluemarsh.jswat.Main[]");
-        assertEquals("[Lcom/bluemarsh/jswat/Main;", jni);
-        jni = Types.typeNameToJNI("org.gnu.regex.Pattern[]");
-        assertEquals("[Lorg/gnu/regex/Pattern;", jni);
+        assertEquals("[Lcom/pkg/MyClass;", Types.typeNameToJNI("com.pkg.MyClass[]"));
+        assertEquals("[Lcom/bluemarsh/jswat/Main;", Types.typeNameToJNI("com.bluemarsh.jswat.Main[]"));
+        assertEquals("[Lorg/gnu/regex/Pattern;", Types.typeNameToJNI("org.gnu.regex.Pattern[]"));
     }
 
-    public void test_Types_wrapperToPrimitive() {
+    @Test
+    public void testWrapperToPrimitive() {
         String jni = Types.wrapperToPrimitive("Ljava/lang/Boolean;");
         assertEquals("Z", jni);
         jni = Types.wrapperToPrimitive("Ljava/lang/Byte;");

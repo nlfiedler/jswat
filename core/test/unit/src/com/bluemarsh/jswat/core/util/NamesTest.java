@@ -14,35 +14,24 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2004. All Rights Reserved.
+ * are Copyright (C) 2003-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import java.io.File;
-import junit.framework.*;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests the Names class.
  */
-public class NamesTest extends TestCase {
+public class NamesTest {
 
-    public NamesTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(NamesTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Names_classnameToFilename() {
         String fn = "com/bluemarsh/jswat/Main.java";
         fn = fn.replace('/', File.separatorChar);
@@ -56,6 +45,24 @@ public class NamesTest extends TestCase {
                 Names.classnameToFilename("com.bluemarsh.jswat.Main", "SrcMain.java"));
     }
 
+    @Test
+    public void testGetPackageName() {
+        assertNull(Names.getPackageName(null));
+        assertTrue(Names.getPackageName("abc").isEmpty());
+        assertEquals("com.pkg", Names.getPackageName("com.pkg.Class"));
+    }
+
+    @Test
+    public void testIsJavaIdentifier() {
+        assertFalse(Names.isJavaIdentifier(null));
+        assertFalse(Names.isJavaIdentifier(""));
+        assertFalse(Names.isJavaIdentifier("  "));
+        assertFalse(Names.isJavaIdentifier("1abc"));
+        assertFalse(Names.isJavaIdentifier("abc+def"));
+        assertTrue(Names.isJavaIdentifier("_abcDef"));
+    }
+
+    @Test
     public void test_Names_getShortClassName() {
         assertNull(Names.getShortClassName(null));
         assertEquals("", Names.getShortClassName(""));
@@ -64,8 +71,8 @@ public class NamesTest extends TestCase {
         assertEquals("abc", Names.getShortClassName("com.package.abc"));
     }
 
+    @Test
     public void test_Names_isMethodIdentifier() {
-        // boolean isMethodIdentifier(String s);
         assertTrue(!Names.isMethodIdentifier(null));
         assertTrue(!Names.isMethodIdentifier(""));
         assertTrue(Names.isMethodIdentifier("ident"));
@@ -74,5 +81,20 @@ public class NamesTest extends TestCase {
         assertTrue(Names.isMethodIdentifier("ide_nt"));
         assertTrue(Names.isMethodIdentifier("<init>"));
         assertTrue(Names.isMethodIdentifier("<clinit>"));
+    }
+
+    @Test
+    public void testIsValidClassname() {
+        assertFalse(Names.isValidClassname(null, false));
+        assertFalse(Names.isValidClassname("", false));
+        assertFalse(Names.isValidClassname("  ", false));
+        assertFalse(Names.isValidClassname("1abc", false));
+        assertFalse(Names.isValidClassname("abc+def", false));
+        assertTrue(Names.isValidClassname("_abcDef", false));
+        assertTrue(Names.isValidClassname("java.lang.String", false));
+        assertTrue(Names.isValidClassname("java.lang.String", true));
+        assertTrue(Names.isValidClassname("java.lang.*", true));
+        assertTrue(Names.isValidClassname("*.String", true));
+        assertFalse(Names.isValidClassname("java.*.String", true));
     }
 }

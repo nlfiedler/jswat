@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -29,14 +29,29 @@
 public class ProcessesTestCode {
 
     public static void main(String[] args) {
-        // Write stuff to output and error streams.
-        System.out.println("output 1");
-        System.err.println("error 1");
-        System.out.println("output 2");
-        System.err.println("error 2");
-        System.out.println("output 3");
-        System.err.println("error 3");
-        System.out.println("output 4");
-        System.err.println("error 4");
+        if (args.length == 0) {
+            System.out.println("output 1");
+            System.err.println("error 1");
+            System.out.println("output 2");
+            System.err.println("error 2");
+            System.out.println("output 3");
+            System.err.println("error 3");
+            System.out.println("output 4");
+            System.err.println("error 4");
+        } else {
+            if (args[0].equals("--out")) {
+                System.out.println("output 1");
+                System.out.println("output 2");
+                System.out.println("output 3");
+                System.out.println("output 4");
+            } else if (args[0].equals("--err")) {
+                System.err.println("error 1");
+                System.err.println("error 2");
+                System.err.println("error 3");
+                System.err.println("error 4");
+            } else if (args[0].equals("--nop")) {
+                // Output nothing at all.
+            }
+        }
     }
 }

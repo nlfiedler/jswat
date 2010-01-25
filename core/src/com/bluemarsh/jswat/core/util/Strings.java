@@ -98,7 +98,7 @@ public class Strings {
      * @return  throwable details.
      */
     public static String exceptionToString(Throwable t) {
-        StringWriter sw = new StringWriter(512);
+        StringWriter sw = new StringWriter(256);
         if (t != null) {
             PrintWriter pw = new PrintWriter(sw);
             t.printStackTrace(pw);
@@ -215,7 +215,7 @@ public class Strings {
      * @return  quote-trimmed string.
      */
     public static String trimQuotes(String str) {
-        if (str != null && str.length() > 0) {
+        if (str != null && str.trim().length() > 0) {
             char fch = str.charAt(0);
             int last = str.length() - 1;
             char lch = str.charAt(last);

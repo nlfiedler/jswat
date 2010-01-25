@@ -14,15 +14,18 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2007. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core;
 
+import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointFactory;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointHelper;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
 import com.bluemarsh.jswat.core.connect.ConnectionFactory;
 import com.bluemarsh.jswat.core.connect.ConnectionProvider;
 import com.bluemarsh.jswat.core.connect.JvmConnection;
@@ -39,6 +42,7 @@ import com.bluemarsh.jswat.core.stepping.Stepper;
 import com.bluemarsh.jswat.core.stepping.SteppingException;
 import com.bluemarsh.jswat.core.stepping.SteppingProvider;
 import java.util.concurrent.Semaphore;
+import static org.junit.Assert.*;
 
 /**
  * Class SessionTestManager manages Sessions. It starts and stops a single
@@ -48,6 +52,7 @@ import java.util.concurrent.Semaphore;
  * @author  Nathan Fiedler
  */
 public class SessionHelper {
+
     /** Our session listener. */
     private static TestSessionListener listener;
     /** Semaphore for the session suspended notification. */
@@ -97,9 +102,33 @@ public class SessionHelper {
     }
 
     /**
+     * Builds a connection and activates the default Session using that
+     * connection. A breakpoint will be created using the specification
+     * (e.g. {@code Foobar:123, or Foo.bar(int, boolean)}). The session
+     * will be automatically resumed, most likely to hit the breakpoint
+     * that was created. The breakpoint will delete itself once it has
+     * been hit.
+     *
+     * @param  main  class to launch (with optional arguments).
+     * @param  brk   breakpoint specification.
+     */
+    public static synchronized void launchDebuggee(String main, String brk) {
+        Session session = getSession();
+        launchDebuggee(session, main);
+        BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
+        try {
+            Breakpoint bp = bf.createBreakpoint(brk, null);
+            BreakpointHelper.prepareBreakpoint(bp, session);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+        SessionHelper.resumeAndWait(session);
+    }
+
+    /**
      * Builds a connection and activates the given Session using that
      * connection. Causes the debuggee to be created but will be left
-     * suspended. Exceptions if the session is already active.
+     * suspended.
      *
      * @param  session  Session to connect to the debuggee.
      * @param  main     class to launch (with optional arguments).
@@ -134,8 +163,7 @@ public class SessionHelper {
             // event handling changes in revision 2843, a longer delay is
             // necessary for some of the breakpoint tests to succeed.
             Thread.sleep(100);
-        } catch (InterruptedException ie) {
-            // ignored
+        } catch (InterruptedException ignored) {
         }
     }
 
@@ -205,23 +233,29 @@ public class SessionHelper {
      */
     protected static class TestSessionListener implements SessionListener {
 
+        @Override
         public void closing(SessionEvent sevt) {
         }
 
+        @Override
         public void connected(SessionEvent sevt) {
         }
 
+        @Override
         public void disconnected(SessionEvent sevt) {
             // This is equivalent to being suspended for our purposes.
             suspendedSem.release();
         }
 
+        @Override
         public void opened(Session session) {
         }
 
+        @Override
         public void resuming(SessionEvent sevt) {
         }
 
+        @Override
         public void suspended(SessionEvent sevt) {
             suspendedSem.release();
         }
