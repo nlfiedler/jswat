@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2005. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,37 +23,34 @@
 
 package com.bluemarsh.jswat.core.session;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests the SessionManagerEventMulticaster class.
+ *
+ * @author Nathan Fiedler
  */
-public class SessionManagerEventMulticasterTest extends TestCase {
+public class SessionManagerEventMulticasterTest {
 
-    public SessionManagerEventMulticasterTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(SessionManagerEventMulticasterTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
-    public void test_SessionManagerEventMulticaster() {
+    @Test
+    public void testMulticaster() {
         SessionManagerListener sl = SessionManagerEventMulticaster.add(null, null);
-        assertEquals(sl, null);
+        assertNull(sl);
 
         sl = SessionManagerEventMulticaster.remove(null, null);
-        assertEquals(sl, null);
+        assertNull(sl);
 
         TestListener l1 = new TestListener();
         sl = SessionManagerEventMulticaster.add(sl, l1);
-        assertTrue(sl != null);
+        assertNotNull(sl);
+        sl = SessionManagerEventMulticaster.add(sl, null);
+        assertNotNull(sl);
+        sl = SessionManagerEventMulticaster.add(null, sl);
+        assertNotNull(sl);
 
         assertEquals(0, l1.added);
         assertEquals(0, l1.removed);
@@ -86,21 +83,61 @@ public class SessionManagerEventMulticasterTest extends TestCase {
         assertEquals(1, l2.added);
         assertEquals(0, l2.removed);
         assertEquals(1, l2.setCurrent);
+
+        sl.sessionRemoved(null);
+        assertEquals(1, l1.added);
+        assertEquals(2, l1.removed);
+        assertEquals(1, l1.setCurrent);
+        assertEquals(1, l2.added);
+        assertEquals(1, l2.removed);
+        assertEquals(1, l2.setCurrent);
+
+        sl = SessionManagerEventMulticaster.remove(sl, null);
+        assertNotNull(sl);
+        assertNull(SessionManagerEventMulticaster.remove(null, sl));
     }
 
-    protected class TestListener implements SessionManagerListener {
+    @Test
+    public void testManyListeners() {
+        List<TestListener> list = new ArrayList<TestListener>();
+        SessionManagerListener sl = null;
+        for (int ii = 0; ii < 100; ii++) {
+            TestListener l = new TestListener();
+            sl = SessionManagerEventMulticaster.add(sl, l);
+            list.add(l);
+        }
+
+        sl.sessionAdded(null);
+        assertEquals(100, list.size());
+        for (TestListener l : list) {
+            assertEquals(1, l.added);
+            assertEquals(0, l.removed);
+            assertEquals(0, l.setCurrent);
+        }
+
+        Collections.shuffle(list);
+        for (TestListener l : list) {
+            sl = SessionManagerEventMulticaster.remove(sl, l);
+        }
+        assertNull(sl);
+    }
+
+    private static class TestListener implements SessionManagerListener {
         public int added;
         public int removed;
         public int setCurrent;
 
+        @Override
         public void sessionAdded(SessionManagerEvent e) {
             added++;
         }
 
+        @Override
         public void sessionRemoved(SessionManagerEvent e) {
             removed++;
         }
 
+        @Override
         public void sessionSetCurrent(SessionManagerEvent e) {
             setCurrent++;
         }

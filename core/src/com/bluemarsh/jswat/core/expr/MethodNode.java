@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2005. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -43,7 +42,6 @@ import com.sun.jdi.VirtualMachine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import org.openide.util.NbBundle;
 
 /**
@@ -53,6 +51,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 class MethodNode extends OperatorNode implements JoinableNode {
+
     /** The name of the method. */
     private String methodName;
     /** The class or object on which to invoke the method. */
@@ -85,22 +84,15 @@ class MethodNode extends OperatorNode implements JoinableNode {
         methodName = name;
     }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  value.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         // Get the preliminaries out of the way first.
         ThreadReference thread = context.getThread();
         if (thread == null) {
             throw new EvaluationException(
-                NbBundle.getMessage(MethodNode.class, "error.method.thread.set"));
+                    NbBundle.getMessage(MethodNode.class, "error.method.thread.set"));
         }
         int frameIdx = context.getFrame();
         VirtualMachine vm = thread.virtualMachine();
@@ -114,7 +106,7 @@ class MethodNode extends OperatorNode implements JoinableNode {
             try {
                 if (thread.frameCount() == 0) {
                     throw new EvaluationException(
-                        NbBundle.getMessage(MethodNode.class, "error.method.thread.stack"));
+                            NbBundle.getMessage(MethodNode.class, "error.method.thread.stack"));
                 }
                 StackFrame frame = thread.frame(frameIdx);
                 object = frame.thisObject();
@@ -123,19 +115,19 @@ class MethodNode extends OperatorNode implements JoinableNode {
                     Location location = context.getLocation();
                     if (location == null) {
                         throw new EvaluationException(
-                            NbBundle.getMessage(MethodNode.class, "error.method.location"));
+                                NbBundle.getMessage(MethodNode.class, "error.method.location"));
                     }
                     clazz = location.declaringType();
                     if (clazz == null) {
                         throw new EvaluationException(
-                            NbBundle.getMessage(MethodNode.class, "error.method.location"));
+                                NbBundle.getMessage(MethodNode.class, "error.method.location"));
                     }
                 } else {
                     clazz = object.referenceType();
                 }
             } catch (IncompatibleThreadStateException itse) {
                 throw new EvaluationException(
-                    NbBundle.getMessage(MethodNode.class, "error.thread.state"));
+                        NbBundle.getMessage(MethodNode.class, "error.thread.state"));
             }
 
         } else {
@@ -150,7 +142,7 @@ class MethodNode extends OperatorNode implements JoinableNode {
             // else: reftype will be null, and...
             if (clazz == null) {
                 String msg = NbBundle.getMessage(
-                    MethodNode.class, "error.method.name", coo);
+                        MethodNode.class, "error.method.name", coo);
                 throw new EvaluationException(msg);
             }
         }
@@ -175,18 +167,18 @@ class MethodNode extends OperatorNode implements JoinableNode {
         // Locate the named method in the resolved class.
         try {
             method = Classes.findMethod(
-                clazz, methodName, argumentTypes, true);
+                    clazz, methodName, argumentTypes, true);
         } catch (AmbiguousMethodException ame) {
             throw new EvaluationException(NbBundle.getMessage(
-                MethodNode.class, "error.method.ambiguous", methodName,
-                Strings.listToString(argumentTypes)));
+                    MethodNode.class, "error.method.ambiguous", methodName,
+                    Strings.listToString(argumentTypes)));
         } catch (InvalidTypeException ite) {
             throw new EvaluationException(NbBundle.getMessage(
-                MethodNode.class, "error.method.argument", ite.getMessage()));
+                    MethodNode.class, "error.method.argument", ite.getMessage()));
         } catch (NoSuchMethodException nsme) {
             throw new EvaluationException(NbBundle.getMessage(
-                MethodNode.class, "error.method.method", methodName,
-                Strings.listToString(argumentTypes)));
+                    MethodNode.class, "error.method.method", methodName,
+                    Strings.listToString(argumentTypes)));
         }
 
         // Convert the arguments to JDI objects.
@@ -200,8 +192,6 @@ class MethodNode extends OperatorNode implements JoinableNode {
         try {
             return Classes.invokeMethod(object, (ClassType) clazz, thread,
                     method, arguments);
-        } catch (InterruptedException ie) {
-            throw new EvaluationException(ie);
         } catch (ExecutionException ee) {
             Throwable cause = ee.getCause();
             if (cause instanceof IncompatibleThreadStateException) {
@@ -210,34 +200,17 @@ class MethodNode extends OperatorNode implements JoinableNode {
                 throw new EvaluationException(msg);
             }
             throw new EvaluationException(cause);
-        } catch (TimeoutException te) {
-            throw new EvaluationException(te);
         }
     }
 
-    /**
-     * Returns this operator's precedence value. The lower the value
-     * the higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 1;
     }
 
-    /**
-     * Returns the signature of the type this node represents. If the
-     * type is void, or otherwise unrecognizable, an exception is
-     * thrown.
-     *
-     * @param  context  evaluation context.
-     * @return  type signature, or null if value is null.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected String type(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         // Force the evaluation to happen, if it hasn't already, so we
         // get the method reference.
@@ -246,7 +219,7 @@ class MethodNode extends OperatorNode implements JoinableNode {
             return method.returnType().signature();
         } catch (ClassNotLoadedException cnle) {
             throw new EvaluationException(NbBundle.getMessage(
-                MethodNode.class, "error.method.class", cnle.className()));
+                    MethodNode.class, "error.method.class", cnle.className()));
         }
     }
 }

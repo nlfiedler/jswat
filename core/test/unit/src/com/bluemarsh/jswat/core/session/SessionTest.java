@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2006. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
 
 import com.bluemarsh.jswat.core.SessionHelper;
@@ -33,28 +32,75 @@ import com.bluemarsh.jswat.core.context.ContextProvider;
 import com.bluemarsh.jswat.core.expr.EvaluationException;
 import com.bluemarsh.jswat.core.expr.Evaluator;
 import com.sun.jdi.ThreadReference;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.MalformedURLException;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import com.bluemarsh.jswat.core.context.DebuggingContext;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class SessionTest extends TestCase {
+public class SessionTest {
 
-    public SessionTest(String name) {
-        super(name);
+    @Test
+    public void properties() {
+        Session session = SessionHelper.getSession();
+        PropListener pl = new PropListener();
+        assertFalse(pl.changed);
+        session.addPropertyChangeListener(pl);
+        assertFalse(pl.changed);
+        session.setProperty("foobar", "bazquux");
+        assertTrue(pl.changed);
+        pl.changed = false;
+        session.setProperty("foobar", null);
+        assertTrue(pl.changed);
+        session.removePropertyChangeListener(pl);
     }
 
-    public static Test suite() {
-        return new TestSuite(SessionTest.class);
+    @Test
+    public void createClose() {
+        SessionFactory factory = SessionProvider.getSessionFactory();
+        Session session = factory.createSession("unit_test_c");
+        session.close();
     }
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
+    @Test(expected = IllegalStateException.class)
+    public void alreadyDisconnected() {
+        SessionFactory factory = SessionProvider.getSessionFactory();
+        Session session = factory.createSession("unit_test_d");
+        session.disconnect(true);
     }
 
-    public void test_Session_addRemoveListener() {
+    @Test(expected = IllegalStateException.class)
+    public void isSuspendedDisconnected() {
+        SessionFactory factory = SessionProvider.getSessionFactory();
+        Session session = factory.createSession("unit_test_isd");
+        session.isSuspended();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void resumeDisconnected() {
+        SessionFactory factory = SessionProvider.getSessionFactory();
+        Session session = factory.createSession("unit_test_rd");
+        session.resumeVM();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void suspendDisconnected() {
+        SessionFactory factory = SessionProvider.getSessionFactory();
+        Session session = factory.createSession("unit_test_sd");
+        session.suspendVM();
+    }
+
+    @Test
+    public void isEquals() {
+        Session session = SessionHelper.getSession();
+        assertFalse(session.equals(this));
+        assertTrue(session.equals(session));
+    }
+
+    @Test
+    public void addRemoveListener() {
         Session session = SessionHelper.getSession();
         session.addSessionListener(null);
         session.removeSessionListener(null);
@@ -72,25 +118,44 @@ public class SessionTest extends TestCase {
         assertTrue(tl.wasRemoved);
     }
 
-    public void test_Session_active_deactivate() {
+    @Test
+    public void active_deactivate() {
         Session session = SessionHelper.getSession();
         assertFalse(session.isConnected());
+        assertEquals("", session.getAddress());
+        assertEquals("Java", session.getStratum());
         SessionHelper.launchDebuggee(session, "irrelevant");
+        try {
+            session.connect(null);
+        } catch (IllegalStateException ise) {
+            // expected
+        }
+        try {
+            session.close();
+        } catch (IllegalStateException ise) {
+            // expected
+        }
         assertTrue(session.isConnected());
+        assertEquals("(launched)", session.getAddress());
+        assertEquals("Java", session.getStratum());
         session.disconnect(true);
         assertFalse(session.isConnected());
     }
 
-    public void test_Session_resume_suspend() {
+    @Test
+    public void resume_suspend() {
         Session session = SessionHelper.getSession();
         assertFalse(session.isConnected());
+        assertEquals("Disconnected", session.getState());
         SessionHelper.launchDebuggee(session, "SessionTestCode");
         assertTrue(session.isConnected());
         session.resumeVM();
         assertTrue(session.isConnected());
         assertFalse(session.isSuspended());
+        assertEquals("Running", session.getState());
         session.suspendVM();
         assertTrue(session.isSuspended());
+        assertEquals("Stopped", session.getState());
 
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
         String srcpath = System.getProperty("test.src.dir");
@@ -123,35 +188,44 @@ public class SessionTest extends TestCase {
         assertFalse(session.isConnected());
     }
 
-//    private static void showLocation(Session session) {
-//        DebuggingContext dc = ContextProvider.getContext(session);
-//        Location loc = dc.getLocation();
-//        System.out.println(loc.declaringType().name() + "." +
-//                loc.method().name() + "@" + loc.lineNumber());
-//    }
+    private static class TestListener implements SessionListener {
 
-    public class TestListener implements SessionListener {
         public boolean wasAdded;
         public boolean wasRemoved;
 
+        @Override
         public void closing(SessionEvent sevt) {
             wasRemoved = true;
         }
 
+        @Override
         public void connected(SessionEvent sevt) {
         }
 
+        @Override
         public void disconnected(SessionEvent sevt) {
         }
 
+        @Override
         public void opened(Session session) {
             wasAdded = true;
         }
 
+        @Override
         public void resuming(SessionEvent sevt) {
         }
 
+        @Override
         public void suspended(SessionEvent sevt) {
+        }
+    }
+
+    private static class PropListener implements PropertyChangeListener {
+        public boolean changed;
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            changed = true;
         }
     }
 }

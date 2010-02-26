@@ -58,4 +58,29 @@
         <delete dir="${build.dir}"/>
         <delete dir="${output.dir}"/>
     </target>
+
+    <!--
+        Code coverage task using Cobertura. Note that the project is
+        first cleaned and then compiled again to ensure accuracy.
+    -->
+    <target name="coverage" depends="clean,compile"
+            description="Run unit tests with code coverage.">
+        <!-- Define the Cobertura tasks. -->
+        <taskdef classpath="${cobertura.classpath}" resource="tasks.properties"/>
+
+        <!-- Instrument the compiled classes. -->
+        <cobertura-instrument todir="${instrumented.dir}"
+                              datafile="${build.dir}/cobertura.ser">
+            <fileset dir="${build.classes.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+        </cobertura-instrument>
+
+        <!-- Run the tests using the instrumented classes. -->
+        <antcall target="test"/>
+
+        <!-- Generate the coverage reports in HTML. -->
+        <cobertura-report srcdir="${src.dir}" destdir="${coveragereport.dir}"
+                          format="html" datafile="${build.dir}/cobertura.ser"/>
+    </target>
 </project>

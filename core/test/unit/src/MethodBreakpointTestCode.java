@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -27,14 +27,19 @@
  * @author  Nathan Fiedler
  */
 public class MethodBreakpointTestCode {
+
     private String value;
 
-    private static void method_MBTC() {
-        String s = "ABC".substring(0, 1);
+    public MethodBreakpointTestCode() {
+        value = "foobar";
     }
 
-    public void method_params(String s, int i, boolean b) {
-        value = s + String.valueOf(i) + String.valueOf(b);
+    private static String method_MBTC() {
+        return "ABC".substring(0, 1);
+    }
+
+    public String method_params(String s, int i, boolean b) {
+        return s + String.valueOf(i) + String.valueOf(b);
     }
 
     public void method_params(char c, double d) {
@@ -52,19 +57,21 @@ public class MethodBreakpointTestCode {
     }
 
     protected static class Inner {
+
         private String str;
-        
+
         public Inner() {
             str = "abcdef";
         }
 
         public void method_I() {
-            str = str.substring(2, 4);
+            str = "abcdef".substring(2, 4);
         }
     }
 }
 
 class MBSecond {
+
     private static String str;
 
     static {
@@ -72,6 +79,6 @@ class MBSecond {
     }
 
     public static void method_MBS() {
-        str = str.substring(0, 2);
+        str = "12345".substring(0, 2);
     }
 }

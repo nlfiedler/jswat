@@ -528,7 +528,7 @@ public class Types {
         } else if (sig.equals("D")) {
             return vm.mirrorOf(0.0D).type();
         } else if (sig.equals("F")) {
-            return vm.mirrorOf(0.0).type();
+            return vm.mirrorOf(0.0F).type();
         } else if (sig.equals("I")) {
             return vm.mirrorOf(0).type();
         } else if (sig.equals("J")) {

@@ -20,7 +20,6 @@
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import com.bluemarsh.jswat.core.CoreSettings;
@@ -79,18 +78,20 @@ public class Classes {
     public static List<ReferenceType> findClasses(
             VirtualMachine vm, String pattern) {
 
-        List<ReferenceType> result = new ArrayList<ReferenceType>();
         if (pattern.indexOf('*') == -1) {
             // It's just a class name, try to find it.
             return vm.classesByName(pattern);
         } else {
             // Wild card exists, have to search manually.
+            List<ReferenceType> result = new ArrayList<ReferenceType>();
             boolean head = true;
             if (pattern.startsWith("*")) {
                 pattern = pattern.substring(1);
             } else if (pattern.endsWith("*")) {
                 pattern = pattern.substring(0, pattern.length() - 1);
                 head = false;
+            } else {
+                throw new IllegalArgumentException("embedded wildcard not allowed");
             }
             List<ReferenceType> classes = vm.allClasses();
             for (ReferenceType type : classes) {
@@ -125,10 +126,10 @@ public class Classes {
      *          if the method could not be found.
      */
     public static Method findMethod(ReferenceType clazz, String methodName,
-                                    List<String> argumentTypes, boolean fuzzySearch)
-        throws AmbiguousMethodException,
-               InvalidTypeException,
-               NoSuchMethodException {
+            List<String> argumentTypes, boolean fuzzySearch)
+            throws AmbiguousMethodException,
+            InvalidTypeException,
+            NoSuchMethodException {
 
         VirtualMachine vm = clazz.virtualMachine();
         boolean constructor = false;
@@ -173,8 +174,9 @@ public class Classes {
                 }
                 String expectedType = candidateTypes.get(ii);
                 String expectedSig = Types.typeNameToJNI(expectedType);
-                if (expectedSig != null && expectedSig.charAt(0) == 'L'
-                    && givenSig.equals("<null>")) {
+                if (expectedSig != null && (expectedSig.charAt(0) == 'L'
+                        || expectedSig.charAt(0) == '[')
+                        && givenSig.equals("<null>")) {
                     // Allow null to match any class.
                     score += 1;
                     continue;
@@ -191,11 +193,11 @@ public class Classes {
                 } else if (fuzzySearch && primSig.equals(expectedSig)) {
                     score += 4;
                 } else if (givenType instanceof ReferenceType
-                           && Types.isCompatible(
-                               expectedSig, (ReferenceType) givenType)) {
+                        && Types.isCompatible(
+                        expectedSig, (ReferenceType) givenType)) {
                     score += 3;
                 } else if (fuzzySearch
-                           && Types.canWiden(expectedSig, givenType)) {
+                        && Types.canWiden(expectedSig, givenType)) {
                     score += 2;
                 } else {
                     // They don't match at all, skip this method.
@@ -245,33 +247,31 @@ public class Classes {
      *          if the bytecode verfication failed.
      */
     public static void hotswap(ReferenceType clazz, InputStream code,
-                               VirtualMachine vm)
-        throws ClassCircularityError,
-               ClassFormatError,
-               IOException,
-               NoClassDefFoundError,
-               UnsupportedClassVersionError,
-               UnsupportedOperationException,
-               VerifyError {
+            VirtualMachine vm)
+            throws ClassCircularityError,
+            ClassFormatError,
+            IOException,
+            NoClassDefFoundError,
+            UnsupportedClassVersionError,
+            UnsupportedOperationException,
+            VerifyError {
 
         // Load the byte-code from the class file.
         byte[] byteCode = new byte[1024];
         int totalBytesRead = 0;
-        int length = byteCode.length;
-        while (true) {
-            int bytesRead = code.read(byteCode, totalBytesRead, length);
-            if (bytesRead == -1) {
-                break;
+        int bytesRead = 0;
+        do {
+            bytesRead = code.read(byteCode, totalBytesRead,
+                    byteCode.length - totalBytesRead);
+            if (bytesRead > 0) {
+                totalBytesRead += bytesRead;
+                if (totalBytesRead >= byteCode.length) {
+                    byte[] temp = new byte[totalBytesRead * 2];
+                    System.arraycopy(byteCode, 0, temp, 0, byteCode.length);
+                    byteCode = temp;
+                }
             }
-
-            totalBytesRead += bytesRead;
-            if (totalBytesRead >= byteCode.length) {
-                byte[] temp = new byte[totalBytesRead * 2];
-                System.arraycopy(byteCode, 0, temp, 0, byteCode.length);
-                byteCode = temp;
-            }
-            length = byteCode.length - totalBytesRead;
-        }
+        } while (bytesRead != -1);
         byte[] temp = new byte[totalBytesRead];
         System.arraycopy(byteCode, 0, temp, 0, temp.length);
         byteCode = temp;
@@ -295,14 +295,19 @@ public class Classes {
      * @return  the return value of the invoked method.
      * @throws  ExecutionException
      *          if a runtime exception occurs.
-     * @throws  InterruptedException
-     *          if the debugger thread making the call is interrupted.
-     * @throws  TimeoutException
-     *          if the invocation has timed out (defaults to 5 seconds).
      */
     public static Value invokeMethod(ObjectReference object, ClassType clazz,
             ThreadReference thread, Method method, List<Value> arguments) throws
-            ExecutionException, InterruptedException, TimeoutException {
+            ExecutionException {
+        if (thread == null) {
+            throw new IllegalArgumentException("thread must not be null");
+        }
+        if (method == null) {
+            throw new IllegalArgumentException("method must not be null");
+        }
+        if (arguments == null) {
+            throw new IllegalArgumentException("arguments must not be null");
+        }
 
         Invoker invoker = new Invoker(object, clazz, thread, method, arguments);
         CoreSettings cs = CoreSettings.getDefault();
@@ -318,6 +323,10 @@ public class Classes {
         bg.setEnabled(false);
         try {
             v = future.get(timeout, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ie) {
+            future.cancel(true);
+        } catch (TimeoutException te) {
+            future.cancel(true);
         } finally {
             // Re-enable all of the breakpoints, regardless if an
             // exception has occurred or not.
@@ -332,6 +341,7 @@ public class Classes {
      * @author  Nathan Fiedler
      */
     private static class Invoker implements Callable<Value> {
+
         /** Object reference, if non-static method. */
         private ObjectReference object;
         /** Reference type, if static method. */
@@ -353,8 +363,8 @@ public class Classes {
          * @param  arguments  arguments to the method.
          */
         public Invoker(ObjectReference object, ClassType clazz,
-                       ThreadReference thread, Method method,
-                       List<Value> arguments) {
+                ThreadReference thread, Method method,
+                List<Value> arguments) {
             this.object = object;
             this.clazz = clazz;
             this.thread = thread;

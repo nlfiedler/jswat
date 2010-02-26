@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2007. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,48 +23,72 @@
 
 package com.bluemarsh.jswat.core.session;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.util.List;
+import org.junit.AfterClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests the SessionManager class.
  */
-public class SessionManagerTest extends TestCase {
+public class SessionManagerTest {
 
-    public SessionManagerTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(SessionManagerTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
-    public void test_SessionManager_addRemoveListener() {
+    @AfterClass
+    public static void tearDownClass() {
+        // Remove all of the sessions and create a default for testing
+        // by the other unit tests.
+        List<Session> sessions = new ArrayList<Session>();
         SessionManager sm = SessionProvider.getSessionManager();
+        Iterator<Session> iter = sm.iterateSessions();
+        while (iter.hasNext()) {
+            sessions.add(iter.next());
+        }
+        SessionFactory factory = SessionProvider.getSessionFactory();
+        Session session = factory.createSession("unit");
+        sm.add(session);
+        sm.setCurrent(session);
+        for (Session s : sessions) {
+            sm.remove(s);
+        }
+        sm.saveSessions(false);
+    }
+
+    @Test
+    public void addRemoveListener() {
+        SessionManager sm = SessionProvider.getSessionManager();
+        sm.addSessionManagerListener(null);
         TestListener tl = new TestListener();
         sm.addSessionManagerListener(tl);
         Session session1 = new DummySession();
         session1.setIdentifier("unitTest1");
         sm.add(session1);
+        Session found = sm.findById("unitTest1");
+        assertEquals(session1, found);
         Session session2 = new DummySession();
         session2.setIdentifier("unitTest2");
         sm.add(session2);
         sm.setCurrent(session2);
+        assertTrue(SessionProvider.isCurrentSession(session2));
+        assertFalse(SessionProvider.isCurrentSession(session1));
+        try {
+            sm.remove(session2);
+            fail("should have failed");
+        } catch (IllegalArgumentException iae) {
+            // expected
+        }
         sm.remove(session1);
         assertTrue("missed add event", tl.wasAdded);
         assertTrue("missed remove event", tl.wasRemoved);
         assertTrue("missed set-current event", tl.wasSetCurrent);
         sm.removeSessionManagerListener(tl);
+        sm.removeSessionManagerListener(null);
         // Do not call SessionManager.close() as other tests will need it.
     }
 
-    public void test_SessionManager_iterate() {
+    @Test
+    public void iterate() {
         SessionManager sm = SessionProvider.getSessionManager();
         Session session1 = new DummySession();
         session1.setIdentifier("unitTest1");
@@ -89,7 +113,8 @@ public class SessionManagerTest extends TestCase {
         // Do not call SessionManager.close() as other tests will need it.
     }
 
-    public void test_SessionManager_properties() {
+    @Test
+    public void properties() {
         SessionManager sm = SessionProvider.getSessionManager();
         Session session1 = new DummySession();
         session1.setIdentifier("unitTest1");
@@ -106,19 +131,72 @@ public class SessionManagerTest extends TestCase {
         // Do not call SessionManager.close() as other tests will need it.
     }
 
-    public class TestListener implements SessionManagerListener {
+    @Test
+    public void loadAndSave() {
+        SessionManager sm = SessionProvider.getSessionManager();
+
+        // Collect all of the sessions from previous tests.
+        List<Session> sessions = new ArrayList<Session>();
+        Iterator<Session> iter = sm.iterateSessions();
+        while (iter.hasNext()) {
+            sessions.add(iter.next());
+        }
+
+        Session session1 = new DummySession();
+        session1.setIdentifier("unitTest1");
+        sm.add(session1);
+        sm.setCurrent(session1);
+
+        // Clean out the left-over sessions.
+        for (Session s : sessions) {
+            sm.remove(s);
+        }
+
+        Session session2 = sm.copy(session1, "unitTest2");
+        assertNotSame(session1, session2);
+        session2.setIdentifier("unitTest2");
+        sm.saveSessions(false);
+        sm.saveSessions(true);
+        Session session3 = new DummySession();
+        session3.setIdentifier("foobar");
+        sm.add(session3);
+        sm.setCurrent(session3);
+        sm.remove(session2);
+        sm.remove(session1);
+        assertNull(sm.findById("unitTest1"));
+        assertNull(sm.findById("unitTest2"));
+        iter = sm.iterateSessions();
+        assertTrue(iter.hasNext());
+        Session s = iter.next();
+        assertEquals(session3, s);
+        assertFalse(iter.hasNext());
+
+        sm.loadSessions();
+        assertNotNull(sm.findById("unitTest1"));
+        assertNotNull(sm.findById("unitTest2"));
+        iter = sm.iterateSessions();
+        assertTrue(iter.hasNext());
+        iter.next();
+        iter.next();
+        assertFalse(iter.hasNext());
+    }
+
+    private static class TestListener implements SessionManagerListener {
         public boolean wasAdded;
         public boolean wasRemoved;
         public boolean wasSetCurrent;
         
+        @Override
         public void sessionAdded(SessionManagerEvent e) {
             wasAdded = true;
         }
         
+        @Override
         public void sessionRemoved(SessionManagerEvent e) {
             wasRemoved = true;
         }
         
+        @Override
         public void sessionSetCurrent(SessionManagerEvent e) {
             wasSetCurrent = true;
         }

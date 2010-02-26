@@ -81,7 +81,7 @@ public class SessionHelper {
      */
     public static String getTestClasspath() {
         String clspath = System.getProperty("test.build.dir");
-        if (clspath == null || clspath.length() == 0) {
+        if (clspath == null || clspath.isEmpty()) {
             throw new RuntimeException("test.build.dir sysproperty required");
         }
         return clspath;
@@ -95,7 +95,7 @@ public class SessionHelper {
      */
     public static String getTestSourcepath() {
         String clspath = System.getProperty("test.src.dir");
-        if (clspath == null || clspath.length() == 0) {
+        if (clspath == null || clspath.isEmpty()) {
             throw new RuntimeException("test.src.dir sysproperty required");
         }
         return clspath;
@@ -168,8 +168,19 @@ public class SessionHelper {
     }
 
     /**
+     * Resume the default session and wait for it to suspend again.
+     *
+     * <p>{@see #resumeAndWait(Session)} for details.</p>
+     */
+    public static synchronized void resumeAndWait() {
+        resumeAndWait(getSession());
+    }
+
+    /**
      * Resume the given session and wait for it to suspend again. Typically
      * this means the method will not return until a breakpoint has been hit.
+     * However, it may be that the session has disconnected because the
+     * debuggee has exited.
      *
      * @param  session  Session to resume and wait for.
      */

@@ -44,7 +44,7 @@ public class DefaultPlatformService implements PlatformService {
     /** Name of the user directory where files are stored by default. */
     private static final String USER_DIR = ".jswat-test";
     /** The path to the user's home directory. */
-    private File userDirectory;
+    private final File userDirectory;
 
     /**
      * Creates a new instance of DefaultPlatformService.

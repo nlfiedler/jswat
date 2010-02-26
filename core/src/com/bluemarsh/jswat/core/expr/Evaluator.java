@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2009. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.core.util.Classes;
@@ -43,7 +42,6 @@ import java.io.StringReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.NbBundle;
@@ -56,6 +54,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class Evaluator {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             Evaluator.class.getName());
@@ -133,7 +132,7 @@ public class Evaluator {
      *          if the expression could not be evaluated.
      */
     public Object evaluate(ThreadReference thread, int frame)
-        throws EvaluationException {
+            throws EvaluationException {
         if (root == null) {
             if (expression == null) {
                 // Simple base case: no expression whatsoever.
@@ -143,7 +142,7 @@ public class Evaluator {
             }
         }
         EvaluationContext context = new EvaluationContext(
-            expression, root, thread, frame);
+                expression, root, thread, frame);
         Object val = root.evaluate(context);
         // Check that the final result is not something erroneous.
         if (val instanceof ClassnamePart) {
@@ -198,10 +197,6 @@ public class Evaluator {
                 buf.append(result != null ? Strings.trimQuotes(result.toString()) : "null");
             } catch (ExecutionException ee) {
                 logger.log(Level.SEVERE, null, ee);
-            } catch (InterruptedException ie) {
-                logger.log(Level.SEVERE, null, ie);
-            } catch (TimeoutException te) {
-                logger.log(Level.SEVERE, null, te);
             }
 
         } else if (value instanceof CharValue) {

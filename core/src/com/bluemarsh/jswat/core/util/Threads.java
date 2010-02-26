@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2009. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import com.sun.jdi.ThreadGroupReference;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import org.openide.util.NbBundle;
 
 /**
@@ -42,13 +40,9 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class Threads {
+
     /** The thread pool, if created, for running background tasks. */
     private static ExecutorService threadPool;
-    /** The thread pool of low priority threads, if created,
-     * for running background tasks. */
-    private static ExecutorService threadPoolLow;
-    /** The priority for the low priority threads. */
-    private static final int THREAD_LOW_PRIORITY = 3;
 
     /**
      * Creates a new instance of Threads.
@@ -110,7 +104,7 @@ public class Threads {
             // Fall through to the default handler, as getting the
             // unique identifier is always safe.
         }
-        if (id == null || id.length() == 0) {
+        if (id == null || id.isEmpty()) {
             id = String.valueOf(thread.uniqueID());
         }
         return id;
@@ -124,39 +118,10 @@ public class Threads {
      * @return  cached thread pool.
      */
     public synchronized static ExecutorService getThreadPool() {
-        return getThreadPool(false);
-    }
-
-    /**
-     * Returns the thread pool for running tasks in the background.
-     * If the service has not yet been created, or if the existing
-     * service has been shut down, then a new service will be created.
-     *
-     * @param  lowPriority  true to turn a thread pool consisting that
-     *                      creates threads with a below normal priority.
-     * @return  cached thread pool.
-     */
-    public synchronized static ExecutorService getThreadPool(boolean lowPriority) {
-        if (lowPriority) {
-            if (threadPoolLow == null || threadPoolLow.isShutdown()) {
-                final ThreadFactory factory = Executors.defaultThreadFactory();
-                threadPoolLow = Executors.newCachedThreadPool(new ThreadFactory() {
-
-                    @Override
-                    public Thread newThread(Runnable r) {
-                        Thread th = factory.newThread(r);
-                        th.setPriority(THREAD_LOW_PRIORITY);
-                        return th;
-                    }
-                });
-            }
-            return threadPoolLow;
-        } else {
-            if (threadPool == null || threadPool.isShutdown()) {
-                threadPool = Executors.newCachedThreadPool();
-            }
-            return threadPool;
+        if (threadPool == null || threadPool.isShutdown()) {
+            threadPool = Executors.newCachedThreadPool();
         }
+        return threadPool;
     }
 
     /**
@@ -181,27 +146,27 @@ public class Threads {
     public static String threadStatus(ThreadReference thread) {
         String desc;
         switch (thread.status()) {
-        case ThreadReference.THREAD_STATUS_MONITOR:
-            desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Monitor");
-            break;
-        case ThreadReference.THREAD_STATUS_RUNNING:
-            desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Running");
-            break;
-        case ThreadReference.THREAD_STATUS_SLEEPING:
-            desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Sleeping");
-            break;
-        case ThreadReference.THREAD_STATUS_WAIT:
-            desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Waiting");
-            break;
-        case ThreadReference.THREAD_STATUS_ZOMBIE:
-            desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Zombie");
-            break;
-        case ThreadReference.THREAD_STATUS_NOT_STARTED:
-            desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_NotStarted");
-            break;
-        default:
-            desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Unknown");
-            break;
+            case ThreadReference.THREAD_STATUS_MONITOR:
+                desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Monitor");
+                break;
+            case ThreadReference.THREAD_STATUS_RUNNING:
+                desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Running");
+                break;
+            case ThreadReference.THREAD_STATUS_SLEEPING:
+                desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Sleeping");
+                break;
+            case ThreadReference.THREAD_STATUS_WAIT:
+                desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Waiting");
+                break;
+            case ThreadReference.THREAD_STATUS_ZOMBIE:
+                desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Zombie");
+                break;
+            case ThreadReference.THREAD_STATUS_NOT_STARTED:
+                desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_NotStarted");
+                break;
+            default:
+                desc = NbBundle.getMessage(Threads.class, "CTL_Thread_Status_Unknown");
+                break;
         }
         return desc;
     }
@@ -215,6 +180,7 @@ public class Threads {
      * @author  Nathan Fiedler
      */
     private static class ThreadGroupIterator implements Iterator<ThreadGroupReference> {
+
         /** Stack of thread group iterators. */
         private Stack<Iterator<ThreadGroupReference>> stack =
                 new Stack<Iterator<ThreadGroupReference>>();

@@ -22,6 +22,27 @@
  */
 package com.bluemarsh.jswat.core.util;
 
+import com.bluemarsh.jswat.core.SessionHelper;
+import com.bluemarsh.jswat.core.session.Session;
+import com.sun.jdi.BooleanType;
+import com.sun.jdi.BooleanValue;
+import com.sun.jdi.ByteType;
+import com.sun.jdi.ByteValue;
+import com.sun.jdi.CharType;
+import com.sun.jdi.CharValue;
+import com.sun.jdi.DoubleType;
+import com.sun.jdi.DoubleValue;
+import com.sun.jdi.FloatType;
+import com.sun.jdi.FloatValue;
+import com.sun.jdi.IntegerType;
+import com.sun.jdi.IntegerValue;
+import com.sun.jdi.LongType;
+import com.sun.jdi.LongValue;
+import com.sun.jdi.ReferenceType;
+import com.sun.jdi.ShortType;
+import com.sun.jdi.ShortValue;
+import com.sun.jdi.StringReference;
+import com.sun.jdi.VirtualMachine;
 import java.util.ArrayList;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -42,6 +63,65 @@ public class TypesTest {
         assertTrue(Types.canWiden("S", Byte.class));
         assertTrue(Types.canWiden("J", Integer.class));
         assertTrue(Types.canWiden("D", Float.class));
+
+        SessionHelper.launchDebuggee("LineBreakpointTestCode",
+                "LineBreakpointTestCode:53");
+        Session session = SessionHelper.getSession();
+        VirtualMachine vm = session.getConnection().getVM();
+        assertFalse(Types.canWiden("V", vm.mirrorOf(123456789).type()));
+        assertFalse(Types.canWiden("B", vm.mirrorOf(123456789).type()));
+        assertFalse(Types.canWiden("I", vm.mirrorOf("string").type()));
+        assertFalse(Types.canWiden("I", vm.mirrorOf(1.234D).type()));
+        assertFalse(Types.canWiden("S", vm.mirrorOf(123456789).type()));
+        assertTrue(Types.canWiden("I", vm.mirrorOf((byte) 123).type()));
+        assertTrue(Types.canWiden("S", vm.mirrorOf((byte) 123).type()));
+        assertTrue(Types.canWiden("J", vm.mirrorOf(12345678).type()));
+        assertTrue(Types.canWiden("J", vm.mirrorOf(12345678L).type()));
+        assertTrue(Types.canWiden("D", vm.mirrorOf(1.234F).type()));
+        assertTrue(Types.canWiden("D", vm.mirrorOf(1.234D).type()));
+        SessionHelper.resumeAndWait(session);
+    }
+
+    @Test
+    public void testMirrorOf() {
+        assertNull(Types.mirrorOf(null, null));
+
+        SessionHelper.launchDebuggee("LineBreakpointTestCode",
+                "LineBreakpointTestCode:53");
+        Session session = SessionHelper.getSession();
+        VirtualMachine vm = session.getConnection().getVM();
+        assertTrue(Types.mirrorOf("String", vm) instanceof StringReference);
+        assertTrue(Types.mirrorOf(Boolean.TRUE, vm) instanceof BooleanValue);
+        assertTrue(Types.mirrorOf(new Character('a'), vm) instanceof CharValue);
+        assertTrue(Types.mirrorOf(new Double(1.2), vm) instanceof DoubleValue);
+        assertTrue(Types.mirrorOf(new Float(1.2), vm) instanceof FloatValue);
+        assertTrue(Types.mirrorOf(new Integer(12), vm) instanceof IntegerValue);
+        assertTrue(Types.mirrorOf(new Long(12), vm) instanceof LongValue);
+        assertTrue(Types.mirrorOf(new Short((short) 12), vm) instanceof ShortValue);
+        assertTrue(Types.mirrorOf(new Byte((byte) 12), vm) instanceof ByteValue);
+        SessionHelper.resumeAndWait(session);
+    }
+
+    @Test
+    public void testSignatureToType() {
+        assertNull(Types.signatureToType(null, null));
+        assertNull(Types.signatureToType(" ", null));
+        assertNull(Types.signatureToType("V", null));
+
+        SessionHelper.launchDebuggee("LineBreakpointTestCode",
+                "LineBreakpointTestCode:53");
+        Session session = SessionHelper.getSession();
+        VirtualMachine vm = session.getConnection().getVM();
+        assertTrue(Types.signatureToType("B", vm) instanceof ByteType);
+        assertTrue(Types.signatureToType("C", vm) instanceof CharType);
+        assertTrue(Types.signatureToType("D", vm) instanceof DoubleType);
+        assertTrue(Types.signatureToType("F", vm) instanceof FloatType);
+        assertTrue(Types.signatureToType("I", vm) instanceof IntegerType);
+        assertTrue(Types.signatureToType("J", vm) instanceof LongType);
+        assertTrue(Types.signatureToType("S", vm) instanceof ShortType);
+        assertTrue(Types.signatureToType("Z", vm) instanceof BooleanType);
+        assertTrue(Types.signatureToType("Ljava/lang/String;", vm) instanceof ReferenceType);
+        SessionHelper.resumeAndWait(session);
     }
 
     @Test
@@ -67,6 +147,35 @@ public class TypesTest {
         assertTrue(Types.cast("Ljava/lang/Float;", new Double(1.234)) instanceof Float);
         assertTrue(Types.cast("D", new Float(1.234)) instanceof Double);
         assertTrue(Types.cast("Ljava/lang/Double;", new Float(1.234)) instanceof Double);
+
+        SessionHelper.launchDebuggee("LineBreakpointTestCode",
+                "LineBreakpointTestCode:53");
+        Session session = SessionHelper.getSession();
+        VirtualMachine vm = session.getConnection().getVM();
+        assertNull(Types.cast("B", vm.mirrorOf("foo"), vm));
+        assertNull(Types.cast("C", vm.mirrorOf("foo"), vm));
+        assertNull(Types.cast("I", vm.mirrorOf("foo"), vm));
+        assertNull(Types.cast("S", vm.mirrorOf("foo"), vm));
+        assertNull(Types.cast("J", vm.mirrorOf("foo"), vm));
+        assertNull(Types.cast("F", vm.mirrorOf("foo"), vm));
+        assertNull(Types.cast("D", vm.mirrorOf("foo"), vm));
+        assertNull(Types.cast("D", vm.mirrorOf("foo"), vm));
+        assertNull(Types.cast("D", vm.mirrorOf("foo"), vm));
+        assertTrue(Types.cast("B", vm.mirrorOf(100), vm) instanceof ByteValue);
+        assertTrue(Types.cast("Ljava/lang/Byte;", vm.mirrorOf(100), vm) instanceof ByteValue);
+        assertTrue(Types.cast("C", vm.mirrorOf(100), vm) instanceof CharValue);
+        assertTrue(Types.cast("Ljava/lang/Character;", vm.mirrorOf(100), vm) instanceof CharValue);
+        assertTrue(Types.cast("I", vm.mirrorOf(100L), vm) instanceof IntegerValue);
+        assertTrue(Types.cast("Ljava/lang/Integer;", vm.mirrorOf(100L), vm) instanceof IntegerValue);
+        assertTrue(Types.cast("S", vm.mirrorOf(100), vm) instanceof ShortValue);
+        assertTrue(Types.cast("Ljava/lang/Short;", vm.mirrorOf(100), vm) instanceof ShortValue);
+        assertTrue(Types.cast("J", vm.mirrorOf(100), vm) instanceof LongValue);
+        assertTrue(Types.cast("Ljava/lang/Long;", vm.mirrorOf(100), vm) instanceof LongValue);
+        assertTrue(Types.cast("F", vm.mirrorOf(1.234D), vm) instanceof FloatValue);
+        assertTrue(Types.cast("Ljava/lang/Float;", vm.mirrorOf(1.234D), vm) instanceof FloatValue);
+        assertTrue(Types.cast("D", vm.mirrorOf(1.234F), vm) instanceof DoubleValue);
+        assertTrue(Types.cast("Ljava/lang/Double;", vm.mirrorOf(1.234F), vm) instanceof DoubleValue);
+        SessionHelper.resumeAndWait(session);
     }
 
     @Test

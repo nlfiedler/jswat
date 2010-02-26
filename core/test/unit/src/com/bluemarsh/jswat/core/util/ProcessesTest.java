@@ -98,7 +98,7 @@ public class ProcessesTest {
         };
         Process proc = Runtime.getRuntime().exec(cmd);
         String output = Processes.waitFor(proc);
-        assertNull(output);
+        assertTrue(output.isEmpty());
     }
 
     @Test
