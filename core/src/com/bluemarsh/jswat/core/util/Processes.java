@@ -14,22 +14,19 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import org.openide.ErrorManager;
 
 /**
  * Utility methods for dealing with external processes.
@@ -45,82 +42,64 @@ public class Processes {
     }
 
     /**
-     * Reads the contents of the input stream and returns it as a String.
-     *
-     * @param  is  input stream to read from.
-     * @return  contents of stream as a String.
-     * @throws  IOException
-     *          if error occurs.
-     */
-    public static String readStream(InputStream is) throws IOException {
-        InputStreamReader isr = new InputStreamReader(is);
-        StringBuilder sb = new StringBuilder();
-        char[] buf = new char[1024];
-        int len = isr.read(buf);
-        while (len != -1) {
-            sb.append(buf, 0, len);
-            len = isr.read(buf);
-        }
-        return sb.toString();
-    }
-
-    /**
      * Waits for the given process to complete, returning the output from
      * that process.
      *
      * @param  proc  running process for which to wait.
-     * @return  the standard output followed by the standard error from
-     *          the process.
+     * @return  the standard output and standard error from the
+     *          process mingled much as it would normally be.
      */
     public static String waitFor(final Process proc) {
         // Get the output and error readers started.
+        StringBuffer buffer = new StringBuffer();
         ExecutorService es = Threads.getThreadPool();
-        Future<String> ofuture = es.submit(new Callable<String>() {
-            @Override
-            public String call() throws IOException {
-                return readStream(proc.getInputStream());
-            }
-        });
-        Future<String> efuture = es.submit(new Callable<String>() {
-            @Override
-            public String call() throws IOException {
-                return readStream(proc.getErrorStream());
-            }
-        });
+        es.submit(new StreamReader(proc.getInputStream(), buffer));
+        es.submit(new StreamReader(proc.getErrorStream(), buffer));
 
         // Wait for the process to terminate.
         try {
             proc.waitFor();
-        } catch (InterruptedException ie) {
-            // ignore
+        } catch (InterruptedException ignored) {
+        }
+        return buffer.toString();
+    }
+
+    /**
+     * Class StreamReader reads text from a stream and appends it to
+     * a StringBuffer.
+     */
+    private static class StreamReader implements Runnable {
+
+        /** From whence output is read. */
+        private final InputStream stream;
+        /** That to which output is sent. */
+        private final StringBuffer buffer;
+
+        /**
+         * Creates a new instance of StreamReader.
+         *
+         * @param  stream  where output is read from.
+         * @param  buffer  where output is sent.
+         */
+        public StreamReader(InputStream stream, StringBuffer buffer) {
+            this.stream = stream;
+            this.buffer = buffer;
         }
 
-        // Wait for the readers to finish.
-        String out = null;
-        try {
-            out = ofuture.get();
-        } catch (ExecutionException ee) {
-            out = ee.toString();
-        } catch (InterruptedException ie) {
-            out = ie.toString();
+        @Override
+        public void run() {
+            try {
+                InputStreamReader isr = new InputStreamReader(stream);
+                char[] buf = new char[1024];
+                int len = isr.read(buf);
+                while (len != -1) {
+                    buffer.append(buf, 0, len);
+                    len = isr.read(buf);
+                }
+            } catch (IOException ioe) {
+                // Unlikely to occur, but notify user prominently.
+                ErrorManager.getDefault().notify(ioe);
+            }
         }
-        String err = null;
-        try {
-            err = efuture.get();
-        } catch (ExecutionException ee) {
-            err = ee.toString();
-        } catch (InterruptedException ie) {
-            err = ie.toString();
-        }
-
-        // Construct the output.
-        if (out.length() > 0 && err.length() > 0) {
-            return out + "\n" + err;
-        } else if (out.length() > 0) {
-            return out;
-        } else if (err.length() > 0) {
-            return err;
-        }
-        return null;
     }
 }

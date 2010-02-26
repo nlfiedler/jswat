@@ -65,8 +65,8 @@ public class ProcessesTest {
         Process proc = Runtime.getRuntime().exec(cmd);
         String output = Processes.waitFor(proc);
         // Output comes before error.
-        assertTrue(output.startsWith("output 1"));
-        assertTrue(output.trim().endsWith("error 4"));
+        assertTrue(output.contains("output 1"));
+        assertTrue(output.trim().contains("error 4"));
     }
 
     @Test
@@ -76,8 +76,8 @@ public class ProcessesTest {
         };
         Process proc = Runtime.getRuntime().exec(cmd);
         String output = Processes.waitFor(proc);
-        assertTrue(output.startsWith("output 1"));
-        assertTrue(output.trim().endsWith("output 4"));
+        assertTrue(output.contains("output 1"));
+        assertTrue(output.trim().contains("output 4"));
     }
 
     @Test
@@ -87,8 +87,8 @@ public class ProcessesTest {
         };
         Process proc = Runtime.getRuntime().exec(cmd);
         String output = Processes.waitFor(proc);
-        assertTrue(output.startsWith("error 1"));
-        assertTrue(output.trim().endsWith("error 4"));
+        assertTrue(output.contains("error 1"));
+        assertTrue(output.trim().contains("error 4"));
     }
 
     @Test
