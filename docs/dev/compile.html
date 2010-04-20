@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.3), see www.w3.org" />
 
   <title>JSwat - How to Compile, Run, and Debug JSwat</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -43,11 +43,19 @@ java -jar cli/dist/com-bluemarsh-jswat-console.jar
   <h4>NetBeans IDE</h4>
 
   <p>The graphical JSwat interface is based on the NetBeans Platform
-  6.5, and utilizes some of the modules provided in the NetBeans IDE.
+  6.8, and utilizes some of the modules provided in the NetBeans IDE.
   Thus, to build this interface you will need to install the <a href=
-  "http://www.netbeans.org/features/ide/">NetBeans IDE</a> version 6.5.
+  "http://www.netbeans.org/features/ide/">NetBeans IDE</a> version 6.8.
   Developing JSwat within the NetBeans IDE is highly recommended, as it
   makes many of the mundane development tasks much easier.</p>
+
+  <p>After installing NetBeans, be sure to update the installation by
+  opening the <strong>Tools</strong> menu, choosing
+  <strong>Plugins</strong>, and selecting the <strong>Updates</strong>
+  tab. If there are any updates avaiable, apply them. JSwat is
+  typically built using the latest available versions of NetBeans
+  modules, so your build environment should be up-to-date to build
+  JSwat.</p>
 
   <p>You may also want to download the NetBeans IDE source code and API
   documentation, which can be found at the NetBeans site.</p>
@@ -111,13 +119,13 @@ ant -Drun.args=&quot;-J-agentlib:jdwp=transport=dt_socket,suspend=n,server=y,add
 
   <ol>
     <li>Define a NetBeans Platform (via <strong>Tools</strong> menu)
-    that points to the NetBeans 6.5 installation, giving it the name
-    <em>NetBeans 6.5</em>.</li>
+    that points to the NetBeans 6.8 installation, giving it the name
+    <em>NetBeans 6.8</em>.</li>
 
     <li>Add the following line to the
     <code>nbproject/private/platform-private.properties</code> file:
       <pre>
-nbplatform.active=NetBeans_6.5
+nbplatform.active=NetBeans_6.8
 </pre>
     </li>
 

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.3), see www.w3.org" />
 
   <title>JSwat - Making a Release</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -78,6 +78,23 @@
 
     <li>Examine the <code>messages.log</code> file for any errors or
     warnings</li>
+  </ol>
+
+  <h4>Testing against Older Releases</h4>
+
+  <p>If a particular JSwat release contains many changes, it may be
+  necessary to test the upgrade path from a previous release. The
+  following outline provides some ideas on how to do that.</p>
+
+  <ol>
+    <li>Install previous release version, run it, create something of
+    everything (sessions, breakpoints, watches)</li>
+
+    <li>Install the new version and start it, watching the log for any
+    issues</li>
+
+    <li>Make sure everything appears as before (sessions, breakpoints,
+    watches)</li>
   </ol>
 
   <h3>Releasing the Build</h3>
