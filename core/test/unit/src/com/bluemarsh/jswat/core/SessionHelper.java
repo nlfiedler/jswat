@@ -240,6 +240,35 @@ public class SessionHelper {
     }
 
     /**
+     * Performs a "step out" operation using the Stepper interface.
+     * Resumes the given session and waits for it to suspend again.
+     *
+     * @param  session  Session to resume and wait for.
+     * @throws  SteppingException
+     *          if current thread is not set.
+     */
+    public static synchronized void stepOutAndWait(Session session) throws
+            SteppingException {
+        if (session == null) {
+            throw new IllegalArgumentException("session cannot be null");
+        }
+        if (!session.isConnected()) {
+            throw new IllegalStateException("session must be connected");
+        }
+        // See the resumeAndWait() method for the explanation of this code.
+        session.addSessionListener(listener);
+        suspendedSem.drainPermits();
+        Stepper stepper = SteppingProvider.getStepper(session);
+        stepper.stepOut();
+        try {
+            suspendedSem.acquire();
+        } catch (InterruptedException ie) {
+            // ignored
+        }
+        session.removeSessionListener(listener);
+    }
+
+    /**
      * Listens to the session for the suspending events.
      */
     protected static class TestSessionListener implements SessionListener {

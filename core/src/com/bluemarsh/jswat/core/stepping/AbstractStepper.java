@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.stepping;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
@@ -33,7 +32,6 @@ import com.bluemarsh.jswat.core.session.SessionEvent;
 import com.bluemarsh.jswat.core.session.SessionListener;
 import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VirtualMachine;
-import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.StepRequest;
@@ -49,9 +47,10 @@ import org.openide.util.NbBundle;
  * @author Nathan Fiedler
  */
 public abstract class AbstractStepper implements SessionListener, Stepper {
+
     /** The Session instance we belong to. */
     private Session owningSession;
-    
+
     /**
      * Creates a new instance of AbstractStepper.
      */
@@ -78,9 +77,11 @@ public abstract class AbstractStepper implements SessionListener, Stepper {
         erm.deleteEventRequests(requests);
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
     }
 
@@ -107,9 +108,11 @@ public abstract class AbstractStepper implements SessionListener, Stepper {
         }
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
     }
 
+    @Override
     public void opened(Session session) {
         owningSession = session;
     }
@@ -129,27 +132,33 @@ public abstract class AbstractStepper implements SessionListener, Stepper {
         }
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void step(int size, int depth) throws SteppingException {
         StepRequest req = createStep(size, depth);
         req.enable();
         owningSession.resumeVM();
     }
 
+    @Override
     public void stepInto() throws SteppingException {
         step(StepRequest.STEP_LINE, StepRequest.STEP_INTO);
     }
 
+    @Override
     public void stepOut() throws SteppingException {
         step(StepRequest.STEP_LINE, StepRequest.STEP_OUT);
     }
 
+    @Override
     public void stepOver() throws SteppingException {
         step(StepRequest.STEP_LINE, StepRequest.STEP_OVER);
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

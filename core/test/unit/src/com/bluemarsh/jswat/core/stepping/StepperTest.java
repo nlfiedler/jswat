@@ -25,10 +25,17 @@ package com.bluemarsh.jswat.core.stepping;
 import com.bluemarsh.jswat.core.CoreSettings;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.SessionHelper;
+import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointFactory;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointHelper;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
+import com.bluemarsh.jswat.core.breakpoint.MalformedClassNameException;
+import com.bluemarsh.jswat.core.breakpoint.MalformedMemberNameException;
 import com.sun.jdi.Location;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -39,8 +46,8 @@ import static org.junit.Assert.*;
  */
 public class StepperTest {
 
-    @Test
-    public void test_Stepper() {
+    @BeforeClass
+    public static void setupClass() {
         // Set the excludes to avoid going places we don't want to go.
         CoreSettings cs = CoreSettings.getDefault();
         List<String> excludes = new ArrayList<String>();
@@ -49,7 +56,10 @@ public class StepperTest {
         excludes.add("java.*");
         excludes.add("javax.*");
         cs.setSteppingExcludes(excludes);
+    }
 
+    @Test
+    public void singleStepping() throws SteppingException {
         Session session = SessionHelper.getSession();
         SessionHelper.launchDebuggee("SteppingTestCode",
                 "SteppingTestCode:main(java.lang.String[])");
@@ -77,13 +87,25 @@ public class StepperTest {
             Location loc = BreakpointHelper.getLocation(session);
             assertNotNull("no location for entry " + ii, loc);
             assertEquals("entry " + ii, method, loc.method().name());
-            try {
-                SessionHelper.stepIntoAndWait(session);
-            } catch (SteppingException se) {
-                fail(se.toString());
-            }
+            SessionHelper.stepIntoAndWait(session);
         }
 
+        // The debuggee will have exited now and the session is inactive.
+    }
+
+    @Test
+    public void steppingOut() throws SteppingException {
+        SessionHelper.launchDebuggee("SteppingTestCode",
+                "SteppingTestCode$Inner:method_I()");
+        Session session = SessionHelper.getSession();
+        Location loc = BreakpointHelper.getLocation(session);
+        assertNotNull(loc);
+        assertEquals("method_I", loc.method().name());
+        SessionHelper.stepOutAndWait(session);
+        loc = BreakpointHelper.getLocation(session);
+        assertNotNull(loc);
+        assertEquals("main", loc.method().name());
+        SessionHelper.resumeAndWait();
         // The debuggee will have exited now and the session is inactive.
     }
 }
