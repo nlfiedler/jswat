@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -28,25 +27,13 @@ import com.bluemarsh.jswat.core.SessionHelper;
 import com.sun.jdi.Location;
 import java.io.File;
 import java.net.MalformedURLException;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-public class HitCountTest extends TestCase {
+public class HitCountTest {
 
-    public HitCountTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(HitCountTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
-    public void test_Breakpoint_Count_Equal() {
+    @Test
+    public void countEqual() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
@@ -66,6 +53,11 @@ public class HitCountTest extends TestCase {
             cond.setType(HitCountCondition.Type.EQUAL);
             bp.addCondition(cond);
             bm.addBreakpoint(bp);
+            // For code coverage, exercise additional methods.
+            assertNotNull(cond.describe());
+            assertEquals(2, cond.getCount());
+            assertEquals(HitCountCondition.Type.EQUAL, cond.getType());
+            assertTrue(cond.isVisible());
         } catch (MalformedClassNameException mcne) {
             fail(mcne.toString());
         } catch (MalformedURLException mue) {
@@ -94,7 +86,8 @@ public class HitCountTest extends TestCase {
         assertFalse("failed to disconnect", session.isConnected());
     }
 
-    public void test_Breakpoint_Count_Greater() {
+    @Test
+    public void countGreater() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
@@ -144,7 +137,8 @@ public class HitCountTest extends TestCase {
         assertFalse("failed to disconnect", session.isConnected());
     }
 
-    public void test_Breakpoint_Count_Multiple() {
+    @Test
+    public void countMultiple() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
