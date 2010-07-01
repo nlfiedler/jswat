@@ -55,10 +55,10 @@ import org.openide.util.NbBundle;
 public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
         implements MethodBreakpoint {
     /** Name of the method this breakpoint is set at (may be empty string). */
-    private String methodId;
+    protected String methodId;
     /** List of method parameters, where each element is represents the
      * parameter type (may be empty list). */
-    private List<String> methodParameters;
+    protected List<String> methodParameters;
 
     /**
      * Creates a new instance of DefaultMethodBreakpoint.

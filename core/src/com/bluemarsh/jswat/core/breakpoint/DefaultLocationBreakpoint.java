@@ -45,7 +45,7 @@ import org.openide.util.NbBundle;
 public class DefaultLocationBreakpoint extends AbstractBreakpoint
         implements LocationBreakpoint, SessionListener {
     /** The Location that we are set to stop upon. */
-    private Location location;
+    protected Location location;
     /** Resolved event request, if breakpoint has resolved. */
     private EventRequest eventRequest;
 

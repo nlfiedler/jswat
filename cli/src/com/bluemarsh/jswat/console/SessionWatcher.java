@@ -148,6 +148,10 @@ public class SessionWatcher implements SessionListener, SessionManagerListener {
                         threadId = String.valueOf(le.thread().uniqueID());
                     }
                     String args = Strings.listToString(loc.method().argumentTypeNames());
+                    // JDB doesn't emit arg types, and doing so confuses Emacs.
+                    if (Main.emulateJDB()) {
+                        args = "";
+                    }
                     Object[] params = {
                         loc.declaringType().name(),
                         loc.method().name(),

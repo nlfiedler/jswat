@@ -60,28 +60,15 @@ public class BreakpointSetCommand extends AbstractCommand {
     public void perform(CommandContext context, CommandArguments arguments)
             throws CommandException, MissingArgumentsException {
 
+        if (!arguments.hasMoreTokens()) {
+            displayBreakpointList(context);
+            return;
+        }
+
         Session session = context.getSession();
         DebuggingContext dbgctx = context.getDebuggingContext();
         PrintWriter writer = context.getWriter();
         BreakpointManager brkman = BreakpointProvider.getBreakpointManager(session);
-
-        if (!arguments.hasMoreTokens()) {
-            Iterator<Breakpoint> iter = brkman.getDefaultGroup().breakpoints(true);
-            while (iter.hasNext()) {
-                Breakpoint bp = iter.next();
-                Integer n = (Integer) bp.getProperty(Breakpoint.PROP_NUMBER);
-                if (n == null) {
-                    n = -1;
-                }
-                String d = bp.getDescription();
-                if (bp.isEnabled()) {
-                    writer.format("[%d] * %s\n", n, d);
-                } else {
-                    writer.format("[%d] - %s\n", n, d);
-                }
-            }
-            return;
-        }
 
         // See if user provided the go or thread option.
         String peek = arguments.peek();
@@ -132,6 +119,31 @@ public class BreakpointSetCommand extends AbstractCommand {
             throw new CommandException(
                 NbBundle.getMessage(BreakpointSetCommand.class,
                 "ERR_MalformedMethod", spec), mmne);
+        }
+    }
+
+    /**
+     * Implements "break" with no arguments, which sends a formatted
+     * view of the current breakpoint set to the {@link PrintWriter}
+     * for {@code context}.
+     */
+    public void displayBreakpointList(CommandContext context) {
+        Session session = context.getSession();
+        PrintWriter writer = context.getWriter();
+        BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
+        Iterator<Breakpoint> iter = bm.getDefaultGroup().breakpoints(true);
+        while (iter.hasNext()) {
+            Breakpoint bp = iter.next();
+            Integer n = (Integer) bp.getProperty(Breakpoint.PROP_NUMBER);
+            if (n == null) {
+                n = -1;
+            }
+            String d = bp.getDescription();
+            if (bp.isEnabled()) {
+                writer.format("[%d] * %s\n", n, d);
+            } else {
+                writer.format("[%d] - %s\n", n, d);
+            }
         }
     }
 }

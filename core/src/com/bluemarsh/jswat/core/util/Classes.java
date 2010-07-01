@@ -28,6 +28,7 @@ import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionProvider;
+import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.ClassType;
 import com.sun.jdi.InvalidTypeException;
 import com.sun.jdi.Method;
@@ -164,6 +165,28 @@ public class Classes {
             if (candidateTypes.size() != argumentTypes.size()) {
                 continue;
             }
+
+            boolean haveCandidateTypes = true;
+            try {
+                // Just asking for them will throw if any aren't loaded.
+                List<Type> actualCandidateTypes = candidate.argumentTypes();
+            } catch (ClassNotLoadedException cnlx) {
+                // This is thrown when there is _any_ parameter to this method
+                // whose type is a reference type (class, interface, array)
+                // and it has not been loaded by the declaring type's ClassLoader.
+                // In this situation we can only use type names for scoring.
+                // See http://java.sun.com/javase/6/docs/jdk/api/jpda/jdi/com/sun/jdi/ClassNotLoadedException.html
+                // for more info (including how _not_ to solve it.)
+                // Note that if no ClassNotLoadedException is thrown, the arg
+                // types may still have problems.  In particular a given arg type
+                // maybe loaded but not yet prepared (see JVM specification 5.4),
+                // in which case we can perform certain operations, but others,
+                // for instance fields(), will throw a ClassNotPreparedException.
+                // I don't think we use any of those operations here, so we don't
+                // check for that case.
+                haveCandidateTypes = false;
+            }
+
             int score = 0;
             for (int ii = 0; ii < candidateTypes.size(); ii++) {
                 String givenSig = argumentTypes.get(ii);
@@ -182,21 +205,27 @@ public class Classes {
                     continue;
                 }
 
-                // Compare the argument types for similarity.
                 Type givenType = Types.signatureToType(givenSig, vm);
-                if (givenType == null) {
+                if (givenType == null && haveCandidateTypes) {
+                    // Don't throw if the arg types weren't loaded.
+                    // It's a rare edge case (see comments above), and when
+                    // it happens we should still try to find a match.
                     throw new InvalidTypeException(givenSig);
                 }
+
+                // Compare the argument types for similarity.
                 String primSig = Types.wrapperToPrimitive(givenSig);
                 if (givenSig.equals(expectedSig)) {
                     score += 5;
                 } else if (fuzzySearch && primSig.equals(expectedSig)) {
                     score += 4;
-                } else if (givenType instanceof ReferenceType
+                } else if (haveCandidateTypes
+                        && givenType instanceof ReferenceType
                         && Types.isCompatible(
                         expectedSig, (ReferenceType) givenType)) {
                     score += 3;
                 } else if (fuzzySearch
+                        && haveCandidateTypes
                         && Types.canWiden(expectedSig, givenType)) {
                     score += 2;
                 } else {

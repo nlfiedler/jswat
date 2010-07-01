@@ -87,7 +87,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
             PipedReader pr = PipeProvider.getPipedReader(session);
             OutputStream os = process.getOutputStream();
             InputReader ir = new InputReader(pr, os, outputSink);
-            Future future = Threads.getThreadPool(true).submit(ir);
+            Future future = Threads.getThreadPool().submit(ir);
             inputFutures.put(session, future);
         }
     }

@@ -51,13 +51,13 @@ import org.openide.util.NbBundle;
 public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         implements LineBreakpoint {
     /** The URL of the file in which we are set. */
-    private String url;
+    protected String url;
     /** Name of package containg the class this breakpoint is set in. */
-    private String packageName;
+    protected String packageName;
     /** Name of the source file this breakpoint is set in. */
-    private String sourceName;
+    protected String sourceName;
     /** The line that we are set to stop upon. */
-    private int lineNumber;
+    protected int lineNumber;
 
     /**
      * Creates a new instance of DefaultLineBreakpoint.

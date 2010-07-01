@@ -36,6 +36,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * DefaultBreakpointFactory creates Breakpoint instances using the default
@@ -45,6 +47,31 @@ import java.util.List;
  * @author Nathan Fiedler
  */
 public class DefaultBreakpointFactory implements BreakpointFactory {
+
+    // This scanner matches a slightly broader set of syntaxes than
+    // are documented in "help break", for JDB compatibility.
+    // The method-break syntax is documented as
+    //   [go|thread] [<class>:]<method>([<arg-list>])
+    // Our extensions are:
+    //   - you can use full.class.name.methodName (or :methodName)
+    //   - you don't need () for breaking in a no-arg method
+    // Hence these two commands are equivalent:
+    //   break my.class.name.myMethod(some.type.Name)
+    //   break my.class.name:myMethod(some.type.Name)
+    // and these four are all equivalent:
+    //   break my.class.name.myMethod
+    //   break my.class.name:myMethod
+    //   break my.class.name.myMethod()
+    //   break my.class.name:myMethod()
+
+    private static final Pattern METHOD_BREAK_ARGS =
+            Pattern.compile(
+                // group 1:  optional class name
+                "(?:([^(]+)[:.])?"
+                // group 2:  required method name
+                + "([^(]+)"
+                // group 3:  optional parenthesized arg list, possibly empty
+                + "(?:\\((.*?)\\))?$");
 
     @Override
     public Breakpoint createBreakpoint(String spec, DebuggingContext context)
@@ -101,37 +128,25 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
             }
         } else {
             // It must be a method breakpoint.
-            int ci = spec.indexOf(':');
-            String suffix = spec;
-            // Remove the method portion from the spec.
-            if (ci > 0) {
-                suffix = spec.substring(ci + 1);
-                spec = spec.substring(0, ci);
-            } else {
+            Matcher m = METHOD_BREAK_ARGS.matcher(spec);
+            if (!m.matches()) {
+                throw new IllegalArgumentException(spec);
+            }
+            String cname = m.group(1);
+            if (cname == null) {
                 // With no class name, current location must be set.
                 Location loc = context.getLocation();
                 if (loc == null) {
                     throw new AmbiguousClassSpecException();
                 }
-                spec = loc.declaringType().name();
+                cname = loc.declaringType().name();
             }
-            int p1 = suffix.indexOf('(');
-            int p2 = suffix.lastIndexOf(')');
-            String method;
-            List<String> args = null;
-            if (p1 < 0 && p2 < 0) {
-                method = suffix;
-                args = Collections.emptyList();
-            } else if (p1 < 0 || p2 < 0) {
-                throw new IllegalArgumentException(suffix);
-            } else {
-                method = suffix.substring(0, p1);
-                args = Strings.stringToList(suffix.substring(p1 + 1, p2));
+            String method = m.group(2);
+            List<String> args = Collections.emptyList();
+            if (m.group(3) != null) {
+                args = Strings.stringToList(m.group(3));
             }
-            if (method.length() == 0) {
-                throw new AmbiguousMethodException();
-            }
-            return createMethodBreakpoint(spec, method, args);
+            return createMethodBreakpoint(cname, method, args);
         }
     }
 
@@ -173,7 +188,7 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
     @Override
     public LineBreakpoint createLineBreakpoint(String url, String pkg, int line)
             throws MalformedClassNameException, MalformedURLException {
-        LineBreakpoint lb = new DefaultLineBreakpoint();
+        LineBreakpoint lb = instantiateLineBreakpoint();
         String cname = pkg == null || pkg.length() == 0 ? "*" : pkg + ".*";
         lb.setClassName(cname);
         lb.setPackageName(pkg);
@@ -184,22 +199,43 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
         return lb;
     }
 
+    /**
+     * Create an unpopulated instance of {@code LineBreakpoint}.
+     */
+    public LineBreakpoint instantiateLineBreakpoint() {
+        return new DefaultLineBreakpoint();
+    }
+
     @Override
     public LocationBreakpoint createLocationBreakpoint(Location location) {
-        LocationBreakpoint lb = new DefaultLocationBreakpoint();
+        LocationBreakpoint lb = instantiateLocationBreakpoint();
         lb.setLocation(location);
         return lb;
+    }
+
+    /**
+     * Create an unpopulated instance of {@code LocationBreakpoint}.
+     */
+    public LocationBreakpoint instantiateLocationBreakpoint() {
+        return new DefaultLocationBreakpoint();
     }
 
     @Override
     public MethodBreakpoint createMethodBreakpoint(String cname, String method,
             List<String> args)
             throws MalformedClassNameException, MalformedMemberNameException {
-        MethodBreakpoint mb = new DefaultMethodBreakpoint();
+        MethodBreakpoint mb = instantiateMethodBreakpoint();
         mb.setClassName(cname);
         mb.setMethodName(method);
         mb.setMethodParameters(args);
         return mb;
+    }
+
+    /**
+     * Create an unpopulated instance of {@code MethodBreakpoint}.
+     */
+    public MethodBreakpoint instantiateMethodBreakpoint() {
+        return new DefaultMethodBreakpoint();
     }
 
     @Override

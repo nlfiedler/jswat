@@ -72,6 +72,9 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class Main {
+    private static boolean jdbEmulationMode;
+
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -178,7 +181,7 @@ public class Main {
 
         // Find and run the RC file.
         try {
-            runStartupFile(parser);
+            runStartupFile(parser, output);
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
         }
@@ -194,6 +197,10 @@ public class Main {
 
         // Display a helpful greeting.
         output.println(NbBundle.getMessage(Main.class, "MSG_Main_Welcome"));
+        if (jdbEmulationMode) {
+            output.println(NbBundle.getMessage(Main.class,
+                    "MSG_Main_Jdb_Emulation"));
+        }
 
         // Enter the main loop of processing user input.
         BufferedReader input = new BufferedReader(
@@ -212,7 +219,7 @@ public class Main {
                 // Sleep briefly to give the event processing threads,
                 // and the automatic output flushing, a chance to catch
                 // up before printing the input prompt again.
-                Thread.sleep(100);
+                Thread.sleep(250);
             } catch (InterruptedException ie) {
                 logger.log(Level.WARNING, null, ie);
             } catch (IOException ioe) {
@@ -287,7 +294,8 @@ public class Main {
      * @param  parser  the command interpreter.
      * @throws  IOException  if reading file fails.
      */
-    private static void runStartupFile(CommandParser parser) throws IOException {
+    private static void runStartupFile(CommandParser parser,
+            PrintWriter consoleOutput) throws IOException {
         StringWriter sw = new StringWriter();
         PrintWriter output = new PrintWriter(sw);
         PrintWriter savedOutput = parser.getOutput();
@@ -301,6 +309,8 @@ public class Main {
         try {
             for (File file : files) {
                 if (file.canRead()) {
+                    consoleOutput.println("Executing startup file: " +
+                            file.getAbsolutePath());
                     BufferedReader br = new BufferedReader(new FileReader(file));
                     try {
                         String line = br.readLine();
@@ -338,12 +348,14 @@ public class Main {
                 Main.class, "MSG_Main_Option_help"));
         OptionBuilder.withLongOpt("help");
         options.addOption(OptionBuilder.create("h"));
+
         // Option: attach <port>
         OptionBuilder.hasArg();
         OptionBuilder.withArgName("port");
         OptionBuilder.withDescription(NbBundle.getMessage(
                 Main.class, "MSG_Main_Option_attach"));
         options.addOption(OptionBuilder.create("attach"));
+
         // Option: sourcepath <path>
         OptionBuilder.hasArg();
         OptionBuilder.withArgName("path");
@@ -351,11 +363,17 @@ public class Main {
                 Main.class, "MSG_Main_Option_sourcepath"));
         options.addOption(OptionBuilder.create("sourcepath"));
 
+        // Option: e/emacs
+        OptionBuilder.withDescription(NbBundle.getMessage(
+                Main.class, "MSG_Main_Option_jdb"));
+        options.addOption(OptionBuilder.create("jdb"));
+
         // Parse the command line arguments.
         CommandLineParser parser = new GnuParser();
         CommandLine line = parser.parse(options, args);
 
         // Interrogate the command line options.
+        jdbEmulationMode = line.hasOption("jdb");
         if (line.hasOption("help")) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("java com.bluemarsh.jswat.console.Main", options);
@@ -394,7 +412,15 @@ public class Main {
             } catch (Exception e) {
                 logger.log(Level.SEVERE, null, e);
             }
-
         }
+    }
+
+    /**
+     * Returns {@code true} if we are attempting to emulate JDB
+     * enough to run within clients (such as Emacs) that may invoke
+     * JDB as a subprocess and parse its output.
+     */
+    public static boolean emulateJDB() {
+        return jdbEmulationMode;
     }
 }

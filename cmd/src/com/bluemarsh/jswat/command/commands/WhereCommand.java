@@ -50,6 +50,11 @@ import org.openide.util.NbBundle;
  */
 public class WhereCommand extends AbstractCommand {
 
+    /**
+     * First argument, or empty string if no args.
+     */
+    protected String arg = "";  // "where"
+
     @Override
     public String getName() {
         return "where";
@@ -69,15 +74,14 @@ public class WhereCommand extends AbstractCommand {
         if (!arguments.hasMoreTokens()) {
             // No arguments, try to use the current thread.
             if (current == null) {
-                throw new CommandException(
-                    NbBundle.getMessage(getClass(), "ERR_NoThread"));
+                throw new CommandException(getMessage("ERR_NoThread"));
             } else {
                 printStack(current, writer, dc);
             }
         } else {
-
-            String token = arguments.nextToken();
-            if (token.equals("all")) {
+            // Note that like JDB, we silently ignore any further args.
+            arg = arguments.nextToken();
+            if (arg.equals("all")) {
                 // Show thread locks for all threads.
                 List<ThreadReference> threads = vm.allThreads();
                 for (ThreadReference thread : threads) {
@@ -87,12 +91,11 @@ public class WhereCommand extends AbstractCommand {
             } else {
                 // Show thread locks for the given thread.
                 // Find the thread by the ID number.
-                ThreadReference thread = Threads.findThread(vm, token);
+                ThreadReference thread = Threads.findThread(vm, arg);
                 if (thread != null) {
                     printStack(thread, writer, dc);
                 } else {
-                    throw new CommandException(
-                        NbBundle.getMessage(getClass(), "ERR_InvalidThreadID"));
+                    throw new CommandException(getMessage("ERR_InvalidThreadID"));
                 }
             }
         }
@@ -107,22 +110,10 @@ public class WhereCommand extends AbstractCommand {
      * @throws  CommandException
      *          if something goes wrong.
      */
-    private void printStack(ThreadReference thread, PrintWriter writer,
+    protected void printStack(ThreadReference thread, PrintWriter writer,
             DebuggingContext dc) throws CommandException {
-        List stack = null;
-        try {
-            stack = thread.frames();
-        } catch (IncompatibleThreadStateException itse) {
-            throw new CommandException(NbBundle.getMessage(getClass(),
-                    "ERR_ThreadNotSuspended"));
-        } catch (ObjectCollectedException oce) {
-            throw new CommandException(NbBundle.getMessage(getClass(),
-                    "ERR_ObjectCollected"));
-        }
-        if (stack == null) {
-            throw new CommandException(NbBundle.getMessage(getClass(),
-                    "ERR_IncompatibleThread"));
-        }
+        List<StackFrame> stack = getStack(thread);
+
         boolean threadIsCurrent = false;
         ThreadReference currThrd = dc.getThread();
         if (currThrd != null && currThrd.equals(thread)) {
@@ -130,18 +121,15 @@ public class WhereCommand extends AbstractCommand {
         }
 
         StringBuilder sb = new StringBuilder(256);
-        sb.append(NbBundle.getMessage(getClass(), "CTL_where_header",
-                thread.name()));
+        sb.append(getMessage("CTL_where_header", thread.name()));
         sb.append('\n');
         int nFrames = stack.size();
         if (nFrames == 0) {
-            sb.append(NbBundle.getMessage(getClass(), "CTL_where_emptyStack"));
+            sb.append(getMessage("CTL_where_emptyStack"));
             sb.append('\n');
         }
         for (int i = 0; i < nFrames; i++) {
-            StackFrame frame = (StackFrame) stack.get(i);
-            Location loc = frame.location();
-            Method method = loc.method();
+            Location loc = stack.get(i).location();
             if (threadIsCurrent) {
                 if (dc.getFrame() == i) {
                     sb.append("* [");
@@ -154,23 +142,7 @@ public class WhereCommand extends AbstractCommand {
             // Leave the stack frame index as zero-based.
             sb.append(i);
             sb.append("] ");
-            sb.append(method.declaringType().name());
-            sb.append('.');
-            sb.append(method.name());
-            sb.append(" (");
-            if (method.isNative()) {
-                sb.append(NbBundle.getMessage(getClass(), "CTL_where_native"));
-            } else if (loc.lineNumber() != -1) {
-                try {
-                    sb.append(loc.sourceName());
-                } catch (AbsentInformationException e) {
-                    sb.append(NbBundle.getMessage(getClass(),
-                            "CTL_where_absentInfo"));
-                }
-                sb.append(':');
-                sb.append(loc.lineNumber());
-            }
-            sb.append(')');
+            appendFrameDescriptor(loc, sb);
             long pc = loc.codeIndex();
             if (pc != -1) {
                 sb.append(", pc = ");
@@ -181,8 +153,62 @@ public class WhereCommand extends AbstractCommand {
         writer.print(sb.toString());
     }
 
+    /**
+     * Append a description of the current frame's location.
+     * Does not print the "[i]" stack frame number.
+     */
+    public void appendFrameDescriptor(Location loc, StringBuilder sb) {
+        Method method = loc.method();
+        sb.append(method.declaringType().name());
+        sb.append('.');
+        sb.append(method.name());
+        sb.append(" (");
+        if (method.isNative()) {
+            sb.append(getMessage("CTL_where_native"));
+        } else if (loc.lineNumber() != -1) {
+            try {
+                sb.append(loc.sourceName());
+            } catch (AbsentInformationException e) {
+                sb.append(getMessage("CTL_where_absentInfo"));
+            }
+            sb.append(':');
+            sb.append(loc.lineNumber());
+        }
+        sb.append(')');
+    }
+
+    /**
+     * Return a list of {@link StackFrame} objects for passed thread.
+     */
+    public List<StackFrame> getStack(ThreadReference thread)
+            throws CommandException {
+        List<StackFrame> stack = null;
+        try {
+            stack = thread.frames();
+        } catch (IncompatibleThreadStateException itse) {
+            throw new CommandException(getMessage("ERR_ThreadNotSuspended"));
+        } catch (ObjectCollectedException oce) {
+            throw new CommandException(getMessage("ERR_ObjectCollected"));
+        }
+        if (stack == null) {
+            throw new CommandException(getMessage("ERR_IncompatibleThread"));
+        }
+        return stack;
+    }
+
     @Override
     public boolean requiresDebuggee() {
         return true;
+    }
+
+    // XXX:  move these utilities to all the main base classes,
+    // and derive the appropriate class name to use.
+
+    protected String getMessage(String key) {
+        return NbBundle.getMessage(WhereCommand.class, key);
+    }
+
+    protected String getMessage(String key, String arg) {
+        return NbBundle.getMessage(WhereCommand.class, key, arg);
     }
 }
