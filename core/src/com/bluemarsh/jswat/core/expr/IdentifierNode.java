@@ -119,17 +119,19 @@ class IdentifierNode extends AbstractNode implements JoinableNode, VariableNode 
             if (classes.size() > 0) {
                 valueContainer = classes.get(0);
                 return valueContainer;
-            } else {
-                // It may be a 'core' package class.
-                classes = vm.classesByName("java.lang." + identifierName);
-                if (classes.size() > 0) {
-                    valueContainer = classes.get(0);
-                    return valueContainer;
-                } else {
-                    // Possibly this is just a classname part.
-                    return new ClassnamePart(identifierName);
-                }
             }
+            // It may be a 'core' package class.
+            classes = vm.classesByName("java.lang." + identifierName);
+            if (classes.size() > 0) {
+                valueContainer = classes.get(0);
+                return valueContainer;
+            }
+            valueContainer = checkUnqualifiedClassname(vm, identifierName);
+            if (valueContainer != null) {
+                return valueContainer;
+            }
+            // Possibly this is just a classname part.
+            return new ClassnamePart(identifierName);
         } else if (localVar != null) {
             // Locals shadow fields so handle them first.
             valueContainer = localVar;
@@ -142,13 +144,42 @@ class IdentifierNode extends AbstractNode implements JoinableNode, VariableNode 
                 String msg = NbBundle.getMessage(IdentifierNode.class,
                     "error.staticAccess", identifierName, mname);
                 throw new UnknownReferenceException(msg);
-            } else {
-                fieldContainer = thiso == null ? clazz : thiso;
-                valueContainer = field;
-                return thiso == null
+            }
+            fieldContainer = thiso == null ? clazz : thiso;
+            valueContainer = field;
+            return thiso == null
                     ? clazz.getValue(field) : thiso.getValue(field);
+        }
+    }
+
+    /**
+     * Check if {@code id} is an unambiguous unqualified class name.
+     * If so, return the class. <p>
+     *
+     * We do this because people always want to type unqualified class names
+     * for classes that are imported in the current source file (because
+     * they "feel" like they're part of the lexical scope chain, even though
+     * in reality they're just converted to qnames by the compiler.) <p>
+     *
+     * A slightly better solution would be to run a Java parser (using the
+     * Java 6 compiler apis) over the source file and figure out what classes
+     * are actually imported, but it seems like overkill.  Plus it's nice to
+     * be able to use any unqualified classname in an expression.  The only
+     * advantage to parsing the imports would be to disambiguate duplicates
+     * by choosing the one that was imported.
+     */
+    private ReferenceType checkUnqualifiedClassname(VirtualMachine vm, String id) {
+        String tail = "." + id;
+        ReferenceType result = null;
+        for (ReferenceType rtype : vm.allClasses()) {
+            if (rtype.name().endsWith(tail)) {
+                if (result != null) {
+                    return null;  // ambiguous!
+                }
+                result = rtype;
             }
         }
+        return result;
     }
 
     /**
