@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command.commands;
 
 import com.bluemarsh.jswat.command.AbstractCommand;
@@ -40,6 +39,7 @@ import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.util.Processes;
 import com.bluemarsh.jswat.core.util.Strings;
 import com.sun.jdi.connect.VMStartException;
+import java.io.File;
 import java.io.PrintWriter;
 import org.openide.util.NbBundle;
 
@@ -97,7 +97,7 @@ public class RunCommand extends AbstractCommand {
 
             // Create a connection, connect and resume the session
             PathManager pm = PathProvider.getPathManager(session);
-            String cp = Strings.listToString(pm.getClassPath());
+            String cp = Strings.listToString(pm.getClassPath(), File.pathSeparator);
             String javaParams = session.getProperty(Session.PROP_JAVA_PARAMS);
             if (javaParams == null) {
                 javaParams = "";
