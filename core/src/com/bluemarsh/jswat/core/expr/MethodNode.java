@@ -167,7 +167,7 @@ class MethodNode extends OperatorNode implements JoinableNode {
         // Locate the named method in the resolved class.
         try {
             method = Classes.findMethod(
-                    clazz, methodName, argumentTypes, true);
+                    clazz, methodName, argumentTypes, true, true);
         } catch (AmbiguousMethodException ame) {
             throw new EvaluationException(NbBundle.getMessage(
                     MethodNode.class, "error.method.ambiguous", methodName,

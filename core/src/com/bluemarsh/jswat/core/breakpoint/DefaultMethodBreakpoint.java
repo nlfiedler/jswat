@@ -162,7 +162,7 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
                     }
                 }
                 Method method = Classes.findMethod(
-                    refType, methodId, parameterTypes, false);
+                    refType, methodId, parameterTypes, false, false);
                 locations.add(method.location());
             } catch (AmbiguousMethodException ame) {
                 throw new ResolveException(ame);

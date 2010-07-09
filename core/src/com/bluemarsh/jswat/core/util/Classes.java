@@ -118,6 +118,7 @@ public class Classes {
      * @param  fuzzySearch    true to allow widening numbers to find a
      *                        match, and to equate wrapper classes with
      *                        equivalent primitive types.
+     * @param  supers         true to search superclass chain as well
      * @return  desired method, or null if not found.
      * @throws  AmbiguousMethodException
      *          if the method is overloaded.
@@ -127,7 +128,7 @@ public class Classes {
      *          if the method could not be found.
      */
     public static Method findMethod(ReferenceType clazz, String methodName,
-            List<String> argumentTypes, boolean fuzzySearch)
+            List<String> argumentTypes, boolean fuzzySearch, boolean searchSupers)
             throws AmbiguousMethodException,
             InvalidTypeException,
             NoSuchMethodException {
@@ -140,7 +141,7 @@ public class Classes {
         }
         // Need to perform our own method name matching since JDI is broken
         // (does not differentiate constructors from initializers).
-        List<Method> methods = clazz.methods();
+        List<Method> methods = searchSupers ? clazz.allMethods() : clazz.methods();
         // The 'best' matching method found (and how many).
         Method bestMethod = null;
         int bestScore = -1;
