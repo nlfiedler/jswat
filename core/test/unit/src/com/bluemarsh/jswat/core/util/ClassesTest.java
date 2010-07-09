@@ -108,7 +108,7 @@ public class ClassesTest {
         // Overloaded method with no arguments provided should fail.
         List<String> args = new ArrayList<String>();
         try {
-            Classes.findMethod(clazz, "method_params", args, false);
+            Classes.findMethod(clazz, "method_params", args, false, false);
             fail("should have failed!");
         } catch (NoSuchMethodException ignored) {
             // expected
@@ -116,7 +116,7 @@ public class ClassesTest {
 
         // Method name that does not exist at all.
         try {
-            Classes.findMethod(clazz, "foobar", args, false);
+            Classes.findMethod(clazz, "foobar", args, false, false);
             fail("should have failed!");
         } catch (NoSuchMethodException ignored) {
             // expected
@@ -126,7 +126,7 @@ public class ClassesTest {
         try {
             args.add("*");
             ReferenceType str_type = vm.classesByName("java.lang.String").get(0);
-            Classes.findMethod(str_type, "valueOf", args, false);
+            Classes.findMethod(str_type, "valueOf", args, false, false);
             fail("should have failed!");
         } catch (AmbiguousMethodException ignored) {
             args.clear();
@@ -136,7 +136,7 @@ public class ClassesTest {
         {
             args.add("Ljava/lang/Character;");
             args.add("Ljava/lang/Double;");
-            Method result = Classes.findMethod(clazz, "method_params", args, true);
+            Method result = Classes.findMethod(clazz, "method_params", args, true, false);
             assertEquals("method_params", result.name());
             assertEquals("(CD)V", result.signature());
             args.clear();
@@ -146,7 +146,7 @@ public class ClassesTest {
         try {
             args.add("Ljava/lang/Character;");
             args.add("Ljava/lang/Double;");
-            Classes.findMethod(clazz, "method_params", args, false);
+            Classes.findMethod(clazz, "method_params", args, false, false);
             fail("should have failed!");
         } catch (NoSuchMethodException ignored) {
             args.clear();
@@ -154,7 +154,7 @@ public class ClassesTest {
 
         {
             args.add("<null>");
-            Method result = Classes.findMethod(clazz, "main", args, true);
+            Method result = Classes.findMethod(clazz, "main", args, true, false);
             assertEquals("main", result.name());
             assertEquals("([Ljava/lang/String;)V", result.signature());
             args.clear();
@@ -164,7 +164,7 @@ public class ClassesTest {
         {
             args.add("C");
             args.add("D");
-            Method result = Classes.findMethod(clazz, "method_params", args, false);
+            Method result = Classes.findMethod(clazz, "method_params", args, false, false);
             assertEquals("method_params", result.name());
             assertEquals("(CD)V", result.signature());
             args.clear();
@@ -172,7 +172,7 @@ public class ClassesTest {
 
         // Search for a constructor.
         {
-            Method result = Classes.findMethod(clazz, "MethodBreakpointTestCode", args, false);
+            Method result = Classes.findMethod(clazz, "MethodBreakpointTestCode", args, false, false);
             assertEquals("<init>", result.name());
             assertEquals("()V", result.signature());
         }

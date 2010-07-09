@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2009. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -118,7 +118,7 @@ public class Classes {
      * @param  fuzzySearch    true to allow widening numbers to find a
      *                        match, and to equate wrapper classes with
      *                        equivalent primitive types.
-     * @param  supers         true to search superclass chain as well
+     * @param  searchSupers   true to search superclass chain as well
      * @return  desired method, or null if not found.
      * @throws  AmbiguousMethodException
      *          if the method is overloaded.
@@ -129,8 +129,7 @@ public class Classes {
      */
     public static Method findMethod(ReferenceType clazz, String methodName,
             List<String> argumentTypes, boolean fuzzySearch, boolean searchSupers)
-            throws AmbiguousMethodException,
-            InvalidTypeException,
+            throws AmbiguousMethodException, InvalidTypeException,
             NoSuchMethodException {
 
         VirtualMachine vm = clazz.virtualMachine();
