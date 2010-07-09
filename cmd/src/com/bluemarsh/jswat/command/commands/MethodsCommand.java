@@ -28,10 +28,14 @@ import com.bluemarsh.jswat.command.CommandArguments;
 import com.bluemarsh.jswat.command.CommandContext;
 import com.bluemarsh.jswat.command.CommandException;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
+import com.bluemarsh.jswat.core.context.DebuggingContext;
+import com.bluemarsh.jswat.core.expr.Evaluator;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.util.Classes;
 import com.sun.jdi.Method;
+import com.sun.jdi.ObjectReference;
 import com.sun.jdi.ReferenceType;
+import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VirtualMachine;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -64,6 +68,10 @@ public class MethodsCommand extends AbstractCommand {
 
         // Find all matching classes.
         List<ReferenceType> classes =  Classes.findClasses(vm, cname);
+        if (classes == null || classes.isEmpty()) {
+            classes = resolveReference(context, cname);
+        }
+
         if (classes != null && classes.size() > 0) {
             // For each matching class, print its methods.
             StringBuilder sb = new StringBuilder(256);
@@ -81,6 +89,35 @@ public class MethodsCommand extends AbstractCommand {
             throw new CommandException(NbBundle.getMessage(
                     MethodsCommand.class, "ERR_ClassNotFound", cname));
         }
+    }
+
+    /**
+     * Call the evaluator to figure out whether this is a reference to some
+     * object.  If so, return its type (as a list, for caller compatibility).
+     * @param context command context
+     * @param expr an expression to evaluate in the current scope
+     * @return a reference type or null if we couldn't resolve the expression
+     */
+    List<ReferenceType> resolveReference(CommandContext context, String expr) {
+        try {
+            Session session = context.getSession();
+            DebuggingContext dc = context.getDebuggingContext();
+            ThreadReference thread = dc.getThread();
+            Evaluator evaluator = new Evaluator(expr);
+            Object value = evaluator.evaluate(thread, dc.getFrame());
+            if (value instanceof ObjectReference) {
+                ObjectReference object = (ObjectReference) value;
+                ReferenceType rtype = object.referenceType();
+                List<ReferenceType> result = new ArrayList<ReferenceType>();
+                result.add(rtype);
+                return result;
+            }
+        } catch (Exception x) {
+            // Doing nothing here is no worse than the default behavior of
+            // the "methods" command before we implemented resolveReference().
+            // Could be better, but at least it's a start.
+        }
+        return null;
     }
 
     /**

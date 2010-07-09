@@ -64,6 +64,10 @@ public class FieldsCommand extends AbstractCommand {
 
         // Find all matching classes.
         List<ReferenceType> classes = Classes.findClasses(vm, cname);
+        if (classes == null || classes.isEmpty()) {
+            classes = new MethodsCommand().resolveReference(context, cname);
+        }
+
         if (classes != null && classes.size() > 0) {
             // For each matching class, print its fields.
             StringBuilder sb = new StringBuilder(256);
