@@ -112,20 +112,17 @@ public class Classes {
      * method must not be overloaded. Otherwise, the argument types must
      * match exactly.
      *
-     * @param  clazz          class in which to find method.
-     * @param  methodName     name of method to find.
-     * @param  argumentTypes  list of method argument types in JNI form.
+     * @param  clazz          class in which to find the method
+     * @param  methodName     name of method to find
+     * @param  argumentTypes  list of method argument types in JNI form
      * @param  fuzzySearch    true to allow widening numbers to find a
      *                        match, and to equate wrapper classes with
-     *                        equivalent primitive types.
+     *                        equivalent primitive types
      * @param  searchSupers   true to search superclass chain as well
-     * @return  desired method, or null if not found.
-     * @throws  AmbiguousMethodException
-     *          if the method is overloaded.
-     * @throws  InvalidTypeException
-     *          if an argument type was not recognized.
-     * @throws  NoSuchMethodException
-     *          if the method could not be found.
+     * @return  desired method, or {@code null} if not found
+     * @throws  AmbiguousMethodException if the method is overloaded
+     * @throws  InvalidTypeException if an argument type was not recognized
+     * @throws  NoSuchMethodException if the method could not be found
      */
     public static Method findMethod(ReferenceType clazz, String methodName,
             List<String> argumentTypes, boolean fuzzySearch, boolean searchSupers)
@@ -133,14 +130,12 @@ public class Classes {
             NoSuchMethodException {
 
         VirtualMachine vm = clazz.virtualMachine();
-        boolean constructor = false;
-        if (methodName.equals(Names.getShortClassName(clazz.name()))) {
-            // Special case for what appears to be a constructor.
-            constructor = true;
-        }
+        boolean constructor = methodName.equals(Names.getShortClassName(clazz.name()));
+
         // Need to perform our own method name matching since JDI is broken
         // (does not differentiate constructors from initializers).
         List<Method> methods = searchSupers ? clazz.allMethods() : clazz.methods();
+
         // The 'best' matching method found (and how many).
         Method bestMethod = null;
         int bestScore = -1;
@@ -180,14 +175,22 @@ public class Classes {
                 // Note that if no ClassNotLoadedException is thrown, the arg
                 // types may still have problems.  In particular a given arg type
                 // maybe loaded but not yet prepared (see JVM specification 5.4),
-                // in which case we can perform certain operations, but others,
-                // for instance fields(), will throw a ClassNotPreparedException.
+                // in which case we can perform certain operations, but others:
+                // for instance, fields() will throw a ClassNotPreparedException.
                 // I don't think we use any of those operations here, so we don't
                 // check for that case.
                 haveCandidateTypes = false;
             }
 
+            // Tweak starting score to prefer methods in more-derived classes.
             int score = 0;
+            if (searchSupers) {
+                ReferenceType declaringType = candidate.declaringType();
+                if (declaringType instanceof ClassType) {
+                    score = getClassDepth((ClassType)declaringType);
+                }
+            }
+
             for (int ii = 0; ii < candidateTypes.size(); ii++) {
                 String givenSig = argumentTypes.get(ii);
                 if (givenSig.equals("*")) {
@@ -246,11 +249,27 @@ public class Classes {
 
         if (bestCount == 1) {
             return bestMethod;
-        } else if (bestCount > 1) {
-            throw new AmbiguousMethodException(methodName);
-        } else {
-            throw new NoSuchMethodException(methodName);
         }
+        if (bestCount > 1) {
+            throw new AmbiguousMethodException(methodName);
+        }
+        throw new NoSuchMethodException(methodName);
+    }
+
+    /**
+     * If we're searching the superclass chain, then overridden methods
+     * will result in a tie.  We assume that the caller wants the most
+     * overriding version of the method (i.e. furthest down the descendant
+     * chain), since that's the one that is actually invoked at runtime.
+     * To break ties in a way that favors the descendant method, we start
+     * the score as the class's depth in the class chain.
+     *
+     * @param the declaring type for the candidate method being examined
+     * @return the number of superclasses in the ancestor chain.
+     */
+    private static int getClassDepth(ClassType clazz) {
+        ClassType superclass = clazz.superclass();
+        return superclass == null ? 0 : 1 + getClassDepth(superclass);
     }
 
     /**
