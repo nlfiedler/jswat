@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -28,24 +28,17 @@ import com.bluemarsh.jswat.core.SessionHelper;
 import com.sun.jdi.Location;
 import java.io.File;
 import java.net.MalformedURLException;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class PackageLineBreakpointTest extends TestCase {
+/**
+ * Unit tests for the PackageLineBreakpoint class.
+ *
+ * @author Nathan Fiedler
+ */
+public class PackageLineBreakpointTest {
 
-    public PackageLineBreakpointTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(PackageLineBreakpointTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Breakpoint_PackageLine() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();

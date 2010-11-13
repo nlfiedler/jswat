@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.path;
 
 import com.bluemarsh.jswat.core.SessionHelper;
@@ -36,27 +35,15 @@ import com.sun.jdi.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests the PathManager class.
  */
-public class PathManagerTest extends TestCase {
+public class PathManagerTest {
 
-    public PathManagerTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(PathManagerTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_PathManger() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
@@ -64,13 +51,13 @@ public class PathManagerTest extends TestCase {
         //
         // Test finding source for a non-public class.
         //
-        String[] classes = new String[] {
+        String[] classes = new String[]{
             "PathManagerTestCode",
             "PathManagerTestCode$Inner",
             "PathManagerTestCode$1",
             "PMSecond"
         };
-        String[] methods = new String[] {
+        String[] methods = new String[]{
             "method1",
             "method_I",
             "run",
@@ -119,8 +106,8 @@ public class PathManagerTest extends TestCase {
                 // public class in the source file doesn't work if we
                 // cannot read the byte code, so expect one of two
                 // possible values for this unit test.
-                if ((!pe.getName().equals("PathManagerTestCode.java")) &&
-                        !pe.getName().equals("PMSecond.class")) {
+                if ((!pe.getName().equals("PathManagerTestCode.java"))
+                        && !pe.getName().equals("PMSecond.class")) {
                     fail("source by name faild");
                 }
                 pe = pm.findByteCode(loc.declaringType());

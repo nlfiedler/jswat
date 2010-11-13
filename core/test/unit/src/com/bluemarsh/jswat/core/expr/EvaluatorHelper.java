@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2009. All Rights Reserved.
+ * are Copyright (C) 2003-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.core.util.Types;
@@ -38,7 +37,7 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 /**
  * Utility class for the Evaluator unit tests.
@@ -75,7 +74,7 @@ public class EvaluatorHelper {
                         buf.append(result.getClass().getName());
                         buf.append(')');
                     }
-                    TestCase.fail(buf.toString());
+                    fail(buf.toString());
                 }
             } catch (EvaluationException ee) {
                 if (!data.fail) {
@@ -88,14 +87,14 @@ public class EvaluatorHelper {
                     // this includes the exception description
                     ee.printStackTrace(pw);
                     buf.append(sw.toString());
-                    TestCase.fail(buf.toString());
+                    fail(buf.toString());
                 }
             } catch (Exception e) {
                 StringBuilder buf = new StringBuilder();
                 buf.append(data.expr);
                 buf.append(" <<unexpected exception>> ");
                 buf.append(e.toString());
-                TestCase.fail(buf.toString());
+                fail(buf.toString());
             }
 
             boolean equals;
@@ -125,7 +124,7 @@ public class EvaluatorHelper {
                         buf.append(result.getClass().getName());
                         buf.append(')');
                     }
-                    TestCase.fail(buf.toString());
+                    fail(buf.toString());
 
                 } else {
                     StringBuilder buf = new StringBuilder();
@@ -144,7 +143,7 @@ public class EvaluatorHelper {
                         buf.append(result.getClass().getName());
                         buf.append(')');
                     }
-                    TestCase.fail(buf.toString());
+                    fail(buf.toString());
                 }
             }
         }
@@ -157,7 +156,8 @@ public class EvaluatorHelper {
      * value of 'true', then they are considered equivalent.
      *
      * @param  o1  first object to compare.
-     * @param  o1  second object to compare.
+     * @param  o2  second object to compare.
+     * @return  true if two objects are equal, false otherwise.
      */
     public static boolean areEqual(Object o1, Object o2) {
         String t1 = null;
@@ -194,8 +194,8 @@ public class EvaluatorHelper {
             return true;
         } else {
             // Check if they are floating point numbers.
-            if ((v1 instanceof Float || v1 instanceof Double) &&
-                    (v2 instanceof Float || v2 instanceof Double)) {
+            if ((v1 instanceof Float || v1 instanceof Double)
+                    && (v2 instanceof Float || v2 instanceof Double)) {
                 // Yes they are, see if they are close to equal.
                 Number n1 = (Number) v1;
                 Number n2 = (Number) v2;
@@ -217,7 +217,7 @@ public class EvaluatorHelper {
         if (v instanceof PrimitiveValue) {
             PrimitiveValue pv = (PrimitiveValue) v;
             if (pv instanceof BooleanValue) {
-                return new Boolean(pv.booleanValue());
+                return pv.booleanValue();
             } else if (pv instanceof ByteValue) {
                 return new Byte(pv.byteValue());
             } else if (pv instanceof CharValue) {
@@ -234,7 +234,7 @@ public class EvaluatorHelper {
                 return new Short(pv.shortValue());
             }
         } else if (v instanceof StringReference) {
-            return new String(((StringReference) v).value());
+            return ((StringReference) v).value();
         }
         // Do not know how to deal with generic objects.
         return null;

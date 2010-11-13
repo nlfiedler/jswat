@@ -14,45 +14,34 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2009. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.SessionHelper;
 import com.bluemarsh.jswat.core.session.Session;
-import com.sun.jdi.IncompatibleThreadStateException;
 import com.sun.jdi.Location;
-import com.sun.jdi.ObjectCollectedException;
 import com.sun.jdi.ThreadReference;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.LocatableEvent;
 import com.sun.jdi.request.EventRequest;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.List;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class SuspendPolicyTest extends TestCase {
+/**
+ * Unit tests for the breakpoint suspend policy.
+ *
+ * @author Nathan Fiedler
+ */
+public class SuspendPolicyTest {
 
-    public SuspendPolicyTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(SuspendPolicyTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Suspend_Policy() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
@@ -114,13 +103,14 @@ public class SuspendPolicyTest extends TestCase {
      * A monitor that indicates if the debuggee suspended or not.
      */
     private static class SuspendMonitor implements Monitor {
+
         private boolean suspended;
         private boolean requiresThread;
 
         /**
          * @param  thread  true to force debuggee to suspend.
          */
-        public SuspendMonitor(boolean thread) {
+        SuspendMonitor(boolean thread) {
             requiresThread = thread;
         }
 
@@ -143,15 +133,8 @@ public class SuspendPolicyTest extends TestCase {
                 LocatableEvent le = (LocatableEvent) evt;
                 ThreadReference thread = le.thread();
                 if (thread != null) {
-                    List stack = null;
-                    try {
-                        stack = thread.frames();
-                        suspended = true;
-                        return;
-                    } catch (IncompatibleThreadStateException itse) {
-                    } catch (ObjectCollectedException oce) {
-                    }
-                    suspended = false;
+                    suspended = true;
+                    return;
                 }
             }
         }

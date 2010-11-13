@@ -22,8 +22,8 @@
   $Id$
 -->
 <!DOCTYPE filesystem
-  PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN"
-         "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+  PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+         "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
         <attr name="SystemFileSystem.localizingBundle" stringvalue="com.bluemarsh.jswat.ui.Bundle"/>

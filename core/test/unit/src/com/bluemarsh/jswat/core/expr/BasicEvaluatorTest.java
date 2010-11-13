@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2006. All Rights Reserved.
+ * are Copyright (C) 2003-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,27 +23,16 @@
 
 package com.bluemarsh.jswat.core.expr;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
 
 /**
  * Tests the Evaluator class.
+ *
+ * @author  Nathan Fiedler
  */
-public class BasicEvaluatorTest extends TestCase {
+public class BasicEvaluatorTest {
 
-    public BasicEvaluatorTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(BasicEvaluatorTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Evaluator_Basic() {
         TestData[] testDatum = new TestData[] {
             // base cases
@@ -52,7 +41,7 @@ public class BasicEvaluatorTest extends TestCase {
             new TestData("null", null, "'null' should be null"),
             new TestData("false", Boolean.FALSE),
             new TestData("true", Boolean.TRUE),
-            new TestData("\"abc\"", new String("abc")),
+            new TestData("\"abc\"", "abc"),
             new TestData("128", new Integer(128)),
             new TestData("182L", new Long(182)),
             new TestData("1.28", new Float(1.28)),
@@ -65,9 +54,9 @@ public class BasicEvaluatorTest extends TestCase {
 
             // binary: +, -
             new TestData("1 + 1", new Integer(2)),
-            new TestData("\"abc\" + 123", new String("abc123")),
-            new TestData("1 + true", new String("1true")),
-            new TestData("1 + null", new String("1null")),
+            new TestData("\"abc\" + 123", "abc123"),
+            new TestData("1 + true", "1true"),
+            new TestData("1 + null", "1null"),
             new TestData("2 - 1", new Integer(1)),
             new TestData("1 - 2", new Integer(-1)),
             new TestData("1 - 2L", new Long(-1)),
@@ -180,9 +169,9 @@ public class BasicEvaluatorTest extends TestCase {
             // typecast ()
             new TestData("(boolean) true", Boolean.TRUE),
             new TestData("(Boolean) false", Boolean.FALSE),
-            new TestData("(String) \"string\"", new String("string")),
+            new TestData("(String) \"string\"", "string"),
             new TestData("(Number) 123456", new Integer(123456)),
-            new TestData("(String) 123456", new String("123456")),
+            new TestData("(String) 123456", "123456"),
             new TestData("(long) 123456", new Long(123456)),
             new TestData("(Long) 123456", new Long(123456)),
             new TestData("(byte) 12", new Byte((byte) 12)),

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -28,24 +27,12 @@ import com.bluemarsh.jswat.core.SessionHelper;
 import com.sun.jdi.Location;
 import java.io.File;
 import java.net.MalformedURLException;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class ConditionTest extends TestCase {
+public class ConditionTest {
 
-    public ConditionTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ConditionTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Breakpoint_Condition() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
 import com.bluemarsh.jswat.core.path.PathManager;
@@ -35,28 +34,16 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests the CommandParser class.
  */
-public class ViewCommandTest extends TestCase {
+public class ViewCommandTest {
 
-    public ViewCommandTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ViewCommandTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
-    public void test_ViewCommand() {
+    @Test
+    public void testViewCommand() {
         // Make sure there is source code for the JDK core classes.
         RuntimeManager rm = RuntimeProvider.getRuntimeManager();
         String base = System.getProperty("java.home");
@@ -67,6 +54,7 @@ public class ViewCommandTest extends TestCase {
         }
         assertNotNull(rt);
         List<String> sources = rt.getSources();
+        assertNotNull(sources);
         assertTrue(sources.size() > 0);
 
         // Change the source path to include the JDK source.

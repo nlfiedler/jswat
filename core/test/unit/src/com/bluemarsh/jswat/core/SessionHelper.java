@@ -57,10 +57,15 @@ public class SessionHelper {
     private static TestSessionListener listener;
     /** Semaphore for the session suspended notification. */
     private static Semaphore suspendedSem;
+    /** Lock used for waiting after launching the debuggee. */
+    private static final Object LAUNCH_LOCK = new Object();
 
     static {
         listener = new TestSessionListener();
         suspendedSem = new Semaphore(1);
+    }
+
+    private SessionHelper() {
     }
 
     /**
@@ -133,37 +138,39 @@ public class SessionHelper {
      * @param  session  Session to connect to the debuggee.
      * @param  main     class to launch (with optional arguments).
      */
-    public static synchronized void launchDebuggee(Session session, String main) {
-        if (session == null) {
-            throw new IllegalArgumentException("session cannot be null");
-        }
-        if (session.isConnected()) {
-            throw new IllegalStateException("session must be disconnected");
-        }
-        String cp = "-cp " + getTestClasspath();
-        // Find the default runtime instance.
-        RuntimeManager rm = RuntimeProvider.getRuntimeManager();
-        RuntimeFactory rf = RuntimeProvider.getRuntimeFactory();
-        String base = rf.getDefaultBase();
-        JavaRuntime rt = rm.findByBase(base);
-        ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
-        JvmConnection conn = factory.createLaunching(rt, cp, main);
-        try {
-            conn.connect();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        session.connect(conn);
-        // Need to give the event handling thread a chance to dispatch
-        // events for the session activation. This is merely to simulate
-        // the natural delay that comes with being a user-driven app.
-        try {
-            // Note that yield() is not effective on some systems.
-            // Also, a value of 1 used to work, but it seems that after the
-            // event handling changes in revision 2843, a longer delay is
-            // necessary for some of the breakpoint tests to succeed.
-            Thread.sleep(100);
-        } catch (InterruptedException ignored) {
+    public static void launchDebuggee(Session session, String main) {
+        synchronized (LAUNCH_LOCK) {
+            if (session == null) {
+                throw new IllegalArgumentException("session cannot be null");
+            }
+            if (session.isConnected()) {
+                throw new IllegalStateException("session must be disconnected");
+            }
+            String cp = "-cp " + getTestClasspath();
+            // Find the default runtime instance.
+            RuntimeManager rm = RuntimeProvider.getRuntimeManager();
+            RuntimeFactory rf = RuntimeProvider.getRuntimeFactory();
+            String base = rf.getDefaultBase();
+            JavaRuntime rt = rm.findByBase(base);
+            ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
+            JvmConnection conn = factory.createLaunching(rt, cp, main);
+            try {
+                conn.connect();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            session.connect(conn);
+            // Need to give the event handling thread a chance to dispatch
+            // events for the session activation. This is merely to simulate
+            // the natural delay that comes with being a user-driven app.
+            try {
+                // Note that yield() is not effective on some systems.
+                // Also, a value of 1 used to work, but it seems that after the
+                // event handling changes in revision 2843, a longer delay is
+                // necessary for some of the breakpoint tests to succeed.
+                LAUNCH_LOCK.wait(100);
+            } catch (InterruptedException ignored) {
+            }
         }
     }
 
@@ -271,7 +278,7 @@ public class SessionHelper {
     /**
      * Listens to the session for the suspending events.
      */
-    protected static class TestSessionListener implements SessionListener {
+    private static class TestSessionListener implements SessionListener {
 
         @Override
         public void closing(SessionEvent sevt) {

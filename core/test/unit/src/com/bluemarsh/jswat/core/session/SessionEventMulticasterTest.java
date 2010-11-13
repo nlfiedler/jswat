@@ -14,36 +14,23 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2006. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests the SessionEventMulticaster class.
  */
-public class SessionEventMulticasterTest extends TestCase {
+public class SessionEventMulticasterTest {
 
-    public SessionEventMulticasterTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(SessionEventMulticasterTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_SessionEventMulticaster() {
         SessionListener sl = SessionEventMulticaster.add(null, null);
         assertEquals(sl, null);
@@ -177,7 +164,8 @@ public class SessionEventMulticasterTest extends TestCase {
         assertEquals(0, l1.suspended);
     }
 
-    protected class TestListener implements SessionListener {
+    private static class TestListener implements SessionListener {
+
         public TestListener listener;
         public int activated;
         public int closing;
@@ -186,12 +174,13 @@ public class SessionEventMulticasterTest extends TestCase {
         public int resuming;
         public int suspended;
 
-        public TestListener(boolean mutate) {
+        TestListener(boolean mutate) {
             if (mutate) {
                 listener = new TestListener(false);
             }
         }
 
+        @Override
         public void connected(SessionEvent sevt) {
             if (listener != null) {
                 sevt.getSession().addSessionListener(listener);
@@ -199,10 +188,12 @@ public class SessionEventMulticasterTest extends TestCase {
             activated++;
         }
 
+        @Override
         public void closing(SessionEvent sevt) {
             closing++;
         }
 
+        @Override
         public void disconnected(SessionEvent sevt) {
             if (listener != null) {
                 sevt.getSession().removeSessionListener(listener);
@@ -210,14 +201,17 @@ public class SessionEventMulticasterTest extends TestCase {
             deactivated++;
         }
 
+        @Override
         public void opened(Session session) {
             opened++;
         }
 
+        @Override
         public void resuming(SessionEvent sevt) {
             resuming++;
         }
 
+        @Override
         public void suspended(SessionEvent sevt) {
             suspended++;
         }

@@ -14,36 +14,23 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.SessionHelper;
 import com.sun.jdi.Location;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class ClassBreakpointTest extends TestCase {
+public class ClassBreakpointTest {
 
-    public ClassBreakpointTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(ClassBreakpointTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Breakpoint_Class() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
@@ -51,7 +38,7 @@ public class ClassBreakpointTest extends TestCase {
         //
         // Test with a class that has no package name.
         //
-        String[] classes = new String[] { "CBSecond" };
+        String[] classes = new String[]{"CBSecond"};
         for (String clazz : classes) {
             Breakpoint bp = bf.createClassBreakpoint(clazz, true, true);
             BreakpointHelper.prepareBreakpoint(bp, session);
@@ -59,7 +46,7 @@ public class ClassBreakpointTest extends TestCase {
 
         SessionHelper.launchDebuggee(session, "ClassBreakpointTestCode");
 
-        String[] methods = new String[] { "loadCBSecond" };
+        String[] methods = new String[]{"loadCBSecond"};
         for (String method : methods) {
             // Resume in order to hit the breakpoint.
             SessionHelper.resumeAndWait(session);
@@ -76,7 +63,7 @@ public class ClassBreakpointTest extends TestCase {
         //
         // Now test using a class inside a package.
         //
-        classes = new String[] { "jswat.test.CBSecond" };
+        classes = new String[]{"jswat.test.CBSecond"};
         for (String clazz : classes) {
             Breakpoint bp = bf.createClassBreakpoint(clazz, true, true);
             BreakpointHelper.prepareBreakpoint(bp, session);

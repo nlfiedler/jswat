@@ -40,13 +40,13 @@ import org.openide.util.NbBundle;
  */
 public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
     /** List of breakpoint groups in this group. */
-    private List<BreakpointGroup> groupList;
+    private final List<BreakpointGroup> groupList;
     /** List of breakpoints in this group. */
-    private List<Breakpoint> breakpointList;
+    private final List<Breakpoint> breakpointList;
     /** List of conditions this breakpoint evaluates when it stops. */
-    private List<Condition> conditionList;
+    private final List<Condition> conditionList;
     /** List of monitors this breakpoint executes when it stops. */
-    private List<Monitor> monitorList;
+    private final List<Monitor> monitorList;
 
     /**
      * Creates a BreakpointGroup with the default parameters.
@@ -58,6 +58,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         monitorList = new LinkedList<Monitor>();
     }
 
+    @Override
     public void addBreakpoint(Breakpoint bp) {
         bp.setBreakpointGroup(this);
         synchronized (breakpointList) {
@@ -69,6 +70,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public void addBreakpointGroup(BreakpointGroup bg) {
         bg.setParent(this);
         synchronized (groupList) {
@@ -76,12 +78,14 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public void addCondition(Condition condition) {
         synchronized (conditionList) {
             conditionList.add(condition);
         }
     }
 
+    @Override
     public void addMonitor(Monitor monitor) {
         if (monitor.requiresThread()) {
             throw new IllegalArgumentException("monitor must not require thread");
@@ -91,6 +95,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public int breakpointCount(boolean recurse) {
         // First get our own count of breakpoints.
         int count = breakpointList.size();
@@ -104,6 +109,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         return count;
     }
 
+    @Override
     public Iterator<Breakpoint> breakpoints(boolean recurse) {
         if (recurse) {
             return new BreakpointIterator(this);
@@ -112,10 +118,12 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public ListIterator<Condition> conditions() {
         return conditionList.listIterator();
     }
 
+    @Override
     public boolean conditionsSatisfied(Breakpoint bp, Event event) {
         // Check that the conditions are all satisfied.
         // We start by assuming they are satisfied.
@@ -144,11 +152,13 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public String getDescription() {
         return NbBundle.getMessage(DefaultBreakpointGroup.class,
                 "CTL_BreakpointGroup_description", getName());
     }
 
+    @Override
     public int groupCount(boolean recurse) {
         // First get our own count of groups.
         int count = groupList.size();
@@ -162,6 +172,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         return count;
     }
 
+    @Override
     public Iterator<BreakpointGroup> groups(boolean recurse) {
         if (recurse) {
             return new GroupIterator(this);
@@ -170,10 +181,12 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public ListIterator<Monitor> monitors() {
         return monitorList.listIterator();
     }
 
+    @Override
     public void removeBreakpoint(Breakpoint bp) {
         // Do not clear the parent of the breakpoint, otherwise the
         // Breakpoint.setBreakpointGroup() method won't work too well.
@@ -182,6 +195,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public void removeBreakpointGroup(BreakpointGroup bg) {
         // Do not clear the parent of the group, otherwise the
         // BreakpointGroup.setParent() method won't work too well.
@@ -190,24 +204,28 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public void removeCondition(Condition condition) {
         synchronized (conditionList) {
             conditionList.remove(condition);
         }
     }
 
+    @Override
     public void removeMonitor(Monitor monitor) {
         synchronized (monitorList) {
             monitorList.remove(monitor);
         }
     }
 
+    @Override
     public void reset() {
         for (Breakpoint bp : breakpointList) {
             bp.reset();
         }
     }
 
+    @Override
     public void runMonitors(BreakpointEvent event) {
         // We are not expecting multiple threads to modify this list,
         // but if it does happen, an exception will be thrown.
@@ -228,6 +246,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
         }
     }
 
+    @Override
     public String toString() {
         String name = getName();
         return name == null ? "<no-name>" : name;
@@ -238,13 +257,13 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
      * groups. It traverses the breakpoint groups in a breadth-first
      * manner.
      */
-    static class BreakpointIterator implements Iterator<Breakpoint> {
+    private static class BreakpointIterator implements Iterator<Breakpoint> {
         /** Current breakpoint group to iterate through. */
-        protected BreakpointGroup group;
+        private BreakpointGroup group;
         /** Iterator of the breakpoints in the current group. */
-        protected Iterator<Breakpoint> breakpointIterator;
+        private Iterator<Breakpoint> breakpointIterator;
         /** Queue of breakpoint groups to be iterated over. */
-        protected Queue<BreakpointGroup> groupQueue;
+        private Queue<BreakpointGroup> groupQueue;
 
         /**
          * Constructs a BreakpointIterator with an initial breakpoint
@@ -271,6 +290,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
             }
         }
 
+        @Override
         public boolean hasNext() {
             if (breakpointIterator.hasNext()) {
                 return true;
@@ -288,6 +308,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
             return false;
         }
 
+        @Override
         public Breakpoint next() {
             if (breakpointIterator.hasNext()) {
                 return breakpointIterator.next();
@@ -305,6 +326,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
             throw new NoSuchElementException("no more elements");
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException("remove not supported");
         }
@@ -315,9 +337,9 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
      * groups. It traverses the breakpoint groups in a breadth-first
      * manner.
      */
-    static class GroupIterator implements Iterator<BreakpointGroup> {
+    private static class GroupIterator implements Iterator<BreakpointGroup> {
         /** Queue of breakpoint groups to be iterated over. */
-        protected Queue<BreakpointGroup> groupQueue;
+        private Queue<BreakpointGroup> groupQueue;
 
         /**
          * Constructs a BreakpointIterator with an initial breakpoint
@@ -338,17 +360,19 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
          * @param  group  breakpoint group.
          */
         private void fillGroupQueue(BreakpointGroup group) {
-            Iterator groups = group.groups(false);
+            Iterator<BreakpointGroup> groups = group.groups(false);
             boolean offered = true;
             while (groups.hasNext() && offered) {
-                offered = groupQueue.offer((BreakpointGroup) groups.next());
+                offered = groupQueue.offer(groups.next());
             }
         }
 
+        @Override
         public boolean hasNext() {
             return groupQueue.size() > 0;
         }
 
+        @Override
         public BreakpointGroup next() {
             // Search for more groups.
             if (!groupQueue.isEmpty()) {
@@ -359,6 +383,7 @@ public class DefaultBreakpointGroup extends AbstractBreakpointGroup {
             throw new NoSuchElementException("no more elements");
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException("remove not supported");
         }

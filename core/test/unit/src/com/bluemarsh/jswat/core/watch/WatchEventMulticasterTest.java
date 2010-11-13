@@ -14,36 +14,23 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.watch;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests the WatchEventMulticaster class.
  */
-public class WatchEventMulticasterTest extends TestCase {
+public class WatchEventMulticasterTest {
 
-    public WatchEventMulticasterTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(WatchEventMulticasterTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_WatchEventMulticaster() {
         WatchListener sl = WatchEventMulticaster.add(null, null);
         assertEquals(sl, null);
@@ -85,14 +72,17 @@ public class WatchEventMulticasterTest extends TestCase {
         assertEquals(1, l2.removed);
     }
 
-    protected class TestListener implements WatchListener {
+    private static class TestListener implements WatchListener {
+
         public int added;
         public int removed;
 
+        @Override
         public void watchAdded(WatchEvent event) {
             added++;
         }
 
+        @Override
         public void watchRemoved(WatchEvent event) {
             removed++;
         }

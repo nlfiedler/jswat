@@ -266,6 +266,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
                 BreakpointEvent.Type.STOPPED, e);
         fireEvent(be);
         runMonitors(be);
+// TODO: this seems backward, should have breakpoint manager check if breakpoint should be deleted
         if (deleteWhenHit) {
             // Let listeners know we should be deleted. Hopefully one of
             // them (e.g. breakpoint manager) will actually remove us.

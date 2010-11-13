@@ -14,36 +14,28 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.SessionHelper;
 import com.sun.jdi.Location;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class UncaughtExceptionBreakpointTest extends TestCase {
+/**
+ * Unit tests for the uncaught exception breakpoint implementation.
+ *
+ * @author Nathan Fiedler
+ */
+public class UncaughtExceptionBreakpointTest {
 
-    public UncaughtExceptionBreakpointTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(UncaughtExceptionBreakpointTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Breakpoint_Uncaught_Exception() {
         //
         // Note that Java 1.5 now appears to have default handlers for

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
 /**
@@ -29,6 +28,7 @@ package com.bluemarsh.jswat.command;
  * @author Nathan Fiedler
  */
 public class TestData {
+
     /** EOL character sequence. */
     private static final String EOL;
     /** Input to be parsed. */
@@ -75,9 +75,10 @@ public class TestData {
 
     private void setResult(String result) {
         if (result != null) {
-            result = result.replace("\n", EOL);
+            this.result = result.replace("\n", EOL);
+        } else {
+            this.result = result;
         }
-        this.result = result;
     }
 
     public boolean shouldFail() {

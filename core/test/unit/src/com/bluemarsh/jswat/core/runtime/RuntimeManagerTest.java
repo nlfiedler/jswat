@@ -14,34 +14,26 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.runtime;
 
 import java.util.Iterator;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class RuntimeManagerTest extends TestCase {
+/**
+ * Unit tests for the RuntimeManager class.
+ *
+ * @author Nathan Fiedler
+ */
+public class RuntimeManagerTest {
 
-    public RuntimeManagerTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(RuntimeManagerTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_RuntimeManager() {
         RuntimeManager rm = RuntimeProvider.getRuntimeManager();
         RuntimeFactory rf = RuntimeProvider.getRuntimeFactory();
@@ -95,14 +87,17 @@ public class RuntimeManagerTest extends TestCase {
         rm.removeRuntimeListener(tl);
     }
 
-    protected class TestListener implements RuntimeListener {
+    private static class TestListener implements RuntimeListener {
+
         public int added;
         public int removed;
 
+        @Override
         public void runtimeAdded(RuntimeEvent event) {
             added++;
         }
 
+        @Override
         public void runtimeRemoved(RuntimeEvent event) {
             removed++;
         }

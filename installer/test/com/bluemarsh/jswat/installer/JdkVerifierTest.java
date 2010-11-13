@@ -14,39 +14,26 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.installer;
 
 import java.io.File;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Unit test for the JdkVerifier class.
  *
  * @author Nathan Fiedler
  */
-public class JdkVerifierTest extends TestCase {
+public class JdkVerifierTest {
 
-    public JdkVerifierTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(JdkVerifierTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_ScanPath() {
         String home = System.getProperty("java.home");
         if (home.endsWith("jre")) {

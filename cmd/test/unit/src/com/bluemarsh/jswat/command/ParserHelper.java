@@ -14,18 +14,17 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 /**
  * Utility class for the CommandParser unit tests.
@@ -55,7 +54,7 @@ public class ParserHelper {
                     buf.append(data.getInput());
                     buf.append(" <<should have failed -- result>> ");
                     buf.append(result);
-                    TestCase.fail(buf.toString());
+                    fail(buf.toString());
                 }
             } catch (CommandException ce) {
                 // This handles missing arguments, too.
@@ -68,7 +67,7 @@ public class ParserHelper {
                     pw = new PrintWriter(sw);
                     ce.printStackTrace(pw);
                     buf.append(sw.toString());
-                    TestCase.fail(buf.toString());
+                    fail(buf.toString());
                 }
             } catch (Exception e) {
                 StringBuilder buf = new StringBuilder();
@@ -78,7 +77,7 @@ public class ParserHelper {
                 pw = new PrintWriter(sw);
                 e.printStackTrace(pw);
                 buf.append(sw.toString());
-                TestCase.fail(buf.toString());
+                fail(buf.toString());
             }
 
             boolean equals;
@@ -98,7 +97,7 @@ public class ParserHelper {
                     buf.append(data.getResult());
                     buf.append(" <<but got>> ");
                     buf.append(result);
-                    TestCase.fail(buf.toString());
+                    fail(buf.toString());
 
                 } else {
                     StringBuilder buf = new StringBuilder();
@@ -107,7 +106,7 @@ public class ParserHelper {
                     buf.append(data.getResult());
                     buf.append(" <<but got>> ");
                     buf.append(result);
-                    TestCase.fail(buf.toString());
+                    fail(buf.toString());
                 }
             }
         }

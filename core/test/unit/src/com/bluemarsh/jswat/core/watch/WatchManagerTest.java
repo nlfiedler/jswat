@@ -14,39 +14,26 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2007. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.watch;
 
 import com.bluemarsh.jswat.core.session.DummySession;
 import com.bluemarsh.jswat.core.session.Session;
 import java.util.Iterator;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests the WatchManager class.
  */
-public class WatchManagerTest extends TestCase {
+public class WatchManagerTest {
 
-    public WatchManagerTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(WatchManagerTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_WatchManager_addRemoveListener() {
         Session session = new DummySession();
         session.setIdentifier("unitTest1");
@@ -63,6 +50,7 @@ public class WatchManagerTest extends TestCase {
         sm.removeWatchListener(tl);
     }
 
+    @Test
     public void test_WatchManager_iterate() {
         Session session = new DummySession();
         session.setIdentifier("unitTest1");
@@ -86,14 +74,17 @@ public class WatchManagerTest extends TestCase {
         assertTrue("watch 2 missing", found2);
     }
 
-    protected class TestListener implements WatchListener {
+    private static class TestListener implements WatchListener {
+
         public int added;
         public int removed;
 
+        @Override
         public void watchAdded(WatchEvent event) {
             added++;
         }
 
+        @Override
         public void watchRemoved(WatchEvent event) {
             removed++;
         }

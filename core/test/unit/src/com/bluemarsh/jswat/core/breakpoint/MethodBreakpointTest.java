@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -29,24 +28,17 @@ import com.sun.jdi.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class MethodBreakpointTest extends TestCase {
+/**
+ * Test the MethodBreakpoint implementation.
+ *
+ * @author Nathan Fiedler
+ */
+public class MethodBreakpointTest {
 
-    public MethodBreakpointTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(MethodBreakpointTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_Breakpoint_Method() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
@@ -54,20 +46,18 @@ public class MethodBreakpointTest extends TestCase {
         //
         // Test with a class that has no package name.
         //
-        String[] classes = new String[] {
+        String[] classes = new String[]{
             "MethodBreakpointTestCode",
             "MethodBreakpointTestCode$Inner",
             "MBSecond",
             "MethodBreakpointTestCode",
-            "MethodBreakpointTestCode",
-        };
-        String[] methods = new String[] {
+            "MethodBreakpointTestCode",};
+        String[] methods = new String[]{
             "method_MBTC",
             "method_I",
             "method_MBS",
             "method_params",
-            "method_params",
-        };
+            "method_params",};
         List<String> empty = Collections.emptyList();
         List<List<String>> arguments = new ArrayList<List<String>>();
         arguments.add(empty);
@@ -112,13 +102,12 @@ public class MethodBreakpointTest extends TestCase {
         //
         // Now test using a class inside a package.
         //
-        classes = new String[] {
-            "jswat.test.MethodBreakpointTestCode",
-            "jswat.test.MethodBreakpointTestCode$Inner",
-            "jswat.test.MBSecond",
-            "jswat.test.MethodBreakpointTestCode",
-            "jswat.test.MethodBreakpointTestCode",
-        };
+        classes = new String[]{
+                    "jswat.test.MethodBreakpointTestCode",
+                    "jswat.test.MethodBreakpointTestCode$Inner",
+                    "jswat.test.MBSecond",
+                    "jswat.test.MethodBreakpointTestCode",
+                    "jswat.test.MethodBreakpointTestCode",};
         try {
             for (int ii = 0; ii < methods.length; ii++) {
                 Breakpoint bp = bf.createMethodBreakpoint(

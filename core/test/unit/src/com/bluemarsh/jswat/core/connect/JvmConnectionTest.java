@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2005. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.connect;
 
 import com.bluemarsh.jswat.core.SessionHelper;
@@ -29,26 +28,13 @@ import com.bluemarsh.jswat.core.runtime.RuntimeManager;
 import com.bluemarsh.jswat.core.runtime.RuntimeFactory;
 import com.bluemarsh.jswat.core.runtime.RuntimeProvider;
 import com.bluemarsh.jswat.core.session.Session;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests the JvmConnection class.
  */
-public class JvmConnectionTest extends TestCase {
-
-    public JvmConnectionTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(JvmConnectionTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
+public class JvmConnectionTest {
 
     private static JavaRuntime getDefault() {
         // Find the default runtime instance.
@@ -58,6 +44,7 @@ public class JvmConnectionTest extends TestCase {
         return rm.findByBase(base);
     }
 
+    @Test
     public void test_JvmConnection_buildConnection() {
         ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
         try {
@@ -72,16 +59,15 @@ public class JvmConnectionTest extends TestCase {
         assertNotNull(conn);
     }
 
+    @Test
     public void test_JvmConnection_Launching() {
         // Test a bunch of methods at once to save time.
 
         ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
         JavaRuntime rt = getDefault();
         JvmConnection conn = factory.createLaunching(rt, null, "someclass arg1 arg2 arg3");
-        assertTrue(!conn.isRemote());
+        assertFalse(conn.isRemote());
         assertNull(conn.getVM());
-        assertTrue(!conn.equals(null));
-        assertTrue(!conn.equals(""));
         assertTrue(conn.equals(conn));
         JvmConnection conn2 = factory.createLaunching(rt, null, "blah blah blah");
         assertTrue(!conn.equals(conn2));
@@ -97,6 +83,7 @@ public class JvmConnectionTest extends TestCase {
         session.disconnect(true);
     }
 
+    @Test
     public void test_JvmConnection_Running() {
         JavaRuntime rt = getDefault();
         ConnectionFactory factory = ConnectionProvider.getConnectionFactory();

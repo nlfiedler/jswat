@@ -2,6 +2,14 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
+- Add junit4 dependencies to the modules that need them
+  - help
+  - nbcore
+  - nodes
+  - product
+  - views
+- Update to NetBeans 6.9.1 Platform
+  - Go through the docs/dev/platform.html steps to update everything
 - Issue 56: StackOverflowError in session event multi-caster
   - probably should replace event multicasters with regular lists
 - Issue 41: expanded nodes in tree/table views collapse on refresh
@@ -12,4 +20,4 @@ $Id$
   - Look at how this might happen, that a resolved breakpoint doesn't suspend
   - Add unit tests to test for a breakpoint being hit multiple times
 - Update the splash and about image copyright years
-- Task 42: make a release based on NetBeans 6.8
+- Task 42: make a release based on NetBeans 6.9

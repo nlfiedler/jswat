@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -23,7 +23,6 @@
 package com.bluemarsh.jswat.console;
 
 import com.bluemarsh.jswat.core.breakpoint.DefaultLineBreakpoint;
-import com.bluemarsh.jswat.core.util.Strings;
 import com.bluemarsh.jswat.core.util.Threads;
 import com.sun.jdi.Location;
 import com.sun.jdi.event.Event;
@@ -144,7 +143,7 @@ public class ConsoleLineBreakpoint extends DefaultLineBreakpoint {
 
         // Emacs looks for "\.[a-zA-Z0-9$_<>(),]+" -- just append anything
         // human-readable that matches this pattern, and Emacs will skip it
-        // and move on to match the line=XXX field.
+        // and move on to match the line=XYZ field.
         classDesc += ".<unknown_method>()";
 
         String thread = "???";  // should try to get it from e

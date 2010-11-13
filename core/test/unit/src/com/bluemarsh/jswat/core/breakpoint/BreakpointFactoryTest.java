@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -29,29 +29,17 @@ import com.bluemarsh.jswat.core.context.DebuggingContext;
 import com.bluemarsh.jswat.core.session.Session;
 import com.sun.jdi.Location;
 import java.io.File;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests the breakpoint factory to ensure it creates the expected breakpoints.
  *
  * @author  Nathan Fiedler
  */
-public class BreakpointFactoryTest extends TestCase {
+public class BreakpointFactoryTest {
 
-    public BreakpointFactoryTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(BreakpointFactoryTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_BreakpointFactory_NoContext() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
@@ -131,8 +119,12 @@ public class BreakpointFactoryTest extends TestCase {
         } catch (Exception ex) {
             fail("unexpected exception: " + ex.toString());
         }
+
+        // The session should be inactive.
+        assertFalse(session.isConnected());
     }
 
+    @Test
     public void test_BreakpointFactory_Method() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
@@ -183,6 +175,7 @@ public class BreakpointFactoryTest extends TestCase {
         // Resume once more to let the program exit.
         SessionHelper.resumeAndWait(session);
         // The debuggee will have exited now and the session is inactive.
+        assertFalse(session.isConnected());
 
         //
         // Now test using a class inside a package.
@@ -224,8 +217,10 @@ public class BreakpointFactoryTest extends TestCase {
         // Resume once more to let the program exit.
         SessionHelper.resumeAndWait(session);
         // The debuggee will have exited now and the session is inactive.
+        assertFalse(session.isConnected());
     }
 
+    @Test
     public void test_BreakpointFactory_Line() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
@@ -324,6 +319,7 @@ public class BreakpointFactoryTest extends TestCase {
         assertFalse(session.isConnected());
     }
 
+    @Test
     public void test_BreakpointFactory_LineUsingSource() {
         Session session = SessionHelper.getSession();
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();

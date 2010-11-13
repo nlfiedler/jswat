@@ -55,6 +55,7 @@ public interface Session {
     public static final String PROP_SOCKET_PORT = "SocketPort";
     /** Name of the connector type property. */
     public static final String PROP_CONNECTOR = "Connector";
+// TODO: move these to ConnectionFactory or some other more appropriate interface
     /** Property value for shared attaching connector. */
     public static final String PREF_PROCESS = "Process";
     /** Property value for shared attaching connector. */

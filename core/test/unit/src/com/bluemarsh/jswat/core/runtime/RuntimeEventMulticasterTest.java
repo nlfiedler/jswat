@@ -14,36 +14,23 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.runtime;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  * Tests the RuntimeEventMulticaster class.
  */
-public class RuntimeEventMulticasterTest extends TestCase {
+public class RuntimeEventMulticasterTest {
 
-    public RuntimeEventMulticasterTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(RuntimeEventMulticasterTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_RuntimeEventMulticaster() {
         RuntimeListener sl = RuntimeEventMulticaster.add(null, null);
         assertEquals(sl, null);
@@ -85,14 +72,17 @@ public class RuntimeEventMulticasterTest extends TestCase {
         assertEquals(1, l2.removed);
     }
 
-    protected class TestListener implements RuntimeListener {
-        public int added;
-        public int removed;
+    private static class TestListener implements RuntimeListener {
 
+        int added;
+        int removed;
+
+        @Override
         public void runtimeAdded(RuntimeEvent event) {
             added++;
         }
 
+        @Override
         public void runtimeRemoved(RuntimeEvent event) {
             removed++;
         }

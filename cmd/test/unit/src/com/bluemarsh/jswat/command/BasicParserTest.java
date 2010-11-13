@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -24,27 +24,15 @@
 package com.bluemarsh.jswat.command;
 
 import java.util.Iterator;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * Tests the CommandParser class.
  */
-public class BasicParserTest extends TestCase {
+public class BasicParserTest {
 
-    public BasicParserTest(String name) {
-        super(name);
-    }
-
-    public static Test suite() {
-        return new TestSuite(BasicParserTest.class);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(suite());
-    }
-
+    @Test
     public void test_CommandParser_Basic() {
         TestData[] datum = new TestData[] {
             new TestData("", "", "Nothing should beget nothing."),
