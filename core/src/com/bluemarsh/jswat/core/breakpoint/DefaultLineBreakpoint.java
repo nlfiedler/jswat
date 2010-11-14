@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2009. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -50,14 +49,15 @@ import org.openide.util.NbBundle;
  */
 public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         implements LineBreakpoint {
+
     /** The URL of the file in which we are set. */
-    protected String url;
+    private String url;
     /** Name of package containg the class this breakpoint is set in. */
-    protected String packageName;
+    private String packageName;
     /** Name of the source file this breakpoint is set in. */
-    protected String sourceName;
+    private String sourceName;
     /** The line that we are set to stop upon. */
-    protected int lineNumber;
+    private int lineNumber;
 
     /**
      * Creates a new instance of DefaultLineBreakpoint.
@@ -148,12 +148,12 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
             List<String> paths = clazz.sourcePaths(null);
             for (String path : paths) {
                 // For Windows, must replace \ with / to match.
-                path = path.replace("\\", "/");
+                String canonicalPath = path.replace("\\", "/");
                 // Check that the path is non-empty before comparing.
                 // Note that for classes in the default package, this
                 // will match anything with the same file name, no matter
                 // what package it might be from.
-                if (path.length() > 0 && url.endsWith(path)) {
+                if (canonicalPath.length() > 0 && url.endsWith(canonicalPath)) {
                     found = true;
                     break;
                 }
@@ -184,14 +184,14 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
     @Override
     protected boolean resolveReference(ReferenceType clazz,
             List<EventRequest> requests) throws ResolveException {
-        List locs = null;
+        List<Location> locs = null;
         try {
             locs = clazz.locationsOfLine(null, sourceName, lineNumber);
             if (locs.isEmpty()) {
-                List inners = clazz.nestedTypes();
-                Iterator iter = inners.iterator();
+                List<ReferenceType> inners = clazz.nestedTypes();
+                Iterator<ReferenceType> iter = inners.iterator();
                 while (iter.hasNext() && locs.isEmpty()) {
-                    ReferenceType type = (ReferenceType) iter.next();
+                    ReferenceType type = iter.next();
                     locs = type.locationsOfLine(null, sourceName, lineNumber);
                 }
             }
@@ -205,7 +205,7 @@ public class DefaultLineBreakpoint extends DefaultResolvableBreakpoint
         }
         if (locs.size() > 0) {
             // We assume the first location for this line is good enough.
-            Location location = (Location) locs.get(0);
+            Location location = locs.get(0);
             VirtualMachine vm = location.virtualMachine();
             EventRequestManager erm = vm.eventRequestManager();
             BreakpointRequest er = erm.createBreakpointRequest(location);

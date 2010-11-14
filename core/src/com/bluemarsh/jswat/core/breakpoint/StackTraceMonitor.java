@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2009. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.output.OutputProvider;
@@ -43,6 +42,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class StackTraceMonitor implements Monitor {
+
     /** The instance of this class. */
     private static StackTraceMonitor theInstance;
 
@@ -82,7 +82,7 @@ public class StackTraceMonitor implements Monitor {
         if (thread == null) {
             return;
         }
-        List stack = null;
+        List<StackFrame> stack = null;
         try {
             stack = thread.frames();
         } catch (IncompatibleThreadStateException itse) {
@@ -105,7 +105,7 @@ public class StackTraceMonitor implements Monitor {
             sb.append('\n');
         }
         for (int index = 0; index < nFrames; index++) {
-            StackFrame frame = (StackFrame) stack.get(index);
+            StackFrame frame = stack.get(index);
             Location loc = frame.location();
             Method method = loc.method();
             sb.append("  [");

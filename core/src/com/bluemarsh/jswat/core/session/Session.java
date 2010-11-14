@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2007. All Rights Reserved.
+ * are Copyright (C) 2003-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
 
 import com.bluemarsh.jswat.core.connect.JvmConnection;
@@ -35,37 +34,37 @@ import java.util.Iterator;
  * @author  Nathan Fiedler
  */
 public interface Session {
+
     /** Name of the session name property. */
-    public static final String PROP_SESSION_NAME = "sessionName";
+    String PROP_SESSION_NAME = "sessionName";
     /** Name of the runtime identifier property. */
-    public static final String PROP_RUNTIME_ID = "RuntimeId";
+    String PROP_RUNTIME_ID = "RuntimeId";
     /** Name of the Java runtime parameters property. */
-    public static final String PROP_JAVA_PARAMS = "JavaParams";
+    String PROP_JAVA_PARAMS = "JavaParams";
     /** Name of the main class name property. */
-    public static final String PROP_CLASS_NAME = "ClassName";
+    String PROP_CLASS_NAME = "ClassName";
     /** Name of the main class parameters property. */
-    public static final String PROP_CLASS_PARAMS = "ClassParams";
+    String PROP_CLASS_PARAMS = "ClassParams";
     /** Name of the process identifier property. */
-    public static final String PROP_PROCESS_ID = "ProcessID";
+    String PROP_PROCESS_ID = "ProcessID";
     /** Name of the shared name property. */
-    public static final String PROP_SHARED_NAME = "SharedName";
+    String PROP_SHARED_NAME = "SharedName";
     /** Name of the socket host property. */
-    public static final String PROP_SOCKET_HOST = "SocketHost";
+    String PROP_SOCKET_HOST = "SocketHost";
     /** Name of the socket port property. */
-    public static final String PROP_SOCKET_PORT = "SocketPort";
+    String PROP_SOCKET_PORT = "SocketPort";
     /** Name of the connector type property. */
-    public static final String PROP_CONNECTOR = "Connector";
-// TODO: move these to ConnectionFactory or some other more appropriate interface
+    String PROP_CONNECTOR = "Connector";
     /** Property value for shared attaching connector. */
-    public static final String PREF_PROCESS = "Process";
+    String PREF_PROCESS = "Process";
     /** Property value for shared attaching connector. */
-    public static final String PREF_SHARED = "Shared";
+    String PREF_SHARED = "Shared";
     /** Property value for socket attaching connector. */
-    public static final String PREF_SOCKET = "Socket";
+    String PREF_SOCKET = "Socket";
     /** Property value for shared listening connector. */
-    public static final String PREF_SHARED_LISTEN = "SharedListen";
+    String PREF_SHARED_LISTEN = "SharedListen";
     /** Property value for socket listening connector. */
-    public static final String PREF_SOCKET_LISTEN = "SocketListen";
+    String PREF_SOCKET_LISTEN = "SocketListen";
 
     /**
      * Add a PropertyChangeListener to the listener list.

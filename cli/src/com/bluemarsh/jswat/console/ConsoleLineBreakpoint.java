@@ -52,11 +52,11 @@ public class ConsoleLineBreakpoint extends DefaultLineBreakpoint {
     // unpack it.
     @Override
     public String getDescription() {
+        String url = getURL();
         if (!Main.emulateJDB() || url == null) {
             return super.getDescription();
         }
         String path = url;
-        String typename = classnameFromUrl(url);
         String prefix = "file://root/";
         if (url.startsWith(prefix)) {
             path = url.substring(prefix.length());
@@ -67,27 +67,9 @@ public class ConsoleLineBreakpoint extends DefaultLineBreakpoint {
             path = path.substring(0, path.length() - ".java".length());
         }
         path = path.replace('/', '.');
+        int lineNumber = getLineNumber();
         return NbBundle.getMessage(ConsoleLineBreakpoint.class,
                 "Line.description", path, lineNumber);
-    }
-
-    /**
-     * Parse the internal {@code LineBreakpoint} {@code url} field
-     * to retrieve the fully qualified type name.
-     * @param url e.g. "file://root/com/bluemarsh/jswat/console/Main.java"
-     * @return a typename such as {@code com.bluemarsh.jswat.console.Main}
-     * Returns {@code null} if we could not parse out a type.
-     */
-    public static String classnameFromUrl(String url) {
-        String prefix = "file://root/";
-        if (!url.startsWith(prefix)) {
-            return null;
-        }
-        String result = url.substring(prefix.length());
-        if (result.endsWith(".java")) {
-            result = result.substring(0, result.length() - ".java".length());
-        }
-        return result.replace('/', '.');
     }
 
     /**
@@ -130,7 +112,7 @@ public class ConsoleLineBreakpoint extends DefaultLineBreakpoint {
      */
     private String generateFallbackJDBDesc(Event e) {
         // I should try harder to get reasonable values from the event.
-        String classDesc = sourceName;
+        String classDesc = getSourceName();
         if (classDesc == null) {
             classDesc = "";
         }
@@ -148,6 +130,7 @@ public class ConsoleLineBreakpoint extends DefaultLineBreakpoint {
 
         String thread = "???";  // should try to get it from e
 
+        int lineNumber = getLineNumber();
         return NbBundle.getMessage(ConsoleLineBreakpoint.class,
                 "Line.description.stop", thread, classDesc, lineNumber);
     }

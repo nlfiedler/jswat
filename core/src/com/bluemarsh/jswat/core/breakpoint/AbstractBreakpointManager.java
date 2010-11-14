@@ -14,22 +14,19 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionEvent;
 import com.bluemarsh.jswat.core.session.SessionListener;
-import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionManagerEvent;
 import com.bluemarsh.jswat.core.session.SessionManagerListener;
-import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.sun.jdi.event.Event;
 import java.beans.PropertyChangeEvent;
 import java.util.Iterator;
@@ -44,6 +41,7 @@ import java.util.Iterator;
 public abstract class AbstractBreakpointManager
         implements BreakpointManager, BreakpointListener,
         BreakpointGroupListener, SessionListener, SessionManagerListener {
+
     /** List of breakpoint listeners. */
     private BreakpointListener bpListeners;
     /** List of group listeners. */
@@ -51,19 +49,12 @@ public abstract class AbstractBreakpointManager
     /** The Session instance with which we are associated. */
     private Session ourSession;
 
-    /**
-     * Constructs a new instance of AbstractBreakpointManager.
-     */
-    public AbstractBreakpointManager() {
-        super();
-        SessionManager sm = SessionProvider.getSessionManager();
-        sm.addSessionManagerListener(this);
-    }
-
+    @Override
     public void addBreakpoint(Breakpoint bp) {
         bp.addBreakpointListener(this);
     }
 
+    @Override
     public void addBreakpointListener(BreakpointListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -72,10 +63,15 @@ public abstract class AbstractBreakpointManager
         }
     }
 
+    @Override
     public void addBreakpointGroup(BreakpointGroup group, BreakpointGroup parent) {
+        if (parent == null) {
+            throw new IllegalArgumentException("parent must not be null");
+        }
         group.addBreakpointGroupListener(this);
     }
 
+    @Override
     public void addBreakpointGroupListener(BreakpointGroupListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -84,10 +80,12 @@ public abstract class AbstractBreakpointManager
         }
     }
 
+    @Override
     public void breakpointAdded(BreakpointEvent event) {
         fireEvent(event);
     }
 
+    @Override
     public void breakpointRemoved(BreakpointEvent event) {
         // The individual breakpoint is firing this event, which indicates
         // that it wants to be deleted, which it is not generally able to
@@ -98,14 +96,17 @@ public abstract class AbstractBreakpointManager
         fireEvent(event);
     }
 
+    @Override
     public void breakpointStopped(BreakpointEvent event) {
         fireEvent(event);
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
         saveBreakpoints(sevt.getSession());
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         // Have to enable the default group so new breakpoints will be enabled.
         getDefaultGroup().setEnabled(true);
@@ -120,27 +121,31 @@ public abstract class AbstractBreakpointManager
      */
     protected abstract void deleteBreakpoints(Session session);
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         // Reset all of the breakpoint groups, which in turn reset their
         // constituent breakpoints. This is called when the session disconnects
         // so that the breakpoint counters are reset to be ready for the next
         // session connection.
-        Iterator iter = getDefaultGroup().groups(true);
+        Iterator<BreakpointGroup> iter = getDefaultGroup().groups(true);
         while (iter.hasNext()) {
-            BreakpointGroup group = (BreakpointGroup) iter.next();
+            BreakpointGroup group = iter.next();
             group.reset();
         }
     }
 
+    @Override
     public void errorOccurred(BreakpointEvent event) {
         fireEvent(event);
     }
 
+    @Override
     public void errorOccurred(BreakpointGroupEvent event) {
         fireEvent(event);
     }
 
-    public void fireEvent(Breakpoint b, BreakpointEvent.Type t, Event e) {
+    @Override
+    public void fireEvent(Breakpoint b, BreakpointEventType t, Event e) {
         fireEvent(new BreakpointEvent(b, t, e));
     }
 
@@ -159,6 +164,7 @@ public abstract class AbstractBreakpointManager
         }
     }
 
+    @Override
     public void fireEvent(BreakpointGroupEvent e) {
         BreakpointGroupListener gl;
         synchronized (this) {
@@ -178,10 +184,12 @@ public abstract class AbstractBreakpointManager
         return ourSession;
     }
 
+    @Override
     public void groupAdded(BreakpointGroupEvent event) {
         fireEvent(event);
     }
 
+    @Override
     public void groupRemoved(BreakpointGroupEvent event) {
         fireEvent(event);
     }
@@ -195,11 +203,13 @@ public abstract class AbstractBreakpointManager
      */
     protected abstract void loadBreakpoints(Session session);
 
+    @Override
     public void opened(Session session) {
         ourSession = session;
         loadBreakpoints(session);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
         Object src = event.getSource();
         if (src instanceof Breakpoint) {
@@ -221,10 +231,12 @@ public abstract class AbstractBreakpointManager
         }
     }
 
+    @Override
     public void removeBreakpoint(Breakpoint bp) {
         bp.removeBreakpointListener(this);
     }
 
+    @Override
     public void removeBreakpointListener(BreakpointListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -233,10 +245,12 @@ public abstract class AbstractBreakpointManager
         }
     }
 
+    @Override
     public void removeBreakpointGroup(BreakpointGroup group) {
         group.removeBreakpointGroupListener(this);
     }
 
+    @Override
     public void removeBreakpointGroupListener(BreakpointGroupListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -245,6 +259,7 @@ public abstract class AbstractBreakpointManager
         }
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
@@ -257,16 +272,21 @@ public abstract class AbstractBreakpointManager
      */
     protected abstract void saveBreakpoints(Session session);
 
+    @Override
+
     public void sessionAdded(SessionManagerEvent e) {
     }
 
+    @Override
     public void sessionSetCurrent(SessionManagerEvent e) {
     }
 
+    @Override
     public void sessionRemoved(SessionManagerEvent e) {
         deleteBreakpoints(e.getSession());
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

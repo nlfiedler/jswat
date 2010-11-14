@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -31,6 +30,7 @@ import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
 import com.bluemarsh.jswat.core.breakpoint.Condition;
 import com.bluemarsh.jswat.core.breakpoint.ExpressionCondition;
 import com.bluemarsh.jswat.core.breakpoint.HitCountCondition;
+import com.bluemarsh.jswat.core.breakpoint.HitCountConditionType;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.bluemarsh.jswat.core.util.NameValuePair;
@@ -52,6 +52,7 @@ import org.openide.util.NbBundle;
  */
 public class CommonPanel extends AbstractAdapter
         implements ChangeListener, FocusListener, ItemListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Breakpoint to update. */
@@ -72,14 +73,14 @@ public class CommonPanel extends AbstractAdapter
         // Populate the hit count combobox.
         hitCountModel = new DefaultComboBoxModel();
         String label = NbBundle.getMessage(CommonPanel.class, "CTL_Common_HitCount_Equal");
-        NameValuePair<HitCountCondition.Type> pair =
-                new NameValuePair<HitCountCondition.Type>(label, HitCountCondition.Type.EQUAL);
+        NameValuePair<HitCountConditionType> pair =
+                new NameValuePair<HitCountConditionType>(label, HitCountConditionType.EQUAL);
         hitCountModel.addElement(pair);
         label = NbBundle.getMessage(CommonPanel.class, "CTL_Common_HitCount_Greater");
-        pair = new NameValuePair<HitCountCondition.Type>(label, HitCountCondition.Type.GREATER);
+        pair = new NameValuePair<HitCountConditionType>(label, HitCountConditionType.GREATER);
         hitCountModel.addElement(pair);
         label = NbBundle.getMessage(CommonPanel.class, "CTL_Common_HitCount_Multiple");
-        pair = new NameValuePair<HitCountCondition.Type>(label, HitCountCondition.Type.MULTIPLE);
+        pair = new NameValuePair<HitCountConditionType>(label, HitCountConditionType.MULTIPLE);
         hitCountModel.addElement(pair);
         hitCountComboBox.setModel(hitCountModel);
         // Set hit count spinner minimum value.
@@ -145,11 +146,11 @@ public class CommonPanel extends AbstractAdapter
                 hitCountComboBox.setEnabled(true);
                 hitCountSpinner.setEnabled(true);
                 hitCountSpinner.setValue(hcc.getCount());
-                HitCountCondition.Type hct = hcc.getType();
+                HitCountConditionType hct = hcc.getType();
                 for (int ii = hitCountModel.getSize() - 1; ii >= 0; ii--) {
                     NameValuePair<?> pair =
                             (NameValuePair<?>) hitCountModel.getElementAt(ii);
-                    HitCountCondition.Type hcp = (HitCountCondition.Type) pair.getValue();
+                    HitCountConditionType hcp = (HitCountConditionType) pair.getValue();
                     if (hcp.equals(hct)) {
                         hitCountModel.setSelectedItem(pair);
                     }
@@ -217,7 +218,7 @@ public class CommonPanel extends AbstractAdapter
             }
             NameValuePair<?> pair =
                     (NameValuePair<?>) hitCountComboBox.getSelectedItem();
-            HitCountCondition.Type hct = (HitCountCondition.Type) pair.getValue();
+            HitCountConditionType hct = (HitCountConditionType) pair.getValue();
             hcc.setType(hct);
             Integer count = (Integer) hitCountSpinner.getValue();
             hcc.setCount(count);
@@ -325,7 +326,6 @@ public class CommonPanel extends AbstractAdapter
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel conditionLabel;
     private javax.swing.JTextField conditionTextField;

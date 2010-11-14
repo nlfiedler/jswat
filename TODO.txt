@@ -2,14 +2,17 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
-- Add junit4 dependencies to the modules that need them
-  - help
-  - nbcore
-  - nodes
-  - product
-  - views
 - Update to NetBeans 6.9.1 Platform
-  - Go through the docs/dev/platform.html steps to update everything
+  - update the cluster values in
+    - build.xml
+    - nbbproject/platform.properties
+    - launcher/unix/jswat
+    - launcher/windows/jswat.cpp
+    - installer source
+  - run product/mkmodules.sh to recreate disabled modules list
+- Thoroughly test the breakpoint UI:
+  - creating various types of breakpoints
+  - creating breakpoint groups
 - Issue 56: StackOverflowError in session event multi-caster
   - probably should replace event multicasters with regular lists
 - Issue 41: expanded nodes in tree/table views collapse on refresh

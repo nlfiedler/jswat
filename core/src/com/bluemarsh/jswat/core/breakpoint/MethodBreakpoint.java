@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import java.util.List;
@@ -31,10 +30,11 @@ import java.util.List;
  * @author Nathan Fiedler
  */
 public interface MethodBreakpoint extends ResolvableBreakpoint {
+
     /** Name of the 'methodName' property. */
-    public static final String PROP_METHODNAME = "methodName";
+    String PROP_METHODNAME = "methodName";
     /** Name of the 'methodParameters' property. */
-    public static final String PROP_METHODPARAMETERS = "methodParameters";
+    String PROP_METHODPARAMETERS = "methodParameters";
 
     /**
      * Retrieve the parameters to the method at which this breakpoint
@@ -42,14 +42,14 @@ public interface MethodBreakpoint extends ResolvableBreakpoint {
      *
      * @return  list of method parameters.
      */
-    public List<String> getMethodParameters();
+    List<String> getMethodParameters();
 
     /**
      * Retrieve the method name associated with this breakpoint.
      *
      * @return  name of method this breakpoint is set to.
      */
-    public String getMethodName();
+    String getMethodName();
 
     /**
      * Set the method name associated with this breakpoint. If name is the
@@ -60,7 +60,7 @@ public interface MethodBreakpoint extends ResolvableBreakpoint {
      * @throws  MalformedMemberNameException
      *          if the method name is invalid.
      */
-    public void setMethodName(String name) throws MalformedMemberNameException;
+    void setMethodName(String name) throws MalformedMemberNameException;
 
     /**
      * Set the list of parameters for the method at which this breakpoint
@@ -69,5 +69,5 @@ public interface MethodBreakpoint extends ResolvableBreakpoint {
      *
      * @param  args  method parameter list.
      */
-    public void setMethodParameters(List<String> args);
+    void setMethodParameters(List<String> args);
 }

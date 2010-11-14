@@ -50,13 +50,13 @@ public class HitCountTest {
             bp = bf.createLineBreakpoint(url, null, line);
             HitCountCondition cond = new HitCountCondition();
             cond.setCount(2);
-            cond.setType(HitCountCondition.Type.EQUAL);
+            cond.setType(HitCountConditionType.EQUAL);
             bp.addCondition(cond);
             bm.addBreakpoint(bp);
             // For code coverage, exercise additional methods.
             assertNotNull(cond.describe());
             assertEquals(2, cond.getCount());
-            assertEquals(HitCountCondition.Type.EQUAL, cond.getType());
+            assertEquals(HitCountConditionType.EQUAL, cond.getType());
             assertTrue(cond.isVisible());
         } catch (MalformedClassNameException mcne) {
             fail(mcne.toString());
@@ -104,7 +104,7 @@ public class HitCountTest {
             bp = bf.createLineBreakpoint(url, null, line);
             HitCountCondition cond = new HitCountCondition();
             cond.setCount(2);
-            cond.setType(HitCountCondition.Type.GREATER);
+            cond.setType(HitCountConditionType.GREATER);
             bp.addCondition(cond);
             bm.addBreakpoint(bp);
         } catch (MalformedClassNameException mcne) {
@@ -155,7 +155,7 @@ public class HitCountTest {
             bp = bf.createLineBreakpoint(url, null, line);
             HitCountCondition cond = new HitCountCondition();
             cond.setCount(2);
-            cond.setType(HitCountCondition.Type.MULTIPLE);
+            cond.setType(HitCountConditionType.MULTIPLE);
             bp.addCondition(cond);
             bm.addBreakpoint(bp);
         } catch (MalformedClassNameException mcne) {

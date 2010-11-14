@@ -14,17 +14,19 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionListener;
+import com.bluemarsh.jswat.core.session.SessionManager;
+import com.bluemarsh.jswat.core.session.SessionManagerListener;
+import com.bluemarsh.jswat.core.session.SessionProvider;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,6 +41,7 @@ import org.openide.util.Lookup;
  * @author Nathan Fiedler
  */
 public class BreakpointProvider {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             BreakpointProvider.class.getName());
@@ -95,7 +98,7 @@ public class BreakpointProvider {
                         BreakpointManager.class);
                 // Using this prototype, construct a new instance for the
                 // given Session, rather than sharing the single instance.
-                Class protoClass = prototype.getClass();
+                Class<? extends BreakpointManager> protoClass = prototype.getClass();
                 try {
                     inst = (BreakpointManager) protoClass.newInstance();
                 } catch (InstantiationException ie) {
@@ -109,6 +112,10 @@ public class BreakpointProvider {
                 reverseMap.put(inst, session);
                 if (inst instanceof SessionListener) {
                     session.addSessionListener((SessionListener) inst);
+                }
+                if (inst instanceof SessionManagerListener) {
+                    SessionManager sm = SessionProvider.getSessionManager();
+                    sm.addSessionManagerListener((SessionManagerListener) inst);
                 }
                 // Some breakpoint managers do not have a default group
                 // until after they have become session listeners.
@@ -128,13 +135,12 @@ public class BreakpointProvider {
      *          BreakpointGroup.
      */
     public static BreakpointManager getBreakpointManager(BreakpointGroup bg) {
-        BreakpointGroup parent = bg.getParent();
-        while (parent != null) {
-            bg = parent;
+        BreakpointGroup parent = bg;
+        while (parent.getParent() != null) {
             parent = parent.getParent();
         }
         synchronized (mapsLock) {
-            return groupMap.get(bg);
+            return groupMap.get(parent);
         }
     }
 

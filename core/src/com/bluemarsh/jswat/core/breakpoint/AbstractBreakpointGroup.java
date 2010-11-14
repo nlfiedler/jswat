@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import java.beans.PropertyChangeListener;
@@ -34,6 +33,7 @@ import java.beans.PropertyChangeSupport;
  * @author Nathan Fiedler
  */
 public abstract class AbstractBreakpointGroup implements BreakpointGroup {
+
     /** True if this breakpoint group is enabled. */
     private boolean isEnabled;
     /** Name of our breakpoint group. Used for display. */
@@ -53,6 +53,7 @@ public abstract class AbstractBreakpointGroup implements BreakpointGroup {
         propSupport = new PropertyChangeSupport(this);
     }
 
+    @Override
     public void addBreakpointGroupListener(BreakpointGroupListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -62,6 +63,7 @@ public abstract class AbstractBreakpointGroup implements BreakpointGroup {
         }
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propSupport.addPropertyChangeListener(listener);
     }
@@ -71,7 +73,7 @@ public abstract class AbstractBreakpointGroup implements BreakpointGroup {
      *
      * @param  type  type of change.
      */
-    protected void fireChange(BreakpointGroupEvent.Type type) {
+    protected void fireChange(BreakpointGroupEventType type) {
         BreakpointGroupEvent e = new BreakpointGroupEvent(this, type);
         BreakpointGroupListener gl;
         synchronized (this) {
@@ -82,14 +84,17 @@ public abstract class AbstractBreakpointGroup implements BreakpointGroup {
         }
     }
 
+    @Override
     public String getName() {
         return groupName;
     }
 
+    @Override
     public BreakpointGroup getParent() {
         return parentGroup;
     }
 
+    @Override
     public boolean isEnabled() {
         if (parentGroup == null) {
             return isEnabled;
@@ -98,6 +103,7 @@ public abstract class AbstractBreakpointGroup implements BreakpointGroup {
         }
     }
 
+    @Override
     public void removeBreakpointGroupListener(BreakpointGroupListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -107,22 +113,26 @@ public abstract class AbstractBreakpointGroup implements BreakpointGroup {
         }
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propSupport.removePropertyChangeListener(listener);
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         boolean old = isEnabled;
         isEnabled = enabled;
         propSupport.firePropertyChange(PROP_ENABLED, old, enabled);
     }
 
+    @Override
     public void setName(String name) {
         String old = groupName;
         groupName = name;
         propSupport.firePropertyChange(PROP_NAME, old, name);
     }
 
+    @Override
     public void setParent(BreakpointGroup parent) {
         BreakpointGroup old = parentGroup;
         parentGroup = parent;

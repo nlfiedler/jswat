@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.sun.jdi.Field;
@@ -33,20 +32,21 @@ import com.sun.jdi.Field;
  * @author  Nathan Fiedler
  */
 public interface FieldBreakpoint extends Breakpoint {
+
     /** Name of 'field' property. */
-    public static final String PROP_FIELD = "field";
+    String PROP_FIELD = "field";
 
     /**
      * Returns the field this breakpoint is watching.
      *
      * @return  field.
      */
-    public Field getField();
+    Field getField();
 
     /**
      * Sets the field this breakpoint should watch.
      *
      * @param  field  the field to watch.
      */
-    public void setField(Field field);
+    void setField(Field field);
 }

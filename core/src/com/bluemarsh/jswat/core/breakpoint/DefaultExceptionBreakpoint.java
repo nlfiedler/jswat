@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2007. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -43,6 +42,7 @@ import org.openide.util.NbBundle;
  */
 public class DefaultExceptionBreakpoint extends DefaultResolvableBreakpoint
         implements ExceptionBreakpoint {
+
     /** True to stop when the exception is caught. */
     private boolean onCaught;
     /** True to stop when the exception is not caught. */
@@ -54,27 +54,32 @@ public class DefaultExceptionBreakpoint extends DefaultResolvableBreakpoint
     public DefaultExceptionBreakpoint() {
     }
 
+    @Override
     public boolean canFilterClass() {
         return false;
     }
 
+    @Override
     public boolean canFilterThread() {
         return false;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public String describe(Event e) {
         if (e instanceof ExceptionEvent) {
             return Utilities.describeException((ExceptionEvent) e);
         } else {
             throw new IllegalArgumentException(
-                    "expected exception event, but got " +
-                    e.getClass().getName());
+                    "expected exception event, but got "
+                    + e.getClass().getName());
         }
     }
 
+    @Override
     public String getDescription() {
         String cname = getClassName();
         String type = "";
@@ -92,23 +97,27 @@ public class DefaultExceptionBreakpoint extends DefaultResolvableBreakpoint
                 "Exception.description", cname, type);
     }
 
+    @Override
     public boolean getStopOnCaught() {
         return onCaught;
     }
 
+    @Override
     public boolean getStopOnUncaught() {
         return onUncaught;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     protected boolean resolveReference(ReferenceType refType,
             List<EventRequest> requests) throws ResolveException {
         VirtualMachine vm = refType.virtualMachine();
         EventRequestManager erm = vm.eventRequestManager();
         ExceptionRequest er = erm.createExceptionRequest(
-            refType, onCaught, onUncaught);
+                refType, onCaught, onUncaught);
         String filter = getClassFilter();
         if (filter != null) {
             er.addClassFilter(filter);
@@ -118,9 +127,11 @@ public class DefaultExceptionBreakpoint extends DefaultResolvableBreakpoint
         return true;
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -130,18 +141,21 @@ public class DefaultExceptionBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setStopOnCaught(boolean stop) {
         boolean old = onCaught;
         onCaught = stop;
         propSupport.firePropertyChange(PROP_STOPONCAUGHT, old, stop);
     }
 
+    @Override
     public void setStopOnUncaught(boolean stop) {
         boolean old = onUncaught;
         onUncaught = stop;
         propSupport.firePropertyChange(PROP_STOPONUNCAUGHT, old, stop);
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

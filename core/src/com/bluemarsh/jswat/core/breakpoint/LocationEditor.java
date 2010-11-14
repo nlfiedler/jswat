@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -39,6 +39,7 @@ public class LocationEditor extends PropertyEditorSupport {
     public LocationEditor() {
     }
 
+    @Override
     public String getAsText() {
         Object value = getValue();
         if (value instanceof Location) {
@@ -56,6 +57,7 @@ public class LocationEditor extends PropertyEditorSupport {
         return "";
     }
 
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         // Do nothing as the user cannot change the object reference.
     }

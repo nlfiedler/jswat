@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2007. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -47,6 +46,7 @@ import org.openide.util.NbBundle;
  */
 public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         implements InstanceWatchBreakpoint, SessionListener {
+
     /** The object reference filter. */
     private ObjectReference objectRef;
     /** Field we are watching. */
@@ -66,17 +66,21 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
     public DefaultInstanceWatchBreakpoint() {
     }
 
+    @Override
     public boolean canFilterClass() {
         return true;
     }
 
+    @Override
     public boolean canFilterThread() {
         return true;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         if (isEnabled()) {
             createRequests();
@@ -125,6 +129,7 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     protected void deleteRequests() {
         // Delete the old requests, if any.
         try {
@@ -146,6 +151,7 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public String describe(Event e) {
         String result = null;
         if (e instanceof WatchpointEvent) {
@@ -153,23 +159,26 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         }
         if (result == null) {
             throw new IllegalArgumentException(
-                    "expected watchpoint event, but got " +
-                    e.getClass().getName());
+                    "expected watchpoint event, but got "
+                    + e.getClass().getName());
         }
         return result;
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         deleteRequests();
         // Delete ourselves since our object reference will be stale,
         // thus rendering us completely useless.
-        fireEvent(new BreakpointEvent(this, BreakpointEvent.Type.REMOVED, null));
+        fireEvent(new BreakpointEvent(this, BreakpointEventType.REMOVED, null));
     }
 
+    @Override
     public String getClassName() {
         return objectRef.referenceType().name();
     }
 
+    @Override
     public String getDescription() {
         StringBuilder buf = new StringBuilder(80);
         String type = "";
@@ -199,36 +208,45 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         return buf.toString();
     }
 
+    @Override
     public Field getField() {
         return watchField;
     }
 
+    @Override
     public String getFieldName() {
         return watchField.name();
     }
 
+    @Override
     public ObjectReference getObjectReference() {
         return objectRef;
     }
 
+    @Override
     public boolean getStopOnAccess() {
         return onAccess;
     }
 
+    @Override
     public boolean getStopOnModify() {
         return onModify;
     }
 
+    @Override
     public boolean isResolved() {
         return true;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setClassFilter(String filter) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -238,6 +256,7 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -247,14 +266,17 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setFieldName(String name) throws MalformedMemberNameException {
         // Do nothing since we already have the field.
     }
 
+    @Override
     public void setObjectReference(ObjectReference obj) {
         objectRef = obj;
     }
 
+    @Override
     public void setStopOnAccess(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -266,6 +288,7 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setStopOnModify(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -277,6 +300,7 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setSuspendPolicy(int policy) {
         super.setSuspendPolicy(policy);
         if (accessRequest != null) {
@@ -293,9 +317,11 @@ public class DefaultInstanceWatchBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 
+    @Override
     public void setField(Field field) {
         watchField = field;
     }

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2007. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -51,6 +50,7 @@ import org.openide.util.NbBundle;
  */
 public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         SessionListener, TraceBreakpoint {
+
     /** Method entry event request. */
     private MethodEntryRequest entryRequest;
     /** Method exit event request. */
@@ -68,17 +68,21 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         super.setSuspendPolicy(EventRequest.SUSPEND_NONE);
     }
 
+    @Override
     public boolean canFilterClass() {
         return true;
     }
 
+    @Override
     public boolean canFilterThread() {
         return true;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         createRequests();
     }
@@ -119,6 +123,7 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     protected void deleteRequests() {
         // Delete the old requests, if any.
         try {
@@ -140,6 +145,7 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     public String describe(Event e) {
         String type;
         Value returnValue = null;
@@ -157,8 +163,8 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
             type = NbBundle.getMessage(DefaultTraceBreakpoint.class,
                     "Trace.description.stop.exit");
         } else {
-            throw new IllegalArgumentException("expected method event, not " +
-                    e.getClass().getName());
+            throw new IllegalArgumentException("expected method event, not "
+                    + e.getClass().getName());
         }
         LocatableEvent le = (LocatableEvent) e;
         Location loc = le.location();
@@ -166,7 +172,7 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         String cname = loc.declaringType().name();
         String args = Strings.listToString(method.argumentTypeNames());
         String tname = Threads.getIdentifier(le.thread());
-        String[] params = new String[] { cname, method.name(), args, type, tname };
+        String[] params = new String[]{cname, method.name(), args, type, tname};
         String msg = NbBundle.getMessage(DefaultTraceBreakpoint.class,
                 "Trace.description.stop", params);
         if (hasReturnValue) {
@@ -176,10 +182,12 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         return msg;
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         deleteRequests();
     }
 
+    @Override
     public String getDescription() {
         // The use of asterisk below means we will match anything.
         String cfilter = getClassFilter();
@@ -194,24 +202,30 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
                 "Trace.description", cfilter, tfilter);
     }
 
+    @Override
     public boolean getStopOnEnter() {
         return stopOnEnter;
     }
 
+    @Override
     public boolean getStopOnExit() {
         return stopOnExit;
     }
 
+    @Override
     public boolean isResolved() {
         return true;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setClassFilter(String filter) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -222,6 +236,7 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -232,10 +247,12 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     public void setSuspendPolicy(int policy) {
         // Do nothing because we simply trace, we never stop.
     }
 
+    @Override
     public void setStopOnEnter(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -247,6 +264,7 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     public void setStopOnExit(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -258,18 +276,20 @@ public class DefaultTraceBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     protected boolean shouldResume(Event event) {
         // Now is our only chance to display our message and run monitors.
         // Note we pretend to be stopped in order for a description to be
         // displayed appropriately.
         BreakpointEvent be = new BreakpointEvent(this,
-                BreakpointEvent.Type.STOPPED, event);
+                BreakpointEventType.STOPPED, event);
         fireEvent(be);
         runMonitors(be);
         // We always resume because we only trace.
         return true;
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

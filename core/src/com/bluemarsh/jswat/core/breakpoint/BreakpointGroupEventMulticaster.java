@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -109,21 +109,25 @@ public class BreakpointGroupEventMulticaster implements BreakpointGroupListener 
         return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
     }
 
+    @Override
     public void errorOccurred(BreakpointGroupEvent event) {
         listener1.errorOccurred(event);
         listener2.errorOccurred(event);
     }
 
+    @Override
     public void groupAdded(BreakpointGroupEvent event) {
         listener1.groupAdded(event);
         listener2.groupAdded(event);
     }
 
+    @Override
     public void groupRemoved(BreakpointGroupEvent event) {
         listener1.groupRemoved(event);
         listener2.groupRemoved(event);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
         listener1.propertyChange(event);
         listener2.propertyChange(event);

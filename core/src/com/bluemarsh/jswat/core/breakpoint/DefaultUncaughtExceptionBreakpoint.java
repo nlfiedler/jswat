@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2007. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -44,20 +43,25 @@ import org.openide.util.NbBundle;
  */
 public class DefaultUncaughtExceptionBreakpoint extends AbstractBreakpoint
         implements SessionListener, UncaughtExceptionBreakpoint {
+
     /** Our exception request. */
     private ExceptionRequest eventRequest;
 
+    @Override
     public boolean canFilterClass() {
         return false;
     }
 
+    @Override
     public boolean canFilterThread() {
         return false;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         createRequests();
     }
@@ -82,6 +86,7 @@ public class DefaultUncaughtExceptionBreakpoint extends AbstractBreakpoint
         register(eventRequest);
     }
 
+    @Override
     protected void deleteRequests() {
         // Delete the old request, if any.
         try {
@@ -97,6 +102,7 @@ public class DefaultUncaughtExceptionBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public String describe(Event e) {
         if (e instanceof ExceptionEvent) {
             return Utilities.describeException((ExceptionEvent) e);
@@ -105,25 +111,31 @@ public class DefaultUncaughtExceptionBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         deleteRequests();
     }
 
+    @Override
     public String getDescription() {
         return NbBundle.getMessage(DefaultUncaughtExceptionBreakpoint.class,
                 "UncaughtException.description");
     }
 
+    @Override
     public boolean isResolved() {
         return true;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -134,6 +146,7 @@ public class DefaultUncaughtExceptionBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setSuspendPolicy(int policy) {
         super.setSuspendPolicy(policy);
         if (eventRequest != null) {
@@ -144,6 +157,7 @@ public class DefaultUncaughtExceptionBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     protected boolean shouldResume(Event event) {
         // We do not call the superclass because the user does not set
         // counts or conditions on us.
@@ -159,6 +173,7 @@ public class DefaultUncaughtExceptionBreakpoint extends AbstractBreakpoint
         return false;
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

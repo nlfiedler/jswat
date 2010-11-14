@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id: BreakpointClearCommand.java 193 2009-05-14 01:02:10Z nathanfiedler $
  */
-
 package com.bluemarsh.jswat.console.commands;
 
 import com.bluemarsh.jswat.command.CommandArguments;
@@ -29,7 +28,6 @@ import com.bluemarsh.jswat.command.CommandException;
 import com.bluemarsh.jswat.command.MissingArgumentsException;
 import com.bluemarsh.jswat.command.commands.BreakpointClearCommand;
 import com.bluemarsh.jswat.command.commands.BreakpointSetCommand;
-import com.bluemarsh.jswat.console.ConsoleLineBreakpoint;
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
@@ -95,8 +93,7 @@ public class ClearCommand extends BreakpointClearCommand {
                 }
             } else if (b instanceof LineBreakpoint) {
                 LineBreakpoint lb = (LineBreakpoint) b;
-                String typename =
-                        ConsoleLineBreakpoint.classnameFromUrl(lb.getURL());
+                String typename = classnameFromUrl(lb.getURL());
                 if (line == lb.getLineNumber() && clazz.equals(typename)) {
                     deleteBreakpoint(context, lb);
                     return;
@@ -124,7 +121,7 @@ public class ClearCommand extends BreakpointClearCommand {
             if (b instanceof MethodBreakpoint) {
                 MethodBreakpoint mb = (MethodBreakpoint) b;
                 if (!(method.equals(mb.getMethodName())
-                      && clazz.equals(mb.getClassName()))) {
+                        && clazz.equals(mb.getClassName()))) {
                     continue;
                 }
                 if (givenArgTypes.equals(mb.getMethodParameters())) {
@@ -146,7 +143,26 @@ public class ClearCommand extends BreakpointClearCommand {
     private void barfNotFound(String arg) throws CommandException {
         throw new CommandException(
                 NbBundle.getMessage(ClearCommand.class,
-                        "ERR_Clear_NotFound", arg));
+                "ERR_Clear_NotFound", arg));
+    }
+
+    /**
+     * Parse the internal {@code LineBreakpoint} {@code url} field
+     * to retrieve the fully qualified type name.
+     * @param url e.g. "file://root/com/bluemarsh/jswat/console/Main.java"
+     * @return a typename such as {@code com.bluemarsh.jswat.console.Main}
+     * Returns {@code null} if we could not parse out a type.
+     */
+    private static String classnameFromUrl(String url) {
+        String prefix = "file://root/";
+        if (!url.startsWith(prefix)) {
+            return null;
+        }
+        String result = url.substring(prefix.length());
+        if (result.endsWith(".java")) {
+            result = result.substring(0, result.length() - ".java".length());
+        }
+        return result.replace('/', '.');
     }
 
     private List<Breakpoint> getBreakpoints(CommandContext context) {

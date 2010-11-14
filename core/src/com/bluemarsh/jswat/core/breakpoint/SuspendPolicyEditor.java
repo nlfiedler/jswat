@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.sun.jdi.request.EventRequest;
@@ -40,6 +39,7 @@ public class SuspendPolicyEditor extends PropertyEditorSupport {
     public SuspendPolicyEditor() {
     }
 
+    @Override
     public String getAsText() {
         Object value = getValue();
         if (value instanceof Integer) {
@@ -58,15 +58,16 @@ public class SuspendPolicyEditor extends PropertyEditorSupport {
         return "";
     }
 
+    @Override
     public String[] getTags() {
         String[] retValue = {
             NbBundle.getMessage(SuspendPolicyEditor.class, "SuspendPolicy.all"),
             NbBundle.getMessage(SuspendPolicyEditor.class, "SuspendPolicy.event"),
-            NbBundle.getMessage(SuspendPolicyEditor.class, "SuspendPolicy.none"),
-        };
+            NbBundle.getMessage(SuspendPolicyEditor.class, "SuspendPolicy.none"),};
         return retValue;
     }
 
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         if (text.equals(NbBundle.getMessage(SuspendPolicyEditor.class,
                 "SuspendPolicy.all"))) {

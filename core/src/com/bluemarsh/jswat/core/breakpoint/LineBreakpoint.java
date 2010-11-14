@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 /**
@@ -29,21 +28,22 @@ package com.bluemarsh.jswat.core.breakpoint;
  * @author Nathan Fiedler
  */
 public interface LineBreakpoint extends ResolvableBreakpoint {
+
     /** Name of the 'lineNumber' property. */
-    public static final String PROP_LINENUMBER = "lineNumber";
+    String PROP_LINENUMBER = "lineNumber";
     /** Name of the 'packageName' property. */
-    public static final String PROP_PACKAGENAME = "packageName";
+    String PROP_PACKAGENAME = "packageName";
     /** Name of the 'sourceName' property. */
-    public static final String PROP_SOURCENAME = "sourceName";
+    String PROP_SOURCENAME = "sourceName";
     /** Name of the 'URL' property. */
-    public static final String PROP_URL = "URL";
+    String PROP_URL = "URL";
 
     /**
      * Retrieve the line number associated with this breakpoint.
      *
      * @return  line number of breakpoint.
      */
-    public int getLineNumber();
+    int getLineNumber();
 
     /**
      * Returns the name of the package containing the class this breakpoint
@@ -51,7 +51,7 @@ public interface LineBreakpoint extends ResolvableBreakpoint {
      *
      * @return  package name (may be null).
      */
-    public String getPackageName();
+    String getPackageName();
 
     /**
      * Returns the name of the source file containing the class this
@@ -59,14 +59,14 @@ public interface LineBreakpoint extends ResolvableBreakpoint {
      *
      * @return  the source file name.
      */
-    public String getSourceName();
+    String getSourceName();
 
     /**
      * Returns the URL of the file this breakpoint was set in.
      *
      * @return  unique file URL.
      */
-    public String getURL();
+    String getURL();
 
     /**
      * Set the line number at which this breakpoint is set. This method will
@@ -76,7 +76,7 @@ public interface LineBreakpoint extends ResolvableBreakpoint {
      *
      * @param  line  line number at this this breakpoint is set.
      */
-    public void setLineNumber(int line);
+    void setLineNumber(int line);
 
     /**
      * Sets the name of the package containing the class this breakpoint
@@ -84,7 +84,7 @@ public interface LineBreakpoint extends ResolvableBreakpoint {
      *
      * @param  pkg  package name (may be null).
      */
-    public void setPackageName(String pkg);
+    void setPackageName(String pkg);
 
     /**
      * Sets the name of the source file containing the class this
@@ -92,12 +92,12 @@ public interface LineBreakpoint extends ResolvableBreakpoint {
      *
      * @param  name  the source file name.
      */
-    public void setSourceName(String name);
+    void setSourceName(String name);
 
     /**
      * Sets the URL of the file this breakpoint is set in.
      *
      * @param  url  unique file URL.
      */
-    public void setURL(String url);
+    void setURL(String url);
 }

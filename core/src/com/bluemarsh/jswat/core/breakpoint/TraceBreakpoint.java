@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 /**
@@ -30,36 +29,37 @@ package com.bluemarsh.jswat.core.breakpoint;
  * @author  Nathan Fiedler
  */
 public interface TraceBreakpoint extends Breakpoint {
+
     /** Name of 'stopOnEnter' property. */
-    public static final String PROP_STOPONENTER = "stopOnEnter";
+    String PROP_STOPONENTER = "stopOnEnter";
     /** Name of 'stopOnExit' property. */
-    public static final String PROP_STOPONEXIT = "stopOnExit";
+    String PROP_STOPONEXIT = "stopOnExit";
 
     /**
      * Returns the stop-on-enter status.
      *
      * @return  true if stopping when method is entered.
      */
-    public boolean getStopOnEnter();
+    boolean getStopOnEnter();
 
     /**
      * Returns the stop-on-exit status.
      *
      * @return  true if stopping when method is exited.
      */
-    public boolean getStopOnExit();
+    boolean getStopOnExit();
 
     /**
      * Sets the stop-on-enter status.
      *
      * @param  stop  true to stop when method is entered.
      */
-    public void setStopOnEnter(boolean stop);
+    void setStopOnEnter(boolean stop);
 
     /**
      * Sets the stop-on-exit status.
      *
      * @param  stop  true to stop when method is exited.
      */
-    public void setStopOnExit(boolean stop);
+    void setStopOnExit(boolean stop);
 }

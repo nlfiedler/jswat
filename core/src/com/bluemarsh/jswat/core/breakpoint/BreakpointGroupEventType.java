@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2010. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -22,31 +22,40 @@
  */
 package com.bluemarsh.jswat.core.breakpoint;
 
-import com.sun.jdi.ObjectReference;
-
 /**
- * An InstanceBreakpoint applies only to a particular object reference.
- * This is typically combined with other types of a breakpoints, such as
- * WatchBreakpoint.
+ * Type of breakpoint group event.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
-public interface InstanceBreakpoint extends Breakpoint {
+public enum BreakpointGroupEventType {
 
-    /** Name of 'objectReference' property. */
-    String PROP_OBJECTREFERENCE = "objectReference";
+    ADDED {
+
+        @Override
+        public void fireEvent(BreakpointGroupEvent e, BreakpointGroupListener l) {
+            l.groupAdded(e);
+        }
+    },
+    REMOVED {
+
+        @Override
+        public void fireEvent(BreakpointGroupEvent e, BreakpointGroupListener l) {
+            l.groupRemoved(e);
+        }
+    },
+    ERROR {
+
+        @Override
+        public void fireEvent(BreakpointGroupEvent e, BreakpointGroupListener l) {
+            l.errorOccurred(e);
+        }
+    };
 
     /**
-     * Returns the object reference this breakpoint is associated with.
+     * Dispatches the event to the listener.
      *
-     * @return  object reference.
+     * @param  e  event to dispatch.
+     * @param  l  listener to receive event.
      */
-    ObjectReference getObjectReference();
-
-    /**
-     * Sets the object reference this breakpoint should filter on.
-     *
-     * @param  obj  object reference to filter against.
-     */
-    void setObjectReference(ObjectReference obj);
+    public abstract void fireEvent(BreakpointGroupEvent e, BreakpointGroupListener l);
 }

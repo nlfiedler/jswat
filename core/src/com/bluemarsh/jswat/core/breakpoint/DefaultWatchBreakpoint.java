@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2007. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -47,6 +46,7 @@ import org.openide.util.NbBundle;
  */
 public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         implements ResolvableWatchBreakpoint {
+
     /** Name of the field we are watching. */
     private String fieldName;
     /** True to stop on field access. */
@@ -60,17 +60,21 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
     public DefaultWatchBreakpoint() {
     }
 
+    @Override
     public boolean canFilterClass() {
         return true;
     }
 
+    @Override
     public boolean canFilterThread() {
         return true;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public String describe(Event e) {
         String result = null;
         if (e instanceof WatchpointEvent) {
@@ -78,12 +82,13 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         }
         if (result == null) {
             throw new IllegalArgumentException(
-                    "expected watchpoint event, but got " +
-                    e.getClass().getName());
+                    "expected watchpoint event, but got "
+                    + e.getClass().getName());
         }
         return result;
     }
 
+    @Override
     public String getDescription() {
         StringBuilder buf = new StringBuilder(80);
         String type = "";
@@ -113,21 +118,26 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         return buf.toString();
     }
 
+    @Override
     public String getFieldName() {
         return fieldName;
     }
 
+    @Override
     public boolean getStopOnAccess() {
         return onAccess;
     }
 
+    @Override
     public boolean getStopOnModify() {
         return onModify;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     protected boolean resolveReference(ReferenceType refType,
             List<EventRequest> requests) throws ResolveException {
 
@@ -189,9 +199,11 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setClassFilter(String filter) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -201,6 +213,7 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -210,6 +223,7 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setFieldName(String name) throws MalformedMemberNameException {
         if (name == null || name.length() == 0) {
             throw new IllegalArgumentException("name must be non-empty");
@@ -227,6 +241,7 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setStopOnAccess(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -238,6 +253,7 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void setStopOnModify(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -249,6 +265,7 @@ public class DefaultWatchBreakpoint extends DefaultResolvableBreakpoint
         }
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

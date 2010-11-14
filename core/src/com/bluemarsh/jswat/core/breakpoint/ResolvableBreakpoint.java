@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 /**
@@ -30,15 +29,16 @@ package com.bluemarsh.jswat.core.breakpoint;
  * @author  Nathan Fiedler
  */
 public interface ResolvableBreakpoint extends Breakpoint {
+
     /** Name of the 'className' property. */
-    public static final String PROP_CLASSNAME = "className";
+    String PROP_CLASSNAME = "className";
 
     /**
      * Returns the class name this breakpoint is to resolve against.
      *
      * @return  class name, possibly with a leading or trailing wildcard (*).
      */
-    public String getClassName();
+    String getClassName();
 
     /**
      * Sets the class name this breakpoint is to resolve against. The
@@ -52,5 +52,5 @@ public interface ResolvableBreakpoint extends Breakpoint {
      * @throws  MalformedClassNameException
      *          if class name is not a valid identifier.
      */
-    public void setClassName(String name) throws MalformedClassNameException;
+    void setClassName(String name) throws MalformedClassNameException;
 }

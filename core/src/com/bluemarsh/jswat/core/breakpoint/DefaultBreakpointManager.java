@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2009. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.PlatformProvider;
@@ -48,6 +47,7 @@ import java.util.logging.Logger;
  * @author  Nathan Fiedler
  */
 public class DefaultBreakpointManager extends AbstractBreakpointManager {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             DefaultBreakpointManager.class.getName());
@@ -69,19 +69,17 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         if (bp instanceof SessionListener) {
             getSession().addSessionListener((SessionListener) bp);
         }
-        bp.setProperty(Breakpoint.PROP_NUMBER, nextBreakpointNumber++);
+        nextBreakpointNumber++;
+        bp.setProperty(Breakpoint.PROP_NUMBER, nextBreakpointNumber);
         // Notify everyone that a breakpoint was added.
-        fireEvent(bp, BreakpointEvent.Type.ADDED, null);
+        fireEvent(bp, BreakpointEventType.ADDED, null);
     }
 
     @Override
     public void addBreakpointGroup(BreakpointGroup group, BreakpointGroup parent) {
         super.addBreakpointGroup(group, parent);
-        if (parent == null) {
-            parent = defaultGroup;
-        }
         parent.addBreakpointGroup(group);
-        fireEvent(new BreakpointGroupEvent(group, BreakpointGroupEvent.Type.ADDED));
+        fireEvent(new BreakpointGroupEvent(group, BreakpointGroupEventType.ADDED));
     }
 
     @Override
@@ -110,6 +108,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
             InputStream is = platform.readFile(name);
             decoder = new XMLDecoder(is);
             decoder.setExceptionListener(new ExceptionListener() {
+
                 @Override
                 public void exceptionThrown(Exception e) {
                     logger.log(Level.SEVERE, null, e);
@@ -161,7 +160,8 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
             addBreakpoint(bp);
         }
         for (Breakpoint bp : numberless) {
-            bp.setProperty(Breakpoint.PROP_NUMBER, nextBreakpointNumber++);
+            nextBreakpointNumber++;
+            bp.setProperty(Breakpoint.PROP_NUMBER, nextBreakpointNumber);
         }
 
         // Make sure we are listening to all of the groups.
@@ -175,7 +175,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
     public void removeBreakpoint(Breakpoint bp) {
         super.removeBreakpoint(bp);
         // Notify the listeners before taking action.
-        fireEvent(bp, BreakpointEvent.Type.REMOVED, null);
+        fireEvent(bp, BreakpointEventType.REMOVED, null);
         if (bp instanceof SessionListener) {
             getSession().removeSessionListener((SessionListener) bp);
         }
@@ -214,7 +214,7 @@ public class DefaultBreakpointManager extends AbstractBreakpointManager {
         if (parent != null) {
             parent.removeBreakpointGroup(group);
         }
-        fireEvent(new BreakpointGroupEvent(group, BreakpointGroupEvent.Type.REMOVED));
+        fireEvent(new BreakpointGroupEvent(group, BreakpointGroupEventType.REMOVED));
     }
 
     @Override

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.sun.jdi.event.Event;
@@ -34,40 +33,11 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class HitCountCondition implements Condition {
-    /** The type of hit count condition. */
-    public static enum Type {
-        EQUAL {
-            @Override
-            public boolean evaluate(int user, int hit) {
-                return user == hit;
-            }
-        },
-        GREATER {
-            @Override
-            public boolean evaluate(int user, int hit) {
-                return user < hit;
-            }
-        },
-        MULTIPLE {
-            @Override
-            public boolean evaluate(int user, int hit) {
-                return hit % user == 0;
-            }
-        };
 
-        /**
-         * Evaluates the condition to determine if it is satisfied.
-         *
-         * @param  user  user-specified value.
-         * @param  hit   breakpoint hit count.
-         * @return  true if satisfied, false otherwise.
-         */
-        public abstract boolean evaluate(int user, int hit);
-    }
     /** Hit count with which to compare. */
     private int count;
     /** The type of this condition. */
-    private Type type;
+    private HitCountConditionType type;
 
     /**
      * Creates a new instance of HitCountCondition.
@@ -95,7 +65,7 @@ public class HitCountCondition implements Condition {
      *
      * @return  hit count type.
      */
-    public Type getType() {
+    public HitCountConditionType getType() {
         return type;
     }
 
@@ -105,7 +75,7 @@ public class HitCountCondition implements Condition {
         int hit = bp.getHitCount();
         if (type == null) {
             // Make sure the type is set to something.
-            type = Type.EQUAL;
+            type = HitCountConditionType.EQUAL;
         }
         return type.evaluate(count, hit);
     }
@@ -130,7 +100,7 @@ public class HitCountCondition implements Condition {
      *
      * @param  type  type of the condition.
      */
-    public void setType(Type type) {
+    public void setType(HitCountConditionType type) {
         this.type = type;
     }
 }

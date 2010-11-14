@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -28,8 +28,8 @@ import com.bluemarsh.jswat.core.util.Threads;
 import com.sun.jdi.Location;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.LocatableEvent;
-import org.openide.util.NbBundle;
 import java.util.List;
+import org.openide.util.NbBundle;
 
 /**
  * Console-mode implementation of
@@ -53,7 +53,7 @@ public class ConsoleMethodBreakpoint extends DefaultMethodBreakpoint {
         String mname = loc.method().name();
         String line = String.valueOf(loc.lineNumber());
         String tname = Threads.getIdentifier(event.thread());
-        String[] params = new String[] { tname, cname, mname, line };
+        String[] params = new String[]{tname, cname, mname, line};
         return NbBundle.getMessage(ConsoleMethodBreakpoint.class,
                 "Method.description.stop", params);
     }
@@ -64,13 +64,15 @@ public class ConsoleMethodBreakpoint extends DefaultMethodBreakpoint {
         // (except for wildcards, which JDB does not support.)
         String cname = getClassName();
         String mname;
+        String methodId = getMethodName();
         if (methodId == null || methodId.length() == 0) {
             mname = "*";
         } else {
             mname = methodId;
         }
         String args;
-        if (methodParameters == null || methodParameters.size() == 0) {
+        List<String> methodParameters = getMethodParameters();
+        if (methodParameters == null || methodParameters.isEmpty()) {
             args = "*";
         } else {
             args = Strings.listToString(methodParameters, ",");

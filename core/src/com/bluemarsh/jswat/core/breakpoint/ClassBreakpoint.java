@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 /**
@@ -30,36 +29,37 @@ package com.bluemarsh.jswat.core.breakpoint;
  * @author  Nathan Fiedler
  */
 public interface ClassBreakpoint extends Breakpoint {
+
     /** Name of 'stopOnPrepare' property. */
-    public static final String PROP_STOPONPREPARE = "stopOnPrepare";
+    String PROP_STOPONPREPARE = "stopOnPrepare";
     /** Name of 'stopOnUnload' property. */
-    public static final String PROP_STOPONUNLOAD = "stopOnUnload";
+    String PROP_STOPONUNLOAD = "stopOnUnload";
 
     /**
      * Returns the stop-on-prepare status.
      *
      * @return  true if stopping when class prepares.
      */
-    public boolean getStopOnPrepare();
+    boolean getStopOnPrepare();
 
     /**
      * Returns the stop-on-unload status.
      *
      * @return  true if stopping when class unloads.
      */
-    public boolean getStopOnUnload();
+    boolean getStopOnUnload();
 
     /**
      * Sets the stop-on-prepare status.
      *
      * @param  stop  true to stop when class prepares.
      */
-    public void setStopOnPrepare(boolean stop);
+    void setStopOnPrepare(boolean stop);
 
     /**
      * Sets the stop-on-unload status.
      *
      * @param  stop  true to stop when class unloads.
      */
-    public void setStopOnUnload(boolean stop);
+    void setStopOnUnload(boolean stop);
 }

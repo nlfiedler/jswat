@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.sun.jdi.Location;
@@ -34,20 +33,21 @@ import com.sun.jdi.Location;
  * @author Nathan Fiedler
  */
 public interface LocationBreakpoint extends Breakpoint {
+
     /** Name of the 'location' property. */
-    public static final String PROP_LOCATION = "location";
+    String PROP_LOCATION = "location";
 
     /**
      * Retrieve the location associated with this breakpoint.
      *
      * @return  location of breakpoint.
      */
-    public Location getLocation();
+    Location getLocation();
 
     /**
      * Set the location at which this breakpoint should stop.
      *
      * @param  location  location at this this breakpoint should stop.
      */
-    public void setLocation(Location location);
+    void setLocation(Location location);
 }

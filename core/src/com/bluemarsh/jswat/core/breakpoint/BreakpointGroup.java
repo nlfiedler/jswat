@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.sun.jdi.event.Event;
@@ -36,13 +35,14 @@ import java.util.ListIterator;
  *
  * @author  Nathan Fiedler
  */
-public interface BreakpointGroup {    
+public interface BreakpointGroup {
+
     /** Name of 'enabled' property. */
-    public static final String PROP_ENABLED = "enabled";
+    String PROP_ENABLED = "enabled";
     /** Name of 'name' property. */
-    public static final String PROP_NAME = "name";
+    String PROP_NAME = "name";
     /** Name of 'parent' property. */
-    public static final String PROP_PARENT = "parent";
+    String PROP_PARENT = "parent";
 
     /**
      * Adds the given breakpoint to this breakpoint group.

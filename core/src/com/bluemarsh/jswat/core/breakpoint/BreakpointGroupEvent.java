@@ -14,14 +14,14 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
+
 import java.util.EventObject;
 
 /**
@@ -30,43 +30,15 @@ import java.util.EventObject;
  * @author  Nathan Fiedler
  */
 public class BreakpointGroupEvent extends EventObject {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The group that changed. */
-    protected transient BreakpointGroup group;
+    private transient BreakpointGroup group;
     /** The type of group change. */
-    protected Type type;
+    private BreakpointGroupEventType type;
     /** Exception that caused this event, if any. */
     private Exception exception;
-
-    /**
-     * Type of breakpoint group event.
-     */
-    public static enum Type {
-        ADDED {
-            public void fireEvent(BreakpointGroupEvent e, BreakpointGroupListener l) {
-                l.groupAdded(e);
-            }
-        },
-        REMOVED {
-            public void fireEvent(BreakpointGroupEvent e, BreakpointGroupListener l) {
-                l.groupRemoved(e);
-            }
-        },
-        ERROR {
-            public void fireEvent(BreakpointGroupEvent e, BreakpointGroupListener l) {
-                l.errorOccurred(e);
-            }
-        };
-
-        /**
-         * Dispatches the event to the listener.
-         *
-         * @param  e  event to dispatch.
-         * @param  l  listener to receive event.
-         */
-        public abstract void fireEvent(BreakpointGroupEvent e, BreakpointGroupListener l);
-    }
 
     /**
      * Constructs a new GroupEvent.
@@ -74,7 +46,7 @@ public class BreakpointGroupEvent extends EventObject {
      * @param  group  group that changed (source of event).
      * @param  type   type of group change.
      */
-    public BreakpointGroupEvent(BreakpointGroup group, Type type) {
+    public BreakpointGroupEvent(BreakpointGroup group, BreakpointGroupEventType type) {
         super(group);
         this.group = group;
         this.type = type;
@@ -87,7 +59,7 @@ public class BreakpointGroupEvent extends EventObject {
      * @param  e      exception that brought about this event.
      */
     public BreakpointGroupEvent(BreakpointGroup group, Exception e) {
-        this(group, Type.ERROR);
+        this(group, BreakpointGroupEventType.ERROR);
         exception = e;
     }
 
@@ -114,7 +86,7 @@ public class BreakpointGroupEvent extends EventObject {
      *
      * @return  group change type.
      */
-    public Type getType() {
+    public BreakpointGroupEventType getType() {
         return type;
     }
 }

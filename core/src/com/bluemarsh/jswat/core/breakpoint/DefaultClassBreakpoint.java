@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2007. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -45,6 +44,7 @@ import org.openide.util.NbBundle;
  */
 public class DefaultClassBreakpoint extends AbstractBreakpoint
         implements ClassBreakpoint, SessionListener {
+
     /** True to stop on prepare. */
     private boolean onPrepare;
     /** True to stop on unload. */
@@ -54,17 +54,21 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
     /** Class unload event request. */
     private ClassUnloadRequest unloadRequest;
 
+    @Override
     public boolean canFilterClass() {
         return true;
     }
 
+    @Override
     public boolean canFilterThread() {
         return false;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         createRequests();
     }
@@ -83,8 +87,7 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
             // Nothing we can do right now.
             return;
         }
-        EventRequestManager erm = session.getConnection()
-            .getVM().eventRequestManager();
+        EventRequestManager erm = session.getConnection().getVM().eventRequestManager();
 
         String filter = getClassFilter();
         if (onPrepare) {
@@ -104,6 +107,7 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     protected void deleteRequests() {
         // Delete the old requests, if any.
         try {
@@ -125,6 +129,7 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public String describe(Event e) {
         if (e instanceof ClassPrepareEvent) {
             ClassPrepareEvent cpe = (ClassPrepareEvent) e;
@@ -141,10 +146,12 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         deleteRequests();
     }
 
+    @Override
     public String getDescription() {
         String cname = getClassFilter();
         if (cname == null) {
@@ -166,24 +173,30 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
                 "Class.description", cname, type);
     }
 
+    @Override
     public boolean getStopOnPrepare() {
         return onPrepare;
     }
 
+    @Override
     public boolean getStopOnUnload() {
         return onUnload;
     }
 
+    @Override
     public boolean isResolved() {
         return true;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setClassFilter(String filter) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -194,6 +207,7 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -204,6 +218,7 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setStopOnPrepare(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -216,6 +231,7 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setStopOnUnload(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -228,6 +244,7 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setSuspendPolicy(int policy) {
         super.setSuspendPolicy(policy);
         if (prepareRequest != null) {
@@ -244,6 +261,7 @@ public class DefaultClassBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

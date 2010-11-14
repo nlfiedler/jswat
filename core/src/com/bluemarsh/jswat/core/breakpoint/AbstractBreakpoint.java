@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2007. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.event.Dispatcher;
@@ -46,6 +45,7 @@ import java.util.Map;
  * @author  Nathan Fiedler
  */
 public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListener {
+
     /** The thread suspension policy requested by the user. Must be one of
      * the <code>com.sun.jdi.request.EventRequest</code> suspend constants.
      * Defaults to <code>SUSPEND_ALL</code>. */
@@ -71,7 +71,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     /** True if the breakpoint should be deleted after being hit. */
     private boolean deleteWhenHit;
     /** Handles property change listeners and sending events. */
-    protected PropertyChangeSupport propSupport;
+    protected final PropertyChangeSupport propSupport;
     /** Map of the properties set in this breakpoint. */
     private Map<String, Object> propertiesMap;
     /** List of breakpoint listeners. */
@@ -133,8 +133,8 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
      * @param  request  event request to apply suspend policy.
      */
     protected void applySuspendPolicy(EventRequest request) {
-        request.setSuspendPolicy(forceSuspend ? EventRequest.SUSPEND_ALL :
-            getSuspendPolicy());
+        request.setSuspendPolicy(forceSuspend ? EventRequest.SUSPEND_ALL
+                : getSuspendPolicy());
     }
 
     @Override
@@ -263,14 +263,13 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
      */
     protected boolean performStop(Event e) {
         BreakpointEvent be = new BreakpointEvent(this,
-                BreakpointEvent.Type.STOPPED, e);
+                BreakpointEventType.STOPPED, e);
         fireEvent(be);
         runMonitors(be);
-// TODO: this seems backward, should have breakpoint manager check if breakpoint should be deleted
         if (deleteWhenHit) {
             // Let listeners know we should be deleted. Hopefully one of
             // them (e.g. breakpoint manager) will actually remove us.
-            fireEvent(new BreakpointEvent(this, BreakpointEvent.Type.REMOVED, e));
+            fireEvent(new BreakpointEvent(this, BreakpointEventType.REMOVED, e));
         }
         // Return true if our policy is to not suspend any threads.
         return suspendPolicy == EventRequest.SUSPEND_NONE;
@@ -364,13 +363,14 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
                     "breakpoint does not support class filters");
         }
         String old = classFilter;
-        if (filter != null && filter.length() == 0) {
+        if (filter != null && filter.isEmpty()) {
             // Property editor doesn't let user delete, so use blank
             // as the indication to delete the filter.
-            filter = null;
+            classFilter = null;
+        } else {
+            classFilter = filter;
         }
-        classFilter = filter;
-        propSupport.firePropertyChange(PROP_CLASSFILTER, old, filter);
+        propSupport.firePropertyChange(PROP_CLASSFILTER, old, classFilter);
     }
 
     @Override
@@ -404,9 +404,9 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
 
     @Override
     public void setSuspendPolicy(int policy) {
-        if ((policy != EventRequest.SUSPEND_ALL) &&
-                (policy != EventRequest.SUSPEND_EVENT_THREAD) &&
-                (policy != EventRequest.SUSPEND_NONE)) {
+        if ((policy != EventRequest.SUSPEND_ALL)
+                && (policy != EventRequest.SUSPEND_EVENT_THREAD)
+                && (policy != EventRequest.SUSPEND_NONE)) {
             throw new IllegalArgumentException("invalid suspend policy: " + policy);
         }
         int old = suspendPolicy;
@@ -433,10 +433,11 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         if (filter != null && filter.length() == 0) {
             // Property editor doesn't let user delete, so use blank
             // as the indication to delete the filter.
-            filter = null;
+            threadFilter = null;
+        } else {
+            threadFilter = filter;
         }
-        threadFilter = filter;
-        propSupport.firePropertyChange(PROP_THREADFILTER, old, filter);
+        propSupport.firePropertyChange(PROP_THREADFILTER, old, threadFilter);
     }
 
     /**

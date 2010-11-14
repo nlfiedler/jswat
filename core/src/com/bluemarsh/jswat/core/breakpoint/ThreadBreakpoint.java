@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 /**
@@ -30,36 +29,37 @@ package com.bluemarsh.jswat.core.breakpoint;
  * @author  Nathan Fiedler
  */
 public interface ThreadBreakpoint extends Breakpoint {
+
     /** Name of 'stopOnDeath' property. */
-    public static final String PROP_STOPONDEATH = "stopOnDeath";
+    String PROP_STOPONDEATH = "stopOnDeath";
     /** Name of 'stopOnStart' property. */
-    public static final String PROP_STOPONSTART = "stopOnStart";
+    String PROP_STOPONSTART = "stopOnStart";
 
     /**
      * Returns the stop-on-death status.
      *
      * @return  true if stopping when thread dies.
      */
-    public boolean getStopOnDeath();
+    boolean getStopOnDeath();
 
     /**
      * Returns the stop-on-start status.
      *
      * @return  true if stopping when thread starts.
      */
-    public boolean getStopOnStart();
+    boolean getStopOnStart();
 
     /**
      * Sets the stop-on-death status.
      *
      * @param  stop  true to stop when thread dies.
      */
-    public void setStopOnDeath(boolean stop);
+    void setStopOnDeath(boolean stop);
 
     /**
      * Sets the stop-on-start status.
      *
      * @param  stop  true to stop when thread starts.
      */
-    public void setStopOnStart(boolean stop);
+    void setStopOnStart(boolean stop);
 }

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2009. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.sun.jdi.event.Event;
@@ -33,22 +32,23 @@ import java.util.ListIterator;
  * @author  Nathan Fiedler
  */
 public interface Breakpoint {
+
     /** Name of 'breakpointGroup' property. */
-    public static final String PROP_BREAKPOINTGROUP = "breakpointGroup";
+    String PROP_BREAKPOINTGROUP = "breakpointGroup";
     /** Name of 'classFilter' property. */
-    public static final String PROP_CLASSFILTER = "classFilter";
+    String PROP_CLASSFILTER = "classFilter";
     /** Name of 'description' property. */
-    public static final String PROP_DESCRIPTION = "description";
+    String PROP_DESCRIPTION = "description";
     /** Name of 'enabled' property. */
-    public static final String PROP_ENABLED = "enabled";
+    String PROP_ENABLED = "enabled";
     /** Name of 'resolved' property. */
-    public static final String PROP_RESOLVED = "resolved";
+    String PROP_RESOLVED = "resolved";
     /** Name of 'suspendPolicy' property. */
-    public static final String PROP_SUSPENDPOLICY = "suspendPolicy";
+    String PROP_SUSPENDPOLICY = "suspendPolicy";
     /** Name of 'threadFilter' property. */
-    public static final String PROP_THREADFILTER = "threadFilter";
+    String PROP_THREADFILTER = "threadFilter";
     /** Name of the 'uniqueNumber' property. */
-    public static final String PROP_NUMBER = "uniqueNumber";
+    String PROP_NUMBER = "uniqueNumber";
 
     /**
      * Add a breakpoint listener to this breakpoint.

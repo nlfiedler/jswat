@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.context.DebuggingContext;
@@ -63,24 +62,23 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
     //   break my.class.name:myMethod
     //   break my.class.name.myMethod()
     //   break my.class.name:myMethod()
-
     private static final Pattern METHOD_BREAK_ARGS =
             Pattern.compile(
-                // group 1:  optional class name
-                "(?:([^(]+)[:.])?"
-                // group 2:  required method name
-                + "([^(]+)"
-                // group 3:  optional parenthesized arg list, possibly empty
-                + "(?:\\((.*?)\\))?$");
+            // group 1:  optional class name
+            "(?:([^(]+)[:.])?"
+            // group 2:  required method name
+            + "([^(]+)"
+            // group 3:  optional parenthesized arg list, possibly empty
+            + "(?:\\((.*?)\\))?$");
 
     @Override
-    public Breakpoint createBreakpoint(String spec, DebuggingContext context)
+    public Breakpoint createBreakpoint(String expression, DebuggingContext context)
             throws AbsentInformationException, AmbiguousClassSpecException,
             AmbiguousMethodException, MalformedClassNameException,
             MalformedMemberNameException, NumberFormatException {
 
         // Trim useless whitespace.
-        spec = spec.trim();
+        String spec = expression.trim();
 
         // Determine what type of breakpoint specification was provided.
         if (spec.matches("^\\d+$") || spec.matches(".+:\\d+$")) {
@@ -201,6 +199,8 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
 
     /**
      * Create an unpopulated instance of {@code LineBreakpoint}.
+     *
+     * @return  a new line breakpoint.
      */
     public LineBreakpoint instantiateLineBreakpoint() {
         return new DefaultLineBreakpoint();
@@ -215,6 +215,8 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
 
     /**
      * Create an unpopulated instance of {@code LocationBreakpoint}.
+     *
+     * @return  a new location breakpoint.
      */
     public LocationBreakpoint instantiateLocationBreakpoint() {
         return new DefaultLocationBreakpoint();
@@ -233,6 +235,8 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
 
     /**
      * Create an unpopulated instance of {@code MethodBreakpoint}.
+     *
+     * @return  a new method breakpoint.
      */
     public MethodBreakpoint instantiateMethodBreakpoint() {
         return new DefaultMethodBreakpoint();
@@ -268,7 +272,7 @@ public class DefaultBreakpointFactory implements BreakpointFactory {
     public WatchBreakpoint createWatchBreakpoint(String cname, String field,
             boolean access, boolean modify)
             throws MalformedClassNameException,
-                   MalformedMemberNameException {
+            MalformedMemberNameException {
         ResolvableWatchBreakpoint wb = new DefaultWatchBreakpoint();
         wb.setClassName(cname);
         wb.setFieldName(field);

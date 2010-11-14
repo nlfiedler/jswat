@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.sun.jdi.ObjectReference;
@@ -39,6 +38,7 @@ public class ObjectReferenceEditor extends PropertyEditorSupport {
     public ObjectReferenceEditor() {
     }
 
+    @Override
     public String getAsText() {
         Object value = getValue();
         if (value instanceof ObjectReference) {
@@ -47,6 +47,7 @@ public class ObjectReferenceEditor extends PropertyEditorSupport {
         return "";
     }
 
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         // Do nothing as the user cannot change the object reference.
     }

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2009. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -41,6 +41,8 @@ import com.sun.jdi.event.LocatableEvent;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -55,10 +57,10 @@ import org.openide.util.NbBundle;
 public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
         implements MethodBreakpoint {
     /** Name of the method this breakpoint is set at (may be empty string). */
-    protected String methodId;
+    private String methodName;
     /** List of method parameters, where each element is represents the
      * parameter type (may be empty list). */
-    protected List<String> methodParameters;
+    private List<String> methodParameters;
 
     /**
      * Creates a new instance of DefaultMethodBreakpoint.
@@ -99,13 +101,13 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
     public String getDescription() {
         String cname = getClassName();
         String mname;
-        if (methodId == null || methodId.length() == 0) {
+        if (methodName == null || methodName.length() == 0) {
             mname = "*";
         } else {
-            mname = methodId;
+            mname = methodName;
         }
         String args;
-        if (methodParameters == null || methodParameters.size() == 0) {
+        if (methodParameters == null || methodParameters.isEmpty()) {
             args = "*";
         } else {
             args = Strings.listToString(methodParameters, ",");
@@ -116,12 +118,12 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
 
     @Override
     public List<String> getMethodParameters() {
-        return methodParameters;
+        return new ArrayList<String>(methodParameters);
     }
 
     @Override
     public String getMethodName() {
-        return methodId;
+        return methodName;
     }
 
     @Override
@@ -134,15 +136,15 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
 
         // Determine the set of locations to which we match.
         List<Location> locations = new LinkedList<Location>();
-        if (methodId.length() == 0) {
+        if (methodName.length() == 0) {
             // No method name at all, resolve against all methods.
             List<Method> methods = refType.methods();
             for (Method method : methods) {
                 locations.add(method.location());
             }
-        } else if (methodParameters.size() == 0) {
+        } else if (methodParameters.isEmpty()) {
             // Resolve against all methods of a certain name.
-            List<Method> methods = refType.methodsByName(methodId);
+            List<Method> methods = refType.methodsByName(methodName);
             for (Method method : methods) {
                 locations.add(method.location());
             }
@@ -162,7 +164,7 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
                     }
                 }
                 Method method = Classes.findMethod(
-                    refType, methodId, parameterTypes, false, false);
+                    refType, methodName, parameterTypes, false, false);
                 locations.add(method.location());
             } catch (AmbiguousMethodException ame) {
                 throw new ResolveException(ame);
@@ -211,8 +213,8 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
         if (name.length() > 0 && !Names.isMethodIdentifier(name)) {
             throw new MalformedMemberNameException(name);
         }
-        String old = methodId;
-        methodId = name;
+        String old = methodName;
+        methodName = name;
         // Reset ourselves so we get resolved all over again.
         deleteRequests();
         propSupport.firePropertyChange(PROP_METHODNAME, old, name);
@@ -226,8 +228,8 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
         if (args == null) {
             throw new NullPointerException("args cannot be null");
         }
-        List old = methodParameters;
-        methodParameters = args;
+        List<String> old = methodParameters;
+        methodParameters = Collections.unmodifiableList(args);
         // Reset ourselves so we get resolved all over again.
         deleteRequests();
         propSupport.firePropertyChange(PROP_METHODPARAMETERS, old, args);

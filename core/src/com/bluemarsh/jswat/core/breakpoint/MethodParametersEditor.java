@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.util.Strings;
@@ -40,16 +39,18 @@ public class MethodParametersEditor extends PropertyEditorSupport {
     public MethodParametersEditor() {
     }
 
+    @Override
     public String getAsText() {
         Object value = getValue();
-        if (value instanceof List) {
+        if (value instanceof List<?>) {
             // Do not change the list values, these are used in persistence
             // and need to be resolvable upon deserialization.
-            return Strings.listToString((List) value);
+            return Strings.listToString((List<?>) value);
         }
         return "";
     }
 
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         // Do nothing since we disallow editing in this manner.
     }

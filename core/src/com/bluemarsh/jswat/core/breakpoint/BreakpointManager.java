@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2006. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.sun.jdi.event.Event;
@@ -96,7 +95,7 @@ public interface BreakpointManager {
      * @param  t  breakpoint event type.
      * @param  e  associated JDI event, or null if none.
      */
-    void fireEvent(Breakpoint b, BreakpointEvent.Type t, Event e);
+    void fireEvent(Breakpoint b, BreakpointEventType t, Event e);
 
     /**
      * Let all the group listeners know of a recent event in the groups.

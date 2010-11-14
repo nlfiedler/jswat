@@ -14,9 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
- * Contributor(s): Nathan L. Fiedler.
+ * Contributor(s): Steve Yegge, Nathan L. Fiedler.
  *
  * $Id: ConsoleBreakpointFactory.java 137 2009-04-29 00:05:39Z nathanfiedler $
  */
@@ -24,6 +24,7 @@ package com.bluemarsh.jswat.console;
 
 import com.bluemarsh.jswat.core.breakpoint.DefaultLocationBreakpoint;
 import com.bluemarsh.jswat.core.util.Threads;
+import com.sun.jdi.Location;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.LocatableEvent;
 import org.openide.util.NbBundle;
@@ -39,6 +40,7 @@ public class ConsoleLocationBreakpoint extends DefaultLocationBreakpoint {
 
     @Override
     public String describe(Event e) {
+        Location location = getLocation();
         String cname = location.declaringType().name();
         String mname = location.method().name();
         String msig = location.method().signature();
@@ -49,23 +51,24 @@ public class ConsoleLocationBreakpoint extends DefaultLocationBreakpoint {
         if (Main.emulateJDB()) {
             return NbBundle.getMessage(ConsoleLocationBreakpoint.class,
                     "Location.description.stop.jdb",
-                    new String[] { thread, cname, mname, line });
+                    new String[]{thread, cname, mname, line});
         }
         return NbBundle.getMessage(ConsoleLocationBreakpoint.class,
                 "Location.description.stop",
-                new String[] { cname, mname, msig, index, thread });
+                new String[]{cname, mname, msig, index, thread});
     }
 
     @Override
     public String getDescription() {
-        String[] params = new String[] {
+        Location location = getLocation();
+        String[] params = new String[]{
             location.declaringType().name(),
             location.method().name(),
             location.method().signature(),
             String.valueOf(Main.emulateJDB() ? location.lineNumber()
-                                             : location.codeIndex())
+            : location.codeIndex())
         };
         return NbBundle.getMessage(ConsoleLocationBreakpoint.class,
-               "Location.description", params);
+                "Location.description", params);
     }
 }

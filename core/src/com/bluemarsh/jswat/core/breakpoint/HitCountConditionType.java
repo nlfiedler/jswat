@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2010. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -22,31 +22,41 @@
  */
 package com.bluemarsh.jswat.core.breakpoint;
 
-import com.sun.jdi.ObjectReference;
-
 /**
- * An InstanceBreakpoint applies only to a particular object reference.
- * This is typically combined with other types of a breakpoints, such as
- * WatchBreakpoint.
+ * The type of hit count condition.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
-public interface InstanceBreakpoint extends Breakpoint {
+public enum HitCountConditionType {
 
-    /** Name of 'objectReference' property. */
-    String PROP_OBJECTREFERENCE = "objectReference";
+    EQUAL {
+
+        @Override
+        public boolean evaluate(int user, int hit) {
+            return user == hit;
+        }
+    },
+    GREATER {
+
+        @Override
+        public boolean evaluate(int user, int hit) {
+            return user < hit;
+        }
+    },
+    MULTIPLE {
+
+        @Override
+        public boolean evaluate(int user, int hit) {
+            return hit % user == 0;
+        }
+    };
 
     /**
-     * Returns the object reference this breakpoint is associated with.
+     * Evaluates the condition to determine if it is satisfied.
      *
-     * @return  object reference.
+     * @param  user  user-specified value.
+     * @param  hit   breakpoint hit count.
+     * @return  true if satisfied, false otherwise.
      */
-    ObjectReference getObjectReference();
-
-    /**
-     * Sets the object reference this breakpoint should filter on.
-     *
-     * @param  obj  object reference to filter against.
-     */
-    void setObjectReference(ObjectReference obj);
+    public abstract boolean evaluate(int user, int hit);
 }

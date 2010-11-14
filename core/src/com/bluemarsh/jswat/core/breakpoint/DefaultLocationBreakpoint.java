@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2007. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -44,8 +43,9 @@ import org.openide.util.NbBundle;
  */
 public class DefaultLocationBreakpoint extends AbstractBreakpoint
         implements LocationBreakpoint, SessionListener {
+
     /** The Location that we are set to stop upon. */
-    protected Location location;
+    private Location location;
     /** Resolved event request, if breakpoint has resolved. */
     private EventRequest eventRequest;
 
@@ -55,17 +55,21 @@ public class DefaultLocationBreakpoint extends AbstractBreakpoint
     public DefaultLocationBreakpoint() {
     }
 
+    @Override
     public boolean canFilterClass() {
         return false;
     }
 
+    @Override
     public boolean canFilterThread() {
         return true;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
     }
 
@@ -81,6 +85,7 @@ public class DefaultLocationBreakpoint extends AbstractBreakpoint
         propSupport.firePropertyChange(PROP_RESOLVED, false, true);
     }
 
+    @Override
     protected void deleteRequests() {
         if (eventRequest != null) {
             try {
@@ -95,9 +100,10 @@ public class DefaultLocationBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public String describe(Event e) {
         LocatableEvent le = (LocatableEvent) e;
-        String[] params = new String[] {
+        String[] params = new String[]{
             location.declaringType().name(),
             location.method().name(),
             location.method().signature(),
@@ -108,20 +114,23 @@ public class DefaultLocationBreakpoint extends AbstractBreakpoint
                 "Location.description.stop", params);
     }
 
+    @Override
     public void destroy() {
         deleteRequests();
         super.destroy();
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         deleteRequests();
         // Delete ourselves since our location will be stale,
         // thus rendering us completely useless.
-        fireEvent(new BreakpointEvent(this, BreakpointEvent.Type.REMOVED, null));
+        fireEvent(new BreakpointEvent(this, BreakpointEventType.REMOVED, null));
     }
 
+    @Override
     public String getDescription() {
-        String[] params = new String[] {
+        String[] params = new String[]{
             location.declaringType().name(),
             location.method().name(),
             location.method().signature(),
@@ -131,20 +140,25 @@ public class DefaultLocationBreakpoint extends AbstractBreakpoint
                 "Location.description", params);
     }
 
+    @Override
     public Location getLocation() {
         return location;
     }
 
+    @Override
     public boolean isResolved() {
         return true;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -154,6 +168,7 @@ public class DefaultLocationBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setLocation(Location location) {
         Location old = this.location;
         this.location = location;
@@ -165,6 +180,7 @@ public class DefaultLocationBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void setSuspendPolicy(int policy) {
         super.setSuspendPolicy(policy);
         if (eventRequest != null) {
@@ -175,6 +191,7 @@ public class DefaultLocationBreakpoint extends AbstractBreakpoint
         }
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

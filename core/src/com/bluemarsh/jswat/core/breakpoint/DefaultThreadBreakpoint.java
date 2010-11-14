@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2006. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -46,6 +45,7 @@ import org.openide.util.NbBundle;
  */
 public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
         SessionListener, ThreadBreakpoint {
+
     /** True to stop on start. */
     private boolean onStart;
     /** True to stop on death. */
@@ -55,17 +55,21 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
     /** Thread death event request. */
     private ThreadDeathRequest deathRequest;
 
+    @Override
     public boolean canFilterClass() {
         return false;
     }
 
+    @Override
     public boolean canFilterThread() {
         return true;
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
         createRequests();
     }
@@ -84,8 +88,7 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
             // Nothing we can do right now.
             return;
         }
-        EventRequestManager erm = session.getConnection()
-            .getVM().eventRequestManager();
+        EventRequestManager erm = session.getConnection().getVM().eventRequestManager();
 
         // Create the new requests.
         if (onStart) {
@@ -99,6 +102,7 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     protected void deleteRequests() {
         // Delete the old requests, if any.
         try {
@@ -120,6 +124,7 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     public String describe(Event e) {
         String name;
         String type;
@@ -132,17 +137,19 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
             type = NbBundle.getMessage(DefaultThreadBreakpoint.class,
                     "Thread.description.stop.death");
         } else {
-            throw new IllegalArgumentException("expected thread event, but got " +
-                    e.getClass().getName());
+            throw new IllegalArgumentException("expected thread event, but got "
+                    + e.getClass().getName());
         }
         return NbBundle.getMessage(DefaultThreadBreakpoint.class,
                 "Thread.description.stop", name, type);
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
         deleteRequests();
     }
 
+    @Override
     public String getDescription() {
         String type = "";
         if (onDeath && onStart) {
@@ -159,24 +166,30 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
                 "Thread.description", type);
     }
 
+    @Override
     public boolean getStopOnDeath() {
         return onDeath;
     }
 
+    @Override
     public boolean getStopOnStart() {
         return onStart;
     }
 
+    @Override
     public boolean isResolved() {
         return true;
     }
 
+    @Override
     public void opened(Session session) {
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -187,6 +200,7 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     public void setStopOnDeath(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -199,6 +213,7 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     public void setStopOnStart(boolean stop) {
         // Delete so we can recreate them using changed settings.
         deleteRequests();
@@ -211,6 +226,7 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     public void setSuspendPolicy(int policy) {
         super.setSuspendPolicy(policy);
         if (startRequest != null) {
@@ -227,6 +243,7 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
         }
     }
 
+    @Override
     protected boolean shouldResume(Event event) {
         // Is this the thread we are interested in?
         ThreadReference thread = null;
@@ -252,6 +269,7 @@ public class DefaultThreadBreakpoint extends AbstractBreakpoint implements
         return super.shouldResume(event);
     }
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }
