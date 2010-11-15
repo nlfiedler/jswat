@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.console;
 
 import com.bluemarsh.jswat.core.PlatformService;
@@ -44,6 +43,7 @@ import org.openide.util.Cancellable;
  * @author  Nathan Fiedler
  */
 public class ConsolePlatformService implements PlatformService {
+
     /** Name of the user directory where files are stored by default. */
     private static final String USER_DIR = ".jswat-console";
     /** The path to the user's home directory. */
@@ -80,7 +80,7 @@ public class ConsolePlatformService implements PlatformService {
     }
 
     @Override
-    public Preferences getPreferences(Class clazz) {
+    public Preferences getPreferences(Class<?> clazz) {
         return Preferences.userNodeForPackage(clazz);
     }
 

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2005. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
 import java.util.NoSuchElementException;
@@ -37,6 +36,7 @@ import java.util.NoSuchElementException;
  * @author  Nathan Fiedler
  */
 public class CommandArguments {
+
     /** The arguments to parse. */
     private String arguments;
     /** Length of arguments in characters. */
@@ -107,7 +107,7 @@ public class CommandArguments {
     public String nextToken() {
         // Skip over spaces.
         currPosition = nextNonSpace >= 0
-            ? nextNonSpace : skipSpaces(currPosition);
+                ? nextNonSpace : skipSpaces(currPosition);
         nextNonSpace = -1;
         if (currPosition == lastPosition) {
             throw new NoSuchElementException("reached end of arguments");
@@ -172,7 +172,7 @@ public class CommandArguments {
     public String rest() {
         String n = arguments.substring(currPosition).trim();
         if (!returnAsIs
-            && (n.indexOf('\'') > -1 || n.indexOf('"') > -1
+                && (n.indexOf('\'') > -1 || n.indexOf('"') > -1
                 || n.indexOf('\\') > -1)) {
             // Remove quotes and translate escaped quotes and slashes.
             n = translateEscapes(n);
@@ -196,69 +196,70 @@ public class CommandArguments {
      * Finds the end of the argument, taking into consideration
      * quotes and escaped quotes.
      *
-     * @param  pos  position from which to start scanning.
+     * @param  start  position from which to start scanning.
      * @return  the offset of the end of the argument, or lastPosition
      *          if end of arguments is reached.
      */
-    protected int scanArgument(int pos) {
+    protected int scanArgument(int start) {
+        int pos = start;
         // Use a simple finite-state machine to parse the input.
         byte state = 0;
         char ch = '\0';
         while (pos < lastPosition) {
             ch = arguments.charAt(pos);
             switch (state) {
-            case 0:
-                // Not inside a quoted string.
-                if (ch == '"') {
+                case 0:
+                    // Not inside a quoted string.
+                    if (ch == '"') {
+                        state = 1;
+                    } else if (ch == '\'') {
+                        state = 2;
+                    } else if (ch == '\\') {
+                        state = 3;
+                    } else if (Character.isSpaceChar(ch)) {
+                        // Found end of argument.
+                        // Return now so we don't increment this again.
+                        return pos;
+                    }
+                    break;
+
+                case 1:
+                    // Inside a double-quoted string.
+                    if (ch == '"') {
+                        state = 0;
+                    } else if (ch == '\\') {
+                        state = 4;
+                    }
+                    break;
+
+                case 2:
+                    // Inside a single-quoted string.
+                    if (ch == '\'') {
+                        state = 0;
+                    } else if (ch == '\\') {
+                        state = 5;
+                    }
+                    break;
+
+                case 3:
+                    // Previous character was a slash.
+                    // Simply skip the character and move on.
+                    state = 0;
+                    break;
+
+                case 4:
+                    // Previous character was a slash.
+                    // Simply skip the character and move on.
                     state = 1;
-                } else if (ch == '\'') {
+                    break;
+
+                case 5:
+                    // Previous character was a slash.
+                    // Simply skip the character and move on.
                     state = 2;
-                } else if (ch == '\\') {
-                    state = 3;
-                } else if (Character.isSpaceChar(ch)) {
-                    // Found end of argument.
-                    // Return now so we don't increment this again.
-                    return pos;
-                }
-                break;
-
-            case 1:
-                // Inside a double-quoted string.
-                if (ch == '"') {
-                    state = 0;
-                } else if (ch == '\\') {
-                    state = 4;
-                }
-                break;
-
-            case 2:
-                // Inside a single-quoted string.
-                if (ch == '\'') {
-                    state = 0;
-                } else if (ch == '\\') {
-                    state = 5;
-                }
-                break;
-
-            case 3:
-                // Previous character was a slash.
-                // Simply skip the character and move on.
-                state = 0;
-                break;
-
-            case 4:
-                // Previous character was a slash.
-                // Simply skip the character and move on.
-                state = 1;
-                break;
-
-            case 5:
-                // Previous character was a slash.
-                // Simply skip the character and move on.
-                state = 2;
-                break;
-            default:
-                throw new IllegalStateException("scanner got confused");
+                    break;
+                default:
+                    throw new IllegalStateException("scanner got confused");
             }
             pos++;
         }
@@ -269,11 +270,12 @@ public class CommandArguments {
      * Skips over space characters and returns the offset of the next
      * non-space character.
      *
-     * @param  pos  position from which to start skipping.
+     * @param  start  position from which to start skipping.
      * @return  the offset of the next non-space, or lastPosition if
      *          end of arguments is reached.
      */
-    protected int skipSpaces(int pos) {
+    protected int skipSpaces(int start) {
+        int pos = start;
         // Skip over space characters.
         while (pos < lastPosition) {
             char c = arguments.charAt(pos);

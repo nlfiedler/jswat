@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2009. All Rights Reserved.
+ * are Copyright (C) 1999-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
 import com.bluemarsh.jswat.core.context.DebuggingContext;
@@ -48,17 +47,18 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class DefaultCommandParser extends AbstractCommandParser {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             DefaultCommandParser.class.getName());
     /** Result of looking up the available input processors. */
-    private Lookup.Result processorLookupResult;
+    private Lookup.Result<InputProcessor> processorLookupResult;
     /** Synchronize on this to access inputProcessors reference. */
     private final Object inputProcessorsLock;
     /** List of the available input processors. */
     private Collection<InputProcessor> inputProcessors;
     /** Result of looking up the available commands. */
-    private Lookup.Result commandLookupResult;
+    private Lookup.Result<Command> commandLookupResult;
     /** Synchronize on this to access loadedCommands and commandMap. */
     private final Object commandsLock;
     /** Collection of the available Command instances. */
@@ -155,9 +155,9 @@ public class DefaultCommandParser extends AbstractCommandParser {
     }
 
     @Override
-    public void parseInput(String input)
+    public void parseInput(String inputStr)
             throws CommandException, MissingArgumentsException {
-        input = input.trim();
+        String input = inputStr.trim();
         // Check for trivial input, which is always ignored.
         if (input.length() == 0) {
             return;
@@ -269,8 +269,7 @@ public class DefaultCommandParser extends AbstractCommandParser {
     @SuppressWarnings("unchecked")
     private void rebuildCommands() {
         synchronized (commandsLock) {
-            loadedCommands = (Collection<Command>)
-                    commandLookupResult.allInstances();
+            loadedCommands = (Collection<Command>) commandLookupResult.allInstances();
             commandMap = new HashMap<String, Command>();
             Iterator<Command> iter = loadedCommands.iterator();
             while (iter.hasNext()) {
@@ -287,8 +286,7 @@ public class DefaultCommandParser extends AbstractCommandParser {
     @SuppressWarnings("unchecked")
     private void rebuildProcessors() {
         synchronized (inputProcessorsLock) {
-            inputProcessors = (Collection<InputProcessor>)
-                    processorLookupResult.allInstances();
+            inputProcessors = (Collection<InputProcessor>) processorLookupResult.allInstances();
         }
     }
 

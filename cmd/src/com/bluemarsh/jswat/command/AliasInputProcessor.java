@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import java.util.List;
  */
 public class AliasInputProcessor implements InputProcessor {
 
+    @Override
     public boolean canProcess(String input, CommandParser parser) {
         int index = input.indexOf(' ');
         String alias;
@@ -44,10 +44,12 @@ public class AliasInputProcessor implements InputProcessor {
         return parser.getAlias(alias) != null;
     }
 
+    @Override
     public boolean expandsInput() {
         return false;
     }
 
+    @Override
     public List<String> process(String input, CommandParser parser)
             throws CommandException {
         List<String> output = new ArrayList<String>(1);

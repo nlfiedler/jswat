@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core;
 
 import java.io.FileNotFoundException;
@@ -53,7 +52,7 @@ public interface PlatformService {
      * @param  clazz  class for which to get Preferences instance.
      * @return  the Preferences instance.
      */
-    Preferences getPreferences(Class clazz);
+    Preferences getPreferences(Class<?> clazz);
 
     /**
      * Retrieve the source file name from the class file.

@@ -14,34 +14,23 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
- * Contributor(s): Nathan L. Fiedler.
+ * Contributor(s): Steve Yegge, Nathan L. Fiedler.
  *
  * $Id: WhereCommand.java 143 2009-05-02 00:17:52Z nathanfiedler $
  */
-
 package com.bluemarsh.jswat.console.commands;
 
-import com.bluemarsh.jswat.command.CommandException;
-import com.bluemarsh.jswat.core.context.DebuggingContext;
-import com.bluemarsh.jswat.core.util.Threads;
-import com.sun.jdi.Location;
-import com.sun.jdi.StackFrame;
 import com.sun.jdi.ThreadReference;
 import java.io.PrintWriter;
-import java.util.List;
 import org.openide.util.NbBundle;
-import com.bluemarsh.jswat.command.CommandArguments;
 import com.bluemarsh.jswat.command.CommandContext;
 import com.bluemarsh.jswat.command.CommandException;
-import com.bluemarsh.jswat.command.MissingArgumentsException;
-import com.bluemarsh.jswat.command.commands.FrameDownCommand;
 import com.bluemarsh.jswat.core.context.ContextProvider;
 import com.bluemarsh.jswat.core.context.DebuggingContext;
 import com.sun.jdi.StackFrame;
 import java.util.List;
-
 
 /**
  * Displays the call stack for one or all threads.
@@ -91,7 +80,6 @@ public class WhereCommand
     //  f) no program counter info unless the command is "wherei"
     //  g) no indicator for current frame in current thread :(
     //  h) "where <thread-id>" actually switches to that thread!
-
     @Override
     protected void printStack(ThreadReference thread, PrintWriter writer,
             DebuggingContext dc) throws CommandException {

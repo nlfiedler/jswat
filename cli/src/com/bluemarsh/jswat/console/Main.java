@@ -72,9 +72,9 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class Main {
+
+    /** If true, the debugger attempts to emulate JDB output. */
     private static boolean jdbEmulationMode;
-
-
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -172,9 +172,9 @@ public class Main {
         sessionMgr.addSessionManagerListener(bwatcher);
 
         // Add the watchers and adapters to the open sessions.
-        Iterator iter = sessionMgr.iterateSessions();
+        Iterator<Session> iter = sessionMgr.iterateSessions();
         while (iter.hasNext()) {
-            Session s = (Session) iter.next();
+            Session s = iter.next();
             s.addSessionListener(adapter);
             s.addSessionListener(swatcher);
         }
@@ -309,8 +309,8 @@ public class Main {
         try {
             for (File file : files) {
                 if (file.canRead()) {
-                    consoleOutput.println("Executing startup file: " +
-                            file.getAbsolutePath());
+                    consoleOutput.println("Executing startup file: "
+                            + file.getAbsolutePath());
                     BufferedReader br = new BufferedReader(new FileReader(file));
                     try {
                         String line = br.readLine();
@@ -396,6 +396,7 @@ public class Main {
                 // The actual connection may be made some time from now,
                 // so set up a listener to be notified at that time.
                 connection.addConnectionListener(new ConnectionListener() {
+
                     @Override
                     public void connected(ConnectionEvent event) {
                         if (session.isConnected()) {
@@ -419,6 +420,8 @@ public class Main {
      * Returns {@code true} if we are attempting to emulate JDB
      * enough to run within clients (such as Emacs) that may invoke
      * JDB as a subprocess and parse its output.
+     *
+     * @return  true if emulating JDB output, false otherwise.
      */
     public static boolean emulateJDB() {
         return jdbEmulationMode;
