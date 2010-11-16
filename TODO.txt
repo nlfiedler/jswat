@@ -2,6 +2,7 @@ JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
 
+- cli project fails to build since rev 274
 - Update to NetBeans 6.9.1 Platform
   - update the cluster values in
     - build.xml
