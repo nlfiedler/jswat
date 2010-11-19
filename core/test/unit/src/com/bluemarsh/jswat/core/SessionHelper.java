@@ -36,7 +36,6 @@ import com.bluemarsh.jswat.core.runtime.RuntimeProvider;
 import com.bluemarsh.jswat.core.session.Session;
 import com.bluemarsh.jswat.core.session.SessionEvent;
 import com.bluemarsh.jswat.core.session.SessionListener;
-import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.bluemarsh.jswat.core.stepping.Stepper;
 import com.bluemarsh.jswat.core.stepping.SteppingException;
@@ -54,16 +53,11 @@ import static org.junit.Assert.*;
 public class SessionHelper {
 
     /** Our session listener. */
-    private static TestSessionListener listener;
+    private static TestSessionListener listener = new TestSessionListener();
     /** Semaphore for the session suspended notification. */
-    private static Semaphore suspendedSem;
+    private static Semaphore suspendedSem = new Semaphore(1);
     /** Lock used for waiting after launching the debuggee. */
     private static final Object LAUNCH_LOCK = new Object();
-
-    static {
-        listener = new TestSessionListener();
-        suspendedSem = new Semaphore(1);
-    }
 
     private SessionHelper() {
     }
@@ -74,8 +68,7 @@ public class SessionHelper {
      * @return  a Session instance.
      */
     public static Session getSession() {
-        SessionManager sm = SessionProvider.getSessionManager();
-        return sm.getCurrent();
+        return SessionProvider.getCurrentSession();
     }
 
     /**
