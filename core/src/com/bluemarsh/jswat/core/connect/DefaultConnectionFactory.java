@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.connect;
 
 import com.bluemarsh.jswat.core.CoreSettings;
@@ -42,6 +41,7 @@ import java.util.Map;
  */
 public class DefaultConnectionFactory implements ConnectionFactory {
 
+    @Override
     public JvmConnection createLaunching(JavaRuntime runtime, String options, String main) {
         if (runtime == null) {
             throw new IllegalArgumentException("runtime must be non-null");
@@ -70,6 +70,7 @@ public class DefaultConnectionFactory implements ConnectionFactory {
         return new LaunchingConnection(connector, args);
     }
 
+    @Override
     public JvmConnection createListening(String transport, String host,
             String address) throws NoListeningConnectorException {
         ListeningConnector connector =
@@ -94,6 +95,7 @@ public class DefaultConnectionFactory implements ConnectionFactory {
         return new ListeningConnection(connector, args);
     }
 
+    @Override
     public JvmConnection createProcess(String pid) throws NoAttachingConnectorException {
         // Find a process attaching connector (uses "local" for the name).
         AttachingConnector connector =
@@ -110,6 +112,7 @@ public class DefaultConnectionFactory implements ConnectionFactory {
         return setTimeout(connector, args);
     }
 
+    @Override
     public JvmConnection createShared(String name)
             throws NoAttachingConnectorException {
         // Find a shared-memory attaching connector.
@@ -127,6 +130,7 @@ public class DefaultConnectionFactory implements ConnectionFactory {
         return setTimeout(connector, args);
     }
 
+    @Override
     public JvmConnection createSocket(String hostname, String port)
             throws NoAttachingConnectorException {
         // Find a socket-based attaching connector.

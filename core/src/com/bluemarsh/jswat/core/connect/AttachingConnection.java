@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.connect;
 
 import com.sun.jdi.VirtualMachine;
@@ -49,10 +48,11 @@ public class AttachingConnection extends AbstractConnection {
         super(connector, args);
     }
 
+    @Override
     public void connect() throws IllegalConnectorArgumentsException, IOException {
         AttachingConnector conn = (AttachingConnector) getConnector();
         VirtualMachine vm = conn.attach(getConnectorArgs());
         setVM(vm);
-        fireEvent(new ConnectionEvent(this, ConnectionEvent.Type.CONNECTED));
+        fireEvent(new ConnectionEvent(this, ConnectionEventType.CONNECTED));
     }
 }

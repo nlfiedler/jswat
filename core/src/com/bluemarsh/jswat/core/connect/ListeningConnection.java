@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2009. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.connect;
 
 import com.bluemarsh.jswat.core.PlatformProvider;
@@ -46,6 +45,7 @@ import org.openide.util.RequestProcessor;
  */
 public class ListeningConnection extends AbstractConnection
         implements Cancellable, Runnable {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             ListeningConnection.class.getName());
@@ -102,7 +102,7 @@ public class ListeningConnection extends AbstractConnection
             VirtualMachine vm = conn.accept(args);
             conn.stopListening(args);
             setVM(vm);
-            fireEvent(new ConnectionEvent(this, ConnectionEvent.Type.CONNECTED));
+            fireEvent(new ConnectionEvent(this, ConnectionEventType.CONNECTED));
         } catch (TransportTimeoutException tte) {
             // It doesn't stop listening when there is a timeout? Stupid...
             try {

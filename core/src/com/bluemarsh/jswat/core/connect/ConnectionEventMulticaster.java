@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.connect;
 
 /**
@@ -53,6 +52,7 @@ package com.bluemarsh.jswat.core.connect;
  * the description given in <u>Taming Java Threads</u> by Allen Holub.</p>
  */
 public class ConnectionEventMulticaster implements ConnectionListener {
+
     /** A connection listener. */
     protected final ConnectionListener listener1;
     /** A connection listener. */
@@ -67,9 +67,9 @@ public class ConnectionEventMulticaster implements ConnectionListener {
      * @return  connection multicast listener.
      */
     public static ConnectionListener add(ConnectionListener l1,
-                                      ConnectionListener l2) {
-        return (l1 == null) ? l2 :
-               (l2 == null) ? l1 : new ConnectionEventMulticaster(l1, l2);
+            ConnectionListener l2) {
+        return (l1 == null) ? l2
+                : (l2 == null) ? l1 : new ConnectionEventMulticaster(l1, l2);
     }
 
     /**
@@ -81,7 +81,7 @@ public class ConnectionEventMulticaster implements ConnectionListener {
      * @return  connection multicast listener.
      */
     public static ConnectionListener remove(ConnectionListener l1,
-                                         ConnectionListener l2) {
+            ConnectionListener l2) {
         if (l1 == l2 || l1 == null) {
             return null;
         } else if (l1 instanceof ConnectionEventMulticaster) {
@@ -123,6 +123,7 @@ public class ConnectionEventMulticaster implements ConnectionListener {
         return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
     }
 
+    @Override
     public void connected(ConnectionEvent e) {
         listener1.connected(e);
         listener2.connected(e);

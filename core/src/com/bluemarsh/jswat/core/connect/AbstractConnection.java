@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.connect;
 
 import com.sun.jdi.VMDisconnectedException;
@@ -28,6 +27,7 @@ import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.ListeningConnector;
+import java.util.HashMap;
 import java.util.Map;
 import org.openide.util.NbBundle;
 
@@ -37,12 +37,13 @@ import org.openide.util.NbBundle;
  * @author Nathan Fiedler
  */
 public abstract class AbstractConnection implements JvmConnection {
+
     /** Connector. */
-    private Connector connector;
+    private final Connector connector;
     /** Connector arguments. */
-    private Map<String, ? extends Connector.Argument> connectorArgs;
+    private final Map<String, ? extends Connector.Argument> connectorArgs;
     /** True if this is a remote connection. */
-    private boolean isRemoteConnection;
+    private final boolean isRemoteConnection;
     /** Debuggee VM. */
     private VirtualMachine debuggeeVM;
     /** List of ConnectionListener objects. */
@@ -59,12 +60,11 @@ public abstract class AbstractConnection implements JvmConnection {
             Map<String, ? extends Connector.Argument> args) {
         this.connector = connector;
         connectorArgs = args;
-        if (connector instanceof AttachingConnector
-            || connector instanceof ListeningConnector) {
-            isRemoteConnection = true;
-        }
+        isRemoteConnection = connector instanceof AttachingConnector
+                || connector instanceof ListeningConnector;
     }
 
+    @Override
     public void addConnectionListener(ConnectionListener listener) {
         if (listener == null) {
             return;
@@ -73,11 +73,12 @@ public abstract class AbstractConnection implements JvmConnection {
             listenerList = ConnectionEventMulticaster.add(listenerList, listener);
         }
         if (isConnected()) {
-            ConnectionEvent se = new ConnectionEvent(this, ConnectionEvent.Type.CONNECTED);
+            ConnectionEvent se = new ConnectionEvent(this, ConnectionEventType.CONNECTED);
             se.getType().fireEvent(se, listener);
         }
     }
 
+    @Override
     public void disconnect() {
         debuggeeVM = null;
     }
@@ -97,6 +98,7 @@ public abstract class AbstractConnection implements JvmConnection {
         }
     }
 
+    @Override
     public String getAddress() {
         String name = getConnectorArg("name");
         if (name != null) {
@@ -143,18 +145,20 @@ public abstract class AbstractConnection implements JvmConnection {
     }
 
     /**
-     * Returns the connector arguments for this connection.
+     * Returns a copy of the connector arguments for this connection.
      *
      * @return  an argument map.
      */
     protected Map<String, ? extends Connector.Argument> getConnectorArgs() {
-        return connectorArgs;
+        return new HashMap<String, Connector.Argument>(connectorArgs);
     }
 
+    @Override
     public VirtualMachine getVM() {
         return debuggeeVM;
     }
 
+    @Override
     public boolean isConnected() {
         if (debuggeeVM != null) {
             try {
@@ -166,10 +170,12 @@ public abstract class AbstractConnection implements JvmConnection {
         return false;
     }
 
+    @Override
     public boolean isRemote() {
         return isRemoteConnection;
     }
 
+    @Override
     public void removeConnectionListener(ConnectionListener listener) {
         if (listener == null) {
             return;

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core;
 
 import com.bluemarsh.jswat.core.util.Strings;
@@ -34,6 +33,7 @@ import java.util.prefs.Preferences;
  * @author  Nathan Fiedler
  */
 public class CoreSettings {
+
     /** Name of the connection timeout setting. */
     public static final String PROP_CONNECT_TIMEOUT = "connectionTimeout";
     /** Name of the method invocation timeout setting. */
@@ -199,10 +199,8 @@ public class CoreSettings {
             throw new IllegalArgumentException("extension cannot be blank");
         }
         // Ensure extension includes the leading period.
-        if (extension.charAt(0) != '.') {
-            extension = '.' + extension;
-        }
-        preferences.put(PROP_SOURCE_EXTENSION, extension);
+        String ext = extension.charAt(0) == '.' ? extension : '.' + extension;
+        preferences.put(PROP_SOURCE_EXTENSION, ext);
     }
 
     /**
@@ -212,10 +210,8 @@ public class CoreSettings {
      *                   null is converted to an empty list.
      */
     public void setSteppingExcludes(List<String> excludes) {
-        if (excludes == null) {
-            excludes = Collections.emptyList();
-        }
-        String exc = Strings.listToString(excludes, ",");
+        List<?> excl = excludes == null ? Collections.EMPTY_LIST : excludes;
+        String exc = Strings.listToString(excl, ",");
         preferences.put(PROP_STEPPING_EXCLUDES, exc);
     }
 }

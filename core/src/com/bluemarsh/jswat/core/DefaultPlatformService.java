@@ -67,7 +67,7 @@ public class DefaultPlatformService implements PlatformService {
     }
 
     @Override
-    public Preferences getPreferences(Class clazz) {
+    public Preferences getPreferences(Class<?> clazz) {
         return Preferences.userNodeForPackage(clazz);
     }
 

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.connect;
 
 import java.util.EventObject;
@@ -31,31 +30,13 @@ import java.util.EventObject;
  * @author Nathan Fiedler
  */
 public class ConnectionEvent extends EventObject {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The source of this event. */
-    private JvmConnection connection;
+    private final JvmConnection connection;
     /** The type of connection change. */
-    private Type type;
-
-    /**
-     * Type of connection event.
-     */
-    public static enum Type {
-        CONNECTED {
-            public void fireEvent(ConnectionEvent e, ConnectionListener l) {
-                l.connected(e);
-            }
-        };
-
-        /**
-         * Dispatches the event to the listener.
-         *
-         * @param  e  event to dispatch.
-         * @param  l  listener to receive event.
-         */
-        public abstract void fireEvent(ConnectionEvent e, ConnectionListener l);
-    }
+    private final ConnectionEventType type;
 
     /**
      * Creates a new instance of ConnectionEvent.
@@ -63,7 +44,7 @@ public class ConnectionEvent extends EventObject {
      * @param  connection  the JVM connection.
      * @param  type        type type of the event.
      */
-    public ConnectionEvent(JvmConnection connection, Type type) {
+    public ConnectionEvent(JvmConnection connection, ConnectionEventType type) {
         super(connection);
         this.connection = connection;
         this.type = type;
@@ -83,7 +64,7 @@ public class ConnectionEvent extends EventObject {
      *
      * @return  connection event type.
      */
-    public Type getType() {
+    public ConnectionEventType getType() {
         return type;
     }
 }

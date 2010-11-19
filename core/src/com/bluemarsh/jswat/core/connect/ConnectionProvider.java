@@ -14,19 +14,17 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.connect;
 
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.VirtualMachineManager;
 import com.sun.jdi.connect.AttachingConnector;
-import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.ListeningConnector;
 import java.util.List;
 import org.openide.util.Lookup;
@@ -37,6 +35,7 @@ import org.openide.util.Lookup;
  * @author Nathan Fiedler
  */
 public class ConnectionProvider {
+
     /** The ConnectionFactory instance, if it has already been retrieved. */
     private static ConnectionFactory connectionFactory;
 
