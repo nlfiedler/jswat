@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.context;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -39,6 +38,7 @@ import org.openide.util.Lookup;
  * @author Nathan Fiedler
  */
 public class ContextProvider {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             ContextProvider.class.getName());
@@ -68,12 +68,12 @@ public class ContextProvider {
             if (inst == null) {
                 // Perform lookup to find a DebuggingContext instance.
                 DebuggingContext prototype =
-                    Lookup.getDefault().lookup(DebuggingContext.class);
+                        Lookup.getDefault().lookup(DebuggingContext.class);
                 // Using this prototype, construct a new instance for the
                 // given Session, rather than sharing the single instance.
-                Class protoClass = prototype.getClass();
+                Class<? extends DebuggingContext> protoClass = prototype.getClass();
                 try {
-                    inst = (DebuggingContext) protoClass.newInstance();
+                    inst = protoClass.newInstance();
                 } catch (InstantiationException ie) {
                     logger.log(Level.SEVERE, null, ie);
                     return null;

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2007. All Rights Reserved.
+ * are Copyright (C) 1999-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.context;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -34,44 +33,15 @@ import java.util.EventObject;
  * @author  Nathan Fiedler
  */
 public class ContextEvent extends EventObject {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The type of context change. */
-    private Type type;
+    private ContextEventType type;
     /** The Session in which the change occurred. */
     private transient Session session;
     /** Indicates if Session was suspending when this event occurred. */
     private boolean suspending;
-
-    /** Type of context change. */
-    public static enum Type {
-        /** The frame and location have changed, but not thread. */
-        FRAME {
-            public void fireEvent(ContextEvent e, ContextListener l) {
-                l.changedFrame(e);
-            }
-        },
-        /** The location changed; frame and/or thread may have changed. */
-        LOCATION {
-            public void fireEvent(ContextEvent e, ContextListener l) {
-                l.changedLocation(e);
-            }
-        },
-        /** The thread, frame and location have changed. */
-        THREAD {
-            public void fireEvent(ContextEvent e, ContextListener l) {
-                l.changedThread(e);
-            }
-        };
-
-        /**
-         * Dispatches the event to the listener.
-         *
-         * @param  e  event to dispatch.
-         * @param  l  listener to receive event.
-         */
-        public abstract void fireEvent(ContextEvent e, ContextListener l);
-    }
 
     /**
      * Constructs a ContextEvent.
@@ -81,7 +51,8 @@ public class ContextEvent extends EventObject {
      * @param  type        the type of the change.
      * @param  suspending  true if Session is suspending as a result of this.
      */
-    public ContextEvent(Object source, Session session, Type type, boolean suspending) {
+    public ContextEvent(Object source, Session session, ContextEventType type,
+            boolean suspending) {
         super(source);
         this.session = session;
         this.type = type;
@@ -102,7 +73,7 @@ public class ContextEvent extends EventObject {
      *
      * @return  an instance of the Type enum.
      */
-    public Type getType() {
+    public ContextEventType getType() {
         return type;
     }
 

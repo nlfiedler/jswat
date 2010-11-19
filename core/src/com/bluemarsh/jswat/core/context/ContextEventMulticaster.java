@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.context;
 
 /**
@@ -36,6 +35,7 @@ package com.bluemarsh.jswat.core.context;
  * the description given in <u>Taming Java Threads</u> by Allen Holub.</p>
  */
 public class ContextEventMulticaster implements ContextListener {
+
     /** A session listener. */
     protected final ContextListener listener1;
     /** A session listener. */
@@ -50,9 +50,9 @@ public class ContextEventMulticaster implements ContextListener {
      * @return  session multicast listener.
      */
     public static ContextListener add(ContextListener l1,
-                                      ContextListener l2) {
-        return (l1 == null) ? l2 :
-               (l2 == null) ? l1 : new ContextEventMulticaster(l1, l2);
+            ContextListener l2) {
+        return (l1 == null) ? l2
+                : (l2 == null) ? l1 : new ContextEventMulticaster(l1, l2);
     }
 
     /**
@@ -64,7 +64,7 @@ public class ContextEventMulticaster implements ContextListener {
      * @return  session multicast listener.
      */
     public static ContextListener remove(ContextListener l1,
-                                         ContextListener l2) {
+            ContextListener l2) {
         if (l1 == l2 || l1 == null) {
             return null;
         } else if (l1 instanceof ContextEventMulticaster) {
@@ -106,16 +106,19 @@ public class ContextEventMulticaster implements ContextListener {
         return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
     }
 
+    @Override
     public void changedFrame(ContextEvent ce) {
         listener1.changedFrame(ce);
         listener2.changedFrame(ce);
     }
 
+    @Override
     public void changedLocation(ContextEvent ce) {
         listener1.changedLocation(ce);
         listener2.changedLocation(ce);
     }
 
+    @Override
     public void changedThread(ContextEvent ce) {
         listener1.changedThread(ce);
         listener2.changedThread(ce);

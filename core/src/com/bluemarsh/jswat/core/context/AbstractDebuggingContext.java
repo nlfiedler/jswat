@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2009. All Rights Reserved.
+ * are Copyright (C) 1999-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.context;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -39,6 +38,7 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractDebuggingContext
         implements DebuggingContext, SessionListener {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             AbstractDebuggingContext.class.getName());
@@ -81,7 +81,7 @@ public abstract class AbstractDebuggingContext
      * @param  type        type of the context change.
      * @param  suspending  true if Session is suspending as a result of this.
      */
-    protected void fireChange(ContextEvent.Type type, boolean suspending) {
+    protected void fireChange(ContextEventType type, boolean suspending) {
         try {
             ContextListener cl;
             synchronized (this) {

@@ -120,7 +120,7 @@ public class DefaultDebuggingContext extends AbstractDebuggingContext {
         // Set the field variables only if the frame changed.
         if (currentFrame != frame) {
             currentFrame = frame;
-            fireChange(ContextEvent.Type.FRAME, false);
+            fireChange(ContextEventType.FRAME, false);
         }
     }
 
@@ -132,7 +132,7 @@ public class DefaultDebuggingContext extends AbstractDebuggingContext {
         } else {
             currentThread = null;
         }
-        fireChange(ContextEvent.Type.LOCATION, suspending);
+        fireChange(ContextEventType.LOCATION, suspending);
     }
 
     @Override
@@ -140,6 +140,6 @@ public class DefaultDebuggingContext extends AbstractDebuggingContext {
         currentThread = thread;
         // If thread changes, stack frame is reset to zero.
         currentFrame = 0;
-        fireChange(ContextEvent.Type.THREAD, suspending);
+        fireChange(ContextEventType.THREAD, suspending);
     }
 }
