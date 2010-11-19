@@ -14,21 +14,20 @@
  *
  * The Original Software is the JSwat Command Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.console;
 
 import com.bluemarsh.jswat.core.session.Session;
 import java.io.IOException;
 import java.io.PipedReader;
 import java.io.PipedWriter;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +39,7 @@ import java.util.logging.Logger;
  * @author  Nathan Fiedler
  */
 public class PipeProvider {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             PipeProvider.class.getName());
@@ -52,8 +52,8 @@ public class PipeProvider {
 
     static {
         mapsLock = new Object();
-        pipedReaders = new HashMap<Session, PipedReader>();
-        pipedWriters = new HashMap<Session, PipedWriter>();
+        pipedReaders = new WeakHashMap<Session, PipedReader>();
+        pipedWriters = new WeakHashMap<Session, PipedWriter>();
     }
 
     /**
