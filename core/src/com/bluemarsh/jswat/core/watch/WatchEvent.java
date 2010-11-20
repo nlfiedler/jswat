@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.watch;
 
 import java.util.EventObject;
@@ -31,38 +30,13 @@ import java.util.EventObject;
  * @author  Nathan Fiedler
  */
 public class WatchEvent extends EventObject {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The watch that changed. */
     private transient Watch watch;
     /** The type of watch change. */
-    private Type type;
-
-    /**
-     * Type of watch event.
-     */
-    public static enum Type {
-        /** Watch was added (to the WatchManager). */
-        ADDED {
-            public void fireEvent(WatchEvent e, WatchListener l) {
-                l.watchAdded(e);
-            }
-        },
-        /** Watch was removed (from the WatchManager). */
-        REMOVED {
-            public void fireEvent(WatchEvent e, WatchListener l) {
-                l.watchRemoved(e);
-            }
-        };
-
-        /**
-         * Dispatches the event to the listener.
-         *
-         * @param  e  event to dispatch.
-         * @param  l  listener to receive event.
-         */
-        public abstract void fireEvent(WatchEvent e, WatchListener l);
-    }
+    private WatchEventType type;
 
     /**
      * Constructs a new WatchEvent.
@@ -70,7 +44,7 @@ public class WatchEvent extends EventObject {
      * @param  watch  watch that changed (source of event).
      * @param  type   type of watch change.
      */
-    public WatchEvent(Watch watch, Type type) {
+    public WatchEvent(Watch watch, WatchEventType type) {
         super(watch);
         this.watch = watch;
         this.type = type;
@@ -90,7 +64,7 @@ public class WatchEvent extends EventObject {
      *
      * @return  watch event type.
      */
-    public Type getType() {
+    public WatchEventType getType() {
         return type;
     }
 }

@@ -49,14 +49,14 @@ public class RuntimeEventMulticasterTest {
         assertEquals(0, l2.removed);
 
         JavaRuntime runtime = new DummyRuntime();
-        RuntimeEvent sevt = new RuntimeEvent(runtime, RuntimeEvent.Type.ADDED);
+        RuntimeEvent sevt = new RuntimeEvent(runtime, RuntimeEventType.ADDED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.added);
         assertEquals(0, l1.removed);
         assertEquals(1, l2.added);
         assertEquals(0, l2.removed);
 
-        sevt = new RuntimeEvent(runtime, RuntimeEvent.Type.REMOVED);
+        sevt = new RuntimeEvent(runtime, RuntimeEventType.REMOVED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.added);
         assertEquals(1, l1.removed);
@@ -64,7 +64,7 @@ public class RuntimeEventMulticasterTest {
         assertEquals(1, l2.removed);
 
         sl = RuntimeEventMulticaster.remove(sl, l1);
-        sevt = new RuntimeEvent(runtime, RuntimeEvent.Type.ADDED);
+        sevt = new RuntimeEvent(runtime, RuntimeEventType.ADDED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.added);
         assertEquals(1, l1.removed);

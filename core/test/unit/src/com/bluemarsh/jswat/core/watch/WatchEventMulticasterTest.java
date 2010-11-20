@@ -49,14 +49,14 @@ public class WatchEventMulticasterTest {
         assertEquals(0, l2.removed);
 
         Watch watch = new DummyWatch();
-        WatchEvent sevt = new WatchEvent(watch, WatchEvent.Type.ADDED);
+        WatchEvent sevt = new WatchEvent(watch, WatchEventType.ADDED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.added);
         assertEquals(0, l1.removed);
         assertEquals(1, l2.added);
         assertEquals(0, l2.removed);
 
-        sevt = new WatchEvent(watch, WatchEvent.Type.REMOVED);
+        sevt = new WatchEvent(watch, WatchEventType.REMOVED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.added);
         assertEquals(1, l1.removed);
@@ -64,7 +64,7 @@ public class WatchEventMulticasterTest {
         assertEquals(1, l2.removed);
 
         sl = WatchEventMulticaster.remove(sl, l1);
-        sevt = new WatchEvent(watch, WatchEvent.Type.ADDED);
+        sevt = new WatchEvent(watch, WatchEventType.ADDED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.added);
         assertEquals(1, l1.removed);

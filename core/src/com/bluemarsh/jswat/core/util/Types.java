@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2007. All Rights Reserved.
+ * are Copyright (C) 2003-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import com.sun.jdi.ByteType;
@@ -49,10 +48,11 @@ import java.util.Stack;
  * @author  Nathan Fiedler
  */
 public class Types {
+
     /** Sizes of numeric types, keyed by Character. */
     private static final Map<Character, Integer> SIZES_BY_CHAR;
     /** Sizes of numeric types, keyed by Class. */
-    private static final Map<Class, Integer> SIZES_BY_CLASS;
+    private static final Map<Class<?>, Integer> SIZES_BY_CLASS;
 
     static {
         // Sizes of numbers by primitive JNI signature.
@@ -65,7 +65,7 @@ public class Types {
         SIZES_BY_CHAR.put(new Character('D'), new Integer(8));
 
         // Sizes of numbers by wrapper class.
-        SIZES_BY_CLASS = new HashMap<Class, Integer>();
+        SIZES_BY_CLASS = new HashMap<Class<?>, Integer>();
         SIZES_BY_CLASS.put(Byte.class, new Integer(1));
         SIZES_BY_CLASS.put(Short.class, new Integer(2));
         SIZES_BY_CLASS.put(Integer.class, new Integer(4));
@@ -92,13 +92,13 @@ public class Types {
      * @param  actualType    the actual numeric type to widen.
      * @return  true if type can be widened to desired type, false otherwise.
      */
-    public static boolean canWiden(String desiredType, Class actualType) {
+    public static boolean canWiden(String desiredType, Class<?> actualType) {
         char dc = desiredType.charAt(0);
         Integer desiredSize = SIZES_BY_CHAR.get(new Character(dc));
         Integer actualSize = SIZES_BY_CLASS.get(actualType);
         boolean desiredInt = dc == 'B' || dc == 'S' || dc == 'I' || dc == 'J';
         boolean actualFloat = actualType.equals(Float.class)
-            || actualType.equals(Double.class);
+                || actualType.equals(Double.class);
         if (desiredSize == null || actualSize == null) {
             // They were not numeric types.
             return false;
@@ -128,7 +128,7 @@ public class Types {
         Integer actualSize = null;
         boolean desiredInt = dc == 'B' || dc == 'S' || dc == 'I' || dc == 'J';
         boolean actualFloat = actualType instanceof FloatType
-            || actualType instanceof DoubleType;
+                || actualType instanceof DoubleType;
         if (actualType instanceof ByteType) {
             actualSize = new Integer(1);
         } else if (actualType instanceof ShortType) {
@@ -296,30 +296,30 @@ public class Types {
      * @return  true if the actual type is assignment compatible with the
      *          desired type.
      */
-    public static boolean isCompatible(String desiredSig, Class actualType) {
+    public static boolean isCompatible(String desiredSig, Class<?> actualType) {
         // Prime the stack with the initial type.
-        Stack<Class> stack = new Stack<Class>();
+        Stack<Class<?>> stack = new Stack<Class<?>>();
         stack.push(actualType);
         // Convert the signature to a name (e.g. "Ljava/lang/String;"
         // becomes "java.lang.String").
-        desiredSig = jniToName(desiredSig);
+        String desiredName = jniToName(desiredSig);
 
         while (!stack.empty()) {
-            Class type = stack.pop();
+            Class<?> type = stack.pop();
 
             // Check if the type names match.
-            if (desiredSig.equals(type.getName())) {
+            if (desiredName.equals(type.getName())) {
                 return true;
             }
 
             // Push the superclass to the stack.
-            Class superType = type.getSuperclass();
+            Class<?> superType = type.getSuperclass();
             if (superType != null) {
                 stack.push(superType);
             }
 
             // Push the implementing interfaces to the stack.
-            Class[] interfaces = type.getInterfaces();
+            Class<?>[] interfaces = type.getInterfaces();
             for (int ii = 0; ii < interfaces.length; ii++) {
                 stack.push(interfaces[ii]);
             }
@@ -340,7 +340,7 @@ public class Types {
      *          desired type.
      */
     public static boolean isCompatible(String desiredSig,
-                                       ReferenceType actualType) {
+            ReferenceType actualType) {
         // Prime the stack with the initial type.
         Stack<ReferenceType> stack = new Stack<ReferenceType>();
         stack.push(actualType);
@@ -397,19 +397,20 @@ public class Types {
     /**
      * Converts a JNI type signature to a simple type name.
      *
-     * @param  jni  type signature (e.g. "Z", "Ljava/net/URL;",
+     * @param  sig  type signature (e.g. "Z", "Ljava/net/URL;",
      *              "Ljava/lang/String;", "[[I").
      * @param  nb   true to discard array brackets in return value.
      * @return  type name (e.g. "boolean", "java.net.URL",
      *          "java.lang.String", "int[][]"), or null if not recognized.
      */
-    public static String jniToTypeName(String jni, boolean nb) {
-        if (jni == null || jni.trim().isEmpty()) {
+    public static String jniToTypeName(String sig, boolean nb) {
+        if (sig == null || sig.trim().isEmpty()) {
             return null;
         }
 
         // Handle multi-dimensional arrays.
         int arrayDepth = 0;
+        String jni = sig;
         while (jni.charAt(0) == '[') {
             arrayDepth++;
             jni = jni.substring(1);
@@ -508,34 +509,35 @@ public class Types {
             return null;
         }
 
+        String _sig = sig;
         // Strip away the leading array brackets.
-        while (sig.charAt(0) == '[') {
-            sig = sig.substring(1);
+        while (_sig.charAt(0) == '[') {
+            _sig = _sig.substring(1);
         }
 
-        if (sig.charAt(0) == 'L') {
+        if (_sig.charAt(0) == 'L') {
             // The superclass search is done against the given
             // type (reverse of typecasting).
-            sig = jniToName(sig);
-            List list = vm.classesByName(sig);
+            _sig = jniToName(_sig);
+            List<ReferenceType> list = vm.classesByName(_sig);
             if (list.size() > 0) {
                 return (Type) list.get(0);
             }
-        } else if (sig.equals("B")) {
+        } else if (_sig.equals("B")) {
             return vm.mirrorOf((byte) 0).type();
-        } else if (sig.equals("C")) {
+        } else if (_sig.equals("C")) {
             return vm.mirrorOf(' ').type();
-        } else if (sig.equals("D")) {
+        } else if (_sig.equals("D")) {
             return vm.mirrorOf(0.0D).type();
-        } else if (sig.equals("F")) {
+        } else if (_sig.equals("F")) {
             return vm.mirrorOf(0.0F).type();
-        } else if (sig.equals("I")) {
+        } else if (_sig.equals("I")) {
             return vm.mirrorOf(0).type();
-        } else if (sig.equals("J")) {
+        } else if (_sig.equals("J")) {
             return vm.mirrorOf(0L).type();
-        } else if (sig.equals("S")) {
+        } else if (_sig.equals("S")) {
             return vm.mirrorOf((short) 0).type();
-        } else if (sig.equals("Z")) {
+        } else if (_sig.equals("Z")) {
             return vm.mirrorOf(false).type();
         }
         // Either void or unknown type.
@@ -556,40 +558,41 @@ public class Types {
 
         // Handle multi-dimensional arrays.
         int arrayDepth = 0;
-        while (type.endsWith("[]")) {
+        String _type = type;
+        while (_type.endsWith("[]")) {
             arrayDepth++;
-            type = type.substring(0, type.length() - 2);
+            _type = _type.substring(0, _type.length() - 2);
         }
 
         String sig = null;
         // Check if it is a primitive type.
-        if (type.equals("boolean")) {
+        if (_type.equals("boolean")) {
             sig = "Z";
-        } else if (type.equals("byte")) {
+        } else if (_type.equals("byte")) {
             sig = "B";
-        } else if (type.equals("char")) {
+        } else if (_type.equals("char")) {
             sig = "C";
-        } else if (type.equals("double")) {
+        } else if (_type.equals("double")) {
             sig = "D";
-        } else if (type.equals("float")) {
+        } else if (_type.equals("float")) {
             sig = "F";
-        } else if (type.equals("int")) {
+        } else if (_type.equals("int")) {
             sig = "I";
-        } else if (type.equals("long")) {
+        } else if (_type.equals("long")) {
             sig = "J";
-        } else if (type.equals("short")) {
+        } else if (_type.equals("short")) {
             sig = "S";
-        } else if (type.equals("void")) {
+        } else if (_type.equals("void")) {
             sig = "V";
 
         } else {
             try {
                 // See if it is a core class.
-                Class.forName("java.lang." + type);
-                sig = "Ljava/lang/" + type + ';';
+                Class.forName("java.lang." + _type);
+                sig = "Ljava/lang/" + _type + ';';
             } catch (ClassNotFoundException cnfe) {
                 // Must be some other class.
-                sig = nameToJni(type);
+                sig = nameToJni(_type);
             }
         }
 

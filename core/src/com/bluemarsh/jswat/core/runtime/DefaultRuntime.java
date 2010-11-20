@@ -14,19 +14,19 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.runtime;
 
 import com.bluemarsh.jswat.core.util.Processes;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +37,7 @@ import java.util.logging.Logger;
  * @author Nathan Fiedler
  */
 public class DefaultRuntime implements JavaRuntime {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             DefaultRuntime.class.getName());
@@ -56,10 +57,7 @@ public class DefaultRuntime implements JavaRuntime {
         try {
             // Make a deep copy of this runtime for the sake of editing.
             DefaultRuntime clone = (DefaultRuntime) super.clone();
-            if (sourceCodes != null) {
-                clone.sourceCodes = new ArrayList<String>();
-                clone.sourceCodes.addAll(sourceCodes);
-            }
+            clone.setSources(sourceCodes);
             return clone;
         } catch (CloneNotSupportedException cnse) {
             // This cannot happen, let the code throw an NPE.
@@ -114,7 +112,7 @@ public class DefaultRuntime implements JavaRuntime {
         if (cachedName == null) {
             File exec = findExecutable(baseDirectory, runtimeExec);
             if (exec != null && exec.exists()) {
-                String[] cmd = new String[] {
+                String[] cmd = new String[]{
                     exec.getAbsolutePath(), "-version"
                 };
                 java.lang.Runtime rt = java.lang.Runtime.getRuntime();
@@ -146,7 +144,7 @@ public class DefaultRuntime implements JavaRuntime {
 
     @Override
     public List<String> getSources() {
-        return sourceCodes;
+        return Collections.unmodifiableList(sourceCodes);
     }
 
     @Override
@@ -189,7 +187,7 @@ public class DefaultRuntime implements JavaRuntime {
         if (sources == null || sources.isEmpty()) {
             sourceCodes = null;
         } else {
-            sourceCodes = sources;
+            sourceCodes = new ArrayList<String>(sources);
         }
     }
 }

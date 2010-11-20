@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2009. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.path;
 
 import java.io.IOException;
@@ -35,13 +34,6 @@ import java.net.URL;
  * @author  Nathan Fiedler
  */
 public interface PathEntry {
-
-//    /**
-//     * Attempts to ensure that the referenced entry actually exists.
-//     *
-//     * @return  true if entry exists, false if not found.
-//     */
-//    boolean exists();
 
     /**
      * Get the input stream for reading the entry object.

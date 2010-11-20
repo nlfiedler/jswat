@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
 
 import java.util.EventObject;
@@ -32,44 +31,13 @@ import java.util.EventObject;
  * @author  Nathan Fiedler
  */
 public class SessionManagerEvent extends EventObject {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The Session related to this event. */
-    private transient Session session;
+    private transient final Session session;
     /** The type of session manager change. */
-    private Type type;
-
-    /**
-     * Type of session manager event.
-     */
-    public static enum Type {
-        ADDED {
-            @Override
-            public void fireEvent(SessionManagerEvent e, SessionManagerListener l) {
-                l.sessionAdded(e);
-            }
-        },
-        CURRENT {
-            @Override
-            public void fireEvent(SessionManagerEvent e, SessionManagerListener l) {
-                l.sessionSetCurrent(e);
-            }
-        },
-        REMOVED {
-            @Override
-            public void fireEvent(SessionManagerEvent e, SessionManagerListener l) {
-                l.sessionRemoved(e);
-            }
-        };
-
-        /**
-         * Dispatches the event to the listener.
-         *
-         * @param  e  event to dispatch.
-         * @param  l  listener to receive event.
-         */
-        public abstract void fireEvent(SessionManagerEvent e, SessionManagerListener l);
-    }
+    private final SessionManagerEventType type;
 
     /**
      * Constructs a new SessionManagerEvent.
@@ -78,7 +46,7 @@ public class SessionManagerEvent extends EventObject {
      * @param  session  Session related to this event.
      * @param  type     type of the event.
      */
-    public SessionManagerEvent(Object source, Session session, Type type) {
+    public SessionManagerEvent(Object source, Session session, SessionManagerEventType type) {
         super(source);
         this.session = session;
         this.type = type;
@@ -98,7 +66,7 @@ public class SessionManagerEvent extends EventObject {
      *
      * @return  session manager event type.
      */
-    public Type getType() {
+    public SessionManagerEventType getType() {
         return type;
     }
 

@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2010. All Rights Reserved.
+ * are Copyright (C) 2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -22,36 +22,35 @@
  */
 package com.bluemarsh.jswat.core.watch;
 
-import com.sun.jdi.ObjectReference;
-
 /**
- * A default implementation of the FixedWatch interface.
+ * Type of watch event.
  *
  * @author Nathan Fiedler
  */
-public class DefaultFixedWatch extends AbstractWatch
-        implements FixedWatch {
+public enum WatchEventType {
 
-    /** Name of 'objectReference' property. */
-    public static final String PROP_OBJECTREFERENCE = "objectReference";
-    /** The object being watched. */
-    private ObjectReference objectReference;
+    /** Watch was added (to the WatchManager). */
+    ADDED {
+
+        @Override
+        public void fireEvent(WatchEvent e, WatchListener l) {
+            l.watchAdded(e);
+        }
+    },
+    /** Watch was removed (from the WatchManager). */
+    REMOVED {
+
+        @Override
+        public void fireEvent(WatchEvent e, WatchListener l) {
+            l.watchRemoved(e);
+        }
+    };
 
     /**
-     * Creates a new instance of DefaultFixedWatch.
+     * Dispatches the event to the listener.
+     *
+     * @param  e  event to dispatch.
+     * @param  l  listener to receive event.
      */
-    public DefaultFixedWatch() {
-    }
-
-    @Override
-    public ObjectReference getObjectReference() {
-        return objectReference;
-    }
-
-    @Override
-    public void setObjectReference(ObjectReference obj) {
-        ObjectReference old = objectReference;
-        objectReference = obj;
-        propSupport.firePropertyChange(PROP_OBJECTREFERENCE, old, objectReference);
-    }
+    public abstract void fireEvent(WatchEvent e, WatchListener l);
 }

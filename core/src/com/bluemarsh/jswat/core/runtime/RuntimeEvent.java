@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.runtime;
 
 import java.util.EventObject;
@@ -31,38 +30,13 @@ import java.util.EventObject;
  * @author  Nathan Fiedler
  */
 public class RuntimeEvent extends EventObject {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The runtime that changed. */
     private transient JavaRuntime runtime;
     /** The type of runtime change. */
-    private Type type;
-
-    /**
-     * Type of runtime event.
-     */
-    public static enum Type {
-        /** Runtime was added (to the RuntimeManager). */
-        ADDED {
-            public void fireEvent(RuntimeEvent e, RuntimeListener l) {
-                l.runtimeAdded(e);
-            }
-        },
-        /** Runtime was removed (from the RuntimeManager). */
-        REMOVED {
-            public void fireEvent(RuntimeEvent e, RuntimeListener l) {
-                l.runtimeRemoved(e);
-            }
-        };
-
-        /**
-         * Dispatches the event to the listener.
-         *
-         * @param  e  event to dispatch.
-         * @param  l  listener to receive event.
-         */
-        public abstract void fireEvent(RuntimeEvent e, RuntimeListener l);
-    }
+    private RuntimeEventType type;
 
     /**
      * Constructs a new RuntimeEvent.
@@ -70,7 +44,7 @@ public class RuntimeEvent extends EventObject {
      * @param  runtime  runtime that changed.
      * @param  type     type of runtime change.
      */
-    public RuntimeEvent(JavaRuntime runtime, Type type) {
+    public RuntimeEvent(JavaRuntime runtime, RuntimeEventType type) {
         super(runtime);
         this.runtime = runtime;
         this.type = type;
@@ -90,7 +64,7 @@ public class RuntimeEvent extends EventObject {
      *
      * @return  runtime event type.
      */
-    public Type getType() {
+    public RuntimeEventType getType() {
         return type;
     }
 }

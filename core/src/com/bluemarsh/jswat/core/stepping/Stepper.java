@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.stepping;
 
 import com.sun.jdi.ThreadReference;
@@ -54,6 +53,7 @@ public interface Stepper {
      *
      * @param  size   how much to step (one of the StepRequest constants).
      * @param  depth  how to step (one of the StepRequest constants).
+     * @throws  SteppingException  if the step operation failed.
      */
     void step(int size, int depth) throws SteppingException;
 

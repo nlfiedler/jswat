@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2009. All Rights Reserved.
+ * are Copyright (C) 2001-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 import java.io.PrintWriter;
@@ -113,7 +112,7 @@ public class Strings {
      * @return  String representing the list; empty if list is empty;
      *          null if list is null.
      */
-    public static String listToString(List list) {
+    public static String listToString(List<?> list) {
         return listToString(list, ", ");
     }
 
@@ -125,12 +124,12 @@ public class Strings {
      * @return  String representing the list; empty if list is empty;
      *          null if list is null.
      */
-    public static String listToString(List list, String sep) {
+    public static String listToString(List<?> list, String sep) {
         if (list == null) {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        Iterator iter = list.iterator();
+        Iterator<?> iter = list.iterator();
         if (iter.hasNext()) {
             sb.append(iter.next());
             while (iter.hasNext()) {
@@ -220,7 +219,7 @@ public class Strings {
             int last = str.length() - 1;
             char lch = str.charAt(last);
             if ((fch == '"' || fch == '\'') && fch == lch) {
-                str = str.substring(1, last);
+                return str.substring(1, last);
             }
         }
         return str;

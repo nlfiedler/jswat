@@ -71,14 +71,15 @@ public class Classes {
      * the first part or last part may optionally be a "*" character, to
      * match any sequence of characters.
      *
-     * @param  vm       debuggee virtual machine.
-     * @param  pattern  Classname pattern, optionally prefixed or
-     *                  suffixed with "*" to match anything.
+     * @param  vm    debuggee virtual machine.
+     * @param  expr  Classname pattern, optionally prefixed or suffixed
+     *               with "*" to match anything.
      * @return  List of ReferenceType objects.
      */
     public static List<ReferenceType> findClasses(
-            VirtualMachine vm, String pattern) {
+            VirtualMachine vm, String expr) {
 
+        String pattern = expr;
         if (pattern.indexOf('*') == -1) {
             // It's just a class name, try to find it.
             return vm.classesByName(pattern);
@@ -187,7 +188,7 @@ public class Classes {
             if (searchSupers) {
                 ReferenceType declaringType = candidate.declaringType();
                 if (declaringType instanceof ClassType) {
-                    score = getClassDepth((ClassType)declaringType);
+                    score = getClassDepth((ClassType) declaringType);
                 }
             }
 
@@ -410,7 +411,7 @@ public class Classes {
          * @param  method     method to be invoked.
          * @param  arguments  arguments to the method.
          */
-        public Invoker(ObjectReference object, ClassType clazz,
+        Invoker(ObjectReference object, ClassType clazz,
                 ThreadReference thread, Method method,
                 List<Value> arguments) {
             this.object = object;

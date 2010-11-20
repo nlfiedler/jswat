@@ -56,14 +56,15 @@ public class Names {
      * @return  path and filename of a source file.
      */
     public static String classnameToFilename(String clsname) {
-        int idx = clsname.indexOf('$');
+        String cname = clsname;
+        int idx = cname.indexOf('$');
         if (idx > 0) {
-            clsname = clsname.substring(0, idx);
+            cname = cname.substring(0, idx);
         }
-        clsname = clsname.replace('.', File.separatorChar);
+        cname = cname.replace('.', File.separatorChar);
         CoreSettings cs = CoreSettings.getDefault();
-        clsname += cs.getSourceExtension();
-        return clsname;
+        cname += cs.getSourceExtension();
+        return cname;
     }
 
     /**

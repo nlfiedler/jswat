@@ -66,7 +66,7 @@ public class DefaultSession extends AbstractSession {
         if (isConnected()) {
             throw new IllegalStateException("session not disconnected");
         }
-        fireEvent(new SessionEvent(this, SessionEvent.Type.CLOSING));
+        fireEvent(new SessionEvent(this, SessionEventType.CLOSING));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class DefaultSession extends AbstractSession {
         vmConnection = connection;
 
         // We are basically connected already, so notify the listeners.
-        fireEvent(new SessionEvent(this, SessionEvent.Type.CONNECTED));
+        fireEvent(new SessionEvent(this, SessionEventType.CONNECTED));
 
         // Drain all of the permits from the semaphore first so that later
         // we are forced to wait until a permit has been released.
@@ -124,7 +124,7 @@ public class DefaultSession extends AbstractSession {
                     dc.setThread(th, true);
                 }
                 fireEvent(new SessionEvent(DefaultSession.this,
-                        SessionEvent.Type.SUSPENDED, event));
+                        SessionEventType.SUSPENDED, event));
                 return false;
             }
         });
@@ -176,7 +176,7 @@ public class DefaultSession extends AbstractSession {
         vmStartedLock.release();
         // Reset the context (without sending events).
         ContextProvider.getContext(this).reset();
-        fireEvent(new SessionEvent(this, SessionEvent.Type.DISCONNECTED));
+        fireEvent(new SessionEvent(this, SessionEventType.DISCONNECTED));
     }
 
     @Override
@@ -223,7 +223,7 @@ public class DefaultSession extends AbstractSession {
         // Reset the context (without sending events).
         ContextProvider.getContext(this).reset();
         // Avoid race conditions by resuming after clearing the context.
-        fireEvent(new SessionEvent(this, SessionEvent.Type.RESUMING));
+        fireEvent(new SessionEvent(this, SessionEventType.RESUMING));
         // Once the listeners have been notified, resume the debuggee.
         vmConnection.getVM().resume();
     }
@@ -238,6 +238,6 @@ public class DefaultSession extends AbstractSession {
         // separately from the individual threads.
         vmConnection.getVM().suspend();
         // Once the debuggee is suspended, notify the listeners.
-        fireEvent(new SessionEvent(this, SessionEvent.Type.SUSPENDED));
+        fireEvent(new SessionEvent(this, SessionEventType.SUSPENDED));
     }
 }

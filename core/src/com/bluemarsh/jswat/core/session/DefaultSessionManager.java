@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
 
 import com.bluemarsh.jswat.core.PlatformProvider;
@@ -46,6 +45,7 @@ import java.util.logging.Logger;
  * @author  Nathan Fiedler
  */
 public class DefaultSessionManager extends AbstractSessionManager {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             DefaultSessionManager.class.getName());
@@ -78,7 +78,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
             setCurrent(session);
         }
         fireEvent(new SessionManagerEvent(this, session,
-                SessionManagerEvent.Type.ADDED));
+                SessionManagerEventType.ADDED));
     }
 
     @Override
@@ -92,13 +92,11 @@ public class DefaultSessionManager extends AbstractSessionManager {
             String value = session.getProperty(key);
             copy.setProperty(key, value);
         }
-        if (name == null) {
-            name = generateName();
-        }
-        copy.setProperty(Session.PROP_SESSION_NAME, name);
+        String sessionName = name == null ? generateName() : name;
+        copy.setProperty(Session.PROP_SESSION_NAME, sessionName);
         openSessions.add(copy);
         fireEvent(new SessionManagerEvent(this, copy,
-                SessionManagerEvent.Type.ADDED));
+                SessionManagerEventType.ADDED));
         return copy;
     }
 
@@ -154,6 +152,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
             InputStream is = platform.readFile(name);
             decoder = new XMLDecoder(is);
             decoder.setExceptionListener(new ExceptionListener() {
+
                 @Override
                 public void exceptionThrown(Exception e) {
                     logger.log(Level.SEVERE, null, e);
@@ -194,7 +193,7 @@ public class DefaultSessionManager extends AbstractSessionManager {
         }
         openSessions.remove(session);
         fireEvent(new SessionManagerEvent(this, session,
-                SessionManagerEvent.Type.REMOVED));
+                SessionManagerEventType.REMOVED));
     }
 
     @Override
@@ -226,6 +225,6 @@ public class DefaultSessionManager extends AbstractSessionManager {
     public synchronized void setCurrent(Session session) {
         currentSession = session;
         fireEvent(new SessionManagerEvent(this, session,
-                SessionManagerEvent.Type.CURRENT));
+                SessionManagerEventType.CURRENT));
     }
 }

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.watch;
 
 import com.sun.jdi.ObjectReference;
@@ -37,12 +36,14 @@ public class DefaultWatchFactory implements WatchFactory {
     public DefaultWatchFactory() {
     }
 
+    @Override
     public ExpressionWatch createExpressionWatch(String expr) {
         ExpressionWatch w = new DefaultExpressionWatch();
         w.setExpression(expr);
         return w;
     }
 
+    @Override
     public FixedWatch createFixedWatch(ObjectReference obj) {
         FixedWatch w = new DefaultFixedWatch();
         w.setObjectReference(obj);

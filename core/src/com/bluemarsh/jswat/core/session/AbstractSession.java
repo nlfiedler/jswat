@@ -70,7 +70,7 @@ public abstract class AbstractSession implements Session {
         }
         listener.opened(this);
         if (isConnected()) {
-            SessionEvent se = new SessionEvent(this, SessionEvent.Type.CONNECTED);
+            SessionEvent se = new SessionEvent(this, SessionEventType.CONNECTED);
             se.getType().fireEvent(se, listener);
         }
     }
@@ -169,10 +169,10 @@ public abstract class AbstractSession implements Session {
             listenerList = SessionEventMulticaster.remove(listenerList, listener);
         }
         if (isConnected()) {
-            SessionEvent se = new SessionEvent(this, SessionEvent.Type.DISCONNECTED);
+            SessionEvent se = new SessionEvent(this, SessionEventType.DISCONNECTED);
             se.getType().fireEvent(se, listener);
         }
-        SessionEvent se = new SessionEvent(this, SessionEvent.Type.CLOSING);
+        SessionEvent se = new SessionEvent(this, SessionEventType.CLOSING);
         se.getType().fireEvent(se, listener);
     }
 

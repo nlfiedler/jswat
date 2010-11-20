@@ -37,7 +37,7 @@ public class SessionManagerEventTest {
     public void testGetSession() {
         Session session = SessionHelper.getSession();
         SessionManagerEvent instance = new SessionManagerEvent(
-                this, session, SessionManagerEvent.Type.ADDED);
+                this, session, SessionManagerEventType.ADDED);
         Session result = instance.getSession();
         assertEquals(session, result);
     }
@@ -46,16 +46,16 @@ public class SessionManagerEventTest {
     public void testGetType() {
         Session session = SessionHelper.getSession();
         SessionManagerEvent instance = new SessionManagerEvent(
-                this, session, SessionManagerEvent.Type.ADDED);
-        SessionManagerEvent.Type result = instance.getType();
-        assertEquals(SessionManagerEvent.Type.ADDED, result);
+                this, session, SessionManagerEventType.ADDED);
+        SessionManagerEventType result = instance.getType();
+        assertEquals(SessionManagerEventType.ADDED, result);
     }
 
     @Test
     public void testToString() {
         Session session = SessionHelper.getSession();
         SessionManagerEvent instance = new SessionManagerEvent(
-                this, session, SessionManagerEvent.Type.ADDED);
+                this, session, SessionManagerEventType.ADDED);
         String expResult = "SessionManagerEvent=[session=";
         String result = instance.toString();
         assertTrue(result.startsWith(expResult));

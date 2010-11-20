@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.runtime;
 
 import java.io.File;
@@ -37,12 +36,14 @@ import java.util.List;
  */
 public class DefaultRuntimeFactory implements RuntimeFactory {
 
+    @Override
     public JavaRuntime createRuntime(String id) {
         JavaRuntime jr = new DefaultRuntime();
         jr.setIdentifier(id);
         return jr;
     }
 
+    @Override
     public JavaRuntime createRuntime(String base, String id) {
         if (base == null || base.length() == 0) {
             throw new IllegalArgumentException("base is required");
@@ -61,7 +62,7 @@ public class DefaultRuntimeFactory implements RuntimeFactory {
 
         // Find and set the Java executable.
         File bindir = new File(basedir, "bin");
-        String[] exec_candidates = new String[] {
+        String[] exec_candidates = new String[]{
             "java", "java.exe", "jvm", "jvm.exe"
         };
         for (String exec : exec_candidates) {
@@ -72,7 +73,7 @@ public class DefaultRuntimeFactory implements RuntimeFactory {
         }
 
         // Find and set the Java core classes source code.
-        String[] src_candidates = new String[] {
+        String[] src_candidates = new String[]{
             "src", "src.zip", "src.jar"
         };
         List<String> srcs = new LinkedList<String>();
@@ -87,6 +88,7 @@ public class DefaultRuntimeFactory implements RuntimeFactory {
         return rt;
     }
 
+    @Override
     public String getDefaultBase() {
         String home = System.getProperty("java.home");
         File base = new File(home);

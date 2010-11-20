@@ -59,14 +59,14 @@ public class Threads {
      * @return  ThreadReference, or null if not found.
      */
     public static ThreadReference findThread(VirtualMachine vm, String id) {
-        List threads = vm.allThreads();
-        Iterator iter = threads.iterator();
+        List<ThreadReference> threads = vm.allThreads();
+        Iterator<ThreadReference> iter = threads.iterator();
         ThreadReference thread = null;
         try {
             // Compare the identifier as if it were a number.
             long threadID = Long.parseLong(id);
             while (iter.hasNext()) {
-                ThreadReference th = (ThreadReference) iter.next();
+                ThreadReference th = iter.next();
                 if (th.uniqueID() == threadID) {
                     thread = th;
                     break;
@@ -76,7 +76,7 @@ public class Threads {
         } catch (NumberFormatException nfe) {
             // Compare the identifier as if it were a name.
             while (iter.hasNext()) {
-                ThreadReference th = (ThreadReference) iter.next();
+                ThreadReference th = iter.next();
                 if (th.name().equals(id)) {
                     thread = th;
                     break;
@@ -191,7 +191,7 @@ public class Threads {
          *
          * @param  groups  ThreadGroup list.
          */
-        public ThreadGroupIterator(List<ThreadGroupReference> groups) {
+        ThreadGroupIterator(List<ThreadGroupReference> groups) {
             push(groups);
         }
 
@@ -203,7 +203,7 @@ public class Threads {
         @Override
         public ThreadGroupReference next() {
             // Ask the top iterator for the next thread group reference.
-            ThreadGroupReference group = (ThreadGroupReference) peek().next();
+            ThreadGroupReference group = peek().next();
             // If this group has more groups, add them to the stack.
             push(group.threadGroups());
             // Return the thread group.
@@ -216,9 +216,9 @@ public class Threads {
          *
          * @return  First iterator on the stack, or null if none.
          */
-        private Iterator peek() {
+        private Iterator<ThreadGroupReference> peek() {
             try {
-                return (Iterator) stack.peek();
+                return stack.peek();
             } catch (EmptyStackException ese) {
                 return null;
             }

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.path;
 
 import com.sun.jdi.Location;
@@ -41,12 +40,13 @@ import java.util.List;
  * @author Nathan Fiedler
  */
 public interface PathManager {
+
     /** Session property name for the classpath setting. */
-    public static final String PROP_CLASSPATH = "ClassPath";
+    String PROP_CLASSPATH = "ClassPath";
     /** Session property name for the sourcepath setting. */
-    public static final String PROP_SOURCEPATH = "SourcePath";
+    String PROP_SOURCEPATH = "SourcePath";
     /** Session property name for ignoring the debuggee classpath. */
-    public static final String PROP_IGNORE_DEBUGGEE = "IgnoreDebuggee";
+    String PROP_IGNORE_DEBUGGEE = "IgnoreDebuggee";
 
     /**
      * Add a PropertyChangeListener to the listener list.

@@ -52,7 +52,7 @@ public class SessionEventMulticasterTest {
 
         Session session = new DummySession();
         session.setIdentifier("eventUnitTest1");
-        SessionEvent sevt = new SessionEvent(session, SessionEvent.Type.OPENED);
+        SessionEvent sevt = new SessionEvent(session, SessionEventType.OPENED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(0, l1.activated);
         assertEquals(0, l1.closing);
@@ -61,7 +61,7 @@ public class SessionEventMulticasterTest {
         assertEquals(0, l1.resuming);
         assertEquals(0, l1.suspended);
 
-        sevt = new SessionEvent(session, SessionEvent.Type.CONNECTED);
+        sevt = new SessionEvent(session, SessionEventType.CONNECTED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.activated);
         assertEquals(0, l1.closing);
@@ -77,7 +77,7 @@ public class SessionEventMulticasterTest {
         assertEquals(0, l2.listener.resuming);
         assertEquals(0, l2.listener.suspended);
 
-        sevt = new SessionEvent(session, SessionEvent.Type.RESUMING);
+        sevt = new SessionEvent(session, SessionEventType.RESUMING);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.activated);
         assertEquals(0, l1.closing);
@@ -86,7 +86,7 @@ public class SessionEventMulticasterTest {
         assertEquals(1, l1.resuming);
         assertEquals(0, l1.suspended);
 
-        sevt = new SessionEvent(session, SessionEvent.Type.SUSPENDED);
+        sevt = new SessionEvent(session, SessionEventType.SUSPENDED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.activated);
         assertEquals(0, l1.closing);
@@ -95,7 +95,7 @@ public class SessionEventMulticasterTest {
         assertEquals(1, l1.resuming);
         assertEquals(1, l1.suspended);
 
-        sevt = new SessionEvent(session, SessionEvent.Type.DISCONNECTED);
+        sevt = new SessionEvent(session, SessionEventType.DISCONNECTED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.activated);
         assertEquals(0, l1.closing);
@@ -111,7 +111,7 @@ public class SessionEventMulticasterTest {
         assertEquals(0, l2.listener.resuming);
         assertEquals(0, l2.listener.suspended);
 
-        sevt = new SessionEvent(session, SessionEvent.Type.CLOSING);
+        sevt = new SessionEvent(session, SessionEventType.CLOSING);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(1, l1.activated);
         assertEquals(1, l1.closing);
@@ -132,7 +132,7 @@ public class SessionEventMulticasterTest {
         assertEquals(0, l1.resuming);
         assertEquals(0, l1.suspended);
 
-        sevt = new SessionEvent(session, SessionEvent.Type.OPENED);
+        sevt = new SessionEvent(session, SessionEventType.OPENED);
         sevt.getType().fireEvent(sevt, sl);
         assertEquals(0, l1.activated);
         assertEquals(0, l1.closing);
@@ -141,7 +141,7 @@ public class SessionEventMulticasterTest {
         assertEquals(0, l1.resuming);
         assertEquals(0, l1.suspended);
 
-        sevt = new SessionEvent(session, SessionEvent.Type.CONNECTED);
+        sevt = new SessionEvent(session, SessionEventType.CONNECTED);
         sevt.getType().fireEvent(sevt, sl);
         sl = SessionEventMulticaster.remove(sl, l2);
         assertEquals(1, l1.activated);
@@ -151,9 +151,9 @@ public class SessionEventMulticasterTest {
         assertEquals(0, l1.resuming);
         assertEquals(0, l1.suspended);
 
-        sevt = new SessionEvent(session, SessionEvent.Type.DISCONNECTED);
+        sevt = new SessionEvent(session, SessionEventType.DISCONNECTED);
         sevt.getType().fireEvent(sevt, sl);
-        sevt = new SessionEvent(session, SessionEvent.Type.CLOSING);
+        sevt = new SessionEvent(session, SessionEventType.CLOSING);
         sevt.getType().fireEvent(sevt, sl);
         sl = SessionEventMulticaster.remove(sl, l1);
         assertEquals(1, l1.activated);

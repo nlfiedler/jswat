@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.watch;
 
 /**
@@ -36,6 +35,7 @@ package com.bluemarsh.jswat.core.watch;
  * the description given in <u>Taming Java Threads</u> by Allen Holub.</p>
  */
 public class WatchEventMulticaster implements WatchListener {
+
     /** A session listener. */
     protected final WatchListener listener1;
     /** A session listener. */
@@ -51,8 +51,8 @@ public class WatchEventMulticaster implements WatchListener {
      */
     public static WatchListener add(WatchListener l1,
             WatchListener l2) {
-        return (l1 == null) ? l2 :
-            (l2 == null) ? l1 : new WatchEventMulticaster(l1, l2);
+        return (l1 == null) ? l2
+                : (l2 == null) ? l1 : new WatchEventMulticaster(l1, l2);
     }
 
     /**
@@ -106,11 +106,13 @@ public class WatchEventMulticaster implements WatchListener {
         return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
     }
 
+    @Override
     public void watchAdded(WatchEvent event) {
         listener1.watchAdded(event);
         listener2.watchAdded(event);
     }
 
+    @Override
     public void watchRemoved(WatchEvent event) {
         listener1.watchRemoved(event);
         listener2.watchRemoved(event);

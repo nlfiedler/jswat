@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2009. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
 
 import com.sun.jdi.event.Event;
@@ -34,64 +33,15 @@ import java.util.EventObject;
  * @author  Nathan Fiedler
  */
 public class SessionEvent extends EventObject {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The Session related to this event. */
-    private transient Session session;
+    private transient final Session session;
     /** The JDI event that caused this event. */
-    private transient Event event;
+    private transient final Event event;
     /** The type of session change. */
-    private Type type;
-
-    /**
-     * Type of session event.
-     */
-    public static enum Type {
-        CLOSING {
-            @Override
-            public void fireEvent(SessionEvent e, SessionListener l) {
-                l.closing(e);
-            }
-        },
-        CONNECTED {
-            @Override
-            public void fireEvent(SessionEvent e, SessionListener l) {
-                l.connected(e);
-            }
-        },
-        DISCONNECTED {
-            @Override
-            public void fireEvent(SessionEvent e, SessionListener l) {
-                l.disconnected(e);
-            }
-        },
-        OPENED {
-            @Override
-            public void fireEvent(SessionEvent e, SessionListener l) {
-                l.opened(e.getSession());
-            }
-        },
-        RESUMING {
-            @Override
-            public void fireEvent(SessionEvent e, SessionListener l) {
-                l.resuming(e);
-            }
-        },
-        SUSPENDED {
-            @Override
-            public void fireEvent(SessionEvent e, SessionListener l) {
-                l.suspended(e);
-            }
-        };
-
-        /**
-         * Dispatches the event to the listener.
-         *
-         * @param  e  event to dispatch.
-         * @param  l  listener to receive event.
-         */
-        public abstract void fireEvent(SessionEvent e, SessionListener l);
-    }
+    private final SessionEventType type;
 
     /**
      * Constructs a new SessionEvent.
@@ -99,10 +49,8 @@ public class SessionEvent extends EventObject {
      * @param  session  Session related to this event.
      * @param  type     type of session change.
      */
-    public SessionEvent(Session session, Type type) {
-        super(session);
-        this.session = session;
-        this.type = type;
+    public SessionEvent(Session session, SessionEventType type) {
+        this(session, type, null);
     }
 
     /**
@@ -112,9 +60,11 @@ public class SessionEvent extends EventObject {
      * @param  type     type of session change.
      * @param  event    event that brought about this event.
      */
-    public SessionEvent(Session session, Type type, Event event) {
-        this(session, type);
+    public SessionEvent(Session session, SessionEventType type, Event event) {
+        super(session);
         this.event = event;
+        this.session = session;
+        this.type = type;
     }
 
     /**
@@ -140,7 +90,7 @@ public class SessionEvent extends EventObject {
      *
      * @return  session event type.
      */
-    public Type getType() {
+    public SessionEventType getType() {
         return type;
     }
 }

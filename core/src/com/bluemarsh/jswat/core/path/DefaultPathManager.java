@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.path;
 
 import com.bluemarsh.jswat.core.PlatformProvider;
@@ -57,6 +56,7 @@ import java.util.zip.ZipFile;
  * @author Nathan Fiedler
  */
 public class DefaultPathManager extends AbstractPathManager {
+
     /** The classpath setting, if specified by the user (read-only). */
     private List<String> classPath;
     /** The sourcepath setting, if specified by the user (read-only). */
@@ -121,8 +121,7 @@ public class DefaultPathManager extends AbstractPathManager {
         if (pe == null && fuzzy) {
             int last = filename.lastIndexOf(File.separatorChar);
             if (last > 0) {
-                filename = filename.substring(last + 1);
-                pe = findFile(filename, false);
+                pe = findFile(filename.substring(last + 1), false);
             }
         }
         return pe;
@@ -143,31 +142,33 @@ public class DefaultPathManager extends AbstractPathManager {
         // into consideration when searching for entries.
         int idx = path.indexOf('!');
         String prefix = null;
+        String zippath = null;
         if (idx > 0) {
             prefix = path.substring(idx + 1);
-            path = path.substring(0, idx);
+            zippath = path.substring(0, idx);
+        } else {
+            zippath = path;
         }
-        File f = new File(path);
+        File f = new File(zippath);
         if (f.isFile()) {
             // Chances are this is some form of archive, let's check.
             ZipFile zipFile = null;
             try {
-                zipFile = new ZipFile(path);
+                zipFile = new ZipFile(zippath);
             } catch (IOException ioe) {
                 // Well maybe it wasn't an archive after all.
                 return null;
             }
-            if (prefix != null) {
-                file = prefix + File.separator + file;
-            }
-            Enumeration entries = zipFile.entries();
+            String queryName = prefix != null
+                    ? prefix + File.separator + file : file;
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
-                ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+                ZipEntry zipEntry = entries.nextElement();
                 String entryName = zipEntry.getName();
                 // Convert the name to the local file system form so we
                 // can compare it to the filename argument.
                 entryName = new File(entryName).getPath();
-                if (entryName.equals(file)) {
+                if (entryName.equals(queryName)) {
                     return new ZipPathEntry(zipFile, zipEntry);
                 }
             }
@@ -249,10 +250,10 @@ public class DefaultPathManager extends AbstractPathManager {
             VirtualMachine vm = clazz.virtualMachine();
             if (vm.canGetSourceDebugExtension()) {
                 try {
-                    List paths = clazz.sourcePaths(null);
-                    Iterator iter = paths.iterator();
+                    List<String> paths = clazz.sourcePaths(null);
+                    Iterator<String> iter = paths.iterator();
                     while (iter.hasNext()) {
-                        String path = (String) iter.next();
+                        String path = iter.next();
                         pe = findFile(path, true);
                         if (pe != null) {
                             break;
@@ -283,17 +284,17 @@ public class DefaultPathManager extends AbstractPathManager {
             }
         }
 
-        return classPath;
+        return new ArrayList<String>(classPath);
     }
 
     @Override
     public List<String> getSourcePath() {
-        return sourcePath;
+        return new ArrayList<String>(sourcePath);
     }
 
     @Override
     protected List<String> getUserClassPath() {
-        return classPath;
+        return classPath == null ? classPath : new ArrayList<String>(classPath);
     }
 
     @Override
@@ -317,7 +318,7 @@ public class DefaultPathManager extends AbstractPathManager {
     @Override
     protected void savePaths(Session session) {
         // Save the classpath setting to the session properties.
-        if (classPath == null || classPath.size() == 0) {
+        if (classPath == null || classPath.isEmpty()) {
             session.setProperty(PROP_CLASSPATH, null);
         } else {
             String cp = Strings.listToString(classPath, File.pathSeparator);
@@ -325,7 +326,7 @@ public class DefaultPathManager extends AbstractPathManager {
         }
 
         // Save the sourcepath setting to the session properties.
-        if (sourcePath == null || sourcePath.size() == 0) {
+        if (sourcePath == null || sourcePath.isEmpty()) {
             session.setProperty(PROP_SOURCEPATH, null);
         } else {
             String sp = Strings.listToString(sourcePath, File.pathSeparator);
@@ -336,7 +337,7 @@ public class DefaultPathManager extends AbstractPathManager {
     @Override
     public void setClassPath(List<String> roots) {
         List<String> oldPath = classPath;
-        if (roots == null || roots.size() == 0) {
+        if (roots == null || roots.isEmpty()) {
             classPath = null;
         } else {
             classPath = Collections.unmodifiableList(roots);
@@ -347,7 +348,7 @@ public class DefaultPathManager extends AbstractPathManager {
     @Override
     public void setSourcePath(List<String> roots) {
         List<String> oldPath = sourcePath;
-        if (roots == null || roots.size() == 0) {
+        if (roots == null || roots.isEmpty()) {
             sourcePath = null;
         } else {
             // Determine if root is an archive with a superfluous
@@ -371,9 +372,9 @@ public class DefaultPathManager extends AbstractPathManager {
                     // and if so, indicate that to make searching for archive
                     // entries accurate and fast.
                     Set<String> ruuts = new HashSet<String>();
-                    Enumeration entries = zipFile.entries();
+                    Enumeration<? extends ZipEntry> entries = zipFile.entries();
                     while (entries.hasMoreElements()) {
-                        ZipEntry zipEntry = (ZipEntry) entries.nextElement();
+                        ZipEntry zipEntry = entries.nextElement();
                         String entryName = zipEntry.getName();
                         // Zip file always uses slash as separator.
                         int si = entryName.indexOf('/');
@@ -405,6 +406,7 @@ public class DefaultPathManager extends AbstractPathManager {
      * @author  Nathan Fiedler
      */
     private class FilePathEntry implements PathEntry {
+
         /** The file that contains the source object. */
         private final File fileSource;
 
@@ -413,7 +415,7 @@ public class DefaultPathManager extends AbstractPathManager {
          *
          * @param  src  file path entry.
          */
-        public FilePathEntry(File src) {
+        FilePathEntry(File src) {
             if (src == null) {
                 throw new NullPointerException("src must be non-null");
             }
@@ -424,19 +426,18 @@ public class DefaultPathManager extends AbstractPathManager {
         public boolean equals(Object o) {
             if (o instanceof FilePathEntry) {
                 FilePathEntry ofs = (FilePathEntry) o;
-                return ofs.fileSource.equals(fileSource);
+                return ofs.getSource().equals(fileSource);
             }
             return false;
         }
 
-//        @Override
-//        public boolean exists() {
-//            return fileSource.exists();
-//        }
-
         @Override
         public String getDisplayName() {
             return fileSource.getName();
+        }
+
+        public File getSource() {
+            return fileSource;
         }
 
         @Override
@@ -493,6 +494,7 @@ public class DefaultPathManager extends AbstractPathManager {
      * @author  Nathan Fiedler
      */
     private class ZipPathEntry implements PathEntry {
+
         /** Zip file. */
         private ZipFile zipFile;
         /** Entry in zip file. */
@@ -508,7 +510,7 @@ public class DefaultPathManager extends AbstractPathManager {
          * @param  file   zip file.
          * @param  entry  zip file entry.
          */
-        public ZipPathEntry(ZipFile file, ZipEntry entry) {
+        ZipPathEntry(ZipFile file, ZipEntry entry) {
             if (file == null || entry == null) {
                 throw new IllegalArgumentException("arguments must be non-null");
             }
@@ -527,19 +529,18 @@ public class DefaultPathManager extends AbstractPathManager {
         public boolean equals(Object o) {
             if (o instanceof ZipPathEntry) {
                 ZipPathEntry zpe = (ZipPathEntry) o;
-                return zpe.entryAsFile.equals(entryAsFile);
+                return zpe.getEntryFile().equals(entryAsFile);
             }
             return false;
         }
 
-//        @Override
-//        public boolean exists() {
-//            return true;
-//        }
-
         @Override
         public String getDisplayName() {
             return entryName;
+        }
+
+        public File getEntryFile() {
+            return entryAsFile;
         }
 
         @Override

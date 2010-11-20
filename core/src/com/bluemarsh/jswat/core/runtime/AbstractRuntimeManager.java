@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.runtime;
 
 import java.io.File;
@@ -33,11 +32,13 @@ import java.util.Iterator;
  * @author Nathan Fiedler
  */
 public abstract class AbstractRuntimeManager implements RuntimeManager {
+
     /** The prefix for runtime identifiers. */
     protected static final String ID_PREFIX = "JRE_";
     /** List of runtime listeners. */
     private RuntimeListener runtimeListeners;
 
+    @Override
     public void addRuntimeListener(RuntimeListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -47,6 +48,7 @@ public abstract class AbstractRuntimeManager implements RuntimeManager {
         }
     }
 
+    @Override
     public JavaRuntime findByBase(String base) {
         JavaRuntime rt = null;
         Iterator<JavaRuntime> iter = iterateRuntimes();
@@ -67,6 +69,7 @@ public abstract class AbstractRuntimeManager implements RuntimeManager {
         return rt;
     }
 
+    @Override
     public JavaRuntime findById(String id) {
         if (id != null && id.length() > 0) {
             Iterator<JavaRuntime> iter = iterateRuntimes();
@@ -95,6 +98,7 @@ public abstract class AbstractRuntimeManager implements RuntimeManager {
         }
     }
 
+    @Override
     public String generateIdentifier() {
         Iterator<JavaRuntime> iter = iterateRuntimes();
         if (!iter.hasNext()) {
@@ -120,6 +124,7 @@ public abstract class AbstractRuntimeManager implements RuntimeManager {
         }
     }
 
+    @Override
     public void removeRuntimeListener(RuntimeListener listener) {
         if (listener != null) {
             synchronized (this) {

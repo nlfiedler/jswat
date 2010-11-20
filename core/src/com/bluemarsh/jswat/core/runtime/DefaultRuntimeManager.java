@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.runtime;
 
 import com.bluemarsh.jswat.core.PlatformProvider;
@@ -46,6 +45,7 @@ import java.util.logging.Logger;
  * @author Nathan Fiedler
  */
 public class DefaultRuntimeManager extends AbstractRuntimeManager {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             DefaultRuntimeManager.class.getName());
@@ -63,7 +63,7 @@ public class DefaultRuntimeManager extends AbstractRuntimeManager {
     @Override
     public synchronized void add(JavaRuntime runtime) {
         openRuntimes.add(runtime);
-        fireEvent(new RuntimeEvent(runtime, RuntimeEvent.Type.ADDED));
+        fireEvent(new RuntimeEvent(runtime, RuntimeEventType.ADDED));
     }
 
     @Override
@@ -83,14 +83,15 @@ public class DefaultRuntimeManager extends AbstractRuntimeManager {
             InputStream is = platform.readFile(name);
             decoder = new XMLDecoder(is);
             decoder.setExceptionListener(new ExceptionListener() {
+
                 @Override
                 public void exceptionThrown(Exception e) {
                     logger.log(Level.SEVERE, null, e);
                 }
             });
             openRuntimes = (List<JavaRuntime>) decoder.readObject();
-        // Leave possibly invalid runtimes in the last, let user
-        // decide what to do with them.
+            // Leave possibly invalid runtimes in the last, let user
+            // decide what to do with them.
         } catch (FileNotFoundException e) {
             // Ignore this error, it's normal.
         } catch (Exception e) {
@@ -107,7 +108,7 @@ public class DefaultRuntimeManager extends AbstractRuntimeManager {
     @Override
     public synchronized void remove(JavaRuntime runtime) {
         openRuntimes.remove(runtime);
-        fireEvent(new RuntimeEvent(runtime, RuntimeEvent.Type.REMOVED));
+        fireEvent(new RuntimeEvent(runtime, RuntimeEventType.REMOVED));
     }
 
     @Override

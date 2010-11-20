@@ -14,42 +14,48 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2010. All Rights Reserved.
+ * are Copyright (C) 2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-package com.bluemarsh.jswat.core.watch;
+package com.bluemarsh.jswat.core.session;
 
 /**
- * A default implementation of the ExpressionWatch interface.
+ * Type of session manager event.
  *
  * @author Nathan Fiedler
  */
-public class DefaultExpressionWatch extends AbstractWatch
-        implements ExpressionWatch {
+public enum SessionManagerEventType {
 
-    /** Name of 'expression' property. */
-    public static final String PROP_EXPRESSION = "expression";
-    /** The expression being watched. */
-    private String expression;
+    ADDED {
+
+        @Override
+        public void fireEvent(SessionManagerEvent e, SessionManagerListener l) {
+            l.sessionAdded(e);
+        }
+    },
+    CURRENT {
+
+        @Override
+        public void fireEvent(SessionManagerEvent e, SessionManagerListener l) {
+            l.sessionSetCurrent(e);
+        }
+    },
+    REMOVED {
+
+        @Override
+        public void fireEvent(SessionManagerEvent e, SessionManagerListener l) {
+            l.sessionRemoved(e);
+        }
+    };
 
     /**
-     * Creates a new instance of DefaultExpressionWatch.
+     * Dispatches the event to the listener.
+     *
+     * @param  e  event to dispatch.
+     * @param  l  listener to receive event.
      */
-    public DefaultExpressionWatch() {
-    }
-
-    @Override
-    public String getExpression() {
-        return expression;
-    }
-
-    @Override
-    public void setExpression(String expr) {
-        String old = expression;
-        expression = expr;
-        propSupport.firePropertyChange(PROP_EXPRESSION, old, expression);
-    }
+    public abstract void fireEvent(SessionManagerEvent e, SessionManagerListener l);
 }

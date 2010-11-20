@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.watch;
 
 import java.beans.PropertyChangeListener;
@@ -33,8 +32,9 @@ import java.beans.PropertyChangeSupport;
  * @author Nathan Fiedler
  */
 public class AbstractWatch implements Watch {
+
     /** Handles property change listeners and sending events. */
-    protected PropertyChangeSupport propSupport;
+    protected final PropertyChangeSupport propSupport;
 
     /**
      * Creates a new instance of AbstractWatch.
@@ -43,10 +43,12 @@ public class AbstractWatch implements Watch {
         propSupport = new PropertyChangeSupport(this);
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propSupport.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propSupport.removePropertyChangeListener(listener);
     }

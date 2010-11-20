@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.util;
 
 /**
@@ -30,6 +29,7 @@ package com.bluemarsh.jswat.core.util;
  * @author Nathan Fiedler
  */
 public class NameValuePair<V> {
+
     /** The name. */
     private String name;
     /** The value. */
@@ -48,14 +48,15 @@ public class NameValuePair<V> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof NameValuePair) {
+        if (obj instanceof NameValuePair<?>) {
             NameValuePair<?> pair = (NameValuePair<?>) obj;
-            if (pair.value == null && value == null) {
+            Object otherValue = pair.getValue();
+            if (otherValue == null && value == null) {
                 return true;
-            } else if (pair.value == null || value == null) {
+            } else if (otherValue == null || value == null) {
                 return false;
             } else {
-                return pair.value.equals(value);
+                return otherValue.equals(value);
             }
         }
         return false;

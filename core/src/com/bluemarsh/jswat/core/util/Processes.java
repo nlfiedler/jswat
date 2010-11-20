@@ -81,7 +81,7 @@ public class Processes {
          * @param  stream  where output is read from.
          * @param  buffer  where output is sent.
          */
-        public StreamReader(InputStream stream, StringBuffer buffer) {
+        StreamReader(InputStream stream, StringBuffer buffer) {
             this.stream = stream;
             this.buffer = buffer;
         }

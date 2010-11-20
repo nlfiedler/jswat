@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.runtime;
 
 /**
@@ -36,6 +35,7 @@ package com.bluemarsh.jswat.core.runtime;
  * the description given in <u>Taming Java Threads</u> by Allen Holub.</p>
  */
 public class RuntimeEventMulticaster implements RuntimeListener {
+
     /** A session listener. */
     protected final RuntimeListener listener1;
     /** A session listener. */
@@ -51,8 +51,8 @@ public class RuntimeEventMulticaster implements RuntimeListener {
      */
     public static RuntimeListener add(RuntimeListener l1,
             RuntimeListener l2) {
-        return (l1 == null) ? l2 :
-            (l2 == null) ? l1 : new RuntimeEventMulticaster(l1, l2);
+        return (l1 == null) ? l2
+                : (l2 == null) ? l1 : new RuntimeEventMulticaster(l1, l2);
     }
 
     /**
@@ -106,11 +106,13 @@ public class RuntimeEventMulticaster implements RuntimeListener {
         return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
     }
 
+    @Override
     public void runtimeAdded(RuntimeEvent event) {
         listener1.runtimeAdded(event);
         listener2.runtimeAdded(event);
     }
 
+    @Override
     public void runtimeRemoved(RuntimeEvent event) {
         listener1.runtimeRemoved(event);
         listener2.runtimeRemoved(event);

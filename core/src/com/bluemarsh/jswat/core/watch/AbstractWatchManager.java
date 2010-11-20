@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.watch;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -36,6 +35,7 @@ import com.bluemarsh.jswat.core.session.SessionListener;
  * @author Nathan Fiedler
  */
 public abstract class AbstractWatchManager implements WatchManager, SessionListener {
+
     /** List of watch listeners. */
     private WatchListener watchListeners;
 
@@ -45,6 +45,7 @@ public abstract class AbstractWatchManager implements WatchManager, SessionListe
     protected AbstractWatchManager() {
     }
 
+    @Override
     public void addWatchListener(WatchListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -54,13 +55,16 @@ public abstract class AbstractWatchManager implements WatchManager, SessionListe
         }
     }
 
+    @Override
     public void closing(SessionEvent sevt) {
         saveWatches(sevt.getSession());
     }
 
+    @Override
     public void connected(SessionEvent sevt) {
     }
 
+    @Override
     public void disconnected(SessionEvent sevt) {
     }
 
@@ -86,10 +90,12 @@ public abstract class AbstractWatchManager implements WatchManager, SessionListe
      */
     protected abstract void loadWatches(Session session);
 
+    @Override
     public void opened(Session session) {
         loadWatches(session);
     }
 
+    @Override
     public void removeWatchListener(WatchListener listener) {
         if (listener != null) {
             synchronized (this) {
@@ -99,6 +105,7 @@ public abstract class AbstractWatchManager implements WatchManager, SessionListe
         }
     }
 
+    @Override
     public void resuming(SessionEvent sevt) {
     }
 
@@ -109,6 +116,7 @@ public abstract class AbstractWatchManager implements WatchManager, SessionListe
      */
     protected abstract void saveWatches(Session session);
 
+    @Override
     public void suspended(SessionEvent sevt) {
     }
 }

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2009. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.watch;
 
 import com.bluemarsh.jswat.core.PlatformProvider;
@@ -46,6 +45,7 @@ import java.util.logging.Logger;
  * @author Nathan Fiedler
  */
 public class DefaultWatchManager extends AbstractWatchManager {
+
     /** Logger for gracefully reporting unexpected errors. */
     private static final Logger logger = Logger.getLogger(
             DefaultWatchManager.class.getName());
@@ -62,7 +62,7 @@ public class DefaultWatchManager extends AbstractWatchManager {
     @Override
     public void addWatch(Watch watch) {
         watchList.add(watch);
-        fireEvent(new WatchEvent(watch, WatchEvent.Type.ADDED));
+        fireEvent(new WatchEvent(watch, WatchEventType.ADDED));
     }
 
     @Override
@@ -81,6 +81,7 @@ public class DefaultWatchManager extends AbstractWatchManager {
             InputStream is = platform.readFile(name);
             decoder = new XMLDecoder(is);
             decoder.setExceptionListener(new ExceptionListener() {
+
                 @Override
                 public void exceptionThrown(Exception e) {
                     logger.log(Level.SEVERE, null, e);
@@ -118,7 +119,7 @@ public class DefaultWatchManager extends AbstractWatchManager {
     @Override
     public void removeWatch(Watch watch) {
         watchList.remove(watch);
-        fireEvent(new WatchEvent(watch, WatchEvent.Type.REMOVED));
+        fireEvent(new WatchEvent(watch, WatchEventType.REMOVED));
     }
 
     @Override
