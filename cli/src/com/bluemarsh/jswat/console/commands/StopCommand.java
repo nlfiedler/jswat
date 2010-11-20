@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: StopCommand.java 157 2009-05-06 02:08:09Z nathanfiedler $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.console.commands;

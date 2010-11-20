@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: DownCommand.java $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.console.commands;

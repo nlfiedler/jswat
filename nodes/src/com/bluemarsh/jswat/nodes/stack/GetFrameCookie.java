@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: $
+ * $Id$
  */
 package com.bluemarsh.jswat.nodes.stack;
 

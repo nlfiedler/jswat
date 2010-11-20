@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: UpCommand.java $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.console.commands;

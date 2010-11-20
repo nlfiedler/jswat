@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: FrameCommand.java $
+ * $Id$
  */
 
 package com.bluemarsh.jswat.console.commands;

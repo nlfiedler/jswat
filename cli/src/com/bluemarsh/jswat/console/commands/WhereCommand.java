@@ -18,7 +18,7 @@
  *
  * Contributor(s): Steve Yegge, Nathan L. Fiedler.
  *
- * $Id: WhereCommand.java 143 2009-05-02 00:17:52Z nathanfiedler $
+ * $Id$
  */
 package com.bluemarsh.jswat.console.commands;
 

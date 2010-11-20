@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: ConsoleBreakpointFactory.java 137 2009-04-29 00:05:39Z nathanfiedler $
+ * $Id$
  */
 package com.bluemarsh.jswat.console;
 

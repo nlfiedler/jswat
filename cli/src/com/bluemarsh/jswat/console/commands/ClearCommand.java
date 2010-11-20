@@ -18,7 +18,7 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  *
- * $Id: BreakpointClearCommand.java 193 2009-05-14 01:02:10Z nathanfiedler $
+ * $Id$
  */
 package com.bluemarsh.jswat.console.commands;
 

@@ -8,7 +8,7 @@
 #
 # The list of modules required by JSwat is in modules.txt.
 #
-# $Id: mkmodules.sh 2800 2007-02-13 07:37:41Z nfiedler $
+# $Id$
 #
 
 # Argument should be the path where NetBeans is installed.
