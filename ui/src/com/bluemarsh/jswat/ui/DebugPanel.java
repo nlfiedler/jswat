@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui;
 
 import com.bluemarsh.jswat.core.CoreSettings;
@@ -46,6 +45,7 @@ import javax.swing.event.ChangeListener;
  */
 final class DebugPanel extends JPanel implements ActionListener,
         ChangeListener, ItemListener, KeyListener {
+
     /** silence compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Options panel controller. */
@@ -316,7 +316,7 @@ final class DebugPanel extends JPanel implements ActionListener,
         settings.setConnectionTimeout((Integer) connectTimeoutSpinner.getValue());
         settings.setInvocationTimeout((Integer) methodTimeoutSpinner.getValue());
         DefaultListModel model = (DefaultListModel) excludesList.getModel();
-        Enumeration enmr = model.elements();
+        Enumeration<?> enmr = model.elements();
         List<String> list = new ArrayList<String>(model.getSize());
         while (enmr.hasMoreElements()) {
             list.add((String) enmr.nextElement());
@@ -328,7 +328,6 @@ final class DebugPanel extends JPanel implements ActionListener,
         // This form is always consistent and complete.
         return true;
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel connectTimeoutLabel;
     private javax.swing.JSpinner connectTimeoutSpinner;

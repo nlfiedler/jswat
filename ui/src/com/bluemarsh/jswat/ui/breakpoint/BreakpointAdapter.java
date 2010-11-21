@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -43,8 +42,9 @@ import java.beans.PropertyChangeListener;
  * @author  Nathan Fiedler
  */
 public interface BreakpointAdapter {
+
     /** The valid input property name. */
-    public static final String PROP_INPUTVALID = "validInput";
+    String PROP_INPUTVALID = "validInput";
 
     /**
      * Add the listener to be notified of property changes.

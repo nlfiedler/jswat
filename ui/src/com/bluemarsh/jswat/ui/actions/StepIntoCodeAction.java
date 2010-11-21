@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.actions;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -43,6 +42,7 @@ import org.openide.util.actions.CallableSystemAction;
  * @author Nathan Fiedler
  */
 public class StepIntoCodeAction extends CallableSystemAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -54,45 +54,27 @@ public class StepIntoCodeAction extends CallableSystemAction {
         ae.registerSuspendedAction(this);
     }
 
-    /**
-     * Indicates if this action can be invoked on any thread.
-     *
-     * @return  true if asynchronous, false otherwise.
-     */
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
-    /**
-     * Returns the help context for this action.
-     *
-     * @return  help context.
-     */
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
-    /**
-     * Returns the name of this action.
-     *
-     * @return  name of action.
-     */
+    @Override
     public String getName() {
         return NbBundle.getMessage(getClass(), "LBL_StepIntoCodeAction");
     }
 
-    /**
-     * Specify the proper resource name for the action's icon.
-     *
-     * @return  the resource name for the icon.
-     */
+    @Override
     protected String iconResource() {
         return NbBundle.getMessage(getClass(), "IMG_StepIntoCodeAction");
     }
 
-    /**
-     * Performs the action.
-     */
+    @Override
     public void performAction() {
         SessionManager sm = SessionProvider.getSessionManager();
         Session session = sm.getCurrent();

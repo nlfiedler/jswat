@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -38,10 +37,15 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class ClassPanel extends AbstractAdapter implements ItemListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
+
     /** Type of class breakpoint. */
-    private static enum Type { BOTH, PREPARE, UNLOAD };
+    private static enum Type {
+
+        BOTH, PREPARE, UNLOAD
+    };
     /** The stop-on combo model. */
     private DefaultComboBoxModel stopOnModel;
     /** Breakpoint to update. */
@@ -66,10 +70,12 @@ public class ClassPanel extends AbstractAdapter implements ItemListener {
         stopOnComboBox.setModel(stopOnModel);
     }
 
+    @Override
     public boolean canCreateBreakpoint() {
         return true;
     }
 
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) stopOnComboBox.getSelectedItem();
@@ -77,10 +83,10 @@ public class ClassPanel extends AbstractAdapter implements ItemListener {
         boolean prepare = true;
         boolean unload = true;
         switch (type) {
-            case PREPARE :
+            case PREPARE:
                 unload = false;
                 break;
-            case UNLOAD :
+            case UNLOAD:
                 prepare = false;
                 break;
         }
@@ -89,6 +95,7 @@ public class ClassPanel extends AbstractAdapter implements ItemListener {
         return factory.createClassBreakpoint(null, prepare, unload);
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             String msg = validateInput();
@@ -99,6 +106,7 @@ public class ClassPanel extends AbstractAdapter implements ItemListener {
         }
     }
 
+    @Override
     public void loadParameters(Breakpoint bp) {
         ClassBreakpoint cb = (ClassBreakpoint) bp;
         boolean prepare = cb.getStopOnPrepare();
@@ -127,6 +135,7 @@ public class ClassPanel extends AbstractAdapter implements ItemListener {
         breakpoint = bp;
     }
 
+    @Override
     public void saveParameters(Breakpoint bp) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) stopOnComboBox.getSelectedItem();
@@ -134,10 +143,10 @@ public class ClassPanel extends AbstractAdapter implements ItemListener {
         boolean prepare = true;
         boolean unload = true;
         switch (type) {
-            case PREPARE :
+            case PREPARE:
                 unload = false;
                 break;
-            case UNLOAD :
+            case UNLOAD:
                 prepare = false;
                 break;
         }
@@ -146,6 +155,7 @@ public class ClassPanel extends AbstractAdapter implements ItemListener {
         cb.setStopOnUnload(unload);
     }
 
+    @Override
     public String validateInput() {
         // nothing for us to validate
         return null;
@@ -189,7 +199,6 @@ public class ClassPanel extends AbstractAdapter implements ItemListener {
         add(stopOnComboBox, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox stopOnComboBox;
     private javax.swing.JLabel stopOnLabel;

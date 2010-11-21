@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007. All Rights Reserved.
+ * are Copyright (C) 2007-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.actions;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
@@ -42,6 +41,7 @@ import org.openide.util.actions.CallableSystemAction;
  * @author Nathan Fiedler
  */
 public class StackUpAction extends CallableSystemAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -53,18 +53,22 @@ public class StackUpAction extends CallableSystemAction {
         ae.registerSuspendedAction(this);
     }
 
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(StackUpAction.class, "LBL_StackUpAction");
     }
 
+    @Override
     public void performAction() {
         SessionManager sm = SessionProvider.getSessionManager();
         Session session = sm.getCurrent();

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.components;
 
 import com.bluemarsh.jswat.core.CoreSettings;
@@ -70,6 +69,7 @@ import org.openide.windows.WindowManager;
  * @author  Nathan Fiedler
  */
 public class RuntimeManagerPanel extends JPanel {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Editor panel for the runtime sources. */
@@ -96,6 +96,7 @@ public class RuntimeManagerPanel extends JPanel {
         // has been pressed for that corresponding text field. Avoids
         // responding to changes made via the setText() method.
         class KeyInputListener extends KeyAdapter implements DocumentListener {
+
             private boolean keyPressed;
 
             @Override
@@ -103,13 +104,16 @@ public class RuntimeManagerPanel extends JPanel {
                 keyPressed = true;
             }
 
+            @Override
             public void changedUpdate(DocumentEvent event) {
             }
 
+            @Override
             public void insertUpdate(DocumentEvent event) {
                 validate(event);
             }
 
+            @Override
             public void removeUpdate(DocumentEvent event) {
                 validate(event);
             }
@@ -142,6 +146,8 @@ public class RuntimeManagerPanel extends JPanel {
         execTextField.addKeyListener(kil);
 
         runtimeList.addListSelectionListener(new ListSelectionListener() {
+
+            @Override
             public void valueChanged(ListSelectionEvent event) {
                 if (!event.getValueIsAdjusting()) {
                     // Save whatever the user entered to the active runtime,
@@ -153,8 +159,7 @@ public class RuntimeManagerPanel extends JPanel {
                     int index = runtimeList.getSelectedIndex();
                     // Must validate the selected index as it can be anything.
                     if (index != -1 && index < model.getSize()) {
-                        NameValuePair<?> pair = (NameValuePair<?>)
-                                model.getElementAt(index);
+                        NameValuePair<?> pair = (NameValuePair<?>) model.getElementAt(index);
                         activeListEntry = (JavaRuntime) pair.getValue();
                         loadRuntime(activeListEntry);
                         setFieldsEnabled(true);
@@ -169,6 +174,8 @@ public class RuntimeManagerPanel extends JPanel {
         });
 
         addButton.addActionListener(new ActionListener() {
+
+            @Override
             public void actionPerformed(ActionEvent event) {
                 // Display a file chooser for the user to select Java home.
                 Frame frame = WindowManager.getDefault().getMainWindow();
@@ -182,8 +189,7 @@ public class RuntimeManagerPanel extends JPanel {
                         RuntimeFactory rf = RuntimeProvider.getRuntimeFactory();
                         JavaRuntime rt = rf.createRuntime(dir.getAbsolutePath(), id);
                         // Add the new runtime to the list.
-                        DefaultListModel model = (DefaultListModel)
-                                runtimeList.getModel();
+                        DefaultListModel model = (DefaultListModel) runtimeList.getModel();
                         model.addElement(new NameValuePair<JavaRuntime>(
                                 rt.getName(), rt));
                         runtimeList.setSelectedIndex(model.getSize() - 1);
@@ -223,6 +229,8 @@ public class RuntimeManagerPanel extends JPanel {
         });
 
         removeButton.addActionListener(new ActionListener() {
+
+            @Override
             public void actionPerformed(ActionEvent event) {
                 // Immediately remove the active runtime.
                 DefaultListModel model = (DefaultListModel) runtimeList.getModel();
@@ -275,7 +283,7 @@ public class RuntimeManagerPanel extends JPanel {
             model.addElement(new NameValuePair<JavaRuntime>(rt.getName(), rt));
         }
         runtimeList.setModel(model);
-        if (model.size() == 0) {
+        if (model.isEmpty()) {
             // Disable the editable fields until a runtime is added.
             setFieldsEnabled(false);
         } else {
@@ -289,6 +297,8 @@ public class RuntimeManagerPanel extends JPanel {
         descriptor = new DialogDescriptor(this, title);
         descriptor.setHelpCtx(new HelpCtx("jswat-runtime-manager"));
         PropertyChangeListener pcl = new PropertyChangeListener() {
+
+            @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if (e.getPropertyName().equals(NotifyDescriptor.PROP_VALID)) {
                     // The input validity has changed in some way.
@@ -411,6 +421,7 @@ public class RuntimeManagerPanel extends JPanel {
      * Renders the entries in the runtimes list.
      */
     private static class RuntimeRenderer extends DefaultListCellRenderer {
+
         /** silence compiler warnings */
         private static final long serialVersionUID = 1L;
 
@@ -555,7 +566,6 @@ public class RuntimeManagerPanel extends JPanel {
                 .addComponent(validationLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JLabel baseLabel;

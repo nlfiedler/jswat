@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -34,6 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPanel;
@@ -48,6 +48,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class CreatorPanel extends JPanel implements ActionListener, ItemListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Dialog for displaying this panel. */
@@ -69,7 +70,7 @@ public class CreatorPanel extends JPanel implements ActionListener, ItemListener
     public CreatorPanel() {
         panelsMap = new HashMap<String, EditorPanel>();
         typesMap = new HashMap<String, BreakpointType>();
-        labelsMap = new HashMap<BreakpointType, String>();
+        labelsMap = new EnumMap<BreakpointType, String>(BreakpointType.class);
         initComponents();
         // Line breakpoints cannot be created by dialog.
         BreakpointType[] typeEnums = {
@@ -153,7 +154,7 @@ public class CreatorPanel extends JPanel implements ActionListener, ItemListener
         dialogDescriptor = new DialogDescriptor(this, title);
         dialogDescriptor.setHelpCtx(new HelpCtx("jswat-create-breakpoint"));
         dialogDescriptor.setButtonListener(this);
-        dialogDescriptor.setClosingOptions(new Object[] { DialogDescriptor.CANCEL_OPTION });
+        dialogDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CANCEL_OPTION});
         inputDialog = DialogDisplayer.getDefault().createDialog(dialogDescriptor);
         okayToGo = false;
         inputDialog.setVisible(true);
@@ -258,7 +259,6 @@ public class CreatorPanel extends JPanel implements ActionListener, ItemListener
         add(subPanel, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel subPanel;
     private javax.swing.JComboBox typeComboBox;

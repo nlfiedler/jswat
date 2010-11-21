@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -38,10 +37,15 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class TracePanel extends AbstractAdapter implements ItemListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
+
     /** Type of trace breakpoint. */
-    private static enum Type { BOTH, ENTER, EXIT };
+    private static enum Type {
+
+        BOTH, ENTER, EXIT
+    };
     /** The stop-on combo model. */
     private DefaultComboBoxModel stopOnModel;
     /** Breakpoint to update. */
@@ -66,10 +70,12 @@ public class TracePanel extends AbstractAdapter implements ItemListener {
         stopOnComboBox.setModel(stopOnModel);
     }
 
+    @Override
     public boolean canCreateBreakpoint() {
         return true;
     }
 
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) stopOnComboBox.getSelectedItem();
@@ -77,10 +83,10 @@ public class TracePanel extends AbstractAdapter implements ItemListener {
         boolean enter = true;
         boolean exit = true;
         switch (type) {
-            case ENTER :
+            case ENTER:
                 exit = false;
                 break;
-            case EXIT :
+            case EXIT:
                 enter = false;
                 break;
         }
@@ -88,6 +94,7 @@ public class TracePanel extends AbstractAdapter implements ItemListener {
         return factory.createTraceBreakpoint(null, null, enter, exit);
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             String msg = validateInput();
@@ -98,6 +105,7 @@ public class TracePanel extends AbstractAdapter implements ItemListener {
         }
     }
 
+    @Override
     public void loadParameters(Breakpoint bp) {
         TraceBreakpoint tb = (TraceBreakpoint) bp;
         boolean enter = tb.getStopOnEnter();
@@ -126,6 +134,7 @@ public class TracePanel extends AbstractAdapter implements ItemListener {
         breakpoint = bp;
     }
 
+    @Override
     public void saveParameters(Breakpoint bp) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) stopOnComboBox.getSelectedItem();
@@ -133,10 +142,10 @@ public class TracePanel extends AbstractAdapter implements ItemListener {
         boolean enter = true;
         boolean exit = true;
         switch (type) {
-            case ENTER :
+            case ENTER:
                 exit = false;
                 break;
-            case EXIT :
+            case EXIT:
                 enter = false;
                 break;
         }
@@ -145,6 +154,7 @@ public class TracePanel extends AbstractAdapter implements ItemListener {
         tb.setStopOnExit(exit);
     }
 
+    @Override
     public String validateInput() {
         // nothing to do
         return null;
@@ -189,7 +199,6 @@ public class TracePanel extends AbstractAdapter implements ItemListener {
         add(useFiltersLabel, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox stopOnComboBox;
     private javax.swing.JLabel stopOnLabel;

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.components;
 
 import com.bluemarsh.jswat.ui.actions.Actions;
@@ -45,6 +44,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class PathAdderPanel extends JPanel {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -54,16 +54,17 @@ public class PathAdderPanel extends JPanel {
     public PathAdderPanel() {
         initComponents();
         pasteButton.addActionListener(new ActionListener() {
+
+            @Override
             public void actionPerformed(ActionEvent event) {
                 inputTextArea.paste();
             }
         });
-        Action[] actions = new Action[] {
+        Action[] actions = new Action[]{
             new CutAction(),
             new CopyAction(),
             new PasteAction(),
-            new ClearAction(),
-        };
+            new ClearAction(),};
         Actions.attachActions(actions, inputTextArea);
         Actions.attachShortcuts(actions, this);
     }
@@ -158,7 +159,6 @@ public class PathAdderPanel extends JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea describeTextArea;
     private javax.swing.JTextArea inputTextArea;

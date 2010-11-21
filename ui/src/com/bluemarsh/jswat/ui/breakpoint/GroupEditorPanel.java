@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2007. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.BreakpointGroup;
@@ -50,6 +49,7 @@ import org.openide.util.NbBundle;
  */
 public class GroupEditorPanel extends JPanel implements
         DocumentListener, ItemListener, PropertyChangeListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Breakpoint group to modify. */
@@ -65,6 +65,7 @@ public class GroupEditorPanel extends JPanel implements
         addPropertyChangeListener(this);
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         // Ensure dialog is not overly narrow.
@@ -74,13 +75,16 @@ public class GroupEditorPanel extends JPanel implements
         validateInput();
     }
 
+    @Override
     public void changedUpdate(DocumentEvent event) {
     }
 
+    @Override
     public void itemStateChanged(ItemEvent event) {
         validateInput();
     }
 
+    @Override
     public void insertUpdate(DocumentEvent event) {
         // This fires an event only if the value has changed.
         putClientProperty(NotifyDescriptor.PROP_VALID,
@@ -125,6 +129,7 @@ public class GroupEditorPanel extends JPanel implements
         this.group = group;
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getPropertyName().equals(NotifyDescriptor.PROP_VALID)) {
             // The input validity has changed in some way.
@@ -141,6 +146,7 @@ public class GroupEditorPanel extends JPanel implements
         }
     }
 
+    @Override
     public void removeUpdate(DocumentEvent event) {
         // This fires an event only if the value has changed.
         putClientProperty(NotifyDescriptor.PROP_VALID,
@@ -292,7 +298,6 @@ public class GroupEditorPanel extends JPanel implements
                 .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel conditionLabel;
     private javax.swing.JTextField conditionTextField;

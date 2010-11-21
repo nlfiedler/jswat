@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -46,6 +45,7 @@ import org.openide.util.NbBundle;
  */
 public class MethodPanel extends AbstractAdapter
         implements FocusListener, ItemListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Breakpoint to update. */
@@ -59,26 +59,12 @@ public class MethodPanel extends AbstractAdapter
         allMethodsCheckBox.addItemListener(this);
     }
 
-    /**
-     * Indicates if this adapter is the sort that can construct a new
-     * Breakpoint instance from the user-provided information.
-     *
-     * @return  true if breakpoint creation is possible, false otherwise.
-     */
+    @Override
     public boolean canCreateBreakpoint() {
         return true;
     }
 
-    /**
-     * Create a Breakpoint instance that encapsulates the information
-     * provided by the user. This may not be entirely complete since
-     * some of the information is contained in other adapters. The caller
-     * is responsible for invoking <code>saveParameters(Breakpoint)</code>
-     * on the other adapters to make the Breakpoint instance complete.
-     *
-     * @param  factory  breakpoint factory to construct breakpoint.
-     * @return  new Breakpoint, or null if creation not supported.
-     */
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         String pkg = packageTextField.getText();
         String cls = classTextField.getText();
@@ -98,9 +84,11 @@ public class MethodPanel extends AbstractAdapter
         return bp;
     }
 
+    @Override
     public void focusGained(FocusEvent e) {
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -109,6 +97,7 @@ public class MethodPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getSource() == allMethodsCheckBox) {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -130,12 +119,7 @@ public class MethodPanel extends AbstractAdapter
         }
     }
 
-    /**
-     * Read the values from the given Breakpoint to populate the fields
-     * of this editor.
-     * 
-     * @param  bp  Breakpoint to edit.
-     */
+    @Override
     public void loadParameters(Breakpoint bp) {
         MethodBreakpoint mb = (MethodBreakpoint) bp;
         String fullname = mb.getClassName();
@@ -163,11 +147,7 @@ public class MethodPanel extends AbstractAdapter
         breakpoint = bp;
     }
 
-    /**
-     * Saves the values from the fields of this editor to the given Breakpoint.
-     * 
-     * @param  bp  Breakpoint to modify.
-     */
+    @Override
     public void saveParameters(Breakpoint bp) {
         MethodBreakpoint mb = (MethodBreakpoint) bp;
         String pname = packageTextField.getText();
@@ -195,11 +175,7 @@ public class MethodPanel extends AbstractAdapter
         mb.setMethodParameters(params);
     }
 
-    /**
-     * Validate the user-provided input.
-     * 
-     * @return  error message if input invalid, null if valid.
-     */
+    @Override
     public String validateInput() {
         String method = methodTextField.getText();
         // Allow empty method names, but non-empty names must be valid.
@@ -311,7 +287,6 @@ public class MethodPanel extends AbstractAdapter
         add(parametersTextField, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox allMethodsCheckBox;
     private javax.swing.JLabel classLabel;

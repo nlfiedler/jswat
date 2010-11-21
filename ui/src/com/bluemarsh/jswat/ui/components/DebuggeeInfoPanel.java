@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.components;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
@@ -55,6 +54,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class DebuggeeInfoPanel extends javax.swing.JPanel {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Emtpy list of Value objects. */
@@ -74,8 +74,8 @@ public class DebuggeeInfoPanel extends javax.swing.JPanel {
      */
     public void display(Session session) {
         VirtualMachineManager vmm = Bootstrap.virtualMachineManager();
-        String str = String.valueOf(vmm.majorInterfaceVersion()) + '.' +
-            String.valueOf(vmm.minorInterfaceVersion());
+        String str = String.valueOf(vmm.majorInterfaceVersion()) + '.'
+                + String.valueOf(vmm.minorInterfaceVersion());
         jdiVersionTextField.setText(str);
         if (session.isConnected()) {
             VirtualMachine vm = session.getConnection().getVM();
@@ -111,7 +111,7 @@ public class DebuggeeInfoPanel extends javax.swing.JPanel {
             // We assume it exists and is a real class.
             ClassType type = (ClassType) classes.get(0);
             List<Method> methods = type.methodsByName("getProperties");
-            if (methods.size() == 0) {
+            if (methods.isEmpty()) {
                 // KVM does not have a System.getProperties() method.
                 sb.append(NbBundle.getMessage(DebuggeeInfoPanel.class,
                         "ERR_DebuggeeInfo_NoPropertiesMethod"));
@@ -124,28 +124,28 @@ public class DebuggeeInfoPanel extends javax.swing.JPanel {
                     // Get the property names enumerator.
                     type = (ClassType) props.referenceType();
                     methods = type.methodsByName("propertyNames", "()Ljava/util/Enumeration;");
-                    if (methods.size() == 0) {
+                    if (methods.isEmpty()) {
                         throw new IllegalArgumentException("no propertyNames() method");
                     }
                     method = methods.get(0);
                     ObjectReference iter = (ObjectReference) Classes.invokeMethod(
-                        props, type, thread, method, EMTPY_ARGUMENTS);
+                            props, type, thread, method, EMTPY_ARGUMENTS);
 
                     ClassType iterType = (ClassType) iter.referenceType();
                     methods = iterType.methodsByName("hasMoreElements", "()Z");
-                    if (methods.size() == 0) {
+                    if (methods.isEmpty()) {
                         throw new IllegalArgumentException("no hasMoreElements() method");
                     }
                     Method hasNextMeth = methods.get(0);
 
                     methods = iterType.methodsByName("nextElement", "()Ljava/lang/Object;");
-                    if (methods.size() == 0) {
+                    if (methods.isEmpty()) {
                         throw new IllegalArgumentException("no nextElement() method");
                     }
                     Method nextMeth = methods.get(0);
 
                     BooleanValue bool = (BooleanValue) Classes.invokeMethod(
-                        iter, iterType, thread, hasNextMeth, EMTPY_ARGUMENTS);
+                            iter, iterType, thread, hasNextMeth, EMTPY_ARGUMENTS);
 
                     // Enumerate the property names, and then sort them.
                     List<String> propNames = new LinkedList<String>();
@@ -162,7 +162,7 @@ public class DebuggeeInfoPanel extends javax.swing.JPanel {
                     type = (ClassType) props.referenceType();
                     methods = type.methodsByName("getProperty",
                             "(Ljava/lang/String;)Ljava/lang/String;");
-                    if (methods.size() == 0) {
+                    if (methods.isEmpty()) {
                         throw new IllegalArgumentException("no getProperty() method");
                     }
                     method = methods.get(0);

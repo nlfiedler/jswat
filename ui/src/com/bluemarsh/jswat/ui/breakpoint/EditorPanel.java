@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -41,6 +40,7 @@ import javax.swing.JPanel;
  * @author  Nathan Fiedler
  */
 public class EditorPanel extends JPanel implements PropertyChangeListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Panel for editing type-specific breakpoint attributes. */
@@ -68,31 +68,31 @@ public class EditorPanel extends JPanel implements PropertyChangeListener {
         gbc.weightx = 1.0;
         // Create the panels according to the breakpoint type.
         switch (type) {
-            case CLASS :
+            case CLASS:
                 specificPanel = new ClassPanel();
                 break;
-            case EXCEPTION :
+            case EXCEPTION:
                 specificPanel = new ExceptionPanel();
                 break;
-            case LINE :
+            case LINE:
                 specificPanel = new LinePanel();
                 break;
-            case LOCATION :
+            case LOCATION:
                 // Do not need a specific editor for this one.
                 break;
-            case METHOD :
+            case METHOD:
                 specificPanel = new MethodPanel();
                 break;
-            case THREAD :
+            case THREAD:
                 specificPanel = new ThreadPanel();
                 break;
-            case TRACE :
+            case TRACE:
                 specificPanel = new TracePanel();
                 break;
-            case UNCAUGHT :
+            case UNCAUGHT:
                 // Do not need a specific editor for this one.
                 break;
-            case WATCH :
+            case WATCH:
                 specificPanel = new WatchPanel();
                 break;
         }
@@ -127,6 +127,7 @@ public class EditorPanel extends JPanel implements PropertyChangeListener {
         }
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         // Ensure dialog is not overly narrow.
@@ -163,6 +164,7 @@ public class EditorPanel extends JPanel implements PropertyChangeListener {
         return bp;
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(BreakpointAdapter.PROP_INPUTVALID)) {
             String msg = (String) evt.getNewValue();
@@ -274,7 +276,6 @@ public class EditorPanel extends JPanel implements PropertyChangeListener {
         add(messageLabel, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel messageLabel;
     private javax.swing.JPanel subPanel;

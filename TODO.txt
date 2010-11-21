@@ -10,6 +10,7 @@ $Id$
     - launcher/windows/jswat.cpp
     - installer source
   - run product/mkmodules.sh to recreate disabled modules list
+- Clean up the code in the nodes and views modules
 - Thoroughly test the breakpoint UI:
   - creating various types of breakpoints
   - creating breakpoint groups

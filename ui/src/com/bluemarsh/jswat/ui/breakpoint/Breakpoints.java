@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006. All Rights Reserved.
+ * are Copyright (C) 2006-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -87,9 +86,9 @@ public class Breakpoints {
             cbox.addItem(new NameValuePair<BreakpointGroup>(name, grp));
 
             // Visit this group's subgroups.
-            Iterator iter = grp.groups(false);
+            Iterator<BreakpointGroup> iter = grp.groups(false);
             while (iter.hasNext()) {
-                BreakpointGroup subgroup = (BreakpointGroup) iter.next();
+                BreakpointGroup subgroup = iter.next();
                 // Ignore the excluded group, and all of its children.
                 if (exclude == null || !subgroup.equals(exclude)) {
                     stack.push(new NameValuePair<BreakpointGroup>(name, subgroup));

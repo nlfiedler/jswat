@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.editor;
 
 import com.bluemarsh.jswat.core.breakpoint.LineBreakpoint;
@@ -74,6 +73,7 @@ import org.openide.windows.TopComponent;
  * @author Nathan Fiedler
  */
 public class EditorSupport {
+
     /** The singleton instance of this class. */
     private static EditorSupport theInstance;
     /** Document listener for keeping breakpoints updated. */
@@ -190,11 +190,11 @@ public class EditorSupport {
                 public void run(CompilationController cc) throws Exception {
                     if (cc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
                         ErrorManager.getDefault().log(ErrorManager.WARNING,
-                                "Unable to resolve " + cc.getFileObject() +
-                                " to phase " + Phase.RESOLVED +
-                                ", current phase = " + cc.getPhase() +
-                                "\nDiagnostics = " + cc.getDiagnostics() +
-                                "\nFree memory = " + Runtime.getRuntime().freeMemory());
+                                "Unable to resolve " + cc.getFileObject()
+                                + " to phase " + Phase.RESOLVED
+                                + ", current phase = " + cc.getPhase()
+                                + "\nDiagnostics = " + cc.getDiagnostics()
+                                + "\nFree memory = " + Runtime.getRuntime().freeMemory());
                         return;
                     }
                     TreePath p = cc.getTreeUtilities().pathFor(offset);
@@ -212,8 +212,8 @@ public class EditorSupport {
                         result[0] = ElementUtilities.getBinaryName(te);
                     } else {
                         ErrorManager.getDefault().log(ErrorManager.WARNING,
-                                "No enclosing class for " + cc.getFileObject() +
-                                ", offset = " + offset);
+                                "No enclosing class for " + cc.getFileObject()
+                                + ", offset = " + offset);
                     }
                 }
             }, true);
@@ -388,11 +388,11 @@ public class EditorSupport {
                 public void run(CompilationController cc) throws Exception {
                     if (cc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
                         ErrorManager.getDefault().log(ErrorManager.WARNING,
-                                "Unable to resolve " + cc.getFileObject() +
-                                " to phase " + Phase.RESOLVED +
-                                ", current phase = " + cc.getPhase() +
-                                "\nDiagnostics = " + cc.getDiagnostics() +
-                                "\nFree memory = " + Runtime.getRuntime().freeMemory());
+                                "Unable to resolve " + cc.getFileObject()
+                                + " to phase " + Phase.RESOLVED
+                                + ", current phase = " + cc.getPhase()
+                                + "\nDiagnostics = " + cc.getDiagnostics()
+                                + "\nFree memory = " + Runtime.getRuntime().freeMemory());
                         return;
                     }
                     TreePath p = cc.getTreeUtilities().pathFor(offset);
@@ -417,11 +417,12 @@ public class EditorSupport {
      * @return  type element, or null if not found.
      */
     public TypeElement getEnclosingType(Element elem) {
-        while (elem != null && !TypeElement.class.isInstance(elem)) {
-            elem = elem.getEnclosingElement();
+        Element curr = elem;
+        while (curr != null && !TypeElement.class.isInstance(curr)) {
+            curr = curr.getEnclosingElement();
         }
-        if (elem != null) {
-            return (TypeElement) elem;
+        if (curr != null) {
+            return (TypeElement) curr;
         }
         return null;
     }

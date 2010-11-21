@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -37,6 +36,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class LinePanel extends AbstractAdapter implements FocusListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Breakpoint to update. */
@@ -49,34 +49,22 @@ public class LinePanel extends AbstractAdapter implements FocusListener {
         initComponents();
     }
 
-    /**
-     * Indicates if this adapter is the sort that can construct a new
-     * Breakpoint instance from the user-provided information.
-     *
-     * @return  true if breakpoint creation is possible, false otherwise.
-     */
+    @Override
     public boolean canCreateBreakpoint() {
         // Line breakpoints can only be created via the editor.
         return false;
     }
 
-    /**
-     * Create a Breakpoint instance that encapsulates the information
-     * provided by the user. This may not be entirely complete since
-     * some of the information is contained in other adapters. The caller
-     * is responsible for invoking <code>saveParameters(Breakpoint)</code>
-     * on the other adapters to make the Breakpoint instance complete.
-     *
-     * @param  factory  breakpoint factory to construct breakpoint.
-     * @return  new Breakpoint, or null if creation not supported.
-     */
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         return null;
     }
 
+    @Override
     public void focusGained(FocusEvent e) {
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -85,12 +73,7 @@ public class LinePanel extends AbstractAdapter implements FocusListener {
         }
     }
 
-    /**
-     * Read the values from the given Breakpoint to populate the fields
-     * of this editor.
-     * 
-     * @param  bp  Breakpoint to edit.
-     */
+    @Override
     public void loadParameters(Breakpoint bp) {
         LineBreakpoint lb = (LineBreakpoint) bp;
         fileTextField.setText(lb.getURL());
@@ -103,11 +86,7 @@ public class LinePanel extends AbstractAdapter implements FocusListener {
         breakpoint = bp;
     }
 
-    /**
-     * Saves the values from the fields of this editor to the given Breakpoint.
-     * 
-     * @param  bp  Breakpoint to modify.
-     */
+    @Override
     public void saveParameters(Breakpoint bp) {
         LineBreakpoint lb = (LineBreakpoint) bp;
         String l = lineTextField.getText();
@@ -120,11 +99,7 @@ public class LinePanel extends AbstractAdapter implements FocusListener {
         }
     }
 
-    /**
-     * Validate the user-provided input.
-     * 
-     * @return  error message if input invalid, null if valid.
-     */
+    @Override
     public String validateInput() {
         String l = lineTextField.getText();
         try {
@@ -185,7 +160,6 @@ public class LinePanel extends AbstractAdapter implements FocusListener {
         add(lineTextField, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField fileTextField;

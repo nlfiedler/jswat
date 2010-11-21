@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.components;
 
 import com.bluemarsh.jswat.core.path.PathManager;
@@ -49,6 +48,7 @@ import org.openide.util.NbBundle;
  */
 public class SessionPropertiesPanel extends JPanel implements
         PropertyChangeListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** If non-null, save the input values to this Session. */
@@ -127,10 +127,6 @@ public class SessionPropertiesPanel extends JPanel implements
                 validateInput();
             }
         });
-
-        if (session != null) {
-            loadParameters(session);
-        }
     }
 
     @Override
@@ -245,14 +241,14 @@ public class SessionPropertiesPanel extends JPanel implements
                 File file = new File(path);
                 if (!file.exists()) {
                     validationLabel.setText(
-                        NbBundle.getMessage(SessionPropertiesPanel.class,
-                        "ERR_PathDoesNotExist", path));
+                            NbBundle.getMessage(SessionPropertiesPanel.class,
+                            "ERR_PathDoesNotExist", path));
                     valid = false;
                     break;
                 } else if (!file.canRead()) {
                     validationLabel.setText(
-                        NbBundle.getMessage(SessionPropertiesPanel.class,
-                        "ERR_CannotAccessPath", path));
+                            NbBundle.getMessage(SessionPropertiesPanel.class,
+                            "ERR_CannotAccessPath", path));
                     valid = false;
                     break;
                 }
@@ -353,7 +349,6 @@ public class SessionPropertiesPanel extends JPanel implements
                 .addComponent(validationLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel nameLabel;
     private javax.swing.JPanel namePanel;

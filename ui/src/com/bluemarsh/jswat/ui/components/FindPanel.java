@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.components;
 
 import java.awt.Color;
@@ -37,6 +36,7 @@ import javax.swing.UIManager;
  * @author  Nathan Fiedler
  */
 public class FindPanel extends JPanel implements ActionListener, KeyListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Color for highlighting the text field. */
@@ -59,6 +59,7 @@ public class FindPanel extends JPanel implements ActionListener, KeyListener {
         findTextField.addKeyListener(this);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if (src == closeButton) {
@@ -84,6 +85,7 @@ public class FindPanel extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         findTextField.requestFocusInWindow();
@@ -109,16 +111,19 @@ public class FindPanel extends JPanel implements ActionListener, KeyListener {
         findTextField.setForeground(fg);
     }
 
+    @Override
     public void keyPressed(KeyEvent e) {
-         int keyCode = e.getKeyCode();
-         if (keyCode == KeyEvent.VK_ESCAPE) {
-             findable.dismiss();
-         }
+        int keyCode = e.getKeyCode();
+        if (keyCode == KeyEvent.VK_ESCAPE) {
+            findable.dismiss();
+        }
     }
 
+    @Override
     public void keyReleased(KeyEvent e) {
     }
 
+    @Override
     public void keyTyped(KeyEvent e) {
     }
 
@@ -182,7 +187,6 @@ public class FindPanel extends JPanel implements ActionListener, KeyListener {
         add(prevButton, new java.awt.GridBagConstraints());
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JLabel findLabel;

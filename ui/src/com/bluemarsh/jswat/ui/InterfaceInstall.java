@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -35,6 +34,7 @@ import org.openide.modules.ModuleInstall;
  * @author  Nathan Fiedler
  */
 public class InterfaceInstall extends ModuleInstall {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -58,9 +58,9 @@ public class InterfaceInstall extends ModuleInstall {
         ActionEnabler ae = ActionEnabler.getDefault();
 
         // Add the watchers and adapters to the open sessions.
-        Iterator iter = sessionMgr.iterateSessions();
+        Iterator<Session> iter = sessionMgr.iterateSessions();
         while (iter.hasNext()) {
-            Session session = (Session) iter.next();
+            Session session = iter.next();
             session.addSessionListener(ae);
             session.addSessionListener(swatcher);
             session.addSessionListener(adapter);

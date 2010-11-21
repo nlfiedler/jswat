@@ -14,14 +14,13 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler,
  *                 Jay Burgess.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.actions;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -47,6 +46,7 @@ import org.openide.util.actions.CallableSystemAction;
  * @author Nathan Fiedler
  */
 public class ToggleBreakpointAction extends CallableSystemAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -77,9 +77,9 @@ public class ToggleBreakpointAction extends CallableSystemAction {
             BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
             // Determine if a breakpoint already exists.
             Breakpoint bp = null;
-            Iterator iter = bm.getDefaultGroup().breakpoints(true);
+            Iterator<Breakpoint> iter = bm.getDefaultGroup().breakpoints(true);
             while (iter.hasNext()) {
-                Breakpoint temp = (Breakpoint) iter.next();
+                Breakpoint temp = iter.next();
                 if (temp instanceof LineBreakpoint) {
                     LineBreakpoint lbp = (LineBreakpoint) temp;
                     if (lbp.getLineNumber() == line && lbp.getURL().equals(url)) {

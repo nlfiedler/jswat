@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.components;
 
 import com.bluemarsh.jswat.core.connect.ConnectionFactory;
@@ -56,6 +55,7 @@ import org.openide.util.NbBundle;
  */
 public class AttachDebuggeePanel extends JPanel implements
         DocumentListener, ItemListener, PropertyChangeListener {
+
     /** Name of property value for resume immediately. */
     private static final String PROP_RESUME = "ResumeAttachee";
     /** silence the compiler warnings */
@@ -67,46 +67,97 @@ public class AttachDebuggeePanel extends JPanel implements
      * How to connect to the debuggee.
      */
     private enum Transport {
+
         /** By shared memory attach */
         ATTACH_SHARED {
+
+            @Override
             public String getDisplayName() {
                 return NbBundle.getMessage(Transport.class, "CTL_Attach_Shared");
             }
-            public String getName() { return "dt_shmem"; }
-            public boolean isListening() { return false; }
+
+            @Override
+            public String getName() {
+                return "dt_shmem";
+            }
+
+            @Override
+            public boolean isListening() {
+                return false;
+            }
         },
         /** By socket attach */
         ATTACH_SOCKET {
+
+            @Override
             public String getDisplayName() {
                 return NbBundle.getMessage(Transport.class, "CTL_Attach_Socket");
             }
-            public String getName() { return "dt_socket"; }
-            public boolean isListening() { return false; }
+
+            @Override
+            public String getName() {
+                return "dt_socket";
+            }
+
+            @Override
+            public boolean isListening() {
+                return false;
+            }
         },
         /** By process ID (place after shared and socket so user is
          * presented with more sensible options first). */
         ATTACH_PROCESS {
+
+            @Override
             public String getDisplayName() {
                 return NbBundle.getMessage(Transport.class, "CTL_Attach_Process");
             }
-            public String getName() { return "local"; }
-            public boolean isListening() { return false; }
+
+            @Override
+            public String getName() {
+                return "local";
+            }
+
+            @Override
+            public boolean isListening() {
+                return false;
+            }
         },
         /** By shared memory listen */
         LISTEN_SHARED {
+
+            @Override
             public String getDisplayName() {
                 return NbBundle.getMessage(Transport.class, "CTL_Listen_Shared");
             }
-            public String getName() { return "dt_shmem"; }
-            public boolean isListening() { return true; }
+
+            @Override
+            public String getName() {
+                return "dt_shmem";
+            }
+
+            @Override
+            public boolean isListening() {
+                return true;
+            }
         },
         /** By socket listen */
         LISTEN_SOCKET {
+
+            @Override
             public String getDisplayName() {
                 return NbBundle.getMessage(Transport.class, "CTL_Listen_Socket");
             }
-            public String getName() { return "dt_socket"; }
-            public boolean isListening() { return true; }
+
+            @Override
+            public String getName() {
+                return "dt_socket";
+            }
+
+            @Override
+            public boolean isListening() {
+                return true;
+            }
         };
 
         /**
@@ -147,9 +198,9 @@ public class AttachDebuggeePanel extends JPanel implements
         snm.setMaximum(new Integer(65535));
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         for (Transport transport : EnumSet.allOf(Transport.class)) {
-            Connector connector = transport.isListening() ?
-                ConnectionProvider.getListeningConnector(transport.getName()) :
-                ConnectionProvider.getAttachingConnector(transport.getName());
+            Connector connector = transport.isListening()
+                    ? ConnectionProvider.getListeningConnector(transport.getName())
+                    : ConnectionProvider.getAttachingConnector(transport.getName());
             if (connector != null) {
                 NameValuePair<Transport> pair = new NameValuePair<Transport>(
                         transport.getDisplayName(), transport);
@@ -188,34 +239,35 @@ public class AttachDebuggeePanel extends JPanel implements
         Transport type = (Transport) pair.getValue();
         ConnectionFactory factory = ConnectionProvider.getConnectionFactory();
         switch (type) {
-        case ATTACH_PROCESS:
-            String pid = processTextField.getText();
-            connection = factory.createProcess(pid);
-            break;
-        case ATTACH_SHARED:
-            String name = shmemTextField.getText();
-            connection = factory.createShared(name);
-            break;
-        case ATTACH_SOCKET:
-            String host = hostTextField.getText();
-            Integer pval = (Integer) portSpinner.getValue();
-            String port = pval.toString();
-            connection = factory.createSocket(host, port);
-            break;
-        case LISTEN_SHARED:
-            name = shmemTextField.getText();
-            connection = factory.createListening("dt_shmem", null, name);
-            break;
-        case LISTEN_SOCKET:
-            host = hostTextField.getText();
-            pval = (Integer) portSpinner.getValue();
-            port = pval.toString();
-            connection = factory.createListening("dt_socket", host, port);
-            break;
+            case ATTACH_PROCESS:
+                String pid = processTextField.getText();
+                connection = factory.createProcess(pid);
+                break;
+            case ATTACH_SHARED:
+                String name = shmemTextField.getText();
+                connection = factory.createShared(name);
+                break;
+            case ATTACH_SOCKET:
+                String host = hostTextField.getText();
+                Integer pval = (Integer) portSpinner.getValue();
+                String port = pval.toString();
+                connection = factory.createSocket(host, port);
+                break;
+            case LISTEN_SHARED:
+                name = shmemTextField.getText();
+                connection = factory.createListening("dt_shmem", null, name);
+                break;
+            case LISTEN_SOCKET:
+                host = hostTextField.getText();
+                pval = (Integer) portSpinner.getValue();
+                port = pval.toString();
+                connection = factory.createListening("dt_socket", host, port);
+                break;
         }
         return connection;
     }
 
+    @Override
     public void changedUpdate(DocumentEvent event) {
     }
 
@@ -236,12 +288,14 @@ public class AttachDebuggeePanel extends JPanel implements
         return value == DialogDescriptor.OK_OPTION;
     }
 
+    @Override
     public void insertUpdate(DocumentEvent event) {
         // This fires an event only if the value has changed.
         putClientProperty(NotifyDescriptor.PROP_VALID,
                 Boolean.valueOf(event.getDocument().getLength() > 0));
     }
 
+    @Override
     public void itemStateChanged(ItemEvent event) {
         Object[] sels = event.getItemSelectable().getSelectedObjects();
         if (sels != null && sels.length == 1) {
@@ -299,6 +353,7 @@ public class AttachDebuggeePanel extends JPanel implements
         ignoreCheckBox.setSelected(value != null && value.length() > 0);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
         if (e.getPropertyName().equals(NotifyDescriptor.PROP_VALID)) {
             // The input validity has changed in some way.
@@ -308,6 +363,7 @@ public class AttachDebuggeePanel extends JPanel implements
         }
     }
 
+    @Override
     public void removeUpdate(DocumentEvent event) {
         // This fires an event only if the value has changed.
         putClientProperty(NotifyDescriptor.PROP_VALID,
@@ -329,21 +385,21 @@ public class AttachDebuggeePanel extends JPanel implements
                 (NameValuePair<?>) connectorComboBox.getSelectedItem();
         Transport type = (Transport) pair.getValue();
         switch (type) {
-        case ATTACH_PROCESS:
-            session.setProperty(Session.PROP_CONNECTOR, Session.PREF_PROCESS);
-            break;
-        case ATTACH_SHARED:
-            session.setProperty(Session.PROP_CONNECTOR, Session.PREF_SHARED);
-            break;
-        case ATTACH_SOCKET:
-            session.setProperty(Session.PROP_CONNECTOR, Session.PREF_SOCKET);
-            break;
-        case LISTEN_SHARED:
-            session.setProperty(Session.PROP_CONNECTOR, Session.PREF_SHARED_LISTEN);
-            break;
-        case LISTEN_SOCKET:
-            session.setProperty(Session.PROP_CONNECTOR, Session.PREF_SOCKET_LISTEN);
-            break;
+            case ATTACH_PROCESS:
+                session.setProperty(Session.PROP_CONNECTOR, Session.PREF_PROCESS);
+                break;
+            case ATTACH_SHARED:
+                session.setProperty(Session.PROP_CONNECTOR, Session.PREF_SHARED);
+                break;
+            case ATTACH_SOCKET:
+                session.setProperty(Session.PROP_CONNECTOR, Session.PREF_SOCKET);
+                break;
+            case LISTEN_SHARED:
+                session.setProperty(Session.PROP_CONNECTOR, Session.PREF_SHARED_LISTEN);
+                break;
+            case LISTEN_SOCKET:
+                session.setProperty(Session.PROP_CONNECTOR, Session.PREF_SOCKET_LISTEN);
+                break;
         }
         if (resumeCheckBox.isSelected()) {
             session.setProperty(PROP_RESUME, "true");
@@ -383,20 +439,20 @@ public class AttachDebuggeePanel extends JPanel implements
     private void showConnectorPanel(Transport type) {
         CardLayout layout = (CardLayout) transportsPanel.getLayout();
         switch (type) {
-        case ATTACH_PROCESS:
-            layout.show(transportsPanel, "process");
-            transportTextField.setText("local");
-            break;
-        case ATTACH_SHARED:
-        case LISTEN_SHARED:
-            layout.show(transportsPanel, "shared");
-            transportTextField.setText("dt_shmem");
-            break;
-        case ATTACH_SOCKET:
-        case LISTEN_SOCKET:
-            layout.show(transportsPanel, "socket");
-            transportTextField.setText("dt_socket");
-            break;
+            case ATTACH_PROCESS:
+                layout.show(transportsPanel, "process");
+                transportTextField.setText("local");
+                break;
+            case ATTACH_SHARED:
+            case LISTEN_SHARED:
+                layout.show(transportsPanel, "shared");
+                transportTextField.setText("dt_shmem");
+                break;
+            case ATTACH_SOCKET:
+            case LISTEN_SOCKET:
+                layout.show(transportsPanel, "socket");
+                transportTextField.setText("dt_socket");
+                break;
         }
     }
 
@@ -418,25 +474,25 @@ public class AttachDebuggeePanel extends JPanel implements
                 (NameValuePair<?>) connectorComboBox.getSelectedItem();
         Transport type = (Transport) pair.getValue();
         switch (type) {
-        case ATTACH_PROCESS:
-            String pid = processTextField.getText();
-            if (pid == null || pid.length() == 0) {
-                validationLabel.setText(NbBundle.getMessage(
-                        AttachDebuggeePanel.class,
-                        "ERR_Attach_Missing_ProcessID"));
-                valid = false;
-            }
-            break;
-        case ATTACH_SHARED:
-        case LISTEN_SHARED:
-            String name = shmemTextField.getText();
-            if (name == null || name.length() == 0) {
-                validationLabel.setText(NbBundle.getMessage(
-                        AttachDebuggeePanel.class,
-                        "ERR_Attach_Missing_ShareName"));
-                valid = false;
-            }
-            break;
+            case ATTACH_PROCESS:
+                String pid = processTextField.getText();
+                if (pid == null || pid.length() == 0) {
+                    validationLabel.setText(NbBundle.getMessage(
+                            AttachDebuggeePanel.class,
+                            "ERR_Attach_Missing_ProcessID"));
+                    valid = false;
+                }
+                break;
+            case ATTACH_SHARED:
+            case LISTEN_SHARED:
+                String name = shmemTextField.getText();
+                if (name == null || name.length() == 0) {
+                    validationLabel.setText(NbBundle.getMessage(
+                            AttachDebuggeePanel.class,
+                            "ERR_Attach_Missing_ShareName"));
+                    valid = false;
+                }
+                break;
         }
         if (valid) {
             validationLabel.setText("   ");
@@ -645,7 +701,6 @@ public class AttachDebuggeePanel extends JPanel implements
                 .addComponent(validationLabel))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSeparator checkboxSeparator;
     private javax.swing.JSeparator comboSeparator;

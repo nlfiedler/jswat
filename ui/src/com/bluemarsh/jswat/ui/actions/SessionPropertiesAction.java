@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.actions;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -37,22 +36,27 @@ import com.bluemarsh.jswat.ui.components.SessionPropertiesPanel;
  * @author Nathan Fiedler
  */
 public class SessionPropertiesAction extends CallableSystemAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-session-properties");
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(SessionPropertiesAction.class,
                 "LBL_SessionPropertiesAction");
     }
 
+    @Override
     public void performAction() {
         SessionPropertiesPanel spp = new SessionPropertiesPanel();
         SessionManager sm = SessionProvider.getSessionManager();

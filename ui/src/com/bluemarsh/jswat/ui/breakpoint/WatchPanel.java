@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -49,10 +48,15 @@ import org.openide.util.NbBundle;
  */
 public class WatchPanel extends AbstractAdapter
         implements FocusListener, ItemListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
+
     /** Type of watch breakpoint. */
-    private static enum Type { ACCESS, BOTH, MODIFY };
+    private static enum Type {
+
+        ACCESS, BOTH, MODIFY
+    };
     /** The stop-on combo model. */
     private DefaultComboBoxModel stopOnModel;
     /** Breakpoint to update. */
@@ -77,10 +81,12 @@ public class WatchPanel extends AbstractAdapter
         stopOnComboBox.setModel(stopOnModel);
     }
 
+    @Override
     public boolean canCreateBreakpoint() {
         return true;
     }
 
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) stopOnComboBox.getSelectedItem();
@@ -88,10 +94,10 @@ public class WatchPanel extends AbstractAdapter
         boolean access = true;
         boolean modify = true;
         switch (type) {
-            case ACCESS :
+            case ACCESS:
                 modify = false;
                 break;
-            case MODIFY :
+            case MODIFY:
                 access = false;
                 break;
         }
@@ -112,9 +118,11 @@ public class WatchPanel extends AbstractAdapter
         return bp;
     }
 
+    @Override
     public void focusGained(FocusEvent e) {
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -123,6 +131,7 @@ public class WatchPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             String msg = validateInput();
@@ -133,6 +142,7 @@ public class WatchPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public void loadParameters(Breakpoint bp) {
         WatchBreakpoint wb = (WatchBreakpoint) bp;
         boolean access = wb.getStopOnAccess();
@@ -187,6 +197,7 @@ public class WatchPanel extends AbstractAdapter
         breakpoint = bp;
     }
 
+    @Override
     public void saveParameters(Breakpoint bp) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) stopOnComboBox.getSelectedItem();
@@ -194,10 +205,10 @@ public class WatchPanel extends AbstractAdapter
         boolean access = true;
         boolean modify = true;
         switch (type) {
-            case ACCESS :
+            case ACCESS:
                 modify = false;
                 break;
-            case MODIFY :
+            case MODIFY:
                 access = false;
                 break;
         }
@@ -229,6 +240,7 @@ public class WatchPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public String validateInput() {
         String field = fieldTextField.getText();
         if (!Names.isJavaIdentifier(field)) {
@@ -325,7 +337,6 @@ public class WatchPanel extends AbstractAdapter
         add(stopOnComboBox, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel classLabel;
     private javax.swing.JTextField classTextField;

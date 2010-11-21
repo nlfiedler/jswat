@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2005. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.actions;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -36,6 +35,7 @@ import org.openide.util.actions.CallableSystemAction;
  * @author Nathan Fiedler
  */
 public class FinishSessionAction extends CallableSystemAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -47,45 +47,27 @@ public class FinishSessionAction extends CallableSystemAction {
         ae.registerActiveAction(this);
     }
 
-    /**
-     * Indicates if this action can be invoked on any thread.
-     *
-     * @return  true if asynchronous, false otherwise.
-     */
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
-    /**
-     * Returns the help context for this action.
-     *
-     * @return  help context.
-     */
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-finish-session");
     }
 
-    /**
-     * Returns the name of this action.
-     *
-     * @return  name of action.
-     */
+    @Override
     public String getName() {
         return NbBundle.getMessage(getClass(), "LBL_FinishSessionAction");
     }
 
-    /**
-     * Specify the proper resource name for the action's icon.
-     *
-     * @return  the resource name for the icon.
-     */
+    @Override
     protected String iconResource() {
         return NbBundle.getMessage(getClass(), "IMG_FinishSessionAction");
     }
 
-    /**
-     * Performs the action.
-     */
+    @Override
     public void performAction() {
         Session session = SessionProvider.getSessionManager().getCurrent();
         if (session.isConnected()) {

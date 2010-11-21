@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2007. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.actions;
 
 import com.bluemarsh.jswat.ui.components.RuntimeManagerPanel;
@@ -34,27 +33,33 @@ import org.openide.util.actions.CallableSystemAction;
  * @author Nathan Fiedler
  */
 public class ManageRuntimesAction extends CallableSystemAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-runtime-manager");
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(ManageRuntimesAction.class,
                 "LBL_ManageRuntimesAction");
     }
 
+    @Override
     protected String iconResource() {
         return NbBundle.getMessage(ManageRuntimesAction.class,
                 "IMG_ManageRuntimesAction");
     }
 
+    @Override
     public void performAction() {
         new RuntimeManagerPanel().display();
     }

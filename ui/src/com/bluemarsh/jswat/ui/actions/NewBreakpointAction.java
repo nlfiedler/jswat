@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.actions;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -36,7 +35,6 @@ import com.bluemarsh.jswat.ui.editor.EditorSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import org.openide.DialogDisplayer;
@@ -51,6 +49,7 @@ import org.openide.util.actions.CallableSystemAction;
  * @author Nathan Fiedler
  */
 public class NewBreakpointAction extends CallableSystemAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -99,9 +98,9 @@ public class NewBreakpointAction extends CallableSystemAction {
                 } catch (MalformedMemberNameException mmne) {
                     // Fall through as if caret position was invalid.
                 }
-            // It would be great to handle fields as well, to create
-            // watch breakpoints, but the code is too fragile to get
-            // reliable results, and the effort outweighs the benefit.
+                // It would be great to handle fields as well, to create
+                // watch breakpoints, but the code is too fragile to get
+                // reliable results, and the effort outweighs the benefit.
             }
         }
 

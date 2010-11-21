@@ -140,7 +140,9 @@ public class DefaultSessionNode extends SessionNode implements
 
     @Override
     public Component getCustomizer() {
-        return new SessionPropertiesPanel(session);
+        SessionPropertiesPanel spp = new SessionPropertiesPanel(session);
+        spp.loadParameters(session);
+        return spp;
     }
 
     @Override

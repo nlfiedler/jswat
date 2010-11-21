@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui;
 
 import com.bluemarsh.jswat.core.connect.JvmConnection;
@@ -54,10 +53,11 @@ import org.openide.windows.InputOutput;
  * @author  Nathan Fiedler
  */
 public class OutputAdapter implements SessionListener, SessionManagerListener {
+
     /** A Map of Session instances to InputOutput instances. */
     private Map<Session, InputOutput> outputTabs;
     /** A Map of Session instances to Future instances. */
-    private Map<Session, Future> inputFutures;
+    private Map<Session, Future<?>> inputFutures;
 
     /**
      * Creates a new instance of OutputAdapter. This instance should be
@@ -65,7 +65,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
      */
     public OutputAdapter() {
         outputTabs = new HashMap<Session, InputOutput>();
-        inputFutures = new HashMap<Session, Future>();
+        inputFutures = new HashMap<Session, Future<?>>();
     }
 
     @Override
@@ -114,7 +114,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
 
             OutputStream os = process.getOutputStream();
             InputReader ir = new InputReader(io.getIn(), os, io.getOut());
-            Future future = Threads.getThreadPool().submit(ir);
+            Future<?> future = Threads.getThreadPool().submit(ir);
             inputFutures.put(session, future);
         }
     }
@@ -134,7 +134,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
         // Let the output/error reader threads die on their own.
         // The input reader thread, however, needs some help.
         Session session = sevt.getSession();
-        Future future = inputFutures.remove(session);
+        Future<?> future = inputFutures.remove(session);
         if (future != null) {
             // Interrupt the running task to make it stop.
             future.cancel(true);
@@ -175,6 +175,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
      * @author  Nathan Fiedler
      */
     private static class OutputReader implements Runnable {
+
         /** Stream from which we are to read. */
         private InputStream inputStream;
         /** Where the output goes to. */
@@ -186,7 +187,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
          * @param  is  input stream to read from.
          * @param  pw  writer to write to.
          */
-        public OutputReader(InputStream is, PrintWriter pw) {
+        OutputReader(InputStream is, PrintWriter pw) {
             inputStream = is;
             printWriter = pw;
         }
@@ -211,7 +212,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                 // Just stop reading.
             } catch (IOException ioe) {
                 printWriter.println(NbBundle.getMessage(
-                    getClass(), "ERR_OutputAdapter_Output", ioe));
+                        getClass(), "ERR_OutputAdapter_Output", ioe));
             }
         }
     }
@@ -223,6 +224,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
      * @author  Nathan Fiedler
      */
     private static class InputReader implements Runnable {
+
         /** Reader from which user input is acquired. */
         private Reader reader;
         /** Stream to which user input is sent. */
@@ -237,7 +239,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
          * @param  os  output stream to send input to.
          * @param  pw  writer to which user input is echoed (and error messages).
          */
-        public InputReader(Reader r, OutputStream os, PrintWriter pw) {
+        InputReader(Reader r, OutputStream os, PrintWriter pw) {
             reader = r;
             outputStream = os;
             printWriter = pw;
@@ -268,7 +270,7 @@ public class OutputAdapter implements SessionListener, SessionManagerListener {
                 if (msg == null || !msg.startsWith("Interrupted")) {
                     // This exception cannot be ignored.
                     printWriter.println(NbBundle.getMessage(
-                        getClass(), "ERR_OutputAdapter_Input", ioe));
+                            getClass(), "ERR_OutputAdapter_Input", ioe));
                 }
             }
         }

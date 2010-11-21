@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.components;
 
 import com.bluemarsh.jswat.core.CoreSettings;
@@ -49,6 +48,7 @@ import org.openide.windows.WindowManager;
  */
 public class PathEditorPanel extends JPanel implements ActionListener,
         ListSelectionListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** The directory that was last selected by the user. Initially this
@@ -186,7 +186,7 @@ public class PathEditorPanel extends JPanel implements ActionListener,
      */
     public List<String> getPath() {
         List<String> list = new LinkedList<String>();
-        Enumeration entries = listModel.elements();
+        Enumeration<?> entries = listModel.elements();
         while (entries.hasMoreElements()) {
             Object entry = entries.nextElement();
             list.add(entry.toString());
@@ -258,7 +258,7 @@ public class PathEditorPanel extends JPanel implements ActionListener,
             bulkAddButton.setEnabled(true);
 
             // Control the enabled state of the remove button.
-            if (listModel.size() == 0) {
+            if (listModel.isEmpty()) {
                 removeButton.setEnabled(false);
             } else {
                 removeButton.setEnabled(true);
@@ -397,7 +397,6 @@ public class PathEditorPanel extends JPanel implements ActionListener,
                 .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JButton bulkAddButton;

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -44,10 +43,15 @@ import org.openide.util.NbBundle;
  */
 public class ExceptionPanel extends AbstractAdapter
         implements FocusListener, ItemListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
+
     /** Type of exception breakpoint. */
-    private static enum Type { CAUGHT, BOTH, UNCAUGHT };
+    private static enum Type {
+
+        CAUGHT, BOTH, UNCAUGHT
+    };
     /** The stop-on combo model. */
     private DefaultComboBoxModel stopOnModel;
     /** Breakpoint to update. */
@@ -72,10 +76,12 @@ public class ExceptionPanel extends AbstractAdapter
         stopOnComboBox.setModel(stopOnModel);
     }
 
+    @Override
     public boolean canCreateBreakpoint() {
         return true;
     }
 
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) stopOnComboBox.getSelectedItem();
@@ -83,10 +89,10 @@ public class ExceptionPanel extends AbstractAdapter
         boolean caught = true;
         boolean uncaught = true;
         switch (type) {
-            case CAUGHT :
+            case CAUGHT:
                 uncaught = false;
                 break;
-            case UNCAUGHT :
+            case UNCAUGHT:
                 caught = false;
                 break;
         }
@@ -103,9 +109,11 @@ public class ExceptionPanel extends AbstractAdapter
         return bp;
     }
 
+    @Override
     public void focusGained(FocusEvent e) {
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -114,6 +122,7 @@ public class ExceptionPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
             String msg = validateInput();
@@ -124,6 +133,7 @@ public class ExceptionPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public void loadParameters(Breakpoint bp) {
         ExceptionBreakpoint eb = (ExceptionBreakpoint) bp;
         boolean caught = eb.getStopOnCaught();
@@ -159,6 +169,7 @@ public class ExceptionPanel extends AbstractAdapter
         breakpoint = bp;
     }
 
+    @Override
     public void saveParameters(Breakpoint bp) {
         NameValuePair<?> pair =
                 (NameValuePair<?>) stopOnComboBox.getSelectedItem();
@@ -166,10 +177,10 @@ public class ExceptionPanel extends AbstractAdapter
         boolean caught = true;
         boolean uncaught = true;
         switch (type) {
-            case CAUGHT :
+            case CAUGHT:
                 uncaught = false;
                 break;
-            case UNCAUGHT :
+            case UNCAUGHT:
                 caught = false;
                 break;
         }
@@ -192,6 +203,7 @@ public class ExceptionPanel extends AbstractAdapter
         }
     }
 
+    @Override
     public String validateInput() {
         String pkg = packageTextField.getText();
         String cls = classTextField.getText();
@@ -267,7 +279,6 @@ public class ExceptionPanel extends AbstractAdapter
         add(stopOnComboBox, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel classLabel;
     private javax.swing.JTextField classTextField;

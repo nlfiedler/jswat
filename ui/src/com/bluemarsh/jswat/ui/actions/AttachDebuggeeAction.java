@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.actions;
 
 import com.bluemarsh.jswat.core.connect.ConnectionEvent;
@@ -48,6 +47,7 @@ import org.openide.util.actions.CallableSystemAction;
  * @author Nathan Fiedler
  */
 public class AttachDebuggeeAction extends CallableSystemAction {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -59,46 +59,28 @@ public class AttachDebuggeeAction extends CallableSystemAction {
         ae.registerInactiveAction(this);
     }
 
-    /**
-     * Indicates if this action can be invoked on any thread.
-     *
-     * @return  true if asynchronous, false otherwise.
-     */
+    @Override
     protected boolean asynchronous() {
         // performAction() should run in event thread
         return false;
     }
 
-    /**
-     * Returns the help context for this action.
-     *
-     * @return  help context.
-     */
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("jswat-attach-debuggee");
     }
 
-    /**
-     * Returns the name of this action.
-     *
-     * @return  name of action.
-     */
+    @Override
     public String getName() {
         return NbBundle.getMessage(getClass(), "LBL_AttachDebuggeeAction");
     }
 
-    /**
-     * Specify the proper resource name for the action's icon.
-     *
-     * @return  the resource name for the icon.
-     */
+    @Override
     protected String iconResource() {
         return NbBundle.getMessage(getClass(), "IMG_AttachDebuggeeAction");
     }
 
-    /**
-     * Performs the action.
-     */
+    @Override
     public void performAction() {
         final AttachDebuggeePanel adp = new AttachDebuggeePanel();
         SessionManager sm = SessionProvider.getSessionManager();
@@ -135,6 +117,8 @@ public class AttachDebuggeeAction extends CallableSystemAction {
                 // The actual connection may be made some time from now,
                 // so set up a listener to be notified at that time.
                 connection.addConnectionListener(new ConnectionListener() {
+
+                    @Override
                     public void connected(ConnectionEvent event) {
                         if (theSession.isConnected()) {
                             // The user already connected to something else.
@@ -157,7 +141,7 @@ public class AttachDebuggeeAction extends CallableSystemAction {
                 String msg = NbBundle.getMessage(
                         getClass(), "ERR_AttachFailed", e.toString());
                 NotifyDescriptor desc = new NotifyDescriptor.Message(
-                    msg, NotifyDescriptor.INFORMATION_MESSAGE);
+                        msg, NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(desc);
                 ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, e);
             }
@@ -172,23 +156,29 @@ public class AttachDebuggeeAction extends CallableSystemAction {
      */
     private static class SessionResumer implements SessionListener {
 
+        @Override
         public void closing(SessionEvent sevt) {
         }
 
+        @Override
         public void connected(SessionEvent sevt) {
         }
 
+        @Override
         public void disconnected(SessionEvent sevt) {
             // We're done listening to this session.
             sevt.getSession().removeSessionListener(this);
         }
 
+        @Override
         public void opened(Session session) {
         }
 
+        @Override
         public void resuming(SessionEvent sevt) {
         }
 
+        @Override
         public void suspended(SessionEvent sevt) {
             if (sevt.getEvent() instanceof VMStartEvent) {
                 // Thread timing caused the VM to suspend after we told it

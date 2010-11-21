@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui.breakpoint;
 
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
@@ -37,6 +36,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 public class FiltersPanel extends AbstractAdapter implements FocusListener {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
     /** Breakpoint to update. */
@@ -52,35 +52,35 @@ public class FiltersPanel extends AbstractAdapter implements FocusListener {
         String msg = NbBundle.getMessage(getClass(),
                 "CTL_Filters_Filter_Unsupported");
         switch (type) {
-            case CLASS :
+            case CLASS:
                 threadFilterTextField.setEnabled(false);
                 threadFilterTextField.setText(msg);
                 break;
-            case EXCEPTION :
-                classFilterTextField.setEnabled(false);
-                classFilterTextField.setText(msg);
-                threadFilterTextField.setEnabled(false);
-                threadFilterTextField.setText(msg);
-                break;
-            case LINE :
-                classFilterTextField.setEnabled(false);
-                classFilterTextField.setText(msg);
-                break;
-            case LOCATION :
-                classFilterTextField.setEnabled(false);
-                classFilterTextField.setText(msg);
-                break;
-            case METHOD :
+            case EXCEPTION:
                 classFilterTextField.setEnabled(false);
                 classFilterTextField.setText(msg);
                 threadFilterTextField.setEnabled(false);
                 threadFilterTextField.setText(msg);
                 break;
-            case THREAD :
+            case LINE:
                 classFilterTextField.setEnabled(false);
                 classFilterTextField.setText(msg);
                 break;
-            case UNCAUGHT :
+            case LOCATION:
+                classFilterTextField.setEnabled(false);
+                classFilterTextField.setText(msg);
+                break;
+            case METHOD:
+                classFilterTextField.setEnabled(false);
+                classFilterTextField.setText(msg);
+                threadFilterTextField.setEnabled(false);
+                threadFilterTextField.setText(msg);
+                break;
+            case THREAD:
+                classFilterTextField.setEnabled(false);
+                classFilterTextField.setText(msg);
+                break;
+            case UNCAUGHT:
                 classFilterTextField.setEnabled(false);
                 classFilterTextField.setText(msg);
                 threadFilterTextField.setEnabled(false);
@@ -89,17 +89,21 @@ public class FiltersPanel extends AbstractAdapter implements FocusListener {
         }
     }
 
+    @Override
     public boolean canCreateBreakpoint() {
         return false;
     }
 
+    @Override
     public Breakpoint createBreakpoint(BreakpointFactory factory) {
         return null;
     }
 
+    @Override
     public void focusGained(FocusEvent e) {
     }
 
+    @Override
     public void focusLost(FocusEvent e) {
         String msg = validateInput();
         fireInputPropertyChange(msg);
@@ -108,6 +112,7 @@ public class FiltersPanel extends AbstractAdapter implements FocusListener {
         }
     }
 
+    @Override
     public void loadParameters(Breakpoint bp) {
         if (bp.canFilterClass()) {
             String filter = bp.getClassFilter();
@@ -134,6 +139,7 @@ public class FiltersPanel extends AbstractAdapter implements FocusListener {
         breakpoint = bp;
     }
 
+    @Override
     public void saveParameters(Breakpoint bp) {
         if (bp.canFilterClass()) {
             String filter = classFilterTextField.getText();
@@ -151,6 +157,7 @@ public class FiltersPanel extends AbstractAdapter implements FocusListener {
         }
     }
 
+    @Override
     public String validateInput() {
         return null;
     }
@@ -203,7 +210,6 @@ public class FiltersPanel extends AbstractAdapter implements FocusListener {
         add(threadFilterTextField, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel classFilterLabel;
     private javax.swing.JTextField classFilterTextField;

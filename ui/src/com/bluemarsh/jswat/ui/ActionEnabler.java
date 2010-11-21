@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.ui;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -35,7 +34,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.Action;
 
-
 /**
  * Class ActionEnabler listens to the state of the current session and
  * enables and disables certain actions depending on the session state.
@@ -43,6 +41,7 @@ import javax.swing.Action;
  * @author Nathan Fiedler
  */
 public class ActionEnabler implements SessionListener, SessionManagerListener {
+
     /** The single instance of this class. */
     private static ActionEnabler theInstance;
     /** The current session. */
@@ -55,14 +54,14 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
     private Set<Action> runningActions;
     /** Actions to be enabled when debuggee is suspended. */
     private Set<Action> suspendedActions;
-    
+
     /**
      * Creates a new instance of ActionEnabler.
+     *
+     * @param  session  the current session.
      */
-    private ActionEnabler() {
-        SessionManager sm = SessionProvider.getSessionManager();
-        sm.addSessionManagerListener(this);
-        currentSession = sm.getCurrent();
+    private ActionEnabler(Session session) {
+        currentSession = session;
         activeActions = new HashSet<Action>();
         inactiveActions = new HashSet<Action>();
         runningActions = new HashSet<Action>();
@@ -91,6 +90,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
      */
     private void disableAction(final Action action) {
         Runnable runner = new Runnable() {
+
             @Override
             public void run() {
                 action.setEnabled(false);
@@ -116,7 +116,9 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
      */
     public static synchronized ActionEnabler getDefault() {
         if (theInstance == null) {
-            theInstance = new ActionEnabler();
+            SessionManager sm = SessionProvider.getSessionManager();
+            theInstance = new ActionEnabler(sm.getCurrent());
+            sm.addSessionManagerListener(theInstance);
         }
         return theInstance;
     }
@@ -227,6 +229,7 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
      */
     private void setEnabled(final Set<Action> actions, final boolean enable) {
         Runnable runner = new Runnable() {
+
             @Override
             public void run() {
                 for (Action action : actions) {
@@ -243,5 +246,5 @@ public class ActionEnabler implements SessionListener, SessionManagerListener {
             setEnabled(suspendedActions, true);
             setEnabled(runningActions, false);
         }
-    }    
+    }
 }
