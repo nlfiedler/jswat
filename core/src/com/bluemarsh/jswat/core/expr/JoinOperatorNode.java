@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -40,6 +39,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, VariableNode {
+
     /** Reference to the local variable, field, object, or class. */
     private Object valueContainer;
     /** Reference to the object or class containing the field. */
@@ -50,20 +50,13 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
      *
      * @param  node  lexical token.
      */
-    public JoinOperatorNode(Token node) {
+    JoinOperatorNode(Token node) {
         super(node);
     }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  the result.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Object result = null;
         Node n1 = getChild(0);
@@ -72,11 +65,11 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
         String name = n2.getToken().getText();
         if (o1 instanceof PrimitiveValue) {
             String msg = NbBundle.getMessage(
-                JoinOperatorNode.class, "error.join.cannot.primitive");
+                    JoinOperatorNode.class, "error.join.cannot.primitive");
             throw new EvaluationException(msg);
         } else if (o1 instanceof VoidValue) {
             String msg = NbBundle.getMessage(
-                JoinOperatorNode.class, "error.join.cannot.void");
+                    JoinOperatorNode.class, "error.join.cannot.void");
             throw new EvaluationException(msg);
         } else if (o1 instanceof ArrayReference) {
             // name may be 'length'; anything else is an error
@@ -85,7 +78,7 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
                 return new Integer(arr.length());
             } else {
                 String msg = NbBundle.getMessage(
-                    JoinOperatorNode.class, "error.join.array.length", name);
+                        JoinOperatorNode.class, "error.join.array.length", name);
                 throw new EvaluationException(msg);
             }
         } else if (o1 instanceof ObjectReference) {
@@ -95,8 +88,8 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
             Field field = clazz.fieldByName(name);
             if (field == null) {
                 String msg = NbBundle.getMessage(
-                    JoinOperatorNode.class, "error.join.unknown.field", name,
-                    n1.getToken().getText(), clazz.name());
+                        JoinOperatorNode.class, "error.join.unknown.field", name,
+                        n1.getToken().getText(), clazz.name());
                 throw new EvaluationException(msg);
             }
             valueContainer = field;
@@ -108,8 +101,8 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
             Field field = clazz.fieldByName(name);
             if (field == null) {
                 String msg = NbBundle.getMessage(
-                    JoinOperatorNode.class, "error.join.unknown.field", name,
-                    n1.getToken().getText(), clazz.name());
+                        JoinOperatorNode.class, "error.join.unknown.field", name,
+                        n1.getToken().getText(), clazz.name());
                 throw new EvaluationException(msg);
             }
             valueContainer = field;
@@ -121,8 +114,8 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
             result = in.evaluate(context);
         } else {
             String msg = NbBundle.getMessage(
-                JoinOperatorNode.class, "error.join.unknown.value", name,
-                n1.getToken().getText());
+                    JoinOperatorNode.class, "error.join.unknown.value", name,
+                    n1.getToken().getText());
             throw new EvaluationException(msg);
         }
         // Note that the method invocation case is handled at parse time;
@@ -131,15 +124,7 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
         return result;
     }
 
-    /**
-     * Returns the thing the field is contained in, either an ObjectReference
-     * or a ReferenceType.
-     *
-     * @param  context  evaluation context.
-     * @return  object or class.
-     * @throws  EvaluationException
-     *          if there was an evaluation error.
-     */
+    @Override
     public Object getFieldContainer(EvaluationContext context) throws
             EvaluationException {
         if (fieldContainer == null) {
@@ -154,15 +139,7 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
         return fieldContainer;
     }
 
-    /**
-     * Returns the thing this identifier refers to rather than its value;
-     * either a Field, LocalVariable, ObjectReference, or ReferenceType.
-     *
-     * @param  context  evaluation context.
-     * @return  field, variable, object, or class.
-     * @throws  EvaluationException
-     *          if there was an evaluation error.
-     */
+    @Override
     public Object getValueContainer(EvaluationContext context) throws
             EvaluationException {
         if (valueContainer == null) {
@@ -222,13 +199,7 @@ class JoinOperatorNode extends BinaryOperatorNode implements JoinableNode, Varia
         }
     }
 
-    /**
-     * Returns this operator's precedence value. The lower the value the
-     * higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 3;
     }

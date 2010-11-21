@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -38,20 +37,13 @@ class DivBinaryOperatorNode extends BinaryOperatorNode {
      *
      * @param  node  lexical token.
      */
-    public DivBinaryOperatorNode(Token node) {
+    DivBinaryOperatorNode(Token node) {
         super(node);
-    } // DivBinaryOperatorNode
+    }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  a Number.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Object o1 = getChild(0).evaluate(context);
         Object o2 = getChild(1).evaluate(context);
@@ -72,8 +64,8 @@ class DivBinaryOperatorNode extends BinaryOperatorNode {
                     long l2 = getLongValue(o2);
                     if (l2 == 0L) {
                         throw new EvaluationException(
-                            NbBundle.getMessage(getClass(), "error.oper.div.zero"),
-                            getToken());
+                                NbBundle.getMessage(getClass(), "error.oper.div.zero"),
+                                getToken());
                     }
                     return new Long(l1 / l2);
                 } else {
@@ -81,26 +73,20 @@ class DivBinaryOperatorNode extends BinaryOperatorNode {
                     int i2 = getIntValue(o2);
                     if (i2 == 0) {
                         throw new EvaluationException(
-                            NbBundle.getMessage(getClass(), "error.oper.div.zero"),
-                            getToken());
+                                NbBundle.getMessage(getClass(), "error.oper.div.zero"),
+                                getToken());
                     }
                     return new Integer(i1 / i2);
                 }
             }
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.num"), getToken());
+                    NbBundle.getMessage(getClass(), "error.oper.num"), getToken());
         }
-    } // eval
+    }
 
-    /**
-     * Returns this operator's precedence value. The lower the value the
-     * higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 6;
-    } // precedence
-} // DivBinaryOperatorNode
+    }
+}

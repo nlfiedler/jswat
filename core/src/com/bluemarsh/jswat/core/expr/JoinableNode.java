@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 /**
@@ -31,4 +30,4 @@ package com.bluemarsh.jswat.core.expr;
  * @author  Nathan Fiedler
  */
 interface JoinableNode extends Node {
-} // JoinableNode
+}

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -32,7 +31,8 @@ import com.bluemarsh.jswat.parser.node.Token;
  *
  * @author  Nathan Fiedler
  */
-public class TypeNode extends AbstractNode {
+class TypeNode extends AbstractNode {
+
     /** Type of the node. */
     private String type;
 
@@ -42,22 +42,15 @@ public class TypeNode extends AbstractNode {
      * @param  node  lexical token.
      * @param  type  type of primitive (e.g. "byte").
      */
-    public TypeNode(Token node, String type) {
+    TypeNode(Token node, String type) {
         super(node);
         this.type = type;
-    } // TypeNode
+    }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  value.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context) throws EvaluationException {
         return type;
-    } // eval
+    }
 
     /**
      * Returns the type of this node, either a primitive keyword
@@ -67,5 +60,5 @@ public class TypeNode extends AbstractNode {
      */
     public String getTypeName() {
         return type;
-    } // getTypeName
-} // TypeNode
+    }
+}

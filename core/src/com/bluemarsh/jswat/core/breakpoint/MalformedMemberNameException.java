@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2004. All Rights Reserved.
+ * are Copyright (C) 1999-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.breakpoint;
 
 /**
@@ -30,6 +29,7 @@ package com.bluemarsh.jswat.core.breakpoint;
  * @author  Nathan Fiedler
  */
 public class MalformedMemberNameException extends Exception {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,7 @@ public class MalformedMemberNameException extends Exception {
      */
     public MalformedMemberNameException() {
         super();
-    } // MalformedMemberNameException
+    }
 
     /**
      * Constructs a MalformedMemberNameException with the given message.
@@ -47,5 +47,5 @@ public class MalformedMemberNameException extends Exception {
      */
     public MalformedMemberNameException(String s) {
         super(s);
-    } // MalformedMemberNameException
-} // MalformedMemberNameException
+    }
+}

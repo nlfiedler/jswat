@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -51,7 +50,7 @@ abstract class OperatorNode extends ParentNode {
      */
     public static boolean isBoolean(Object o) {
         return (o instanceof Boolean || o instanceof BooleanValue);
-    } // isBoolean
+    }
 
     /**
      * Determines the type of 'o' and returns true if it is a character.
@@ -61,7 +60,7 @@ abstract class OperatorNode extends ParentNode {
      */
     public static boolean isCharacter(Object o) {
         return (o instanceof Character || o instanceof CharValue);
-    } // isCharacter
+    }
 
     /**
      * Determines the type of 'o' and returns true if it is a double.
@@ -71,7 +70,7 @@ abstract class OperatorNode extends ParentNode {
      */
     public static boolean isDouble(Object o) {
         return (o instanceof Double || o instanceof DoubleValue);
-    } // isDouble
+    }
 
     /**
      * Determines the type of 'o' and returns true if it is a floating
@@ -83,7 +82,7 @@ abstract class OperatorNode extends ParentNode {
     public static boolean isFloating(Object o) {
         return (o instanceof Double || o instanceof DoubleValue
                 || o instanceof Float || o instanceof FloatValue);
-    } // isFloating
+    }
 
     /**
      * Determines the type of 'o' and returns true if it is a long.
@@ -93,7 +92,7 @@ abstract class OperatorNode extends ParentNode {
      */
     public static boolean isLong(Object o) {
         return (o instanceof Long || o instanceof LongValue);
-    } // isLong
+    }
 
     /**
      * Determines the type of 'o' and returns true if it is some type of
@@ -108,7 +107,7 @@ abstract class OperatorNode extends ParentNode {
                 || o instanceof IntegerValue || o instanceof LongValue
                 || o instanceof ShortValue || o instanceof Character
                 || o instanceof CharValue);
-    } // isNumber
+    }
 
     /**
      * Determines the type of 'o' and returns true if it is either a
@@ -126,9 +125,9 @@ abstract class OperatorNode extends ParentNode {
      *
      * @param  node  lexical token.
      */
-    public OperatorNode(Token node) {
+    OperatorNode(Token node) {
         super(node);
-    } // OperatorNode
+    }
 
     /**
      * Returns the boolean value from the given object.
@@ -145,9 +144,9 @@ abstract class OperatorNode extends ParentNode {
             return ((BooleanValue) o).value();
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.bool"), getToken(), o);
+                    NbBundle.getMessage(getClass(), "error.oper.bool"), getToken(), o);
         }
-    } // getBooleanValue
+    }
 
     /**
      * Returns the char value from the given object.
@@ -164,9 +163,9 @@ abstract class OperatorNode extends ParentNode {
             return ((CharValue) o).value();
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.char"), getToken(), o);
+                    NbBundle.getMessage(getClass(), "error.oper.char"), getToken(), o);
         }
-    } // getCharValue
+    }
 
     /**
      * Returns the double value from the given object.
@@ -185,9 +184,9 @@ abstract class OperatorNode extends ParentNode {
             return ((PrimitiveValue) o).doubleValue();
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.floating"), getToken(), o);
+                    NbBundle.getMessage(getClass(), "error.oper.floating"), getToken(), o);
         }
-    } // getDoubleValue
+    }
 
     /**
      * Returns the float value from the given object.
@@ -206,9 +205,9 @@ abstract class OperatorNode extends ParentNode {
             return ((PrimitiveValue) o).floatValue();
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.floating"), getToken(), o);
+                    NbBundle.getMessage(getClass(), "error.oper.floating"), getToken(), o);
         }
-    } // getFloatValue
+    }
 
     /**
      * Returns the integer value from the given object.
@@ -227,9 +226,9 @@ abstract class OperatorNode extends ParentNode {
             return ((PrimitiveValue) o).intValue();
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.intval"), getToken(), o);
+                    NbBundle.getMessage(getClass(), "error.oper.intval"), getToken(), o);
         }
-    } // getIntValue
+    }
 
     /**
      * Returns the long value from the given object.
@@ -248,9 +247,9 @@ abstract class OperatorNode extends ParentNode {
             return ((PrimitiveValue) o).longValue();
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.intval"), getToken(), o);
+                    NbBundle.getMessage(getClass(), "error.oper.intval"), getToken(), o);
         }
-    } // getLongValue
+    }
 
     /**
      * Returns the String value from the given object.
@@ -267,7 +266,7 @@ abstract class OperatorNode extends ParentNode {
             return ((StringReference) o).value();
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.strval"), getToken(), o);
+                    NbBundle.getMessage(getClass(), "error.oper.strval"), getToken(), o);
         }
     }
 
@@ -280,7 +279,7 @@ abstract class OperatorNode extends ParentNode {
      */
     public boolean isSentinel() {
         return false;
-    } // isSentinel
+    }
 
     /**
      * Returns this operator's precedence value. The lower the value the
@@ -290,4 +289,4 @@ abstract class OperatorNode extends ParentNode {
      * @return  precedence value.
      */
     public abstract int precedence();
-} // OperatorNode
+}

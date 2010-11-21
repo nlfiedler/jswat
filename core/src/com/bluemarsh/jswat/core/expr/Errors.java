@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import org.openide.util.NbBundle;
@@ -30,61 +29,125 @@ import org.openide.util.NbBundle;
  *
  * @author  Nathan Fiedler
  */
-class Errors {
-    public static enum Code {
-        NO_ERROR, UNEXPECTED_TOKEN, UNSUPPORTED_TOKEN, UNKNOWN_STATE,
-        UNMATCHED_RPAREN, UNMATCHED_LPAREN, MISSING_ARGS, INVALID_EXPR,
-        UNMATCHED_RBRACKET, UNMATCHED_LBRACKET, ARRAY_MULTI_INDEX,
-        DOT_REQUIRES_ID, UNSUPPORTED_FEATURE, NUMBER_FORMAT,
-        ARG_STACK_NON_EMPTY, LARGE_OPER_STACK
+enum Errors {
+
+    NO_ERROR {
+
+        @Override
+        public String getMessage() {
+            return "<no error>";
+        }
+    },
+    UNEXPECTED_TOKEN {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.unexpectedToken");
+        }
+    },
+    UNSUPPORTED_TOKEN {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.unsupportedToken");
+        }
+    },
+    UNKNOWN_STATE {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.unknownState");
+        }
+    },
+    UNMATCHED_RPAREN {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.unmatchedRParen");
+        }
+    },
+    UNMATCHED_LPAREN {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.unmatchedLParen");
+        }
+    },
+    MISSING_ARGS {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.missingArgs");
+        }
+    },
+    INVALID_EXPR {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.invalidExpr");
+        }
+    },
+    UNMATCHED_RBRACKET {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.unmatchedRBracket");
+        }
+    },
+    UNMATCHED_LBRACKET {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.unmatchedLBracket");
+        }
+    },
+    ARRAY_MULTI_INDEX {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.arrayMultiIndex");
+        }
+    },
+    DOT_REQUIRES_ID {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.dotNeedsIdent");
+        }
+    },
+    UNSUPPORTED_FEATURE {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.unsupportedFeature");
+        }
+    },
+    NUMBER_FORMAT {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.numberFormat");
+        }
+    },
+    ARG_STACK_NON_EMPTY {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.nonEmptyArgStack");
+        }
+    },
+    LARGE_OPER_STACK {
+
+        @Override
+        public String getMessage() {
+            return NbBundle.getMessage(Errors.class, "error.largeArgStack");
+        }
     };
 
     /**
-     * This class is not to be instantiated.
-     */
-    private Errors() {
-    } // Errors
-
-    /**
-     * Retrieve the localized message for the given error code.
+     * Retrieve the localized message for the error code.
      *
-     * @param  error  error code.
      * @return  localized error message.
      */
-    public static String getMessage(Code error) {
-        if (error == Code.UNEXPECTED_TOKEN) {
-            return NbBundle.getMessage(Errors.class, "error.unexpectedToken");
-        } else if (error == Code.UNSUPPORTED_TOKEN) {
-            return NbBundle.getMessage(Errors.class, "error.unsupportedToken");
-        } else if (error == Code.UNKNOWN_STATE) {
-            return NbBundle.getMessage(Errors.class, "error.unknownState");
-        } else if (error == Code.UNMATCHED_RPAREN) {
-            return NbBundle.getMessage(Errors.class, "error.unmatchedRParen");
-        } else if (error == Code.UNMATCHED_LPAREN) {
-            return NbBundle.getMessage(Errors.class, "error.unmatchedLParen");
-        } else if (error == Code.UNMATCHED_RBRACKET) {
-            return NbBundle.getMessage(Errors.class, "error.unmatchedRBracket");
-        } else if (error == Code.UNMATCHED_LBRACKET) {
-            return NbBundle.getMessage(Errors.class, "error.unmatchedLBracket");
-        } else if (error == Code.MISSING_ARGS) {
-            return NbBundle.getMessage(Errors.class, "error.missingArgs");
-        } else if (error == Code.INVALID_EXPR) {
-            return NbBundle.getMessage(Errors.class, "error.invalidExpr");
-        } else if (error == Code.ARRAY_MULTI_INDEX) {
-            return NbBundle.getMessage(Errors.class, "error.arrayMultiIndex");
-        } else if (error == Code.DOT_REQUIRES_ID) {
-            return NbBundle.getMessage(Errors.class, "error.dotNeedsIdent");
-        } else if (error == Code.UNSUPPORTED_FEATURE) {
-            return NbBundle.getMessage(Errors.class, "error.unsupportedFeature");
-        } else if (error == Code.NUMBER_FORMAT) {
-            return NbBundle.getMessage(Errors.class, "error.numberFormat");
-        } else if (error == Code.ARG_STACK_NON_EMPTY) {
-            return NbBundle.getMessage(Errors.class, "error.nonEmptyArgStack");
-        } else if (error == Code.LARGE_OPER_STACK) {
-            return NbBundle.getMessage(Errors.class, "error.largeArgStack");
-        } else {
-            return NbBundle.getMessage(Errors.class, "error.unknownError",
-                                       String.valueOf(error));
-        }
-    } // getMessage
-} // Errors
+    public abstract String getMessage();
+}

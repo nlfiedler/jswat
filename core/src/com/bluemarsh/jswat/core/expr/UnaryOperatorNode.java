@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -37,7 +36,7 @@ abstract class UnaryOperatorNode extends OperatorNode {
      *
      * @param  node  lexical token.
      */
-    public UnaryOperatorNode(Token node) {
+    UnaryOperatorNode(Token node) {
         super(node);
-    } // UnaryOperatorNode
-} // UnaryOperatorNode
+    }
+}

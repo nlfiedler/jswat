@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -33,6 +32,7 @@ import com.sun.jdi.Value;
  * @author  Nathan Fiedler
  */
 abstract class AbstractNode implements Node {
+
     /** Place holder for an evaluation that resulted in null. */
     private static final Object NULL_VALUE = new Object();
     /** Place holder for a null type. */
@@ -51,9 +51,9 @@ abstract class AbstractNode implements Node {
      *
      * @param  node  lexical token.
      */
-    public AbstractNode(Token node) {
+    AbstractNode(Token node) {
         nodeToken = node;
-    } // AbstractNode
+    }
 
     /**
      * Returns the value of this node.
@@ -64,19 +64,11 @@ abstract class AbstractNode implements Node {
      *          if an error occurred during evaluation.
      */
     protected abstract Object eval(EvaluationContext context)
-        throws EvaluationException;
+            throws EvaluationException;
 
-    /**
-     * Returns the value of this node. If the value has been determined
-     * in a previous call, the cached value is returned.
-     *
-     * @param  context  evaluation context.
-     * @return  value.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     public final Object evaluate(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         if (cachedValue == null) {
             // Call the eval() method to do the real work.
@@ -90,39 +82,21 @@ abstract class AbstractNode implements Node {
         } else {
             return cachedValue;
         }
-    } // evaluate
+    }
 
-    /**
-     * Returns the parent node.
-     *
-     * @return  parent node.
-     */
+    @Override
     public ParentNode getParent() {
         return parentNode;
-    } // getParent
+    }
 
-    /**
-     * Returns the token node.
-     *
-     * @return  token node.
-     */
+    @Override
     public Token getToken() {
         return nodeToken;
-    } // getToken
+    }
 
-    /**
-     * Returns the signature of the type this node represents. If the
-     * type is void, or otherwise unrecognizable, an exception is
-     * thrown. If the type has been determined in a previous call, the
-     * cached type is returned.
-     *
-     * @param  context  evaluation context.
-     * @return  type signature, or null if value is null.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     public final String getType(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         if (cachedType == null) {
             // Call the type() method to do the real work.
@@ -136,16 +110,12 @@ abstract class AbstractNode implements Node {
         } else {
             return cachedType;
         }
-    } // getType
+    }
 
-    /**
-     * Sets the parent node of this node.
-     *
-     * @param  parent  new parent node.
-     */
+    @Override
     public void setParent(ParentNode parent) {
         parentNode = parent;
-    } // setParent
+    }
 
     /**
      * Returns the signature of the type this node represents. If the
@@ -158,7 +128,7 @@ abstract class AbstractNode implements Node {
      *          if an error occurred during evaluation.
      */
     protected String type(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Object value = evaluate(context);
         if (value == null) {
@@ -168,5 +138,5 @@ abstract class AbstractNode implements Node {
         } else {
             return Types.nameToJni(value.getClass().getName());
         }
-    } // type
-} // AbstractNode
+    }
+}

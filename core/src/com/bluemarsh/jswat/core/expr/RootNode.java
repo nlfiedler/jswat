@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 /**
@@ -33,9 +32,9 @@ class RootNode extends ParentNode {
     /**
      * Constructs a RootNode.
      */
-    public RootNode() {
+    RootNode() {
         super(null);
-    } // RootNode
+    }
 
     /**
      * Sets the parent node of this node.
@@ -44,5 +43,5 @@ class RootNode extends ParentNode {
      */
     public void setParent(Node parent) {
         throw new UnsupportedOperationException("root has no parent");
-    } // setParent
-} // RootNode
+    }
+}

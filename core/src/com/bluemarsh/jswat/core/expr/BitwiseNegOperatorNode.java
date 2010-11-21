@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -38,20 +37,13 @@ class BitwiseNegOperatorNode extends UnaryOperatorNode {
      *
      * @param  node  lexical token.
      */
-    public BitwiseNegOperatorNode(Token node) {
+    BitwiseNegOperatorNode(Token node) {
         super(node);
-    } // BitwiseNegOperatorNode
+    }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  a Number.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Object o1 = getChild(0).evaluate(context);
 
@@ -61,18 +53,12 @@ class BitwiseNegOperatorNode extends UnaryOperatorNode {
             return new Integer(~getIntValue(o1));
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.int"), getToken());
+                    NbBundle.getMessage(getClass(), "error.oper.int"), getToken());
         }
-    } // eval
+    }
 
-    /**
-     * Returns this operator's precedence value. The lower the value the
-     * higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 5;
-    } // precedence
-} // BitwiseNegOperatorNode
+    }
+}

@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -37,29 +36,17 @@ class LeftParen extends OperatorNode {
      *
      * @param  node  lexical token.
      */
-    public LeftParen(Token node) {
+    LeftParen(Token node) {
         super(node);
-    } // LeftParen
+    }
 
-    /**
-     * Returns true if this operator does not do any operation but
-     * instead acts as a sentinel, delineating portions of an
-     * expression. This includes (), [], and commas.
-     *
-     * @return  true if sentinel, false otherwise.
-     */
+    @Override
     public boolean isSentinel() {
         return true;
-    } // isSentinel
+    }
 
-    /**
-     * Returns this operator's precedence value. The lower the value
-     * the higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 1;
-    } // precedence
-} // LeftParen
+    }
+}

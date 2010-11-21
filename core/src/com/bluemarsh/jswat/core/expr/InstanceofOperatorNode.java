@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007-2008. All Rights Reserved.
+ * are Copyright (C) 2007-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.core.util.Types;
@@ -44,7 +43,7 @@ class InstanceofOperatorNode extends BinaryOperatorNode {
      *
      * @param  node  lexical token.
      */
-    public InstanceofOperatorNode(Token node) {
+    InstanceofOperatorNode(Token node) {
         super(node);
     }
 

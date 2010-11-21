@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2006. All Rights Reserved.
+ * are Copyright (C) 2003-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -48,6 +47,7 @@ import org.openide.util.NbBundle;
  * @author  Nathan Fiedler
  */
 class TypeCastOperatorNode extends UnaryOperatorNode {
+
     /** The type of the cast ("byte", "Boolean", "com.sun.jdi.Bootstrap"). */
     private String typeName;
 
@@ -57,27 +57,20 @@ class TypeCastOperatorNode extends UnaryOperatorNode {
      * @param  node  lexical token.
      * @param  type  type for the cast (e.g. "byte", "com.sun.jdi.Bootstrap").
      */
-    public TypeCastOperatorNode(Token node, String type) {
+    TypeCastOperatorNode(Token node, String type) {
         super(node);
         typeName = type;
-    } // TypeCastOperatorNode
+    }
 
-    /**
-     * Returns the value of this node as the desired type.
-     *
-     * @param  context  evaluation context.
-     * @return  a value of the desired type.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         // Get the type of the cast.
         String type = getType(context);
         if (type == null) {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.cast.type", typeName));
+                    NbBundle.getMessage(getClass(), "error.cast.type", typeName));
         }
 
         // Value to be cast.
@@ -96,7 +89,7 @@ class TypeCastOperatorNode extends UnaryOperatorNode {
         }
 
         // This is a non-JDI value.
-        Class vclass = value.getClass();
+        Class<?> vclass = value.getClass();
 
         // Check if expecting an array. Technically we can't create
         // arrays with the expression evaluator, and since this is not a
@@ -104,7 +97,7 @@ class TypeCastOperatorNode extends UnaryOperatorNode {
         if (type.charAt(0) == '[') {
             if (!vclass.isArray()) {
                 throw new EvaluationException(NbBundle.getMessage(
-                    getClass(), "error.cast.incompatible", type, vclass.getName()));
+                        getClass(), "error.cast.incompatible", type, vclass.getName()));
             }
             type = type.substring(1);
             vclass = vclass.getComponentType();
@@ -144,40 +137,41 @@ class TypeCastOperatorNode extends UnaryOperatorNode {
             Object result = Types.cast(type, value);
             if (result == null) {
                 throw new EvaluationException(NbBundle.getMessage(
-                    getClass(), "error.cast.incompatible", type, vclass.getName()));
+                        getClass(), "error.cast.incompatible", type, vclass.getName()));
             }
             return result;
         }
-    } // eval
+    }
 
     /**
      * Attempts to perform the type-cast on the JDI Value.
      *
-     * @param  context  evaluation context.
-     * @param  type     cast type.
-     * @param  value    the value to convert.
+     * @param  context   evaluation context.
+     * @param  castType  cast type.
+     * @param  value     the value to convert.
      * @return  a value of the desired type.
      * @throws  EvaluationException
      *          if an error occurred during evaluation.
      */
     protected Object evalJdi(EvaluationContext context,
-                             String type, Value value)
-        throws EvaluationException {
+            String castType, Value value)
+            throws EvaluationException {
 
         Type vtype = value.type();
 
         // Check if expecting an array.
+        String type = castType;
         if (type.charAt(0) == '[') {
             if (!(vtype instanceof ArrayType)) {
                 throw new EvaluationException(NbBundle.getMessage(
-                    getClass(), "error.cast.incompatible", type, vtype.name()));
+                        getClass(), "error.cast.incompatible", type, vtype.name()));
             }
             type = type.substring(1);
             try {
                 vtype = ((ArrayType) vtype).componentType();
             } catch (ClassNotLoadedException cnle) {
                 throw new EvaluationException(
-                    NbBundle.getMessage(getClass(), "error.cast.vm"), cnle);
+                        NbBundle.getMessage(getClass(), "error.cast.vm"), cnle);
             }
         }
 
@@ -220,36 +214,22 @@ class TypeCastOperatorNode extends UnaryOperatorNode {
             Object result = Types.cast(type, value, vm);
             if (result == null) {
                 throw new EvaluationException(NbBundle.getMessage(
-                    getClass(), "error.cast.incompatible", type, vtype.name()));
+                        getClass(), "error.cast.incompatible", type, vtype.name()));
             }
             return result;
         } else {
             throw new EvaluationException(NbBundle.getMessage(
-                getClass(), "error.cast.location", type, vtype.name()));
+                    getClass(), "error.cast.location", type, vtype.name()));
         }
-    } // evalJdi
+    }
 
-    /**
-     * Returns this operator's precedence value. The lower the value the
-     * higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 5;
-    } // precedence
+    }
 
-    /**
-     * Returns the signature of the type this node represents. If the type
-     * is void, or otherwise unrecognizable, an exception is thrown.
-     *
-     * @param  context  evaluation context.
-     * @return  type signature.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected String type(EvaluationContext context) throws EvaluationException {
         return Types.typeNameToJNI(typeName);
-    } // type
-} // TypeCastOperatorNode
+    }
+}

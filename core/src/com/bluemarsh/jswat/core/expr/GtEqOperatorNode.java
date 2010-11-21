@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -38,20 +37,13 @@ class GtEqOperatorNode extends BinaryOperatorNode {
      *
      * @param  node  lexical token.
      */
-    public GtEqOperatorNode(Token node) {
+    GtEqOperatorNode(Token node) {
         super(node);
-    } // GtEqOperatorNode
+    }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  a Boolean.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Object o1 = getChild(0).evaluate(context);
         Object o2 = getChild(1).evaluate(context);
@@ -65,14 +57,14 @@ class GtEqOperatorNode extends BinaryOperatorNode {
                         long l1 = Double.doubleToLongBits(d1);
                         long l2 = Double.doubleToLongBits(d2);
                         return d1 > d2 || l1 == l2
-                            ? Boolean.TRUE : Boolean.FALSE;
+                                ? Boolean.TRUE : Boolean.FALSE;
                     } else {
                         float f1 = getFloatValue(o1);
                         float f2 = getFloatValue(o2);
                         int i1 = Float.floatToIntBits(f1);
                         int i2 = Float.floatToIntBits(f2);
                         return f1 > f2 || i1 == i2
-                            ? Boolean.TRUE : Boolean.FALSE;
+                                ? Boolean.TRUE : Boolean.FALSE;
                     }
                 } else {
                     if (isLong(o1) || isLong(o2)) {
@@ -87,23 +79,17 @@ class GtEqOperatorNode extends BinaryOperatorNode {
                 }
             } else {
                 throw new EvaluationException(
-                    NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
+                        NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
             }
 
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.comp.type"), getToken());
+                    NbBundle.getMessage(getClass(), "error.oper.comp.type"), getToken());
         }
-    } // eval
+    }
 
-    /**
-     * Returns this operator's precedence value. The lower the value the
-     * higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 9;
-    } // precedence
-} // GtEqOperatorNode
+    }
+}

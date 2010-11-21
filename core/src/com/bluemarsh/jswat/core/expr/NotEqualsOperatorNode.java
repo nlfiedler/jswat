@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -38,20 +37,13 @@ class NotEqualsOperatorNode extends BinaryOperatorNode {
      *
      * @param  node  lexical token.
      */
-    public NotEqualsOperatorNode(Token node) {
+    NotEqualsOperatorNode(Token node) {
         super(node);
-    } // NotEqualsOperatorNode
+    }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  a Boolean.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Node n1 = getChild(0);
         Object o1 = n1.evaluate(context);
@@ -68,7 +60,7 @@ class NotEqualsOperatorNode extends BinaryOperatorNode {
                 return b1 != b2 ? Boolean.TRUE : Boolean.FALSE;
             } else {
                 throw new EvaluationException(
-                    NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
+                        NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
             }
 
         } else if (isNumber(o1) || isNumber(o2)) {
@@ -100,22 +92,16 @@ class NotEqualsOperatorNode extends BinaryOperatorNode {
                 }
             } else {
                 throw new EvaluationException(
-                    NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
+                        NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
             }
 
         } else {
             return o1.equals(o2) ? Boolean.FALSE : Boolean.TRUE;
         }
-    } // eval
+    }
 
-    /**
-     * Returns this operator's precedence value. The lower the value the
-     * higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 10;
-    } // precedence
-} // NotEqualsOperatorNode
+    }
+}

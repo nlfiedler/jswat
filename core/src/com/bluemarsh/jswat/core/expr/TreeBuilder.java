@@ -14,7 +14,7 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -24,12 +24,120 @@
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.analysis.AnalysisAdapter;
-import com.bluemarsh.jswat.parser.node.*;
 import com.bluemarsh.jswat.core.util.Strings;
+import com.bluemarsh.jswat.parser.node.EOF;
+import com.bluemarsh.jswat.parser.node.TAbstract;
+import com.bluemarsh.jswat.parser.node.TAnd;
+import com.bluemarsh.jswat.parser.node.TAssert;
+import com.bluemarsh.jswat.parser.node.TAssign;
+import com.bluemarsh.jswat.parser.node.TBitAnd;
+import com.bluemarsh.jswat.parser.node.TBitAndAssign;
+import com.bluemarsh.jswat.parser.node.TBitComplement;
+import com.bluemarsh.jswat.parser.node.TBitOr;
+import com.bluemarsh.jswat.parser.node.TBitOrAssign;
+import com.bluemarsh.jswat.parser.node.TBitXor;
+import com.bluemarsh.jswat.parser.node.TBitXorAssign;
+import com.bluemarsh.jswat.parser.node.TBoolean;
+import com.bluemarsh.jswat.parser.node.TBreak;
+import com.bluemarsh.jswat.parser.node.TByte;
+import com.bluemarsh.jswat.parser.node.TCase;
+import com.bluemarsh.jswat.parser.node.TCatch;
+import com.bluemarsh.jswat.parser.node.TChar;
+import com.bluemarsh.jswat.parser.node.TCharacterLiteral;
+import com.bluemarsh.jswat.parser.node.TClass;
+import com.bluemarsh.jswat.parser.node.TColon;
+import com.bluemarsh.jswat.parser.node.TComma;
+import com.bluemarsh.jswat.parser.node.TComplement;
+import com.bluemarsh.jswat.parser.node.TConst;
+import com.bluemarsh.jswat.parser.node.TContinue;
+import com.bluemarsh.jswat.parser.node.TDecimalIntegerLiteral;
+import com.bluemarsh.jswat.parser.node.TDefault;
+import com.bluemarsh.jswat.parser.node.TDiv;
+import com.bluemarsh.jswat.parser.node.TDivAssign;
+import com.bluemarsh.jswat.parser.node.TDo;
+import com.bluemarsh.jswat.parser.node.TDocumentationComment;
+import com.bluemarsh.jswat.parser.node.TDot;
+import com.bluemarsh.jswat.parser.node.TDouble;
+import com.bluemarsh.jswat.parser.node.TElse;
+import com.bluemarsh.jswat.parser.node.TEndOfLineComment;
+import com.bluemarsh.jswat.parser.node.TEq;
+import com.bluemarsh.jswat.parser.node.TExtends;
+import com.bluemarsh.jswat.parser.node.TFalse;
+import com.bluemarsh.jswat.parser.node.TFinal;
+import com.bluemarsh.jswat.parser.node.TFinally;
+import com.bluemarsh.jswat.parser.node.TFloat;
+import com.bluemarsh.jswat.parser.node.TFloatingPointLiteral;
+import com.bluemarsh.jswat.parser.node.TFor;
+import com.bluemarsh.jswat.parser.node.TGoto;
+import com.bluemarsh.jswat.parser.node.TGt;
+import com.bluemarsh.jswat.parser.node.TGteq;
+import com.bluemarsh.jswat.parser.node.THexIntegerLiteral;
+import com.bluemarsh.jswat.parser.node.TIdentifier;
+import com.bluemarsh.jswat.parser.node.TIf;
+import com.bluemarsh.jswat.parser.node.TImplements;
+import com.bluemarsh.jswat.parser.node.TImport;
+import com.bluemarsh.jswat.parser.node.TInstanceof;
+import com.bluemarsh.jswat.parser.node.TInt;
+import com.bluemarsh.jswat.parser.node.TInterface;
+import com.bluemarsh.jswat.parser.node.TLBrace;
+import com.bluemarsh.jswat.parser.node.TLBracket;
+import com.bluemarsh.jswat.parser.node.TLParenthese;
+import com.bluemarsh.jswat.parser.node.TLong;
+import com.bluemarsh.jswat.parser.node.TLt;
+import com.bluemarsh.jswat.parser.node.TLteq;
+import com.bluemarsh.jswat.parser.node.TMinus;
+import com.bluemarsh.jswat.parser.node.TMinusAssign;
+import com.bluemarsh.jswat.parser.node.TMinusMinus;
+import com.bluemarsh.jswat.parser.node.TMod;
+import com.bluemarsh.jswat.parser.node.TModAssign;
+import com.bluemarsh.jswat.parser.node.TNative;
+import com.bluemarsh.jswat.parser.node.TNeq;
+import com.bluemarsh.jswat.parser.node.TNew;
+import com.bluemarsh.jswat.parser.node.TNull;
+import com.bluemarsh.jswat.parser.node.TOctalIntegerLiteral;
+import com.bluemarsh.jswat.parser.node.TOr;
+import com.bluemarsh.jswat.parser.node.TPackage;
+import com.bluemarsh.jswat.parser.node.TPlus;
+import com.bluemarsh.jswat.parser.node.TPlusAssign;
+import com.bluemarsh.jswat.parser.node.TPlusPlus;
+import com.bluemarsh.jswat.parser.node.TPrivate;
+import com.bluemarsh.jswat.parser.node.TProtected;
+import com.bluemarsh.jswat.parser.node.TPublic;
+import com.bluemarsh.jswat.parser.node.TQuestion;
+import com.bluemarsh.jswat.parser.node.TRBrace;
+import com.bluemarsh.jswat.parser.node.TRBracket;
+import com.bluemarsh.jswat.parser.node.TRParenthese;
+import com.bluemarsh.jswat.parser.node.TReturn;
+import com.bluemarsh.jswat.parser.node.TSemicolon;
+import com.bluemarsh.jswat.parser.node.TShiftLeft;
+import com.bluemarsh.jswat.parser.node.TShiftLeftAssign;
+import com.bluemarsh.jswat.parser.node.TShort;
+import com.bluemarsh.jswat.parser.node.TSignedShiftRight;
+import com.bluemarsh.jswat.parser.node.TSignedShiftRightAssign;
+import com.bluemarsh.jswat.parser.node.TStar;
+import com.bluemarsh.jswat.parser.node.TStarAssign;
+import com.bluemarsh.jswat.parser.node.TStatic;
+import com.bluemarsh.jswat.parser.node.TStrictfp;
+import com.bluemarsh.jswat.parser.node.TStringLiteral;
+import com.bluemarsh.jswat.parser.node.TSuper;
+import com.bluemarsh.jswat.parser.node.TSwitch;
+import com.bluemarsh.jswat.parser.node.TSynchronized;
+import com.bluemarsh.jswat.parser.node.TThis;
+import com.bluemarsh.jswat.parser.node.TThrow;
+import com.bluemarsh.jswat.parser.node.TThrows;
+import com.bluemarsh.jswat.parser.node.TTraditionalComment;
+import com.bluemarsh.jswat.parser.node.TTransient;
+import com.bluemarsh.jswat.parser.node.TTrue;
+import com.bluemarsh.jswat.parser.node.TTry;
+import com.bluemarsh.jswat.parser.node.TUnsignedShiftRight;
+import com.bluemarsh.jswat.parser.node.TUnsignedShiftRightAssign;
+import com.bluemarsh.jswat.parser.node.TVoid;
+import com.bluemarsh.jswat.parser.node.TVolatile;
+import com.bluemarsh.jswat.parser.node.TWhile;
+import com.bluemarsh.jswat.parser.node.Token;
 import java.io.PrintStream;
 import java.util.EmptyStackException;
 import java.util.Stack;
-import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
 /**
@@ -128,7 +236,7 @@ class TreeBuilder extends AnalysisAdapter {
         } else {
             throw new IllegalArgumentException("not a character: " + charStr);
         }
-    } // translateChar
+    }
 
     /**
      * Processes the given string, looking for character escapes and
@@ -141,7 +249,8 @@ class TreeBuilder extends AnalysisAdapter {
     protected static String translateString(String str) {
         int strlen = str.length();
         StringBuilder buf = new StringBuilder(strlen);
-        for (int ii = 0; ii < strlen; ii++) {
+        int ii = 0;
+        while (ii < strlen) {
             char ch = str.charAt(ii);
             if (ch == '\\') {
                 ii++;
@@ -196,21 +305,22 @@ class TreeBuilder extends AnalysisAdapter {
             } else {
                 buf.append(ch);
             }
+            ii++;
         }
         return buf.toString();
-    } // translateString
+    }
 
     /**
      * Constructs a TreeBuilder.
      *
      * @param  context  parser context.
      */
-    public TreeBuilder() {
+    TreeBuilder() {
         searchState = State.ARGUMENT;
         rootNode = new RootNode();
         argumentStack = new Stack<Node>();
         operatorStack = new Stack<Node>();
-    } // TreeBuilder
+    }
 
     /**
      * Are we done yet?
@@ -219,7 +329,7 @@ class TreeBuilder extends AnalysisAdapter {
      */
     public boolean doneProcessing() {
         return doneProcessing;
-    } // doneProcessing
+    }
 
     /**
      * Dumps (and empties) the argument and operator stacks to the given
@@ -244,7 +354,7 @@ class TreeBuilder extends AnalysisAdapter {
             out.print(": ");
             out.println(n.getToken().getText());
         }
-    } // dumpStacks
+    }
 
     /**
      * Returns the parser exception, if any.
@@ -253,7 +363,7 @@ class TreeBuilder extends AnalysisAdapter {
      */
     public EvaluationException getException() {
         return evalException;
-    } // getException
+    }
 
     /**
      * Returns the root node of the tree.
@@ -262,7 +372,7 @@ class TreeBuilder extends AnalysisAdapter {
      */
     public RootNode getRoot() {
         return rootNode;
-    } // getRoot
+    }
 
     /**
      * Handles the given literal node appropriately.
@@ -271,12 +381,12 @@ class TreeBuilder extends AnalysisAdapter {
      */
     protected void handleLiteral(LiteralNode lit) {
         if (searchState == State.APPEND) {
-            setError(Errors.Code.DOT_REQUIRES_ID, lit.getToken());
+            setError(Errors.DOT_REQUIRES_ID, lit.getToken());
             return;
         }
         argumentStack.push(lit);
         searchState = State.OPERATOR;
-    } // handleLiteral
+    }
 
     /**
      * Handles the given type node appropriately.
@@ -285,23 +395,24 @@ class TreeBuilder extends AnalysisAdapter {
      */
     protected void handleType(TypeNode type) {
         if (searchState == State.APPEND) {
-            setError(Errors.Code.DOT_REQUIRES_ID, type.getToken());
+            setError(Errors.DOT_REQUIRES_ID, type.getToken());
             return;
         }
         argumentStack.push(type);
         searchState = State.OPERATOR;
-    } // handleType
+    }
 
     /**
      * Parse the string as a number, either integer or floating.
      *
-     * @param  token  token to be parsed as a number.
+     * @param  input  user input to be parsed as a number.
      * @param  radix  radix to parse token as; if zero, token is
      *                treated as floating point.
      * @param  node   original node from the lexer.
      */
-    protected void handleNumber(String token, int radix, Token node) {
+    protected void handleNumber(String input, int radix, Token node) {
         Number n;
+        String token = input;
         int last = token.length() - 1;
         char ch = token.charAt(last);
         if (radix > 0) {
@@ -310,7 +421,7 @@ class TreeBuilder extends AnalysisAdapter {
                 try {
                     n = Long.valueOf(token, radix);
                 } catch (NumberFormatException nfe) {
-                    setError(Errors.Code.NUMBER_FORMAT, node);
+                    setError(Errors.NUMBER_FORMAT, node);
                     return;
                 }
 
@@ -323,7 +434,7 @@ class TreeBuilder extends AnalysisAdapter {
                         // but try long if that didn't work.
                         n = Long.valueOf(token, radix);
                     } catch (NumberFormatException nfe2) {
-                        setError(Errors.Code.NUMBER_FORMAT, node);
+                        setError(Errors.NUMBER_FORMAT, node);
                         return;
                     }
                 }
@@ -335,7 +446,7 @@ class TreeBuilder extends AnalysisAdapter {
                 try {
                     n = Float.valueOf(token);
                 } catch (NumberFormatException nfe) {
-                    setError(Errors.Code.NUMBER_FORMAT, node);
+                    setError(Errors.NUMBER_FORMAT, node);
                     return;
                 }
             } else if (ch == 'd' || ch == 'D') {
@@ -343,7 +454,7 @@ class TreeBuilder extends AnalysisAdapter {
                 try {
                     n = Double.valueOf(token);
                 } catch (NumberFormatException nfe) {
-                    setError(Errors.Code.NUMBER_FORMAT, node);
+                    setError(Errors.NUMBER_FORMAT, node);
                     return;
                 }
 
@@ -354,14 +465,14 @@ class TreeBuilder extends AnalysisAdapter {
                     try {
                         n = Double.valueOf(token);
                     } catch (NumberFormatException nfe2) {
-                        setError(Errors.Code.NUMBER_FORMAT, node);
+                        setError(Errors.NUMBER_FORMAT, node);
                         return;
                     }
                 }
             }
         }
         handleLiteral(new LiteralNode(node, n));
-    } // handleNumber
+    }
 
     /**
      * Handles the given binary or unary operator node.
@@ -370,7 +481,7 @@ class TreeBuilder extends AnalysisAdapter {
      */
     protected void handleOperator(OperatorNode op) {
         if (searchState == State.APPEND) {
-            setError(Errors.Code.DOT_REQUIRES_ID, op.getToken());
+            setError(Errors.DOT_REQUIRES_ID, op.getToken());
             return;
         }
 
@@ -387,7 +498,7 @@ class TreeBuilder extends AnalysisAdapter {
         }
         operatorStack.push(op);
         searchState = State.ARGUMENT;
-    } // handleOperator
+    }
 
     /**
      * Handles the given postfix operator node.
@@ -399,7 +510,7 @@ class TreeBuilder extends AnalysisAdapter {
         // stack, then pop it off and push a postfix operation node
         // (built from the variable and the postfix operator) back onto
         // the argument stack.
-    } // handlePostfixOp
+    }
 
     /**
      * Handles the given variable node appropriately.
@@ -410,7 +521,7 @@ class TreeBuilder extends AnalysisAdapter {
         // Push the variable onto the tree stack.
         argumentStack.push(var);
         searchState = State.OPERATOR;
-    } // handleVariable
+    }
 
     /**
      * Reduce the operator stack by one. If the operator stack top is
@@ -435,7 +546,7 @@ class TreeBuilder extends AnalysisAdapter {
                 top.addChild(arg2);
                 argumentStack.push(top);
             } catch (EmptyStackException ese) {
-                setError(Errors.Code.MISSING_ARGS, top.getToken());
+                setError(Errors.MISSING_ARGS, top.getToken());
             }
         } else if (top instanceof UnaryOperatorNode) {
             try {
@@ -443,12 +554,12 @@ class TreeBuilder extends AnalysisAdapter {
                 top.addChild(arg);
                 argumentStack.push(top);
             } catch (EmptyStackException ese) {
-                setError(Errors.Code.MISSING_ARGS, top.getToken());
+                setError(Errors.MISSING_ARGS, top.getToken());
             }
         } else {
-            setError(Errors.Code.UNEXPECTED_TOKEN, top.getToken());
+            setError(Errors.UNEXPECTED_TOKEN, top.getToken());
         }
-    } // reduce
+    }
 
     /**
      * Set the error message and set the done flag to true.
@@ -458,16 +569,16 @@ class TreeBuilder extends AnalysisAdapter {
     protected void setError(String msg) {
         evalException = new EvaluationException(msg);
         doneProcessing = true;
-    } // setError
+    }
 
     /**
      * Set the error value and set the done flag to true.
      *
      * @param  error  error value.
      */
-    protected void setError(Errors.Code error) {
-        setError(Errors.getMessage(error));
-    } // setError
+    protected void setError(Errors error) {
+        setError(error.getMessage());
+    }
 
     /**
      * Set the error value and set the done flag to true.
@@ -477,9 +588,9 @@ class TreeBuilder extends AnalysisAdapter {
      * @param  error  error value.
      * @param  add    additional error suffix.
      */
-    protected void setError(Errors.Code error, String add) {
-        setError(Errors.getMessage(error) + ": " + add);
-    } // setError
+    protected void setError(Errors error, String add) {
+        setError(error.getMessage() + ": " + add);
+    }
 
     /**
      * Set the error value and set the done flag to true.
@@ -488,10 +599,10 @@ class TreeBuilder extends AnalysisAdapter {
      * @param  error  error value.
      * @param  token  token providing additional details.
      */
-    protected void setError(Errors.Code error, Token token) {
-        setError(Errors.getMessage(error) + ": " + token.getText()
+    protected void setError(Errors error, Token token) {
+        setError(error.getMessage() + ": " + token.getText()
                  + " @ " + token.getPos());
-    } // setError
+    }
 
     /**
      * Set the error value and set the done flag to true.
@@ -502,7 +613,7 @@ class TreeBuilder extends AnalysisAdapter {
      */
     protected void setError(String msg, Token token) {
         setError(msg + ": " + token.getText() + " @ " + token.getPos());
-    } // setError
+    }
 
     /**
      * Set the error value and set the done flag to true.
@@ -512,10 +623,10 @@ class TreeBuilder extends AnalysisAdapter {
      * @param  token  token providing additional details.
      * @param  add    additional error message.
      */
-    protected void setError(Errors.Code error, Token token, String add) {
-        setError(Errors.getMessage(error) + ": " + token.getText()
+    protected void setError(Errors error, Token token, String add) {
+        setError(error.getMessage() + ": " + token.getText()
                  + " @ " + token.getPos() + ": " + add);
-    } // setError
+    }
 
     /**
      * Sets the token that was just applied, which means it is the
@@ -525,19 +636,17 @@ class TreeBuilder extends AnalysisAdapter {
      */
     protected void setPrevToken(Token token) {
         previousToken = token;
-    } // setPrevToken
+    }
 
     //
     // Methods inherited from AnalysisAdapter.
     //
 
-    /**
-     * @param  node  end-of-file node.
-     */
+    @Override
     public void caseEOF(EOF node) {
         doneProcessing = true;
         if (searchState == State.APPEND) {
-            setError(Errors.Code.DOT_REQUIRES_ID, node);
+            setError(Errors.DOT_REQUIRES_ID, node);
             return;
         }
 
@@ -550,19 +659,19 @@ class TreeBuilder extends AnalysisAdapter {
         while (!operatorStack.empty()) {
             OperatorNode top = (OperatorNode) operatorStack.peek();
             if (top instanceof LeftParen) {
-                setError(Errors.Code.UNMATCHED_LPAREN, top.getToken());
+                setError(Errors.UNMATCHED_LPAREN, top.getToken());
                 return;
             } else if (top instanceof LeftBracket) {
-                setError(Errors.Code.UNMATCHED_LBRACKET, top.getToken());
+                setError(Errors.UNMATCHED_LBRACKET, top.getToken());
                 return;
             } else if (top.isSentinel()) {
-                setError(Errors.Code.INVALID_EXPR, top.getToken());
+                setError(Errors.INVALID_EXPR, top.getToken());
                 return;
             }
             reduce();
             count++;
             if (count > 500) {
-                setError(Errors.Code.LARGE_OPER_STACK);
+                setError(Errors.LARGE_OPER_STACK);
                 return;
             }
         }
@@ -572,7 +681,7 @@ class TreeBuilder extends AnalysisAdapter {
             if (argumentStack.empty() && operatorStack.empty()) {
                 rootNode.addChild(topArg);
             } else {
-                setError(Errors.Code.ARG_STACK_NON_EMPTY, topArg.getToken());
+                setError(Errors.ARG_STACK_NON_EMPTY, topArg.getToken());
             }
         }
     }
@@ -581,10 +690,7 @@ class TreeBuilder extends AnalysisAdapter {
     // Identifiers
     //
 
-    /**
-     *
-     * @param  token  identifier token.
-     */
+    @Override
     public void caseTIdentifier(TIdentifier token) {
         String name = token.getText();
         if (searchState == State.APPEND) {
@@ -600,10 +706,10 @@ class TreeBuilder extends AnalysisAdapter {
                     reduce();
                     searchState = State.OPERATOR;
                 } else {
-                    setError(Errors.Code.UNKNOWN_STATE, token, "append without join");
+                    setError(Errors.UNKNOWN_STATE, token, "append without join");
                 }
             } else {
-                setError(Errors.Code.UNKNOWN_STATE, token, "cannot append to "
+                setError(Errors.UNKNOWN_STATE, token, "cannot append to "
                     + node.getToken().getText());
             }
         } else {
@@ -611,14 +717,11 @@ class TreeBuilder extends AnalysisAdapter {
         }
     }
 
-    /**
-     *
-     * @param  node  'this' node.
-     */
+    @Override
     public void caseTThis(TThis node) {
         if (searchState == State.APPEND) {
             // this is where RFE 881 implementation would begin
-            setError(Errors.Code.DOT_REQUIRES_ID, node);
+            setError(Errors.DOT_REQUIRES_ID, node);
             return;
         }
         handleVariable(new IdentifierNode(node, "this"));
@@ -628,18 +731,12 @@ class TreeBuilder extends AnalysisAdapter {
     // Literal values.
     //
 
-    /**
-     *
-     * @param  node  decimal integer literal node.
-     */
+    @Override
     public void caseTDecimalIntegerLiteral(TDecimalIntegerLiteral node) {
         handleNumber(node.getText(), 10, node);
     }
 
-    /**
-     *
-     * @param  node  hexadecimal integer literal node.
-     */
+    @Override
     public void caseTHexIntegerLiteral(THexIntegerLiteral node) {
         String t = node.getText();
         // Chop off the 0x prefix.
@@ -647,26 +744,17 @@ class TreeBuilder extends AnalysisAdapter {
         handleNumber(t, 16, node);
     }
 
-    /**
-     *
-     * @param  node  octal integer literal node.
-     */
+    @Override
     public void caseTOctalIntegerLiteral(TOctalIntegerLiteral node) {
         handleNumber(node.getText(), 8, node);
     }
 
-    /**
-     *
-     * @param  node  floating point literal node.
-     */
+    @Override
     public void caseTFloatingPointLiteral(TFloatingPointLiteral node) {
         handleNumber(node.getText(), 0, node);
     }
 
-    /**
-     *
-     * @param  node  character literal node.
-     */
+    @Override
     public void caseTCharacterLiteral(TCharacterLiteral node) {
         String t = node.getText();
         if (t.length() > 0) {
@@ -674,14 +762,11 @@ class TreeBuilder extends AnalysisAdapter {
             handleLiteral(new LiteralNode(node, new Character(
                                               translateChar(t))));
         } else {
-            setError(Errors.Code.INVALID_EXPR, node);
+            setError(Errors.INVALID_EXPR, node);
         }
     }
 
-    /**
-     *
-     * @param  node  string literal node.
-     */
+    @Override
     public void caseTStringLiteral(TStringLiteral node) {
         String t = node.getText();
         if (t.length() > 0) {
@@ -689,30 +774,21 @@ class TreeBuilder extends AnalysisAdapter {
             t = translateString(t);
             handleLiteral(new LiteralNode(node, t));
         } else {
-            setError(Errors.Code.INVALID_EXPR, node);
+            setError(Errors.INVALID_EXPR, node);
         }
     }
 
-    /**
-     *
-     * @param  node  true keyword node.
-     */
+    @Override
     public void caseTTrue(TTrue node) {
         handleLiteral(new LiteralNode(node, Boolean.TRUE));
     }
 
-    /**
-     *
-     * @param  node  false keyword node.
-     */
+    @Override
     public void caseTFalse(TFalse node) {
         handleLiteral(new LiteralNode(node, Boolean.FALSE));
     }
 
-    /**
-     *
-     * @param  node  null keyword node.
-     */
+    @Override
     public void caseTNull(TNull node) {
         handleLiteral(new LiteralNode(node, null));
     }
@@ -721,15 +797,12 @@ class TreeBuilder extends AnalysisAdapter {
     // Operators
     //
 
-    /**
-     *
-     * @param  node  left parenthesis.
-     */
+    @Override
     public void caseTLParenthese(TLParenthese node) {
         // Append state is definitely wrong, but argument and operator
         // states are perfectly exceptable.
         if (searchState == State.APPEND) {
-            setError(Errors.Code.DOT_REQUIRES_ID, node);
+            setError(Errors.DOT_REQUIRES_ID, node);
             return;
         }
         LeftParen lp = new LeftParen(node);
@@ -761,13 +834,10 @@ class TreeBuilder extends AnalysisAdapter {
         operatorStack.push(lp);
     }
 
-    /**
-     *
-     * @param  node  right parenthesis.
-     */
+    @Override
     public void caseTRParenthese(TRParenthese node) {
         if (operatorStack.empty()) {
-            setError(Errors.Code.UNMATCHED_RPAREN, node);
+            setError(Errors.UNMATCHED_RPAREN, node);
             return;
         }
         // If there is a left parenthesis on the operator stack, we can
@@ -778,7 +848,7 @@ class TreeBuilder extends AnalysisAdapter {
         while (!(top instanceof LeftParen)) {
             reduce();
             if (operatorStack.empty() || top.isSentinel()) {
-                setError(Errors.Code.UNMATCHED_RPAREN, node);
+                setError(Errors.UNMATCHED_RPAREN, node);
                 return;
             }
             top = (OperatorNode) operatorStack.peek();
@@ -833,27 +903,24 @@ class TreeBuilder extends AnalysisAdapter {
             } catch (EvaluationException ee) {
                 setError(ee.getMessage(), top.getToken());
             } catch (EmptyStackException ese) {
-                setError(Errors.Code.MISSING_ARGS, top.getToken());
+                setError(Errors.MISSING_ARGS, top.getToken());
             }
         }
     }
 
-    /**
-     *
-     * @param  node  left bracket.
-     */
+    @Override
     public void caseTLBracket(TLBracket node) {
         // Make sure there is something reasonable on the stack, since
         // a left bracket without a preceding type or identifier is
         // incorrect syntax.
         if (argumentStack.isEmpty()) {
-            setError(Errors.Code.UNEXPECTED_TOKEN, node);
+            setError(Errors.UNEXPECTED_TOKEN, node);
         } else {
             Node n = argumentStack.peek();
             if (!(n instanceof JoinOperatorNode)
                 && !(n instanceof IdentifierNode)
                 && !(n instanceof TypeNode)) {
-                setError(Errors.Code.UNEXPECTED_TOKEN, node);
+                setError(Errors.UNEXPECTED_TOKEN, node);
             }
         }
         // Push the left bracket on the operator stack. We can't tell yet
@@ -867,23 +934,20 @@ class TreeBuilder extends AnalysisAdapter {
         // and we can't be sure what we will find next.
     }
 
-    /**
-     *
-     * @param  node  right bracket.
-     */
+    @Override
     public void caseTRBracket(TRBracket node) {
         // If there is a left bracket on the operator stack, we can
         // "cancel" the pair. If the operator stack contains some other
         // operator on top, reduce the stacks.
         if (operatorStack.empty()) {
-            setError(Errors.Code.UNMATCHED_RBRACKET, node);
+            setError(Errors.UNMATCHED_RBRACKET, node);
             return;
         }
         OperatorNode top = (OperatorNode) operatorStack.peek();
         while (!(top instanceof LeftBracket)) {
             reduce();
             if (operatorStack.empty() || top.isSentinel()) {
-                setError(Errors.Code.UNMATCHED_RBRACKET, node);
+                setError(Errors.UNMATCHED_RBRACKET, node);
                 return;
             }
             top = (OperatorNode) operatorStack.peek();
@@ -914,22 +978,19 @@ class TreeBuilder extends AnalysisAdapter {
                 // Put the array reference on the argument stack; it's a value.
                 argumentStack.push(arrayref);
             } else {
-                setError(Errors.Code.ARRAY_MULTI_INDEX, name.getToken());
+                setError(Errors.ARRAY_MULTI_INDEX, name.getToken());
             }
         }
     }
 
-    /**
-     *
-     * @param  node  comma.
-     */
+    @Override
     public void caseTComma(TComma node) {
         if (methodCount == 0) {
-            setError(Errors.Code.UNEXPECTED_TOKEN, node);
+            setError(Errors.UNEXPECTED_TOKEN, node);
         } else {
             // Reduce the operator stack to the left parenthesis.
             if (operatorStack.empty()) {
-                setError(Errors.Code.UNEXPECTED_TOKEN, node);
+                setError(Errors.UNEXPECTED_TOKEN, node);
                 return;
             }
             OperatorNode top = (OperatorNode) operatorStack.peek();
@@ -943,10 +1004,7 @@ class TreeBuilder extends AnalysisAdapter {
         // or fails to find a matching method. Stupid user error.
     }
 
-    /**
-     *
-     * @param  node  period.
-     */
+    @Override
     public void caseTDot(TDot node) {
         // Dot is special and needs processing before evaluation.
         if (!argumentStack.empty()
@@ -955,14 +1013,11 @@ class TreeBuilder extends AnalysisAdapter {
             handleOperator(new JoinOperatorNode(node));
             searchState = State.APPEND;
         } else {
-            setError(Errors.Code.UNEXPECTED_TOKEN, node);
+            setError(Errors.UNEXPECTED_TOKEN, node);
         }
     }
 
-    /**
-     *
-     * @param  node  plus sign.
-     */
+    @Override
     public void caseTPlus(TPlus node) {
         // The plus is unary if we are expecting an argument or if
         // the argument stack is empty (ie. search state is 'start').
@@ -973,10 +1028,7 @@ class TreeBuilder extends AnalysisAdapter {
         }
     }
 
-    /**
-     *
-     * @param  node  minus sign.
-     */
+    @Override
     public void caseTMinus(TMinus node) {
         // The minus is unary if we are expecting an argument or if
         // the argument stack is empty (ie. search state is 'start').
@@ -987,154 +1039,97 @@ class TreeBuilder extends AnalysisAdapter {
         }
     }
 
-    /**
-     *
-     * @param  node  asterisk.
-     */
+    @Override
     public void caseTStar(TStar node) {
         handleOperator(new MultBinaryOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  division sign.
-     */
+    @Override
     public void caseTDiv(TDiv node) {
         handleOperator(new DivBinaryOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  modulus sign.
-     */
+    @Override
     public void caseTMod(TMod node) {
         handleOperator(new ModBinaryOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  shift left.
-     */
+    @Override
     public void caseTShiftLeft(TShiftLeft node) {
         handleOperator(new LeftShiftOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  signed shift right.
-     */
+    @Override
     public void caseTSignedShiftRight(TSignedShiftRight node) {
         handleOperator(new RightShiftOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  unsigned shift right.
-     */
+    @Override
     public void caseTUnsignedShiftRight(TUnsignedShiftRight node) {
         handleOperator(new UnsignedRightShiftOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  bitwise and.
-     */
+    @Override
     public void caseTBitAnd(TBitAnd node) {
         handleOperator(new BitwiseAndOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  bitwise or.
-     */
+    @Override
     public void caseTBitOr(TBitOr node) {
         handleOperator(new BitwiseOrOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  bitwise exclusive or.
-     */
+    @Override
     public void caseTBitXor(TBitXor node) {
         handleOperator(new BitwiseXorOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  bitwise complement.
-     */
+    @Override
     public void caseTBitComplement(TBitComplement node) {
         handleOperator(new BitwiseNegOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  logical complement.
-     */
+    @Override
     public void caseTComplement(TComplement node) {
         handleOperator(new BooleanNegOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  logical and.
-     */
+    @Override
     public void caseTAnd(TAnd node) {
         handleOperator(new BooleanAndOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  logical or.
-     */
+    @Override
     public void caseTOr(TOr node) {
         handleOperator(new BooleanOrOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  equality.
-     */
+    @Override
     public void caseTEq(TEq node) {
         handleOperator(new EqualsOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  negation.
-     */
+    @Override
     public void caseTNeq(TNeq node) {
         handleOperator(new NotEqualsOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  greater than.
-     */
+    @Override
     public void caseTGt(TGt node) {
         handleOperator(new GtOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  less than.
-     */
+    @Override
     public void caseTLt(TLt node) {
         handleOperator(new LtOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  less than or equal.
-     */
+    @Override
     public void caseTLteq(TLteq node) {
         handleOperator(new LtEqOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  greater than or equal.
-     */
+    @Override
     public void caseTGteq(TGteq node) {
         handleOperator(new GtEqOperatorNode(node));
     }
@@ -1143,74 +1138,47 @@ class TreeBuilder extends AnalysisAdapter {
     // Primitive data types
     //
 
-    /**
-     *
-     * @param  node  boolean keyword.
-     */
+    @Override
     public void caseTBoolean(TBoolean node) {
         handleType(new TypeNode(node, "boolean"));
     }
 
-    /**
-     *
-     * @param  node  byte keyword.
-     */
+    @Override
     public void caseTByte(TByte node) {
         handleType(new TypeNode(node, "byte"));
     }
 
-    /**
-     *
-     * @param  node  char keyword
-     */
+    @Override
     public void caseTChar(TChar node) {
         handleType(new TypeNode(node, "char"));
     }
 
-    /**
-     *
-     * @param  node  class keyword
-     */
+    @Override
     public void caseTClass(TClass node) {
-        setError(Errors.Code.UNSUPPORTED_FEATURE, node);
+        setError(Errors.UNSUPPORTED_FEATURE, node);
     }
 
-    /**
-     *
-     * @param  node  double keyword
-     */
+    @Override
     public void caseTDouble(TDouble node) {
         handleType(new TypeNode(node, "double"));
     }
 
-    /**
-     *
-     * @param  node  float keyword
-     */
+    @Override
     public void caseTFloat(TFloat node) {
         handleType(new TypeNode(node, "float"));
     }
 
-    /**
-     *
-     * @param  node  int keyword
-     */
+    @Override
     public void caseTInt(TInt node) {
         handleType(new TypeNode(node, "int"));
     }
 
-    /**
-     *
-     * @param  node  long keyword
-     */
+    @Override
     public void caseTLong(TLong node) {
         handleType(new TypeNode(node, "long"));
     }
 
-    /**
-     *
-     * @param  node  short keyword
-     */
+    @Override
     public void caseTShort(TShort node) {
         handleType(new TypeNode(node, "short"));
     }
@@ -1219,495 +1187,312 @@ class TreeBuilder extends AnalysisAdapter {
     // Unsupported features (that may be supported in the future)
     //
 
-    /**
-     *
-     * @param  node  super keyword.
-     */
+    @Override
     public void caseTSuper(TSuper node) {
-        setError(Errors.Code.UNSUPPORTED_FEATURE, node);
+        setError(Errors.UNSUPPORTED_FEATURE, node);
     }
 
-    /**
-     *
-     * @param  node  question mark.
-     */
+    @Override
     public void caseTQuestion(TQuestion node) {
-        setError(Errors.Code.UNSUPPORTED_FEATURE, node);
+        setError(Errors.UNSUPPORTED_FEATURE, node);
     }
 
-    /**
-     *
-     * @param  node  colon.
-     */
+    @Override
     public void caseTColon(TColon node) {
-        setError(Errors.Code.UNSUPPORTED_FEATURE, node);
+        setError(Errors.UNSUPPORTED_FEATURE, node);
     }
 
     //
     // Unsupported tokens.
     //
 
-    /**
-     *
-     * @param  node  comment
-     */
+    @Override
     public void caseTTraditionalComment(TTraditionalComment node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  comment
-     */
+    @Override
     public void caseTDocumentationComment(TDocumentationComment node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  comment
-     */
+    @Override
     public void caseTEndOfLineComment(TEndOfLineComment node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  void keyword
-     */
+    @Override
     public void caseTVoid(TVoid node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  left brace.
-     */
+    @Override
     public void caseTLBrace(TLBrace node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  right brace.
-     */
+    @Override
     public void caseTRBrace(TRBrace node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  abstract keyword.
-     */
+    @Override
     public void caseTAbstract(TAbstract node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  assert keyword.
-     */
+    @Override
     public void caseTAssert(TAssert node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  break keyword.
-     */
+    @Override
     public void caseTBreak(TBreak node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  case keyword.
-     */
+    @Override
     public void caseTCase(TCase node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  catch keyword.
-     */
+    @Override
     public void caseTCatch(TCatch node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  const keyword.
-     */
+    @Override
     public void caseTConst(TConst node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  continue keyword.
-     */
+    @Override
     public void caseTContinue(TContinue node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  default keyword.
-     */
+    @Override
     public void caseTDefault(TDefault node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  do keyword.
-     */
+    @Override
     public void caseTDo(TDo node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  else keyword.
-     */
+    @Override
     public void caseTElse(TElse node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  extends keyword.
-     */
+    @Override
     public void caseTExtends(TExtends node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  final keyword.
-     */
+    @Override
     public void caseTFinal(TFinal node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  finally keyword.
-     */
+    @Override
     public void caseTFinally(TFinally node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  for keyword.
-     */
+    @Override
     public void caseTFor(TFor node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  goto keyword.
-     */
+    @Override
     public void caseTGoto(TGoto node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  if keyword.
-     */
+    @Override
     public void caseTIf(TIf node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  implements keyword.
-     */
+    @Override
     public void caseTImplements(TImplements node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  import keyword.
-     */
+    @Override
     public void caseTImport(TImport node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  instanceof keyword.
-     */
+    @Override
     public void caseTInstanceof(TInstanceof node) {
         handleOperator(new InstanceofOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  interface keyword.
-     */
+    @Override
     public void caseTInterface(TInterface node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  native keyword.
-     */
+    @Override
     public void caseTNative(TNative node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  new keyword.
-     */
+    @Override
     public void caseTNew(TNew node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  package keyword.
-     */
+    @Override
     public void caseTPackage(TPackage node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  private keyword.
-     */
+    @Override
     public void caseTPrivate(TPrivate node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  protected keyword.
-     */
+    @Override
     public void caseTProtected(TProtected node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  public keyword.
-     */
+    @Override
     public void caseTPublic(TPublic node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  return keyword.
-     */
+    @Override
     public void caseTReturn(TReturn node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  static keyword.
-     */
+    @Override
     public void caseTStatic(TStatic node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  strictfp keyword.
-     */
+    @Override
     public void caseTStrictfp(TStrictfp node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  switch keyword.
-     */
+    @Override
     public void caseTSwitch(TSwitch node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  synchronized keyword.
-     */
+    @Override
     public void caseTSynchronized(TSynchronized node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  throw keyword.
-     */
+    @Override
     public void caseTThrow(TThrow node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  throws keyword.
-     */
+    @Override
     public void caseTThrows(TThrows node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  transient keyword.
-     */
+    @Override
     public void caseTTransient(TTransient node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  try keyword.
-     */
+    @Override
     public void caseTTry(TTry node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  volatile keyword.
-     */
+    @Override
     public void caseTVolatile(TVolatile node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  while keyword.
-     */
+    @Override
     public void caseTWhile(TWhile node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  semicolon keyword.
-     */
+    @Override
     public void caseTSemicolon(TSemicolon node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  assign keyword.
-     */
+    @Override
     public void caseTAssign(TAssign node) {
         handleOperator(new AssignOperatorNode(node));
     }
 
-    /**
-     *
-     * @param  node  plus plus sign.
-     */
+    @Override
     public void caseTPlusPlus(TPlusPlus node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  minus minus sign.
-     */
+    @Override
     public void caseTMinusMinus(TMinusMinus node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  plus assign.
-     */
+    @Override
     public void caseTPlusAssign(TPlusAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  minus assign.
-     */
+    @Override
     public void caseTMinusAssign(TMinusAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  multiply assign.
-     */
+    @Override
     public void caseTStarAssign(TStarAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  divide assign.
-     */
+    @Override
     public void caseTDivAssign(TDivAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  bitwise and assign.
-     */
+    @Override
     public void caseTBitAndAssign(TBitAndAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  bitwise or assign.
-     */
+    @Override
     public void caseTBitOrAssign(TBitOrAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  bitwise exclusive or assign.
-     */
+    @Override
     public void caseTBitXorAssign(TBitXorAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  modulus assign.
-     */
+    @Override
     public void caseTModAssign(TModAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  shift left assign.
-     */
+    @Override
     public void caseTShiftLeftAssign(TShiftLeftAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  signed shift right assign.
-     */
+    @Override
     public void caseTSignedShiftRightAssign(TSignedShiftRightAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
 
-    /**
-     *
-     * @param  node  unsigned shift right assign.
-     */
+    @Override
     public void caseTUnsignedShiftRightAssign(TUnsignedShiftRightAssign node) {
-        setError(Errors.Code.UNSUPPORTED_TOKEN, node);
+        setError(Errors.UNSUPPORTED_TOKEN, node);
     }
-} // TreeBuilder
+}

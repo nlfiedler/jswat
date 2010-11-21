@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -33,6 +32,7 @@ import java.util.List;
  * @author  Nathan Fiedler
  */
 class ParentNode extends AbstractNode {
+
     /** List of children nodes. */
     private List<Node> children;
 
@@ -41,7 +41,7 @@ class ParentNode extends AbstractNode {
      *
      * @param  node  lexical token.
      */
-    public ParentNode(Token node) {
+    ParentNode(Token node) {
         super(node);
         children = new ArrayList<Node>(2);
     }
@@ -56,7 +56,7 @@ class ParentNode extends AbstractNode {
     public void addChild(Node node) {
         ParentNode parent = node.getParent();
         if (parent != null) {
-            parent.children.remove(node);
+            parent.removeChild(node);
         }
         children.add(node);
         node.setParent(this);
@@ -71,18 +71,11 @@ class ParentNode extends AbstractNode {
         return children.size();
     }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  value.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
-        if (children.size() == 0) {
+        if (children.isEmpty()) {
             // No children, no value.
             return null;
         } else if (children.size() == 1) {
@@ -109,5 +102,9 @@ class ParentNode extends AbstractNode {
      */
     public Node getChild(int i) {
         return children.get(i);
+    }
+
+    protected void removeChild(Node node) {
+        children.remove(node);
     }
 }

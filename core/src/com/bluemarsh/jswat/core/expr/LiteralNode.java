@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -33,6 +32,7 @@ import com.bluemarsh.jswat.core.util.Types;
  * @author  Nathan Fiedler
  */
 class LiteralNode extends AbstractNode {
+
     /** Literal value of this literal node. */
     private Object literalValue;
 
@@ -42,48 +42,32 @@ class LiteralNode extends AbstractNode {
      * @param  node  lexical token.
      * @param  lit   literal value.
      */
-    public LiteralNode(Token node, Object lit) {
+    LiteralNode(Token node, Object lit) {
         super(node);
         literalValue = lit;
-    } // LiteralNode
+    }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  value.
-     * @throws  EvaluationException
-     *          if an error occurs.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         return literalValue;
-    } // eval
+    }
 
-    /**
-     * Returns the signature of the type this node represents. If the
-     * type is void, or otherwise unrecognizable, an exception is
-     * thrown.
-     *
-     * @param  context  evaluation context.
-     * @return  type signature, or null if value is null.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected String type(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         if (literalValue == null) {
             return null;
         } else {
             String type = Types.nameToJni(
-                literalValue.getClass().getName());
+                    literalValue.getClass().getName());
             String primitive = Types.wrapperToPrimitive(type);
             if (primitive.length() > 0) {
                 type = primitive;
             }
             return type;
         }
-    } // type
-} // LiteralNode
+    }
+}

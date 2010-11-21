@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2007. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -38,12 +37,13 @@ class EqualsOperatorNode extends BinaryOperatorNode {
      *
      * @param  node  lexical token.
      */
-    public EqualsOperatorNode(Token node) {
+    EqualsOperatorNode(Token node) {
         super(node);
-    } // EqualsOperatorNode
+    }
 
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Object o1 = getChild(0).evaluate(context);
         Object o2 = getChild(1).evaluate(context);
@@ -58,7 +58,7 @@ class EqualsOperatorNode extends BinaryOperatorNode {
                 return Boolean.valueOf(b1 == b2);
             } else {
                 throw new EvaluationException(
-                    NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
+                        NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
             }
 
         } else if (isNumber(o1) || isNumber(o2)) {
@@ -90,7 +90,7 @@ class EqualsOperatorNode extends BinaryOperatorNode {
                 }
             } else {
                 throw new EvaluationException(
-                    NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
+                        NbBundle.getMessage(getClass(), "error.oper.equals.type"), getToken());
             }
 
         } else if (isString(o1) || isString(o2)) {
@@ -104,7 +104,8 @@ class EqualsOperatorNode extends BinaryOperatorNode {
         }
     }
 
+    @Override
     public int precedence() {
         return 10;
-    } // precedence
+    }
 }

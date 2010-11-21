@@ -14,13 +14,12 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Original Software is Antonia Kwok. Portions created by Antonia Kwok
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2010. All Rights Reserved.
  *
  * Contributor(s): Antonia Kwok, Nathan Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -48,18 +47,19 @@ import org.openide.util.NbBundle;
  * @author  Antonia Kwok
  */
 class AssignOperatorNode extends BinaryOperatorNode {
-    
+
     /** 
      * Constructs a AssignOperatorNode.
      *
      * @param  node  lexical token.
      */
-    public AssignOperatorNode(Token node) {
+    AssignOperatorNode(Token node) {
         super(node);
     }
-    
+
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Node lChild = getChild(0);
         Node rChild = getChild(1);
@@ -75,10 +75,10 @@ class AssignOperatorNode extends BinaryOperatorNode {
         Type rChildType = Types.signatureToType(rChildSig, vm);
         Object value = null;
         // Compare the argument types for similarity (allow null literal).
-        if (rChildSig == null || rChildSig.equals(lChildSig) ||
-                (rChildType instanceof ReferenceType &&
-                Types.isCompatible(lChildSig, (ReferenceType) rChildType)) ||
-                Types.canWiden(lChildSig, rChildType)) {
+        if (rChildSig == null || rChildSig.equals(lChildSig)
+                || (rChildType instanceof ReferenceType
+                && Types.isCompatible(lChildSig, (ReferenceType) rChildType))
+                || Types.canWiden(lChildSig, rChildType)) {
             if (lChild instanceof VariableNode) {
                 VariableNode vChild = (VariableNode) lChild;
                 value = setValue(context, vChild, rChild.evaluate(context));
@@ -119,7 +119,7 @@ class AssignOperatorNode extends BinaryOperatorNode {
         }
         return value;
     }
-    
+
     /**
      * Assign the value to the variable reference. This function does not
      * handle array reference.
@@ -129,9 +129,9 @@ class AssignOperatorNode extends BinaryOperatorNode {
      * @param  rValue   assignment value.
      */
     private Object setValue(EvaluationContext context, VariableNode vNode,
-                            Object rValue)
-        throws EvaluationException {
-                   
+            Object rValue)
+            throws EvaluationException {
+
         // Get the referenced field or local variable.
         ThreadReference th = context.getThread();
         StackFrame frame = null;
@@ -157,11 +157,11 @@ class AssignOperatorNode extends BinaryOperatorNode {
         }
         try {
             // Set the value to the identifier accordingly.
-            if (vcon instanceof LocalVariable) { 
+            if (vcon instanceof LocalVariable) {
                 frame.setValue((LocalVariable) vcon, mirror);
             } else if (vcon instanceof Field) {
                 // Prohibit assignment to final fields
-                if (((TypeComponent)vcon).isFinal()) {
+                if (((TypeComponent) vcon).isFinal()) {
                     throw new EvaluationException(NbBundle.getMessage(
                             AssignOperatorNode.class, "error.assign.final",
                             vNode.getToken().getText()));
@@ -190,7 +190,8 @@ class AssignOperatorNode extends BinaryOperatorNode {
         }
         return mirror;
     }
-    
+
+    @Override
     public int precedence() {
         return 17;
     }

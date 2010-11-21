@@ -284,12 +284,12 @@ public class DefaultPathManager extends AbstractPathManager {
             }
         }
 
-        return new ArrayList<String>(classPath);
+        return classPath == null ? classPath : new ArrayList<String>(classPath);
     }
 
     @Override
     public List<String> getSourcePath() {
-        return new ArrayList<String>(sourcePath);
+        return sourcePath == null ? sourcePath : new ArrayList<String>(sourcePath);
     }
 
     @Override

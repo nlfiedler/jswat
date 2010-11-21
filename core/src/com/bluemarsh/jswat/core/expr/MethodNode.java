@@ -65,7 +65,7 @@ class MethodNode extends OperatorNode implements JoinableNode {
      * @param  node  lexical token.
      * @param  name  name of the method.
      */
-    public MethodNode(Token node, String name) {
+    MethodNode(Token node, String name) {
         super(node);
         methodName = name;
     }
@@ -78,7 +78,7 @@ class MethodNode extends OperatorNode implements JoinableNode {
      * @param  object  the object or class on which to invoke the method.
      * @param  name    name of the method.
      */
-    public MethodNode(Token node, Node object, String name) {
+    MethodNode(Token node, Node object, String name) {
         super(node);
         classOrObject = object;
         methodName = name;

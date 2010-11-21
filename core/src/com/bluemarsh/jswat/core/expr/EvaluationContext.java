@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2006. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.sun.jdi.IncompatibleThreadStateException;
@@ -36,7 +35,8 @@ import com.sun.jdi.ThreadReference;
  *
  * @author  Nathan Fiedler
  */
-public class EvaluationContext {
+class EvaluationContext {
+
     /** The original expression. */
     private String expr;
     /** Root of node tree. */
@@ -54,8 +54,8 @@ public class EvaluationContext {
      * @param  thread  JDI thread; null if no thread set.
      * @param  frame   stack frame index, if thread is given.
      */
-    public EvaluationContext(String expr, RootNode root,
-                             ThreadReference thread, int frame) {
+    EvaluationContext(String expr, RootNode root,
+            ThreadReference thread, int frame) {
         this.expr = expr;
         this.root = root;
         this.thread = thread;

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -38,20 +37,13 @@ class BitwiseXorOperatorNode extends BinaryOperatorNode {
      *
      * @param  node  lexical token.
      */
-    public BitwiseXorOperatorNode(Token node) {
+    BitwiseXorOperatorNode(Token node) {
         super(node);
-    } // BitwiseXorOperatorNode
+    }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  a Number or Boolean.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         Node n1 = getChild(0);
         Object o1 = n1.evaluate(context);
@@ -60,7 +52,7 @@ class BitwiseXorOperatorNode extends BinaryOperatorNode {
         if (isNumber(o1) && isNumber(o2)) {
             if (isFloating(o1) || isFloating(o2)) {
                 throw new EvaluationException(
-                    NbBundle.getMessage(getClass(), "error.oper.intbool"), getToken());
+                        NbBundle.getMessage(getClass(), "error.oper.intbool"), getToken());
             } else if (isLong(o1) || isLong(o2)) {
                 long l1 = getLongValue(o1);
                 long l2 = getLongValue(o2);
@@ -76,18 +68,12 @@ class BitwiseXorOperatorNode extends BinaryOperatorNode {
             return b1 ^ b2 ? Boolean.TRUE : Boolean.FALSE;
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.oper.intbool"), getToken());
+                    NbBundle.getMessage(getClass(), "error.oper.intbool"), getToken());
         }
-    } // eval
+    }
 
-    /**
-     * Returns this operator's precedence value. The lower the value the
-     * higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 12;
-    } // precedence
-} // BitwiseXorOperatorNode
+    }
+}

@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2004. All Rights Reserved.
+ * are Copyright (C) 2002-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.core.expr;
 
 import com.bluemarsh.jswat.parser.node.Token;
@@ -34,27 +33,20 @@ import org.openide.util.NbBundle;
  *
  * @author  Nathan Fiedler
  */
-public class ArrayNode extends OperatorNode implements JoinableNode {
+class ArrayNode extends OperatorNode implements JoinableNode {
 
     /**
      * Constructs a ArrayNode associated with the given token.
      *
      * @param  node  lexical token.
      */
-    public ArrayNode(Token node) {
+    ArrayNode(Token node) {
         super(node);
     }
 
-    /**
-     * Returns the value of this node.
-     *
-     * @param  context  evaluation context.
-     * @return  value.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected Object eval(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         // Access the array and return the results
         ArrayReference array = getArray(context);
@@ -81,7 +73,7 @@ public class ArrayNode extends OperatorNode implements JoinableNode {
             return (ArrayReference) o;
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(getClass(), "error.array.type"));
+                    NbBundle.getMessage(getClass(), "error.array.type"));
         }
     }
 
@@ -101,34 +93,19 @@ public class ArrayNode extends OperatorNode implements JoinableNode {
             return getIntValue(o);
         } else {
             throw new EvaluationException(
-                NbBundle.getMessage(
+                    NbBundle.getMessage(
                     getClass(), "error.array.idx", o.getClass()));
         }
     }
 
-    /**
-     * Returns this operator's precedence value. The lower the value the
-     * higher the precedence. The values are equivalent to those
-     * described in the Java Language Reference book (2nd ed.), p 106.
-     *
-     * @return  precedence value.
-     */
+    @Override
     public int precedence() {
         return 1;
     }
 
-    /**
-     * Returns the signature of the type this node represents. If the
-     * type is void, or otherwise unrecognizable, an exception is
-     * thrown.
-     *
-     * @param  context  evaluation context.
-     * @return  type signature.
-     * @throws  EvaluationException
-     *          if an error occurred during evaluation.
-     */
+    @Override
     protected String type(EvaluationContext context)
-        throws EvaluationException {
+            throws EvaluationException {
 
         // Access the array and determine its type.
         ArrayReference array = getArray(context);
