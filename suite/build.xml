@@ -15,7 +15,7 @@
 
   The Original Software is JSwat. The Initial Developer of the Original
   Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
-  are Copyright (C) 2004-2009. All Rights Reserved.
+  are Copyright (C) 2004-2010. All Rights Reserved.
 
   Contributor(s): Nathan L. Fiedler.
 
@@ -34,6 +34,9 @@
 
     <target name="testuserdir-delete">
         <!-- Do nothing in the hopes that our userdir will stick around. -->
+        <!-- Clean up the filtered branding files (tried overriding the
+             clean target that but seemed to be ignored, so put this here). -->
+        <delete dir="${branding.dir}"/>
     </target>
 
     <!-- Fix the version number in the branding resources. -->
