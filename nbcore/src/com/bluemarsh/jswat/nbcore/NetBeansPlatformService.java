@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009. All Rights Reserved.
+ * are Copyright (C) 2009-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nbcore;
 
 import com.bluemarsh.jswat.core.PlatformService;
@@ -49,6 +48,7 @@ import org.openide.util.NbPreferences;
  * @author Nathan Fiedler
  */
 public class NetBeansPlatformService implements PlatformService {
+
     /** Map of locks for file names. */
     private Map<String, FileLock> locks;
 
@@ -68,7 +68,7 @@ public class NetBeansPlatformService implements PlatformService {
     }
 
     @Override
-    public Preferences getPreferences(Class clazz) {
+    public Preferences getPreferences(Class<?> clazz) {
         return NbPreferences.forModule(clazz);
     }
 

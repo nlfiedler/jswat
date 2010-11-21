@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nbcore.path;
 
 import com.bluemarsh.jswat.core.PlatformProvider;
@@ -64,6 +63,7 @@ import org.openide.util.NbBundle;
  * @author Nathan Fiedler
  */
 public class NetBeansPathManager extends AbstractPathManager {
+
     /** The classpath setting, if specified by the user (read-only). */
     private List<String> classPath;
     /** The sourcepath setting, if specified by the user (read-only). */
@@ -113,19 +113,19 @@ public class NetBeansPathManager extends AbstractPathManager {
      */
     protected PathEntry findFile(String filename, boolean fuzzy) {
         // ClassPath wants / no matter which platform we are on.
-        filename = filename.replace('\\', '/');
+        String _filename = filename.replace('\\', '/');
         FileObject fo = null;
         if (sourcePathLookup != null) {
-            fo = sourcePathLookup.findResource(filename);
+            fo = sourcePathLookup.findResource(_filename);
         }
         if (fo == null && classPathLookup != null) {
-            fo = classPathLookup.findResource(filename);
+            fo = classPathLookup.findResource(_filename);
         }
         if (fo == null && fuzzy) {
-            int last = filename.lastIndexOf('/');
+            int last = _filename.lastIndexOf('/');
             if (last > 0) {
-                filename = filename.substring(last + 1);
-                return findFile(filename, false);
+                _filename = _filename.substring(last + 1);
+                return findFile(_filename, false);
             }
         }
         return fo != null ? new FileObjectPathEntry(fo) : null;
@@ -200,10 +200,10 @@ public class NetBeansPathManager extends AbstractPathManager {
             VirtualMachine vm = clazz.virtualMachine();
             if (vm.canGetSourceDebugExtension()) {
                 try {
-                    List paths = clazz.sourcePaths(null);
-                    Iterator iter = paths.iterator();
+                    List<String> paths = clazz.sourcePaths(null);
+                    Iterator<String> iter = paths.iterator();
                     while (iter.hasNext()) {
-                        String path = (String) iter.next();
+                        String path = iter.next();
                         pe = findFile(path, true);
                         if (pe != null) {
                             break;
@@ -234,17 +234,17 @@ public class NetBeansPathManager extends AbstractPathManager {
             }
         }
 
-        return classPath;
+        return classPath == null ? classPath : new ArrayList<String>(classPath);
     }
 
     @Override
     public List<String> getSourcePath() {
-        return sourcePath;
+        return sourcePath == null ? sourcePath : new ArrayList<String>(sourcePath);
     }
 
     @Override
     protected List<String> getUserClassPath() {
-        return classPath;
+        return classPath == null ? classPath : new ArrayList<String>(classPath);
     }
 
     @Override
@@ -274,14 +274,13 @@ public class NetBeansPathManager extends AbstractPathManager {
     @SuppressWarnings("unchecked")
     private void registerClassPath() {
         GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
-        Set paths = gpr.getPaths(ClassPath.COMPILE);
+        Set<ClassPath> paths = gpr.getPaths(ClassPath.COMPILE);
         if (paths.size() > 0) {
-            ClassPath[] arr = (ClassPath[]) paths.toArray(
-                    new ClassPath[paths.size()]);
+            ClassPath[] arr = paths.toArray(new ClassPath[paths.size()]);
             gpr.unregister(ClassPath.COMPILE, arr);
         }
         if (classPathLookup != null) {
-            ClassPath[] arr = new ClassPath[] { classPathLookup };
+            ClassPath[] arr = new ClassPath[]{classPathLookup};
             gpr.register(ClassPath.COMPILE, arr);
         }
     }
@@ -295,14 +294,13 @@ public class NetBeansPathManager extends AbstractPathManager {
     @SuppressWarnings("unchecked")
     private void registerSourcePath() {
         GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
-        Set paths = gpr.getPaths(ClassPath.SOURCE);
+        Set<ClassPath> paths = gpr.getPaths(ClassPath.SOURCE);
         if (paths.size() > 0) {
-            ClassPath[] arr = (ClassPath[]) paths.toArray(
-                    new ClassPath[paths.size()]);
+            ClassPath[] arr = paths.toArray(new ClassPath[paths.size()]);
             gpr.unregister(ClassPath.SOURCE, arr);
         }
         if (sourcePathLookup != null) {
-            ClassPath[] arr = new ClassPath[] { sourcePathLookup };
+            ClassPath[] arr = new ClassPath[]{sourcePathLookup};
             gpr.register(ClassPath.SOURCE, arr);
         }
     }
@@ -310,7 +308,7 @@ public class NetBeansPathManager extends AbstractPathManager {
     @Override
     protected void savePaths(Session session) {
         // Save the classpath setting to the session properties.
-        if (classPath == null || classPath.size() == 0) {
+        if (classPath == null || classPath.isEmpty()) {
             session.setProperty(PROP_CLASSPATH, null);
         } else {
             String cp = Strings.listToString(classPath, File.pathSeparator);
@@ -318,7 +316,7 @@ public class NetBeansPathManager extends AbstractPathManager {
         }
 
         // Save the sourcepath setting to the session properties.
-        if (sourcePath == null || sourcePath.size() == 0) {
+        if (sourcePath == null || sourcePath.isEmpty()) {
             session.setProperty(PROP_SOURCEPATH, null);
         } else {
             String sp = Strings.listToString(sourcePath, File.pathSeparator);
@@ -331,7 +329,7 @@ public class NetBeansPathManager extends AbstractPathManager {
         List<String> oldPath = classPath;
         // Wipe out the lookup and rebuild if possible.
         classPathLookup = null;
-        if (roots == null || roots.size() == 0) {
+        if (roots == null || roots.isEmpty()) {
             classPath = null;
         } else {
             classPath = Collections.unmodifiableList(roots);
@@ -373,7 +371,7 @@ public class NetBeansPathManager extends AbstractPathManager {
     @Override
     public void setSourcePath(List<String> roots) {
         List<String> oldPath = sourcePath;
-        if (roots == null || roots.size() == 0) {
+        if (roots == null || roots.isEmpty()) {
             sourcePath = null;
             sourcePathLookup = null;
         } else {
@@ -413,6 +411,7 @@ public class NetBeansPathManager extends AbstractPathManager {
      * @author  Nathan Fiedler
      */
     private class FileObjectPathEntry implements PathEntry {
+
         /** The FileObject representing this path entry. */
         private final FileObject fileObject;
 
@@ -421,7 +420,7 @@ public class NetBeansPathManager extends AbstractPathManager {
          *
          * @param  fobj  the file object.
          */
-        public FileObjectPathEntry(FileObject fobj) {
+        FileObjectPathEntry(FileObject fobj) {
             fileObject = fobj;
         }
 
@@ -429,7 +428,7 @@ public class NetBeansPathManager extends AbstractPathManager {
         public boolean equals(Object o) {
             if (o instanceof FileObjectPathEntry) {
                 FileObjectPathEntry fope = (FileObjectPathEntry) o;
-                return fope.fileObject.equals(fileObject);
+                return fope.getFileObject().equals(fileObject);
             }
             return false;
         }
@@ -442,6 +441,10 @@ public class NetBeansPathManager extends AbstractPathManager {
         @Override
         public String getDisplayName() {
             return FileUtil.getFileDisplayName(fileObject);
+        }
+
+        protected FileObject getFileObject() {
+            return fileObject;
         }
 
         @Override

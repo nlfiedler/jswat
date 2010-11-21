@@ -14,13 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2010. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
  * $Id$
  */
-
 package com.bluemarsh.jswat.nbcore.path;
 
 import java.io.File;
@@ -68,15 +67,16 @@ public class PathConverter {
      * @return  the converted file object.
      */
     public static FileObject convertToRoot(FileObject file) {
-        if (FileUtil.isArchiveFile(file)) {
-            file = FileUtil.getArchiveRoot(file);
-            FileObject[] children = file.getChildren();
+        FileObject _file = file;
+        if (FileUtil.isArchiveFile(_file)) {
+            _file = FileUtil.getArchiveRoot(_file);
+            FileObject[] children = _file.getChildren();
             if (children.length == 1 && children[0].getName().equals("src")) {
                 // There was a "src" parent folder in the archive.
-                file = children[0];
+                _file = children[0];
             }
         }
-        return file;
+        return _file;
     }
 
     /**
@@ -91,10 +91,10 @@ public class PathConverter {
         for (FileObject fo : path) {
             // Check if the entry is inside an archive.
             FileObject arc = FileUtil.getArchiveFile(fo);
-            if (arc != null) {
-                fo = arc;
+            if (arc == null) {
+                arc = fo;
             }
-            File file = FileUtil.toFile(fo);
+            File file = FileUtil.toFile(arc);
             String fpath = file.getAbsolutePath();
             paths.add(fpath);
         }
