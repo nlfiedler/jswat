@@ -144,7 +144,8 @@ launchNbexec() {
         fi
     done | head -n 1`
     sh=sh
-    # #73162: Ubuntu uses the ancient Bourne shell, which does not implement trap well.
+    # #73162: Ubuntu uses the ancient Bourne shell, which does not
+    #         implement trap well.
     if [ -x /bin/bash ]
     then
         sh=/bin/bash
@@ -156,8 +157,9 @@ launchNbexec() {
     fi
 }
 
-# in case of macosx, the apple.laf.useScreenMenuBar property should be ideally in the Info.plist file
-# but it doesn't get propagated into the executed java VM. 
+# in case of macosx, the apple.laf.useScreenMenuBar property should be
+# ideally in the Info.plist file but it doesn't get propagated into the
+# executed java VM.
 case "`uname`" in
     Darwin*)
         eval launchNbexec \

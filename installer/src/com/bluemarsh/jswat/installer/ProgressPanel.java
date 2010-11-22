@@ -290,7 +290,7 @@ public class ProgressPanel extends InstallerPanel implements Runnable {
         String[] exefiles = new String[] {
             "/bin/jswat",
             "/bin/jpdalaunch",
-            "/platform9/lib/nbexec"
+            "/platform/lib/nbexec"
         };
         for (String file : exefiles) {
             File exe = new File(home + file.replace('/', File.separatorChar));

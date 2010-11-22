@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.3), see www.w3.org" />
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.3.6), see www.w3.org" />
 
   <title>JSwat - Updating the Platform</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -35,16 +35,18 @@
 
         <li><code>nbproject/platform.properties</code></li>
 
-        <li><code>launcher/unix/jswat</code></li>
-
-        <li><code>launcher/windows/jswat.cpp</code></li>
+        <li><code>launcher/jswat.clusters</code></li>
 
         <li>Installer source code</li>
       </ul>
     </li>
 
     <li>Run <code>product/mkmodules.sh</code> to recreate disabled
-    modules list</li>
+    modules list.</li>
+
+    <li>Run <code>product/findmodules.sh</code> to recreate the list of
+    <code>jar</code> and <code>xml</code> files to be included in the
+    <code>build.xml</code> file.</li>
 
     <li>Recompile the <a href="launchers.html">launcher</a> for
     Windows.</li>

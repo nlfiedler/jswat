@@ -3,13 +3,10 @@ JSWAT TASK LIST
 $Id$
 
 - Update to NetBeans 6.9.1 Platform
-  - update the cluster values in
-    - build.xml
-    - nbbproject/platform.properties
-    - launcher/unix/jswat
-    - launcher/windows/jswat.cpp
-    - installer source
-  - run product/mkmodules.sh to recreate disabled modules list
+  - Look into the new suite branding interface
+  - Look into using the suite generated installer
+  - Editor is missing syntax highlighting
+- Name of runtime in Runtime window is missing
 - Clean up the code in the nodes and views modules
 - Thoroughly test the breakpoint UI:
   - creating various types of breakpoints
@@ -24,4 +21,5 @@ $Id$
   - Look at how this might happen, that a resolved breakpoint doesn't suspend
   - Add unit tests to test for a breakpoint being hit multiple times
 - Update the splash and about image copyright years
+- Compile Windows launchers
 - Task 42: make a release based on NetBeans 6.9
