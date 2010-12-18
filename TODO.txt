@@ -1,25 +1,3 @@
 JSWAT TASK LIST
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $Id$
-
-- Update to NetBeans 6.9.1 Platform
-  - Look into the new suite branding interface
-  - Look into using the suite generated installer
-  - Editor is missing syntax highlighting
-- Name of runtime in Runtime window is missing
-- Clean up the code in the nodes and views modules
-- Thoroughly test the breakpoint UI:
-  - creating various types of breakpoints
-  - creating breakpoint groups
-- Issue 56: StackOverflowError in session event multi-caster
-  - probably should replace event multicasters with regular lists
-- Issue 41: expanded nodes in tree/table views collapse on refresh
-- Make sure the faded tree/table columns are visible in Linux/Solaris/Windows
-- Classes view find action needs a keyboard shortcut
-- Our tree-table view does not scroll and show nodes properly
-- Issue 51: breakpoints sometimes fail to suspend debuggee
-  - Look at how this might happen, that a resolved breakpoint doesn't suspend
-  - Add unit tests to test for a breakpoint being hit multiple times
-- Update the splash and about image copyright years
-- Compile Windows launchers
-- Task 42: make a release based on NetBeans 6.9
