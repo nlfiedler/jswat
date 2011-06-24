@@ -226,6 +226,12 @@ public class Main {
                 logger.log(Level.SEVERE, null, ioe);
                 output.println(NbBundle.getMessage(Main.class,
                         "ERR_Main_IOError", ioe));
+            } catch (Exception x) {
+                // Don't ever let an internal bug (e.g. in the command parser)
+                // hork the console, as it really irritates people.
+                logger.log(Level.SEVERE, null, x);
+                output.println(NbBundle.getMessage(Main.class,
+                        "ERR_Main_Exception", x));
             }
         }
     }
