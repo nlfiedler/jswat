@@ -119,7 +119,7 @@ public class DefaultMethodBreakpoint extends DefaultResolvableBreakpoint
     @Override
     public List<String> getMethodParameters() {
         if (methodParameters == null) {
-            return new ArrayList<String>();
+            return Collections.emptyList();
         }
         return new ArrayList<String>(methodParameters);
     }

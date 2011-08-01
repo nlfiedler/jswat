@@ -147,7 +147,7 @@ public class DefaultRuntime implements JavaRuntime {
         if (sourceCodes != null) {
             return Collections.unmodifiableList(sourceCodes);
         }
-        return Collections.unmodifiableList(new ArrayList<String>());
+        return Collections.emptyList();
     }
 
     @Override
