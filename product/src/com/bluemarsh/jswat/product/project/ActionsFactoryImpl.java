@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2008. All Rights Reserved.
+ * are Copyright (C) 2008-2011. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  *
@@ -27,6 +27,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import org.netbeans.modules.project.uiapi.ActionsFactory;
 import org.netbeans.spi.project.ui.support.ProjectActionPerformer;
+import org.openide.util.ContextAwareAction;
 
 /**
  * Satisfy requirements of the projectuiapi module. We do not support
@@ -82,7 +83,7 @@ public class ActionsFactoryImpl implements ActionsFactory {
     }
 
     @Override
-    public Action projectCommandAction(String arg0, String arg1, Icon arg2) {
+    public ContextAwareAction projectCommandAction(String string, String string1, Icon icon) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
