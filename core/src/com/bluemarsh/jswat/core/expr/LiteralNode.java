@@ -31,7 +31,7 @@ import com.bluemarsh.jswat.core.util.Types;
  *
  * @author  Nathan Fiedler
  */
-class LiteralNode extends AbstractNode {
+class LiteralNode extends AbstractNode implements JoinableNode {
 
     /** Literal value of this literal node. */
     private Object literalValue;

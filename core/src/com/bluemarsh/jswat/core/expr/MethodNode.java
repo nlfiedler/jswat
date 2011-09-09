@@ -138,6 +138,10 @@ class MethodNode extends OperatorNode implements JoinableNode {
                 clazz = object.referenceType();
             } else if (coo instanceof ReferenceType) {
                 clazz = (ReferenceType) coo;
+            } else if (classOrObject instanceof LiteralNode
+                       && coo instanceof String) {
+                object = (ObjectReference) Types.mirrorOf(coo, vm);
+                clazz = object.referenceType();
             }
             // else: reftype will be null, and...
             if (clazz == null) {
