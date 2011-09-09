@@ -919,7 +919,9 @@ class TreeBuilder extends AnalysisAdapter {
             Node n = argumentStack.peek();
             if (!(n instanceof JoinOperatorNode)
                 && !(n instanceof IdentifierNode)
-                && !(n instanceof TypeNode)) {
+                && !(n instanceof TypeNode)
+                // this is for methodCall()[0]
+                && !(n instanceof MethodNode)) {
                 setError(Errors.UNEXPECTED_TOKEN, node);
             }
         }
