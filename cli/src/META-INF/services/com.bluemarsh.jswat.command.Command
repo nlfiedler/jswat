@@ -19,3 +19,5 @@ com.bluemarsh.jswat.console.commands.WhereCommand
 #-com.bluemarsh.jswat.command.commands.WhereCommand
 
 com.bluemarsh.jswat.console.commands.DumpCommand
+
+com.bluemarsh.jswat.console.commands.ListCommand
