@@ -60,6 +60,15 @@ public interface CommandParser {
     Command getCommand(String name);
 
     /**
+     * Retrieves a command instance specified by unique prefix.
+     *
+     * @param  name  name or prefix of command to retrieve.
+     * @return  command, or null if not found.
+     * @throws AmbiguousMatchException if more than one command matched.
+     */
+    Command findCommand(String input) throws AmbiguousMatchException;
+
+    /**
      * Returns an array of the available commands.
      *
      * @return  iterator of known commands.

@@ -24,6 +24,7 @@
 package com.bluemarsh.jswat.command.commands;
 
 import com.bluemarsh.jswat.command.AbstractCommand;
+import com.bluemarsh.jswat.command.AmbiguousMatchException;
 import com.bluemarsh.jswat.command.Command;
 import com.bluemarsh.jswat.command.CommandArguments;
 import com.bluemarsh.jswat.command.CommandContext;
@@ -82,7 +83,12 @@ public class HelpCommand extends AbstractCommand {
                 }
                 writer.print(sb.toString());
             } else {
-                Command command = parser.getCommand(token);
+                Command command = null;
+                try {
+                     command = parser.findCommand(token);
+                } catch (AmbiguousMatchException ame) {
+                    throw new CommandException(ame.getMessage());
+                }
                 if (command != null) {
                     writer.println(command.getHelp());
                 } else {

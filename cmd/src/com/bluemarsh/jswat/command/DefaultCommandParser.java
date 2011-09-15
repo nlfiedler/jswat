@@ -93,7 +93,8 @@ public class DefaultCommandParser extends AbstractCommandParser {
      * @throws  AmbiguousMatchException
      *          if the input matched more than one Command.
      */
-    private Command findCommand(String input) throws AmbiguousMatchException {
+    @Override
+    public Command findCommand(String input) throws AmbiguousMatchException {
         int index = input.indexOf(' ');
         String name = null;
         if (index > 0) {

@@ -210,6 +210,11 @@ public abstract class AbstractCommandParser implements CommandParser {
         }
     }
 
+    @Override
+    public Command findCommand(String input) throws AmbiguousMatchException {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Resets the current history index to the end of the history.
      */
