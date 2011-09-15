@@ -302,42 +302,32 @@ public class Main {
      */
     private static void runStartupFile(CommandParser parser,
             PrintWriter consoleOutput) throws IOException {
-        StringWriter sw = new StringWriter();
-        PrintWriter output = new PrintWriter(sw);
-        PrintWriter savedOutput = parser.getOutput();
-        parser.setOutput(output);
         File[] files = {
             new File(System.getProperty("user.dir"), ".jswatrc"),
             new File(System.getProperty("user.dir"), "jswat.ini"),
             new File(System.getProperty("user.home"), ".jswatrc"),
             new File(System.getProperty("user.home"), "jswat.ini")
         };
-        try {
-            for (File file : files) {
-                if (file.canRead()) {
-                    consoleOutput.println("Executing startup file: "
-                            + file.getAbsolutePath());
-                    BufferedReader br = new BufferedReader(new FileReader(file));
-                    try {
-                        String line = br.readLine();
-                        while (line != null) {
-                            line = line.trim();
-                            if (!line.isEmpty() && !line.startsWith("#")) {
-                                performCommand(output, parser, line);
-                            }
-                            line = br.readLine();
+        for (File file : files) {
+            if (file.canRead()) {
+                consoleOutput.println("Executing startup file: "
+                                      + file.getAbsolutePath());
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                try {
+                    String line = br.readLine();
+                    while (line != null) {
+                        line = line.trim();
+                        if (!line.isEmpty() && !line.startsWith("#")) {
+                            performCommand(consoleOutput, parser, line);
                         }
-                    } finally {
-                        br.close();
+                        line = br.readLine();
                     }
-                    // We just read the first file we find and stop.
-                    break;
+                } finally {
+                    br.close();
                 }
+                // We just read the first file we find and stop.
+                break;
             }
-        } finally {
-            // Show what happened when running the commands.
-            logger.log(Level.INFO, sw.toString());
-            parser.setOutput(savedOutput);
         }
     }
 
