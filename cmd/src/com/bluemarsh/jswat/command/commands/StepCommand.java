@@ -55,7 +55,7 @@ public class StepCommand extends AbstractCommand {
         try {
             if (arguments.hasMoreTokens()) {
                 String token = arguments.peek();
-                if (token.equals("out")) {
+                if (token.equals("out") || token.equals("up")) {
                     st.stepOut();
                 }
             } else {
