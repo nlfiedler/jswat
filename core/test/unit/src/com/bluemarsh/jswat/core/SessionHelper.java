@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2010. All Rights Reserved.
+ * are Copyright (C) 2002-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core;
 
@@ -41,22 +39,28 @@ import com.bluemarsh.jswat.core.stepping.Stepper;
 import com.bluemarsh.jswat.core.stepping.SteppingException;
 import com.bluemarsh.jswat.core.stepping.SteppingProvider;
 import java.util.concurrent.Semaphore;
-import static org.junit.Assert.*;
+import org.junit.Assert;
 
 /**
  * Class SessionTestManager manages Sessions. It starts and stops a single
- * Session instance and provides methods for launching a debuggee and
- * waiting for the debuggee to stop.
+ * Session instance and provides methods for launching a debuggee and waiting
+ * for the debuggee to stop.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public class SessionHelper {
 
-    /** Our session listener. */
+    /**
+     * Our session listener.
+     */
     private static TestSessionListener listener = new TestSessionListener();
-    /** Semaphore for the session suspended notification. */
-    private static Semaphore suspendedSem = new Semaphore(1);
-    /** Lock used for waiting after launching the debuggee. */
+    /**
+     * Semaphore for the session suspended notification.
+     */
+    private static final Semaphore suspendedSem = new Semaphore(0);
+    /**
+     * Lock used for waiting after launching the debuggee.
+     */
     private static final Object LAUNCH_LOCK = new Object();
 
     private SessionHelper() {
@@ -65,17 +69,17 @@ public class SessionHelper {
     /**
      * Get the current Session instance from the SessionManager.
      *
-     * @return  a Session instance.
+     * @return a Session instance.
      */
     public static Session getSession() {
         return SessionProvider.getCurrentSession();
     }
 
     /**
-     * Returns the classpath for the unit tests, such that it may be used
-     * to run the test code.
+     * Returns the classpath for the unit tests, such that it may be used to run
+     * the test code.
      *
-     * @return  unit test classpath.
+     * @return unit test classpath.
      */
     public static String getTestClasspath() {
         String clspath = System.getProperty("test.build.dir");
@@ -86,10 +90,10 @@ public class SessionHelper {
     }
 
     /**
-     * Returns the sourcepath for the unit tests, such that it may be used
-     * to find the test code source files.
+     * Returns the sourcepath for the unit tests, such that it may be used to
+     * find the test code source files.
      *
-     * @return  unit test sourcepath.
+     * @return unit test sourcepath.
      */
     public static String getTestSourcepath() {
         String clspath = System.getProperty("test.src.dir");
@@ -101,14 +105,13 @@ public class SessionHelper {
 
     /**
      * Builds a connection and activates the default Session using that
-     * connection. A breakpoint will be created using the specification
-     * (e.g. {@code Foobar:123, or Foo.bar(int, boolean)}). The session
-     * will be automatically resumed, most likely to hit the breakpoint
-     * that was created. The breakpoint will delete itself once it has
-     * been hit.
+     * connection. A breakpoint will be created using the specification (e.g. {@code Foobar:123, or Foo.bar(int, boolean)}).
+     * The session will be automatically resumed, most likely to hit the
+     * breakpoint that was created. The breakpoint will delete itself once it
+     * has been hit.
      *
-     * @param  main  class to launch (with optional arguments).
-     * @param  brk   breakpoint specification.
+     * @param main class to launch (with optional arguments).
+     * @param brk breakpoint specification.
      */
     public static synchronized void launchDebuggee(String main, String brk) {
         Session session = getSession();
@@ -118,18 +121,17 @@ public class SessionHelper {
             Breakpoint bp = bf.createBreakpoint(brk, null);
             BreakpointHelper.prepareBreakpoint(bp, session);
         } catch (Exception e) {
-            fail(e.toString());
+            Assert.fail(e.toString());
         }
         SessionHelper.resumeAndWait(session);
     }
 
     /**
      * Builds a connection and activates the given Session using that
-     * connection. Causes the debuggee to be created but will be left
-     * suspended.
+     * connection. Causes the debuggee to be created but will be left suspended.
      *
-     * @param  session  Session to connect to the debuggee.
-     * @param  main     class to launch (with optional arguments).
+     * @param session Session to connect to the debuggee.
+     * @param main class to launch (with optional arguments).
      */
     public static void launchDebuggee(Session session, String main) {
         synchronized (LAUNCH_LOCK) {
@@ -170,19 +172,21 @@ public class SessionHelper {
     /**
      * Resume the default session and wait for it to suspend again.
      *
-     * <p>{@see #resumeAndWait(Session)} for details.</p>
+     * <p>{
+     *
+     * @see #resumeAndWait(Session)} for details.</p>
      */
     public static synchronized void resumeAndWait() {
         resumeAndWait(getSession());
     }
 
     /**
-     * Resume the given session and wait for it to suspend again. Typically
-     * this means the method will not return until a breakpoint has been hit.
-     * However, it may be that the session has disconnected because the
-     * debuggee has exited.
+     * Resume the given session and wait for it to suspend again. Typically this
+     * means the method will not return until a breakpoint has been hit.
+     * However, it may be that the session has disconnected because the debuggee
+     * has exited.
      *
-     * @param  session  Session to resume and wait for.
+     * @param session Session to resume and wait for.
      */
     public static synchronized void resumeAndWait(Session session) {
         if (session == null) {
@@ -211,12 +215,11 @@ public class SessionHelper {
     }
 
     /**
-     * Performs a single-step operation using the Stepper interface.
-     * Resumes the given session and waits for it to suspend again.
+     * Performs a single-step operation using the Stepper interface. Resumes the
+     * given session and waits for it to suspend again.
      *
-     * @param  session  Session to resume and wait for.
-     * @throws  SteppingException
-     *          if current thread is not set.
+     * @param session Session to resume and wait for.
+     * @throws SteppingException if current thread is not set.
      */
     public static synchronized void stepIntoAndWait(Session session) throws
             SteppingException {
@@ -240,12 +243,11 @@ public class SessionHelper {
     }
 
     /**
-     * Performs a "step out" operation using the Stepper interface.
-     * Resumes the given session and waits for it to suspend again.
+     * Performs a "step out" operation using the Stepper interface. Resumes the
+     * given session and waits for it to suspend again.
      *
-     * @param  session  Session to resume and wait for.
-     * @throws  SteppingException
-     *          if current thread is not set.
+     * @param session Session to resume and wait for.
+     * @throws SteppingException if current thread is not set.
      */
     public static synchronized void stepOutAndWait(Session session) throws
             SteppingException {
