@@ -14,15 +14,13 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +30,10 @@ import java.util.List;
  * @author Nathan Fiedler
  */
 public class MultipleCommandInputProcessor implements InputProcessor {
-    /** Separate of multiple commands in a single input string. */
+
+    /**
+     * Separate of multiple commands in a single input string.
+     */
     private static final char COMMAND_SEPARATOR_CHAR = ';';
 
     @Override
@@ -40,55 +41,55 @@ public class MultipleCommandInputProcessor implements InputProcessor {
         // Check if there is a command separator that is not
         // inside a quoted string.
         boolean processable = false;
-        int strlen = input.length();
+        int strlen = input != null ? input.length() : 0;
         int index = 0;
         byte state = 0;
         byte previousState = 0;
         while (index < strlen && !processable) {
             char ch = input.charAt(index);
             switch (state) {
-            case 0:
-                // Not inside a quoted string.
-                if (ch == '"') {
-                    state = 1;
-                } else if (ch == '\'') {
-                    state = 2;
-                } else if (ch == '\\') {
-                    previousState = state;
-                    state = 3;
-                } else if (ch == COMMAND_SEPARATOR_CHAR) {
-                    processable = true;
-                }
-                break;
+                case 0:
+                    // Not inside a quoted string.
+                    if (ch == '"') {
+                        state = 1;
+                    } else if (ch == '\'') {
+                        state = 2;
+                    } else if (ch == '\\') {
+                        previousState = state;
+                        state = 3;
+                    } else if (ch == COMMAND_SEPARATOR_CHAR) {
+                        processable = true;
+                    }
+                    break;
 
-            case 1:
-                // Inside a double-quoted string.
-                if (ch == '"') {
-                    state = 0;
-                } else if (ch == '\\') {
-                    previousState = state;
-                    state = 3;
-                }
-                break;
+                case 1:
+                    // Inside a double-quoted string.
+                    if (ch == '"') {
+                        state = 0;
+                    } else if (ch == '\\') {
+                        previousState = state;
+                        state = 3;
+                    }
+                    break;
 
-            case 2:
-                // Inside a single-quoted string.
-                if (ch == '\'') {
-                    state = 0;
-                } else if (ch == '\\') {
-                    previousState = state;
-                    state = 3;
-                }
-                break;
+                case 2:
+                    // Inside a single-quoted string.
+                    if (ch == '\'') {
+                        state = 0;
+                    } else if (ch == '\\') {
+                        previousState = state;
+                        state = 3;
+                    }
+                    break;
 
-            case 3:
-                // Previous character was a slash.
-                // Simply skip the character and return to previous state.
-                state = previousState;
-                break;
+                case 3:
+                    // Previous character was a slash.
+                    // Simply skip the character and return to previous state.
+                    state = previousState;
+                    break;
 
-            default:
-                throw new IllegalStateException("I am confused: " + input);
+                default:
+                    throw new IllegalStateException("I am confused: " + input);
             }
             index++;
         }
@@ -104,6 +105,9 @@ public class MultipleCommandInputProcessor implements InputProcessor {
     public List<String> process(String input, CommandParser parser)
             throws CommandException {
         List<String> output = new LinkedList<String>();
+        if (input == null) {
+            return null;
+        }
         // The input could be multiple commands, or there could be
         // a separator embedded in one of the command arguments.
         int strlen = input.length();
@@ -114,50 +118,49 @@ public class MultipleCommandInputProcessor implements InputProcessor {
         while (index < strlen) {
             char ch = input.charAt(index);
             switch (state) {
-            case 0:
-                // Not inside a quoted string.
-                if (ch == '"') {
-                    state = 1;
-                } else if (ch == '\'') {
-                    state = 2;
-                } else if (ch == '\\') {
-                    previousState = state;
-                    state = 3;
-                } else if (ch == COMMAND_SEPARATOR_CHAR) {
-                    String cmd = input.substring(start, index);
-                    output.add(cmd);
-                    start = index + 1;
-                }
-                break;
+                case 0:
+                    // Not inside a quoted string.
+                    if (ch == '"') {
+                        state = 1;
+                    } else if (ch == '\'') {
+                        state = 2;
+                    } else if (ch == '\\') {
+                        previousState = state;
+                        state = 3;
+                    } else if (ch == COMMAND_SEPARATOR_CHAR) {
+                        output.add(input.substring(start, index));
+                        start = index + 1;
+                    }
+                    break;
 
-            case 1:
-                // Inside a double-quoted string.
-                if (ch == '"') {
-                    state = 0;
-                } else if (ch == '\\') {
-                    previousState = state;
-                    state = 3;
-                }
-                break;
+                case 1:
+                    // Inside a double-quoted string.
+                    if (ch == '"') {
+                        state = 0;
+                    } else if (ch == '\\') {
+                        previousState = state;
+                        state = 3;
+                    }
+                    break;
 
-            case 2:
-                // Inside a single-quoted string.
-                if (ch == '\'') {
-                    state = 0;
-                } else if (ch == '\\') {
-                    previousState = state;
-                    state = 3;
-                }
-                break;
+                case 2:
+                    // Inside a single-quoted string.
+                    if (ch == '\'') {
+                        state = 0;
+                    } else if (ch == '\\') {
+                        previousState = state;
+                        state = 3;
+                    }
+                    break;
 
-            case 3:
-                // Previous character was a slash.
-                // Simply skip the character and return to previous state.
-                state = previousState;
-                break;
+                case 3:
+                    // Previous character was a slash.
+                    // Simply skip the character and return to previous state.
+                    state = previousState;
+                    break;
 
-            default:
-                throw new IllegalStateException("I am confused: " + input);
+                default:
+                    throw new IllegalStateException("I am confused: " + input);
             }
             index++;
         }
@@ -165,8 +168,15 @@ public class MultipleCommandInputProcessor implements InputProcessor {
         // Either we have processed nothing or processed all but the
         // last separated command. Both cases are happily handled in
         // exactly the same manner.
-        String cmd = input.substring(start);
-        output.add(cmd);
+        output.add(input.substring(start));
+        // Remove empty commands.
+        Iterator<String> iter = output.iterator();
+        while (iter.hasNext()) {
+            String s = iter.next();
+            if (s.trim().isEmpty()) {
+                iter.remove();
+            }
+        }
         return output;
     }
 }

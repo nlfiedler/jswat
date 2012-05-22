@@ -14,18 +14,15 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
 import java.util.Iterator;
+import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Tests the CommandParser class.
@@ -34,7 +31,7 @@ public class BasicParserTest {
 
     @Test
     public void test_CommandParser_Basic() {
-        TestData[] datum = new TestData[] {
+        TestData[] datum = new TestData[]{
             new TestData("", "", "Nothing should beget nothing."),
             new TestData("echo"),
             new TestData("echo hello", "hello\n"),
@@ -44,8 +41,7 @@ public class BasicParserTest {
             // bang-prefix input processor
             new TestData("!ec", "hello\n"),
             // unique command-name prefix
-            new TestData("ec hello", "hello\n"),
-        };
+            new TestData("ec hello", "hello\n"),};
         CommandParser parser = new DefaultCommandParser();
         ParserHelper helper = new ParserHelper();
         helper.performTest(parser, datum);
@@ -57,14 +53,14 @@ public class BasicParserTest {
             history.next();
             count++;
         }
-        assertEquals("duplicates impacted history", 3, count);
+        Assert.assertEquals("duplicates impacted history", 3, count);
 
         // Test more input processors, including combinations.
         parser.setAlias("ohce1", "echo hello");
         parser.setAlias("ohce2", "3 echo hello");
         parser.setAlias("ohce3", "echo hello;echo hello;echo hello");
         parser.setAlias("ohce4", "3 ohce1");
-        datum = new TestData[] {
+        datum = new TestData[]{
             // alias input processor
             new TestData("ohce1", "hello\n"),
             // repeater input processor
@@ -75,6 +71,7 @@ public class BasicParserTest {
             // the following !! is invoking the test above this line
             new TestData("1 echo hello;ohce1;!!", "hello\nhello\nhello\nhello\nhello\n"),
             // multiple command input processor
+            new TestData("eval true;", "true\n"),
             new TestData("echo \"this;is;a;test\"", "this;is;a;test\n"),
             new TestData("echo hello ; echo hello;echo hello", "hello\nhello\nhello\n"),
             new TestData("ohce1 ; ohce1;ohce1", "hello\nhello\nhello\n"),

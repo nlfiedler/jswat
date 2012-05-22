@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009-2010. All Rights Reserved.
+ * are Copyright (C) 2009-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.command;
 
@@ -34,7 +32,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -46,16 +44,16 @@ public class ViewCommandTest {
     public void testViewCommand() {
         // Make sure there is source code for the JDK core classes.
         RuntimeManager rm = RuntimeProvider.getRuntimeManager();
-        String base = System.getProperty("java.home");
+        RuntimeFactory rf = RuntimeProvider.getRuntimeFactory();
+        String base = rf.getDefaultBase();
         JavaRuntime rt = rm.findByBase(base);
         if (rt == null) {
-            RuntimeFactory rf = RuntimeProvider.getRuntimeFactory();
             rt = rf.createRuntime(base, rm.generateIdentifier());
         }
-        assertNotNull(rt);
+        Assert.assertNotNull(rt);
         List<String> sources = rt.getSources();
-        assertNotNull(sources);
-        assertTrue(sources.size() > 0);
+        Assert.assertNotNull(sources);
+        Assert.assertTrue(sources.size() > 0);
 
         // Change the source path to include the JDK source.
         Session session = SessionProvider.getCurrentSession();
@@ -70,9 +68,9 @@ public class ViewCommandTest {
         try {
             parser.parseInput("view java.lang.String");
         } catch (CommandException ce) {
-            fail(ce.toString());
+            Assert.fail(ce.toString());
         }
-        assertTrue(sw.toString().length() > 0);
+        Assert.assertTrue(sw.toString().length() > 0);
 
         // Test using a relative file path in the local format.
         sw = new StringWriter();
@@ -83,8 +81,8 @@ public class ViewCommandTest {
         try {
             parser.parseInput(cmd);
         } catch (CommandException ce) {
-            fail(ce.toString());
+            Assert.fail(ce.toString());
         }
-        assertTrue(sw.toString().length() > 0);
+        Assert.assertTrue(sw.toString().length() > 0);
     }
 }

@@ -14,13 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.command;
 
 import java.util.Collections;
@@ -34,13 +31,16 @@ import java.util.logging.Logger;
  * @author Nathan Fiedler
  */
 public class RepeaterInputProcessor implements InputProcessor {
-    /** Logger for gracefully reporting unexpected errors. */
+
+    /**
+     * Logger for gracefully reporting unexpected errors.
+     */
     private static final Logger logger = Logger.getLogger(
             RepeaterInputProcessor.class.getName());
 
     @Override
     public boolean canProcess(String input, CommandParser parser) {
-        int index = input.indexOf(' ');
+        int index = input != null ? input.indexOf(' ') : 0;
         // See if the first token is an integer.
         if (index > 0) {
             String val = input.substring(0, index);
@@ -63,11 +63,13 @@ public class RepeaterInputProcessor implements InputProcessor {
     public List<String> process(String input, CommandParser parser)
             throws CommandException {
         try {
-            int index = input.indexOf(' ');
-            String mult = input.substring(0, index);
-            int times = Integer.parseInt(mult);
-            String command = input.substring(index + 1);
-            return Collections.nCopies(times, command);
+            int index = input != null ? input.indexOf(' ') : 0;
+            if (index > 0) {
+                String mult = input.substring(0, index);
+                int times = Integer.parseInt(mult);
+                String command = input.substring(index + 1);
+                return Collections.nCopies(times, command);
+            }
         } catch (NumberFormatException nfe) {
             // This should not have happened.
             logger.log(Level.SEVERE, null, nfe);
