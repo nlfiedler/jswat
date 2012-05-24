@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2010. All Rights Reserved.
+ * are Copyright (C) 2001-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.breakpoint;
 
@@ -43,11 +41,16 @@ public abstract class AbstractBreakpointManager
         BreakpointGroupListener, SessionListener, SessionManagerListener {
 
     /** List of breakpoint listeners. */
-    private BreakpointListener bpListeners;
+    private BreakpointEventMulticaster bpMulticaster;
     /** List of group listeners. */
-    private BreakpointGroupListener groupListeners;
+    private BreakpointGroupEventMulticaster groupMulticaster;
     /** The Session instance with which we are associated. */
     private Session ourSession;
+
+    protected AbstractBreakpointManager() {
+        bpMulticaster = new BreakpointEventMulticaster();
+        groupMulticaster = new BreakpointGroupEventMulticaster();
+    }
 
     @Override
     public void addBreakpoint(Breakpoint bp) {
@@ -57,9 +60,7 @@ public abstract class AbstractBreakpointManager
     @Override
     public void addBreakpointListener(BreakpointListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                bpListeners = BreakpointEventMulticaster.add(bpListeners, listener);
-            }
+            bpMulticaster.add(listener);
         }
     }
 
@@ -74,9 +75,7 @@ public abstract class AbstractBreakpointManager
     @Override
     public void addBreakpointGroupListener(BreakpointGroupListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                groupListeners = BreakpointGroupEventMulticaster.add(groupListeners, listener);
-            }
+            groupMulticaster.add(listener);
         }
     }
 
@@ -155,24 +154,12 @@ public abstract class AbstractBreakpointManager
      * @param  e   the breakpoint event.
      */
     private void fireEvent(BreakpointEvent e) {
-        BreakpointListener bl;
-        synchronized (this) {
-            bl = bpListeners;
-        }
-        if (bl != null) {
-            e.getType().fireEvent(e, bl);
-        }
+        e.getType().fireEvent(e, bpMulticaster);
     }
 
     @Override
     public void fireEvent(BreakpointGroupEvent e) {
-        BreakpointGroupListener gl;
-        synchronized (this) {
-            gl = groupListeners;
-        }
-        if (gl != null) {
-            e.getType().fireEvent(e, gl);
-        }
+        e.getType().fireEvent(e, groupMulticaster);
     }
 
     /**
@@ -213,21 +200,9 @@ public abstract class AbstractBreakpointManager
     public void propertyChange(PropertyChangeEvent event) {
         Object src = event.getSource();
         if (src instanceof Breakpoint) {
-            BreakpointListener bl;
-            synchronized (this) {
-                bl = bpListeners;
-            }
-            if (bl != null) {
-                bl.propertyChange(event);
-            }
+            bpMulticaster.propertyChange(event);
         } else if (src instanceof BreakpointGroup) {
-            BreakpointGroupListener gl;
-            synchronized (this) {
-                gl = groupListeners;
-            }
-            if (gl != null) {
-                gl.propertyChange(event);
-            }
+            groupMulticaster.propertyChange(event);
         }
     }
 
@@ -239,9 +214,7 @@ public abstract class AbstractBreakpointManager
     @Override
     public void removeBreakpointListener(BreakpointListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                bpListeners = BreakpointEventMulticaster.remove(bpListeners, listener);
-            }
+            bpMulticaster.remove(listener);
         }
     }
 
@@ -253,9 +226,7 @@ public abstract class AbstractBreakpointManager
     @Override
     public void removeBreakpointGroupListener(BreakpointGroupListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                groupListeners = BreakpointGroupEventMulticaster.remove(groupListeners, listener);
-            }
+            groupMulticaster.remove(listener);
         }
     }
 

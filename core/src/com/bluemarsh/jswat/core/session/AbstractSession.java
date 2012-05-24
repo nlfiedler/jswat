@@ -14,14 +14,12 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2009. All Rights Reserved.
+ * are Copyright (C) 2003-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
+
 import com.sun.jdi.VirtualMachine;
 import java.util.Map;
 import org.openide.util.NbBundle;
@@ -32,25 +30,35 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * Class AbstractSession provides a few of the necessary methods that
- * all Session implementations will need.
+ * Class AbstractSession provides a few of the necessary methods that all
+ * Session implementations will need.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public abstract class AbstractSession implements Session {
-    /** Unique identifier for this instance. */
+
+    /**
+     * Unique identifier for this instance.
+     */
     private String sessionIdentifier;
-    /** List of SessionListener objects. */
-    private SessionListener listenerList;
-    /** Set of session properties. */
+    /**
+     * List of SessionListener objects.
+     */
+    private SessionEventMulticaster eventMulticaster;
+    /**
+     * Set of session properties.
+     */
     private Map<String, String> sessionProperties;
-    /** Handles property change listeners and sending events. */
+    /**
+     * Handles property change listeners and sending events.
+     */
     private PropertyChangeSupport propSupport;
 
     /**
      * Creates a new instance of AbstractSession.
      */
     public AbstractSession() {
+        eventMulticaster = new SessionEventMulticaster();
         sessionProperties = new HashMap<String, String>();
         propSupport = new PropertyChangeSupport(this);
     }
@@ -65,9 +73,7 @@ public abstract class AbstractSession implements Session {
         if (listener == null) {
             return;
         }
-        synchronized (this) {
-            listenerList = SessionEventMulticaster.add(listenerList, listener);
-        }
+        eventMulticaster.add(listener);
         listener.opened(this);
         if (isConnected()) {
             SessionEvent se = new SessionEvent(this, SessionEventType.CONNECTED);
@@ -87,16 +93,10 @@ public abstract class AbstractSession implements Session {
     /**
      * Fires the event to all of the registered listeners.
      *
-     * @param  se  session event.
+     * @param se session event.
      */
     protected void fireEvent(SessionEvent se) {
-        SessionListener sl;
-        synchronized (this) {
-            sl = listenerList;
-        }
-        if (sl != null) {
-            se.getType().fireEvent(se, sl);
-        }
+        se.getType().fireEvent(se, eventMulticaster);
     }
 
     @Override
@@ -165,9 +165,7 @@ public abstract class AbstractSession implements Session {
         if (listener == null) {
             return;
         }
-        synchronized (this) {
-            listenerList = SessionEventMulticaster.remove(listenerList, listener);
-        }
+        eventMulticaster.remove(listener);
         if (isConnected()) {
             SessionEvent se = new SessionEvent(this, SessionEventType.DISCONNECTED);
             se.getType().fireEvent(se, listener);

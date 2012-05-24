@@ -14,78 +14,94 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2007-2012. All Rights Reserved.
+ * are Copyright (C) 2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-package com.bluemarsh.jswat.core.runtime;
+package com.bluemarsh.jswat.core.breakpoint;
 
+import java.beans.PropertyChangeEvent;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests the RuntimeEventMulticaster class.
+ * Tests the BreakpointGroupEventMulticaster class.
  *
  * @author Nathan Fiedler
  */
-public class RuntimeEventMulticasterTest {
+public class BreakpointGroupEventMulticasterTest {
 
     @Test
-    public void test_RuntimeEventMulticaster() {
-        RuntimeEventMulticaster rem = new RuntimeEventMulticaster();
-        Assert.assertNotNull(rem);
+    public void testMulticaster() {
+        BreakpointGroupEventMulticaster bgem = new BreakpointGroupEventMulticaster();
+        Assert.assertNotNull(bgem);
 
         // nothing should happen
-        rem.add(null);
-        rem.remove(null);
+        bgem.add(null);
+        bgem.remove(null);
 
         TestListener l1 = new TestListener();
-        rem.add(l1);
-        TestListener l2 = new TestListener();
-        rem.add(l2);
+        bgem.add(l1);
 
         Assert.assertEquals(0, l1.added);
         Assert.assertEquals(0, l1.removed);
-        Assert.assertEquals(0, l2.added);
-        Assert.assertEquals(0, l2.removed);
 
-        JavaRuntime runtime = new DummyRuntime();
-        RuntimeEvent sevt = new RuntimeEvent(runtime, RuntimeEventType.ADDED);
-        sevt.getType().fireEvent(sevt, rem);
+        TestListener l2 = new TestListener();
+        bgem.add(l2);
+        bgem.groupAdded(null);
         Assert.assertEquals(1, l1.added);
         Assert.assertEquals(0, l1.removed);
         Assert.assertEquals(1, l2.added);
         Assert.assertEquals(0, l2.removed);
 
-        sevt = new RuntimeEvent(runtime, RuntimeEventType.REMOVED);
-        sevt.getType().fireEvent(sevt, rem);
+        bgem.remove(l2);
+        bgem.groupRemoved(null);
         Assert.assertEquals(1, l1.added);
         Assert.assertEquals(1, l1.removed);
         Assert.assertEquals(1, l2.added);
-        Assert.assertEquals(1, l2.removed);
+        Assert.assertEquals(0, l2.removed);
 
-        rem.remove(l1);
-        sevt = new RuntimeEvent(runtime, RuntimeEventType.ADDED);
-        sevt.getType().fireEvent(sevt, rem);
+        bgem.add(l2);
+        bgem.errorOccurred(null);
         Assert.assertEquals(1, l1.added);
         Assert.assertEquals(1, l1.removed);
-        Assert.assertEquals(2, l2.added);
+        Assert.assertEquals(1, l2.added);
+        Assert.assertEquals(0, l2.removed);
+        Assert.assertEquals(1, l1.error);
+        Assert.assertEquals(1, l2.error);
+
+        bgem.groupRemoved(null);
+        Assert.assertEquals(1, l1.added);
+        Assert.assertEquals(2, l1.removed);
+        Assert.assertEquals(1, l2.added);
         Assert.assertEquals(1, l2.removed);
     }
 
-    private static class TestListener implements RuntimeListener {
+    private static class TestListener implements BreakpointGroupListener {
 
-        int added;
-        int removed;
+        public int added;
+        public int removed;
+        public int error;
+        public int property;
 
         @Override
-        public void runtimeAdded(RuntimeEvent event) {
+        public void groupAdded(BreakpointGroupEvent e) {
             added++;
         }
 
         @Override
-        public void runtimeRemoved(RuntimeEvent event) {
+        public void groupRemoved(BreakpointGroupEvent e) {
             removed++;
+        }
+
+        @Override
+        public void errorOccurred(BreakpointGroupEvent e) {
+            error++;
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent e) {
+            property++;
         }
     }
 }

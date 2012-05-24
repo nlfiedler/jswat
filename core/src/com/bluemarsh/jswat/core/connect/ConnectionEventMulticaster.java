@@ -14,118 +14,66 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2010. All Rights Reserved.
+ * are Copyright (C) 2006-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.connect;
 
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 /**
- * Class ConnectionEventMulticaster implements a thread-safe list of
- * connection listeners. It is technically a tree but it grows only
- * in one direction, which makes it more like a linked list. This
- * class behaves like a listener but it simply forwards the events
- * to the contained connection listeners.
+ * Class ConnectionEventMulticaster implements a thread-safe set of connection
+ * listeners. In addition, it acts as a listener such that events can be sent to
+ * the multicaster and it will dispatch the events to all registered listeners.
  *
- * <pre><code>
- * ConnectionListener connectionListener = null;
- *
- * public synchronized void addConnectionListener(ConnectionListener l) {
- *     connectionListener = ConnectionEventMulticaster.add(connectionListener, l);
- * }
- * public synchronized void removeConnectionListener(ConnectionListener l) {
- *     connectionListener = ConnectionEventMulticaster.remove(connectionListener, l);
- * }
- * protected void fireEvent(ConnectionEvent e) {
- *     ConnectionListener listener = connectionListener;
- *     if (listener != null) {
- *         listener.connectionEvent(e);
- *     }
- * }
- * </code></pre>
- *
- * <p>This marvelous design was originally put to code by Amy Fowler and
- * John Rose in the form of the <code>AWTEventMulticaster</code> class
- * in the <code>java.awt</code> package. This implementation is based on
- * the description given in <u>Taming Java Threads</u> by Allen Holub.</p>
+ * @author Nathan Fiedler
  */
 public class ConnectionEventMulticaster implements ConnectionListener {
 
-    /** A connection listener. */
-    protected final ConnectionListener listener1;
-    /** A connection listener. */
-    protected final ConnectionListener listener2;
+    /**
+     * A set of unique connection listeners.
+     */
+    private final Set<ConnectionListener> listeners;
 
     /**
-     * Adds the second listener to the first listener and returns the
-     * resulting multicast listener.
-     *
-     * @param  l1  a connection listener.
-     * @param  l2  the connection listener being added.
-     * @return  connection multicast listener.
+     * Creates a new instance of ConnectionEventMulticaster.
      */
-    public static ConnectionListener add(ConnectionListener l1,
-            ConnectionListener l2) {
-        return (l1 == null) ? l2
-                : (l2 == null) ? l1 : new ConnectionEventMulticaster(l1, l2);
+    public ConnectionEventMulticaster() {
+        // Use CopyOnWriteArraySet so that our listeners are unique,
+        // that the average case of iterating the list is kept fast
+        // and efficient, and that the unusual case of adding/removing
+        // from the list is still thread-safe (albeit via copying).
+        listeners = new CopyOnWriteArraySet<ConnectionListener>();
     }
 
     /**
-     * Removes the second listener from the first listener and returns
-     * the resulting multicast listener.
+     * Adds the given listener to the set of listeners.
      *
-     * @param  l1  a connection listener.
-     * @param  l2  the listener being removed.
-     * @return  connection multicast listener.
+     * @param l a connection listener.
      */
-    public static ConnectionListener remove(ConnectionListener l1,
-            ConnectionListener l2) {
-        if (l1 == l2 || l1 == null) {
-            return null;
-        } else if (l1 instanceof ConnectionEventMulticaster) {
-            return ((ConnectionEventMulticaster) l1).remove(l2);
-        } else {
-            return l1;
+    public void add(ConnectionListener l) {
+        if (l != null) {
+            listeners.add(l);
         }
     }
 
     /**
-     * Creates a connection event multicaster instance which chains
-     * listener l1 with listener l2.
+     * Removes the given listener from the set of listeners.
      *
-     * @param  l1  a connection listener.
-     * @param  l2  a connection listener.
+     * @param l a connection listener.
      */
-    protected ConnectionEventMulticaster(ConnectionListener l1, ConnectionListener l2) {
-        listener1 = l1;
-        listener2 = l2;
-    }
-
-    /**
-     * Removes a connection listener from this multicaster and returns the
-     * resulting multicast listener.
-     *
-     * @param  l  the listener to be removed.
-     * @return  the other listener.
-     */
-    protected ConnectionListener remove(ConnectionListener l) {
-        if (l == listener1) {
-            return listener2;
+    public void remove(ConnectionListener l) {
+        if (l != null) {
+            listeners.remove(l);
         }
-        if (l == listener2) {
-            return listener1;
-        }
-        // Recursively seek out the target listener.
-        ConnectionListener l1 = remove(listener1, l);
-        ConnectionListener l2 = remove(listener2, l);
-        return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
     }
 
     @Override
     public void connected(ConnectionEvent e) {
-        listener1.connected(e);
-        listener2.connected(e);
+        for (ConnectionListener l : listeners) {
+            l.connected(e);
+        }
     }
 }

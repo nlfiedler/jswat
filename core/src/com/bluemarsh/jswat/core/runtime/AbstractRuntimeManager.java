@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.runtime;
 
@@ -33,18 +31,23 @@ import java.util.Iterator;
  */
 public abstract class AbstractRuntimeManager implements RuntimeManager {
 
-    /** The prefix for runtime identifiers. */
+    /**
+     * The prefix for runtime identifiers.
+     */
     protected static final String ID_PREFIX = "JRE_";
-    /** List of runtime listeners. */
-    private RuntimeListener runtimeListeners;
+    /**
+     * List of runtime listeners.
+     */
+    private RuntimeEventMulticaster eventMulticaster;
+
+    protected AbstractRuntimeManager() {
+        eventMulticaster = new RuntimeEventMulticaster();
+    }
 
     @Override
     public void addRuntimeListener(RuntimeListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                runtimeListeners = RuntimeEventMulticaster.add(
-                        runtimeListeners, listener);
-            }
+            eventMulticaster.add(listener);
         }
     }
 
@@ -86,16 +89,10 @@ public abstract class AbstractRuntimeManager implements RuntimeManager {
     /**
      * Sends the given event to all of the registered listeners.
      *
-     * @param  e  event to be dispatched.
+     * @param e event to be dispatched.
      */
     protected void fireEvent(RuntimeEvent e) {
-        RuntimeListener listeners;
-        synchronized (this) {
-            listeners = runtimeListeners;
-        }
-        if (listeners != null) {
-            e.getType().fireEvent(e, listeners);
-        }
+        e.getType().fireEvent(e, eventMulticaster);
     }
 
     @Override
@@ -127,10 +124,7 @@ public abstract class AbstractRuntimeManager implements RuntimeManager {
     @Override
     public void removeRuntimeListener(RuntimeListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                runtimeListeners = RuntimeEventMulticaster.remove(
-                        runtimeListeners, listener);
-            }
+            eventMulticaster.remove(listener);
         }
     }
 }

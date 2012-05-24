@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2010. All Rights Reserved.
+ * are Copyright (C) 2006-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.watch;
 
@@ -27,31 +25,31 @@ import com.bluemarsh.jswat.core.session.SessionEvent;
 import com.bluemarsh.jswat.core.session.SessionListener;
 
 /**
- * AbstractWatchManager provides an abstract WatchManager implementation
- * for concrete implementations to subclass. This class implements the
- * SessionListener interface so that the watches are loaded and saved
- * at the appropriate times.
+ * AbstractWatchManager provides an abstract WatchManager implementation for
+ * concrete implementations to subclass. This class implements the
+ * SessionListener interface so that the watches are loaded and saved at the
+ * appropriate times.
  *
  * @author Nathan Fiedler
  */
 public abstract class AbstractWatchManager implements WatchManager, SessionListener {
 
-    /** List of watch listeners. */
-    private WatchListener watchListeners;
+    /**
+     * List of watch listeners.
+     */
+    private WatchEventMulticaster eventMulticaster;
 
     /**
      * Creates a new instance of AbstractWatchManager.
      */
     protected AbstractWatchManager() {
+        eventMulticaster = new WatchEventMulticaster();
     }
 
     @Override
     public void addWatchListener(WatchListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                watchListeners = WatchEventMulticaster.add(
-                        watchListeners, listener);
-            }
+            eventMulticaster.add(listener);
         }
     }
 
@@ -71,22 +69,16 @@ public abstract class AbstractWatchManager implements WatchManager, SessionListe
     /**
      * Sends the given event to all of the registered listeners.
      *
-     * @param  e  event to be dispatched.
+     * @param e event to be dispatched.
      */
     protected void fireEvent(WatchEvent e) {
-        WatchListener listeners;
-        synchronized (this) {
-            listeners = watchListeners;
-        }
-        if (listeners != null) {
-            e.getType().fireEvent(e, listeners);
-        }
+        e.getType().fireEvent(e, eventMulticaster);
     }
 
     /**
      * Load the persisted watches from storage.
      *
-     * @param  session  associated Session instance.
+     * @param session associated Session instance.
      */
     protected abstract void loadWatches(Session session);
 
@@ -98,10 +90,7 @@ public abstract class AbstractWatchManager implements WatchManager, SessionListe
     @Override
     public void removeWatchListener(WatchListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                watchListeners = WatchEventMulticaster.remove(
-                        watchListeners, listener);
-            }
+            eventMulticaster.remove(listener);
         }
     }
 
@@ -112,7 +101,7 @@ public abstract class AbstractWatchManager implements WatchManager, SessionListe
     /**
      * Save the watches to persistent storage.
      *
-     * @param  session  associated Session instance.
+     * @param session associated Session instance.
      */
     protected abstract void saveWatches(Session session);
 

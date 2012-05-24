@@ -14,65 +14,57 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
 
 import java.util.Iterator;
 
 /**
  * Class AbstractSessionManager provides an abstract implementation of a
- * SessionManager for the concrete implementations to subclass. It takes
- * care of basic functionality such as managing listeners.
+ * SessionManager for the concrete implementations to subclass. It takes care of
+ * basic functionality such as managing listeners.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public abstract class AbstractSessionManager implements SessionManager {
-    /** The prefix for generating session names. */
+
+    /**
+     * The prefix for generating session names.
+     */
     private static final String GEN_NAME_PREFIX = "Session ";
-    /** Session manager listeners list. */
-    private SessionManagerListener sessionManagerListener = null;
+    /**
+     * Session manager listeners list.
+     */
+    private SessionManagerEventMulticaster eventMulticaster = null;
 
     /**
      * Constructs a new instance of AbstractSessionManager.
      */
     protected AbstractSessionManager() {
+        eventMulticaster = new SessionManagerEventMulticaster();
     }
 
     @Override
     public void addSessionManagerListener(SessionManagerListener l) {
-        if (l != null) {
-            synchronized (this) {
-                sessionManagerListener = SessionManagerEventMulticaster.add(
-                        sessionManagerListener, l);
-            }
-        }
+        eventMulticaster.add(l);
     }
 
     /**
      * Dispatches the event to the registered listeners.
      *
-     * @param  event  event to be dispatched.
+     * @param event event to be dispatched.
      */
     protected void fireEvent(SessionManagerEvent event) {
-        SessionManagerListener listener;
-        synchronized (this) {
-            listener = sessionManagerListener;
-        }
-        if (listener != null) {
-            event.getType().fireEvent(event, listener);
-        }
+        event.getType().fireEvent(event, eventMulticaster);
     }
 
     /**
      * Generates a new, unique session name.
      *
-     * @return  new session name.
+     * @return new session name.
      */
     protected String generateName() {
         Iterator<Session> iter = iterateSessions();
@@ -102,11 +94,6 @@ public abstract class AbstractSessionManager implements SessionManager {
 
     @Override
     public void removeSessionManagerListener(SessionManagerListener l) {
-        if (l != null) {
-            synchronized (this) {
-                sessionManagerListener = SessionManagerEventMulticaster.remove(
-                    sessionManagerListener, l);
-            }
-        }
+        eventMulticaster.remove(l);
     }
 }

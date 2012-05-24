@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 1999-2010. All Rights Reserved.
+ * are Copyright (C) 1999-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.context;
 
@@ -31,34 +29,39 @@ import java.util.logging.Logger;
 
 /**
  * Class AbstractDebuggingContext provides an abstract implementation of
- * DebuggingContext for concrete implementations to subclass. It maintains
- * a set of ContextListener instances and fires events on request.
+ * DebuggingContext for concrete implementations to subclass. It maintains a set
+ * of ContextListener instances and fires events on request.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public abstract class AbstractDebuggingContext
         implements DebuggingContext, SessionListener {
 
-    /** Logger for gracefully reporting unexpected errors. */
+    /**
+     * Logger for gracefully reporting unexpected errors.
+     */
     private static final Logger logger = Logger.getLogger(
             AbstractDebuggingContext.class.getName());
-    /** List of context listeners. */
-    private ContextListener listeners;
-    /** The Session instance we belong to. */
+    /**
+     * List of context listeners.
+     */
+    private ContextEventMulticaster eventMulticaster;
+    /**
+     * The Session instance we belong to.
+     */
     private Session ourSession;
 
     /**
-     * Constructs a new DebuggingContext object.
+     * Constructs a new AbstractDebuggingContext object.
      */
     protected AbstractDebuggingContext() {
+        eventMulticaster = new ContextEventMulticaster();
     }
 
     @Override
     public void addContextListener(ContextListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                listeners = ContextEventMulticaster.add(listeners, listener);
-            }
+            eventMulticaster.add(listener);
         }
     }
 
@@ -75,23 +78,17 @@ public abstract class AbstractDebuggingContext
     }
 
     /**
-     * Let all the change listeners know of a recent change in the context.
-     * This creates an event and sends it out to the listeners.
+     * Let all the change listeners know of a recent change in the context. This
+     * creates an event and sends it out to the listeners.
      *
-     * @param  type        type of the context change.
-     * @param  suspending  true if Session is suspending as a result of this.
+     * @param type type of the context change.
+     * @param suspending true if Session is suspending as a result of this.
      */
     protected void fireChange(ContextEventType type, boolean suspending) {
         try {
-            ContextListener cl;
-            synchronized (this) {
-                cl = listeners;
-            }
-            if (cl != null) {
-                ContextEvent event = new ContextEvent(
-                        this, ourSession, type, suspending);
-                event.getType().fireEvent(event, cl);
-            }
+            ContextEvent event = new ContextEvent(
+                    this, ourSession, type, suspending);
+            event.getType().fireEvent(event, eventMulticaster);
         } catch (VMDisconnectedException vmde) {
             // This happens quite often, so ignore it.
         } catch (Exception e) {
@@ -107,9 +104,7 @@ public abstract class AbstractDebuggingContext
     @Override
     public void removeContextListener(ContextListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                listeners = ContextEventMulticaster.remove(listeners, listener);
-            }
+            eventMulticaster.remove(listener);
         }
     }
 

@@ -14,94 +14,107 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2012. All Rights Reserved.
+ * are Copyright (C) 2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-package com.bluemarsh.jswat.core.session;
+package com.bluemarsh.jswat.core.breakpoint;
 
+import java.beans.PropertyChangeEvent;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests the SessionManagerEventMulticaster class.
+ * Tests the BreakpointEventMulticaster class.
  *
  * @author Nathan Fiedler
  */
-public class SessionManagerEventMulticasterTest {
+public class BreakpointEventMulticasterTest {
 
     @Test
     public void testMulticaster() {
-        SessionManagerEventMulticaster smem = new SessionManagerEventMulticaster();
-        Assert.assertNotNull(smem);
+        BreakpointEventMulticaster bem = new BreakpointEventMulticaster();
+        Assert.assertNotNull(bem);
 
         // nothing should happen
-        smem.add(null);
-        smem.remove(null);
+        bem.add(null);
+        bem.remove(null);
 
         TestListener l1 = new TestListener();
-        smem.add(l1);
+        bem.add(l1);
 
         Assert.assertEquals(0, l1.added);
         Assert.assertEquals(0, l1.removed);
-        Assert.assertEquals(0, l1.setCurrent);
+        Assert.assertEquals(0, l1.stopped);
 
         TestListener l2 = new TestListener();
-        smem.add(l2);
-        smem.sessionAdded(null);
+        bem.add(l2);
+        bem.breakpointAdded(null);
         Assert.assertEquals(1, l1.added);
         Assert.assertEquals(0, l1.removed);
-        Assert.assertEquals(0, l1.setCurrent);
+        Assert.assertEquals(0, l1.stopped);
         Assert.assertEquals(1, l2.added);
         Assert.assertEquals(0, l2.removed);
-        Assert.assertEquals(0, l2.setCurrent);
+        Assert.assertEquals(0, l2.stopped);
 
-        smem.remove(l2);
-        smem.sessionRemoved(null);
+        bem.remove(l2);
+        bem.breakpointRemoved(null);
         Assert.assertEquals(1, l1.added);
         Assert.assertEquals(1, l1.removed);
-        Assert.assertEquals(0, l1.setCurrent);
+        Assert.assertEquals(0, l1.stopped);
         Assert.assertEquals(1, l2.added);
         Assert.assertEquals(0, l2.removed);
-        Assert.assertEquals(0, l2.setCurrent);
+        Assert.assertEquals(0, l2.stopped);
 
-        smem.add(l2);
-        smem.sessionSetCurrent(null);
+        bem.add(l2);
+        bem.breakpointStopped(null);
         Assert.assertEquals(1, l1.added);
         Assert.assertEquals(1, l1.removed);
-        Assert.assertEquals(1, l1.setCurrent);
+        Assert.assertEquals(1, l1.stopped);
         Assert.assertEquals(1, l2.added);
         Assert.assertEquals(0, l2.removed);
-        Assert.assertEquals(1, l2.setCurrent);
+        Assert.assertEquals(1, l2.stopped);
 
-        smem.sessionRemoved(null);
+        bem.breakpointRemoved(null);
         Assert.assertEquals(1, l1.added);
         Assert.assertEquals(2, l1.removed);
-        Assert.assertEquals(1, l1.setCurrent);
+        Assert.assertEquals(1, l1.stopped);
         Assert.assertEquals(1, l2.added);
         Assert.assertEquals(1, l2.removed);
-        Assert.assertEquals(1, l2.setCurrent);
+        Assert.assertEquals(1, l2.stopped);
     }
 
-    private static class TestListener implements SessionManagerListener {
+    private static class TestListener implements BreakpointListener {
 
         public int added;
         public int removed;
-        public int setCurrent;
+        public int stopped;
+        public int error;
+        public int property;
 
         @Override
-        public void sessionAdded(SessionManagerEvent e) {
+        public void breakpointAdded(BreakpointEvent e) {
             added++;
         }
 
         @Override
-        public void sessionRemoved(SessionManagerEvent e) {
+        public void breakpointRemoved(BreakpointEvent e) {
             removed++;
         }
 
         @Override
-        public void sessionSetCurrent(SessionManagerEvent e) {
-            setCurrent++;
+        public void breakpointStopped(BreakpointEvent e) {
+            stopped++;
+        }
+
+        @Override
+        public void errorOccurred(BreakpointEvent e) {
+            error++;
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent e) {
+            property++;
         }
     }
 }

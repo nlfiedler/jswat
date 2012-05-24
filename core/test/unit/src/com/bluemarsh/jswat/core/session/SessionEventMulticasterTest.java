@@ -14,154 +14,155 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2010. All Rights Reserved.
+ * are Copyright (C) 2002-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.session;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Tests the SessionEventMulticaster class.
+ *
+ * @author Nathan Fiedler
  */
 public class SessionEventMulticasterTest {
 
     @Test
     public void test_SessionEventMulticaster() {
-        SessionListener sl = SessionEventMulticaster.add(null, null);
-        assertEquals(sl, null);
+        SessionEventMulticaster sem = new SessionEventMulticaster();
+        Assert.assertNotNull(sem);
 
-        sl = SessionEventMulticaster.remove(null, null);
-        assertEquals(sl, null);
+        // nothing should happen
+        sem.add(null);
+        sem.remove(null);
 
         TestListener l1 = new TestListener(false);
-        sl = SessionEventMulticaster.add(sl, l1);
+        sem.add(l1);
         TestListener l2 = new TestListener(true);
-        sl = SessionEventMulticaster.add(sl, l2);
+        sem.add(l2);
 
-        assertEquals(0, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(0, l1.deactivated);
-        assertEquals(0, l1.opened);
-        assertEquals(0, l1.resuming);
-        assertEquals(0, l1.suspended);
+        Assert.assertEquals(0, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(0, l1.deactivated);
+        Assert.assertEquals(0, l1.opened);
+        Assert.assertEquals(0, l1.resuming);
+        Assert.assertEquals(0, l1.suspended);
 
         Session session = new DummySession();
         session.setIdentifier("eventUnitTest1");
         SessionEvent sevt = new SessionEvent(session, SessionEventType.OPENED);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(0, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(0, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(0, l1.resuming);
-        assertEquals(0, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        Assert.assertEquals(0, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(0, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(0, l1.resuming);
+        Assert.assertEquals(0, l1.suspended);
 
         sevt = new SessionEvent(session, SessionEventType.CONNECTED);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(1, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(0, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(0, l1.resuming);
-        assertEquals(0, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        Assert.assertEquals(1, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(0, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(0, l1.resuming);
+        Assert.assertEquals(0, l1.suspended);
 
-        assertEquals(0, l2.listener.activated);
-        assertEquals(0, l2.listener.closing);
-        assertEquals(0, l2.listener.deactivated);
-        assertEquals(1, l2.listener.opened);
-        assertEquals(0, l2.listener.resuming);
-        assertEquals(0, l2.listener.suspended);
+        Assert.assertEquals(0, l2.listener.activated);
+        Assert.assertEquals(0, l2.listener.closing);
+        Assert.assertEquals(0, l2.listener.deactivated);
+        Assert.assertEquals(1, l2.listener.opened);
+        Assert.assertEquals(0, l2.listener.resuming);
+        Assert.assertEquals(0, l2.listener.suspended);
 
         sevt = new SessionEvent(session, SessionEventType.RESUMING);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(1, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(0, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(1, l1.resuming);
-        assertEquals(0, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        Assert.assertEquals(1, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(0, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(1, l1.resuming);
+        Assert.assertEquals(0, l1.suspended);
 
         sevt = new SessionEvent(session, SessionEventType.SUSPENDED);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(1, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(0, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(1, l1.resuming);
-        assertEquals(1, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        Assert.assertEquals(1, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(0, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(1, l1.resuming);
+        Assert.assertEquals(1, l1.suspended);
 
         sevt = new SessionEvent(session, SessionEventType.DISCONNECTED);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(1, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(1, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(1, l1.resuming);
-        assertEquals(1, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        Assert.assertEquals(1, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(1, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(1, l1.resuming);
+        Assert.assertEquals(1, l1.suspended);
 
-        assertEquals(0, l2.listener.activated);
-        assertEquals(1, l2.listener.closing);
-        assertEquals(0, l2.listener.deactivated);
-        assertEquals(1, l2.listener.opened);
-        assertEquals(0, l2.listener.resuming);
-        assertEquals(0, l2.listener.suspended);
+        Assert.assertEquals(0, l2.listener.activated);
+        Assert.assertEquals(1, l2.listener.closing);
+        Assert.assertEquals(0, l2.listener.deactivated);
+        Assert.assertEquals(1, l2.listener.opened);
+        Assert.assertEquals(0, l2.listener.resuming);
+        Assert.assertEquals(0, l2.listener.suspended);
 
         sevt = new SessionEvent(session, SessionEventType.CLOSING);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(1, l1.activated);
-        assertEquals(1, l1.closing);
-        assertEquals(1, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(1, l1.resuming);
-        assertEquals(1, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        Assert.assertEquals(1, l1.activated);
+        Assert.assertEquals(1, l1.closing);
+        Assert.assertEquals(1, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(1, l1.resuming);
+        Assert.assertEquals(1, l1.suspended);
 
         l1 = new TestListener(false);
-        sl = SessionEventMulticaster.add(sl, l1);
+        sem.add(l1);
         l2 = new TestListener(true);
-        sl = SessionEventMulticaster.add(sl, l2);
+        sem.add(l2);
 
-        assertEquals(0, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(0, l1.deactivated);
-        assertEquals(0, l1.opened);
-        assertEquals(0, l1.resuming);
-        assertEquals(0, l1.suspended);
+        Assert.assertEquals(0, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(0, l1.deactivated);
+        Assert.assertEquals(0, l1.opened);
+        Assert.assertEquals(0, l1.resuming);
+        Assert.assertEquals(0, l1.suspended);
 
         sevt = new SessionEvent(session, SessionEventType.OPENED);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(0, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(0, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(0, l1.resuming);
-        assertEquals(0, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        Assert.assertEquals(0, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(0, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(0, l1.resuming);
+        Assert.assertEquals(0, l1.suspended);
 
         sevt = new SessionEvent(session, SessionEventType.CONNECTED);
-        sevt.getType().fireEvent(sevt, sl);
-        sl = SessionEventMulticaster.remove(sl, l2);
-        assertEquals(1, l1.activated);
-        assertEquals(0, l1.closing);
-        assertEquals(0, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(0, l1.resuming);
-        assertEquals(0, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        sem.remove(l2);
+        Assert.assertEquals(1, l1.activated);
+        Assert.assertEquals(0, l1.closing);
+        Assert.assertEquals(0, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(0, l1.resuming);
+        Assert.assertEquals(0, l1.suspended);
 
         sevt = new SessionEvent(session, SessionEventType.DISCONNECTED);
-        sevt.getType().fireEvent(sevt, sl);
+        sevt.getType().fireEvent(sevt, sem);
         sevt = new SessionEvent(session, SessionEventType.CLOSING);
-        sevt.getType().fireEvent(sevt, sl);
-        sl = SessionEventMulticaster.remove(sl, l1);
-        assertEquals(1, l1.activated);
-        assertEquals(1, l1.closing);
-        assertEquals(1, l1.deactivated);
-        assertEquals(1, l1.opened);
-        assertEquals(0, l1.resuming);
-        assertEquals(0, l1.suspended);
+        sevt.getType().fireEvent(sevt, sem);
+        sem.remove(l1);
+        Assert.assertEquals(1, l1.activated);
+        Assert.assertEquals(1, l1.closing);
+        Assert.assertEquals(1, l1.deactivated);
+        Assert.assertEquals(1, l1.opened);
+        Assert.assertEquals(0, l1.resuming);
+        Assert.assertEquals(0, l1.suspended);
     }
 
     private static class TestListener implements SessionListener {

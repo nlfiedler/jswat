@@ -14,15 +14,13 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2010. All Rights Reserved.
+ * are Copyright (C) 2006-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.watch;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -32,44 +30,45 @@ public class WatchEventMulticasterTest {
 
     @Test
     public void test_WatchEventMulticaster() {
-        WatchListener sl = WatchEventMulticaster.add(null, null);
-        assertEquals(sl, null);
+        WatchEventMulticaster wem = new WatchEventMulticaster();
+        Assert.assertNotNull(wem);
 
-        sl = WatchEventMulticaster.remove(null, null);
-        assertEquals(sl, null);
+        // nothing should happen
+        wem.add(null);
+        wem.remove(null);
 
         TestListener l1 = new TestListener();
-        sl = WatchEventMulticaster.add(sl, l1);
+        wem.add(l1);
         TestListener l2 = new TestListener();
-        sl = WatchEventMulticaster.add(sl, l2);
+        wem.add(l2);
 
-        assertEquals(0, l1.added);
-        assertEquals(0, l1.removed);
-        assertEquals(0, l2.added);
-        assertEquals(0, l2.removed);
+        Assert.assertEquals(0, l1.added);
+        Assert.assertEquals(0, l1.removed);
+        Assert.assertEquals(0, l2.added);
+        Assert.assertEquals(0, l2.removed);
 
         Watch watch = new DummyWatch();
         WatchEvent sevt = new WatchEvent(watch, WatchEventType.ADDED);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(1, l1.added);
-        assertEquals(0, l1.removed);
-        assertEquals(1, l2.added);
-        assertEquals(0, l2.removed);
+        sevt.getType().fireEvent(sevt, wem);
+        Assert.assertEquals(1, l1.added);
+        Assert.assertEquals(0, l1.removed);
+        Assert.assertEquals(1, l2.added);
+        Assert.assertEquals(0, l2.removed);
 
         sevt = new WatchEvent(watch, WatchEventType.REMOVED);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(1, l1.added);
-        assertEquals(1, l1.removed);
-        assertEquals(1, l2.added);
-        assertEquals(1, l2.removed);
+        sevt.getType().fireEvent(sevt, wem);
+        Assert.assertEquals(1, l1.added);
+        Assert.assertEquals(1, l1.removed);
+        Assert.assertEquals(1, l2.added);
+        Assert.assertEquals(1, l2.removed);
 
-        sl = WatchEventMulticaster.remove(sl, l1);
+        wem.remove(l1);
         sevt = new WatchEvent(watch, WatchEventType.ADDED);
-        sevt.getType().fireEvent(sevt, sl);
-        assertEquals(1, l1.added);
-        assertEquals(1, l1.removed);
-        assertEquals(2, l2.added);
-        assertEquals(1, l2.removed);
+        sevt.getType().fireEvent(sevt, wem);
+        Assert.assertEquals(1, l1.added);
+        Assert.assertEquals(1, l1.removed);
+        Assert.assertEquals(2, l2.added);
+        Assert.assertEquals(1, l2.removed);
     }
 
     private static class TestListener implements WatchListener {

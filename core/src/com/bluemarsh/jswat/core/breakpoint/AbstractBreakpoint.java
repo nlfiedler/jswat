@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2010. All Rights Reserved.
+ * are Copyright (C) 2001-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.breakpoint;
 
@@ -42,40 +40,67 @@ import java.util.Map;
  * Class AbstractBreakpoint is an abstract implementation of the Breakpoint
  * interface. It implements most of the basic behavior of breakpoints.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListener {
 
-    /** The thread suspension policy requested by the user. Must be one of
-     * the <code>com.sun.jdi.request.EventRequest</code> suspend constants.
-     * Defaults to <code>SUSPEND_ALL</code>. */
+    /**
+     * The thread suspension policy requested by the user. Must be one of the
+     * <code>com.sun.jdi.request.EventRequest</code> suspend constants. Defaults
+     * to
+     * <code>SUSPEND_ALL</code>.
+     */
     private int suspendPolicy = EventRequest.SUSPEND_ALL;
-    /** If true, force the debuggee to suspend, regardless of the suspend
-     * policy chosen by the user. This is to accomodate monitors that
-     * require a suspended debuggee in order to perform. */
+    /**
+     * If true, force the debuggee to suspend, regardless of the suspend policy
+     * chosen by the user. This is to accomodate monitors that require a
+     * suspended debuggee in order to perform.
+     */
     private boolean forceSuspend;
-    /** True if this breakpoint is enabled. */
+    /**
+     * True if this breakpoint is enabled.
+     */
     private boolean isEnabled;
-    /** Breakpoint group that contains us (always non-null). */
+    /**
+     * Breakpoint group that contains us (always non-null).
+     */
     private BreakpointGroup breakpointGroup;
-    /** Number of times this breakpoint has been hit. */
+    /**
+     * Number of times this breakpoint has been hit.
+     */
     private int hitCount;
-    /** List of conditions this breakpoint depends on. */
+    /**
+     * List of conditions this breakpoint depends on.
+     */
     private final List<Condition> conditionList;
-    /** List of monitors this breakpoint executes when it stops. */
+    /**
+     * List of monitors this breakpoint executes when it stops.
+     */
     private final List<Monitor> monitorList;
-    /** Class filter, appropriate for JDI event requests. */
+    /**
+     * Class filter, appropriate for JDI event requests.
+     */
     private String classFilter;
-    /** Thread filter, appropriate for JDI event requests. */
+    /**
+     * Thread filter, appropriate for JDI event requests.
+     */
     private String threadFilter;
-    /** True if the breakpoint should be deleted after being hit. */
+    /**
+     * True if the breakpoint should be deleted after being hit.
+     */
     private boolean deleteWhenHit;
-    /** Handles property change listeners and sending events. */
+    /**
+     * Handles property change listeners and sending events.
+     */
     protected final PropertyChangeSupport propSupport;
-    /** Map of the properties set in this breakpoint. */
+    /**
+     * Map of the properties set in this breakpoint.
+     */
     private Map<String, Object> propertiesMap;
-    /** List of breakpoint listeners. */
-    private BreakpointListener listeners;
+    /**
+     * List of breakpoint listeners.
+     */
+    private BreakpointEventMulticaster multicaster;
 
     /**
      * Creates a AbstractBreakpoint with the default parameters.
@@ -86,14 +111,13 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
         isEnabled = true;
         propSupport = new PropertyChangeSupport(this);
         propertiesMap = new HashMap<String, Object>();
+        multicaster = new BreakpointEventMulticaster();
     }
 
     @Override
     public void addBreakpointListener(BreakpointListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                listeners = BreakpointEventMulticaster.add(listeners, listener);
-            }
+            multicaster.add(listener);
             propSupport.addPropertyChangeListener(listener);
         }
     }
@@ -126,11 +150,11 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     }
 
     /**
-     * Applies the effective suspend policy of this breakpoint to the given
-     * JDI event request. This takes into account any monitors that require
-     * the debuggee to be suspended in order to perform.
+     * Applies the effective suspend policy of this breakpoint to the given JDI
+     * event request. This takes into account any monitors that require the
+     * debuggee to be suspended in order to perform.
      *
-     * @param  request  event request to apply suspend policy.
+     * @param request event request to apply suspend policy.
      */
     protected void applySuspendPolicy(EventRequest request) {
         request.setSuspendPolicy(forceSuspend ? EventRequest.SUSPEND_ALL
@@ -180,10 +204,10 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     }
 
     /**
-     * Notify breakpoint listeners that this breakpoint experienced
-     * an exceptional event.
+     * Notify breakpoint listeners that this breakpoint experienced an
+     * exceptional event.
      *
-     * @param  exc  exception that occurred.
+     * @param exc exception that occurred.
      */
     protected void fireError(Exception exc) {
         fireEvent(new BreakpointEvent(this, exc));
@@ -192,16 +216,10 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     /**
      * Let the breakpoint listeners know of an event in this breakpoint.
      *
-     * @param  e  the breakpoint event.
+     * @param e the breakpoint event.
      */
     protected void fireEvent(BreakpointEvent e) {
-        BreakpointListener bl;
-        synchronized (this) {
-            bl = listeners;
-        }
-        if (bl != null) {
-            e.getType().fireEvent(e, bl);
-        }
+        e.getType().fireEvent(e, multicaster);
     }
 
     @Override
@@ -255,11 +273,11 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     }
 
     /**
-     * This breakpoint has caused the debuggee VM to stop. Execute all
-     * monitors associated with this breakpoint.
+     * This breakpoint has caused the debuggee VM to stop. Execute all monitors
+     * associated with this breakpoint.
      *
-     * @param  e  Event for which we are stopping.
-     * @return  true if VM should resume, false otherwise.
+     * @param e Event for which we are stopping.
+     * @return true if VM should resume, false otherwise.
      */
     protected boolean performStop(Event e) {
         BreakpointEvent be = new BreakpointEvent(this,
@@ -276,12 +294,12 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     }
 
     /**
-     * Register this breakpoint as a listener for the given event request,
-     * such that the event dispatcher will invoke this breakpoint when
-     * events related to this request occur. Also sets the suspend policy
-     * and the enabled state based on the properties of this breakpoint.
+     * Register this breakpoint as a listener for the given event request, such
+     * that the event dispatcher will invoke this breakpoint when events related
+     * to this request occur. Also sets the suspend policy and the enabled state
+     * based on the properties of this breakpoint.
      *
-     * @param  request  event request to be registered.
+     * @param request event request to be registered.
      */
     protected void register(EventRequest request) {
         BreakpointGroup group = getBreakpointGroup();
@@ -298,9 +316,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     @Override
     public void removeBreakpointListener(BreakpointListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                listeners = BreakpointEventMulticaster.remove(listeners, listener);
-            }
+            multicaster.remove(listener);
             propSupport.removePropertyChangeListener(listener);
         }
     }
@@ -334,7 +350,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     /**
      * Run the monitors associated with this breakpoint and its group.
      *
-     * @param  event  breakpoint event.
+     * @param event breakpoint event.
      */
     protected void runMonitors(BreakpointEvent event) {
         // We are not expecting multiple threads to modify this list,
@@ -441,16 +457,16 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     }
 
     /**
-     * Determines if this breakpoint is to halt execution. Technically
-     * execution has already stopped. This method simply indicates
-     * whether the debuggee VM should be resumed or not. This method checks
-     * if a thread filter is in effect and if there is a match, as well as
-     * consulting any registered conditions to ensure they are satisfied.
-     * The conditions of the parent group, and it's parent and so on, are
-     * also considered prior to this method returning.
+     * Determines if this breakpoint is to halt execution. Technically execution
+     * has already stopped. This method simply indicates whether the debuggee VM
+     * should be resumed or not. This method checks if a thread filter is in
+     * effect and if there is a match, as well as consulting any registered
+     * conditions to ensure they are satisfied. The conditions of the parent
+     * group, and it's parent and so on, are also considered prior to this
+     * method returning.
      *
-     * @param  event  JDI Event that brought us here.
-     * @return  true if debuggee VM should resume, false otherwise.
+     * @param event JDI Event that brought us here.
+     * @return true if debuggee VM should resume, false otherwise.
      */
     protected boolean shouldResume(Event event) {
         // Check the thread filter to see if there is a match.
@@ -500,7 +516,7 @@ public abstract class AbstractBreakpoint implements Breakpoint, DispatcherListen
     /**
      * Unregister this breakpoint from the given event request.
      *
-     * @param  request  event request.
+     * @param request event request.
      */
     protected void unregister(EventRequest request) {
         BreakpointGroup group = getBreakpointGroup();

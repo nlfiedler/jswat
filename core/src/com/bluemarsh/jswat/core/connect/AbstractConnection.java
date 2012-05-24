@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.connect;
 
@@ -38,23 +36,32 @@ import org.openide.util.NbBundle;
  */
 public abstract class AbstractConnection implements JvmConnection {
 
-    /** Connector. */
+    /**
+     * Connector.
+     */
     private final Connector connector;
-    /** Connector arguments. */
+    /**
+     * Connector arguments.
+     */
     private final Map<String, ? extends Connector.Argument> connectorArgs;
-    /** True if this is a remote connection. */
+    /**
+     * True if this is a remote connection.
+     */
     private final boolean isRemoteConnection;
-    /** Debuggee VM. */
+    /**
+     * Debuggee VM.
+     */
     private VirtualMachine debuggeeVM;
-    /** List of ConnectionListener objects. */
-    private ConnectionListener listenerList;
+    /**
+     * List of ConnectionListener objects.
+     */
+    private ConnectionEventMulticaster eventMulticaster;
 
     /**
-     * Constructs a new JvmConnection with the given connector and
-     * arguments.
+     * Constructs a new JvmConnection with the given connector and arguments.
      *
-     * @param  connector  connector.
-     * @param  args       connector arguments.
+     * @param connector connector.
+     * @param args connector arguments.
      */
     public AbstractConnection(Connector connector,
             Map<String, ? extends Connector.Argument> args) {
@@ -62,6 +69,7 @@ public abstract class AbstractConnection implements JvmConnection {
         connectorArgs = args;
         isRemoteConnection = connector instanceof AttachingConnector
                 || connector instanceof ListeningConnector;
+        eventMulticaster = new ConnectionEventMulticaster();
     }
 
     @Override
@@ -69,9 +77,7 @@ public abstract class AbstractConnection implements JvmConnection {
         if (listener == null) {
             return;
         }
-        synchronized (this) {
-            listenerList = ConnectionEventMulticaster.add(listenerList, listener);
-        }
+        eventMulticaster.add(listener);
         if (isConnected()) {
             ConnectionEvent se = new ConnectionEvent(this, ConnectionEventType.CONNECTED);
             se.getType().fireEvent(se, listener);
@@ -86,16 +92,10 @@ public abstract class AbstractConnection implements JvmConnection {
     /**
      * Fires the event to all of the registered listeners.
      *
-     * @param  se  session event.
+     * @param se session event.
      */
     protected void fireEvent(ConnectionEvent se) {
-        ConnectionListener sl;
-        synchronized (this) {
-            sl = listenerList;
-        }
-        if (sl != null) {
-            se.getType().fireEvent(se, sl);
-        }
+        se.getType().fireEvent(se, eventMulticaster);
     }
 
     @Override
@@ -122,7 +122,7 @@ public abstract class AbstractConnection implements JvmConnection {
     /**
      * Returns the JDI connector associated with this connection instance.
      *
-     * @return  a connector.
+     * @return a connector.
      */
     protected Connector getConnector() {
         return connector;
@@ -131,8 +131,8 @@ public abstract class AbstractConnection implements JvmConnection {
     /**
      * Returns the named connector argument value as a String.
      *
-     * @param  name  name of argument to retrieve.
-     * @return  named argument value, or null if not available.
+     * @param name name of argument to retrieve.
+     * @return named argument value, or null if not available.
      */
     protected String getConnectorArg(String name) {
         if (connectorArgs != null) {
@@ -147,7 +147,7 @@ public abstract class AbstractConnection implements JvmConnection {
     /**
      * Returns a copy of the connector arguments for this connection.
      *
-     * @return  an argument map.
+     * @return an argument map.
      */
     protected Map<String, ? extends Connector.Argument> getConnectorArgs() {
         return new HashMap<String, Connector.Argument>(connectorArgs);
@@ -180,14 +180,12 @@ public abstract class AbstractConnection implements JvmConnection {
         if (listener == null) {
             return;
         }
-        synchronized (this) {
-            listenerList = ConnectionEventMulticaster.remove(listenerList, listener);
-        }
+        eventMulticaster.remove(listener);
     }
 
     /**
      *
-     * @param  vm  virtual machine we are now connected to.
+     * @param vm virtual machine we are now connected to.
      */
     protected void setVM(VirtualMachine vm) {
         debuggeeVM = vm;

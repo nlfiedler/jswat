@@ -14,148 +14,101 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004. All Rights Reserved.
+ * are Copyright (C) 2004-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.core.session;
 
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
 /**
- * Class SessionEventMulticaster implements a thread-safe list of
- * session listeners. It is technically a tree but it grows only
- * in one direction, which makes it more like a linked list. This
- * class behaves like a listener but it simply forwards the events
- * to the contained session listeners.
+ * Class SessionEventMulticaster implements a thread-safe list of session
+ * listeners. In addition, it acts as a listener such that events can be sent to
+ * the multicaster and it will dispatch the events to all registered listeners.
  *
- * <pre><code>
- * SessionListener sessionListener = null;
- *
- * public synchronized void addSessionListener(SessionListener l) {
- *     sessionListener = SessionEventMulticaster.add(sessionListener, l);
- * }
- * public synchronized void removeSessionListener(SessionListener l) {
- *     sessionListener = SessionEventMulticaster.remove(sessionListener, l);
- * }
- * protected void fireEvent(SessionEvent e) {
- *     SessionListener listener = sessionListener;
- *     if (listener != null) {
- *         listener.sessionEvent(e);
- *     }
- * }
- * </code></pre>
- *
- * <p>This marvelous design was originally put to code by Amy Fowler and
- * John Rose in the form of the <code>AWTEventMulticaster</code> class
- * in the <code>java.awt</code> package. This implementation is based on
- * the description given in <u>Taming Java Threads</u> by Allen Holub.</p>
+ * @author Nathan Fiedler
  */
 public class SessionEventMulticaster implements SessionListener {
-    /** A session listener. */
-    protected final SessionListener listener1;
-    /** A session listener. */
-    protected final SessionListener listener2;
 
     /**
-     * Adds the second listener to the first listener and returns the
-     * resulting multicast listener.
-     *
-     * @param  l1  a session listener.
-     * @param  l2  the session listener being added.
-     * @return  session multicast listener.
+     * A set of unique session listeners.
      */
-    public static SessionListener add(SessionListener l1,
-                                      SessionListener l2) {
-        return (l1 == null) ? l2 :
-               (l2 == null) ? l1 : new SessionEventMulticaster(l1, l2);
+    private final Set<SessionListener> listeners;
+
+    /**
+     * Creates a new instance of SessionEventMulticaster.
+     */
+    public SessionEventMulticaster() {
+        // Use CopyOnWriteArraySet so that our listeners are unique,
+        // that the average case of iterating the list is kept fast
+        // and efficient, and that the unusual case of adding/removing
+        // from the list is still thread-safe (albeit via copying).
+        listeners = new CopyOnWriteArraySet<SessionListener>();
     }
 
     /**
-     * Removes the second listener from the first listener and returns
-     * the resulting multicast listener.
+     * Adds the given listener to the set of listeners.
      *
-     * @param  l1  a session listener.
-     * @param  l2  the listener being removed.
-     * @return  session multicast listener.
+     * @param l a session listener.
      */
-    public static SessionListener remove(SessionListener l1,
-                                         SessionListener l2) {
-        if (l1 == l2 || l1 == null) {
-            return null;
-        } else if (l1 instanceof SessionEventMulticaster) {
-            return ((SessionEventMulticaster) l1).remove(l2);
-        } else {
-            return l1;
+    public void add(SessionListener l) {
+        if (l != null) {
+            listeners.add(l);
         }
     }
 
     /**
-     * Creates a session event multicaster instance which chains
-     * listener l1 with listener l2.
+     * Removes the given listener from the set of listeners.
      *
-     * @param  l1  a session listener.
-     * @param  l2  a session listener.
+     * @param l a session listener.
      */
-    protected SessionEventMulticaster(SessionListener l1, SessionListener l2) {
-        listener1 = l1;
-        listener2 = l2;
-    }
-
-    /**
-     * Removes a session listener from this multicaster and returns the
-     * resulting multicast listener.
-     *
-     * @param  l  the listener to be removed.
-     * @return  the other listener.
-     */
-    protected SessionListener remove(SessionListener l) {
-        if (l == listener1) {
-            return listener2;
+    public void remove(SessionListener l) {
+        if (l != null) {
+            listeners.remove(l);
         }
-        if (l == listener2) {
-            return listener1;
-        }
-        // Recursively seek out the target listener.
-        SessionListener l1 = remove(listener1, l);
-        SessionListener l2 = remove(listener2, l);
-        return (l1 == listener1 && l2 == listener2) ? this : add(l1, l2);
     }
 
     @Override
     public void connected(SessionEvent e) {
-        listener1.connected(e);
-        listener2.connected(e);
+        for (SessionListener l : listeners) {
+            l.connected(e);
+        }
     }
 
     @Override
     public void closing(SessionEvent e) {
-        listener1.closing(e);
-        listener2.closing(e);
+        for (SessionListener l : listeners) {
+            l.closing(e);
+        }
     }
 
     @Override
     public void disconnected(SessionEvent e) {
-        listener1.disconnected(e);
-        listener2.disconnected(e);
+        for (SessionListener l : listeners) {
+            l.disconnected(e);
+        }
     }
 
     @Override
     public void opened(Session s) {
-        listener1.opened(s);
-        listener2.opened(s);
+        for (SessionListener l : listeners) {
+            l.opened(s);
+        }
     }
 
     @Override
     public void resuming(SessionEvent e) {
-        listener1.resuming(e);
-        listener2.resuming(e);
+        for (SessionListener l : listeners) {
+            l.resuming(e);
+        }
     }
 
     @Override
     public void suspended(SessionEvent e) {
-        listener1.suspended(e);
-        listener2.suspended(e);
+        for (SessionListener l : listeners) {
+            l.suspended(e);
+        }
     }
 }

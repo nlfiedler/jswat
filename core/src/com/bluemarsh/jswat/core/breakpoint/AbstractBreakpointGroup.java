@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2001-2010. All Rights Reserved.
+ * are Copyright (C) 2001-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.core.breakpoint;
 
@@ -27,38 +25,47 @@ import java.beans.PropertyChangeSupport;
 
 /**
  * Class AbstractBreakpointGroup is an abstract implementation of the
- * BreakpointGroup interface. It implements some of the basic behavior
- * of breakpoint groups.
+ * BreakpointGroup interface. It implements some of the basic behavior of
+ * breakpoint groups.
  *
  * @author Nathan Fiedler
  */
 public abstract class AbstractBreakpointGroup implements BreakpointGroup {
 
-    /** True if this breakpoint group is enabled. */
+    /**
+     * True if this breakpoint group is enabled.
+     */
     private boolean isEnabled;
-    /** Name of our breakpoint group. Used for display. */
+    /**
+     * Name of our breakpoint group. Used for display.
+     */
     private String groupName;
-    /** The breakpoint group to which we belong (always non-null). */
+    /**
+     * The breakpoint group to which we belong (always non-null).
+     */
     private BreakpointGroup parentGroup;
-    /** Handles property change listeners and sending events. */
+    /**
+     * Handles property change listeners and sending events.
+     */
     private PropertyChangeSupport propSupport;
-    /** List of breakpoint group listeners. */
-    private BreakpointGroupListener listeners;
+    /**
+     * List of breakpoint group listeners.
+     */
+    private BreakpointGroupEventMulticaster multicaster;
 
     /**
      * Creates a new instance of AbstractBreakpointGroup.
      */
     public AbstractBreakpointGroup() {
         isEnabled = true;
+        multicaster = new BreakpointGroupEventMulticaster();
         propSupport = new PropertyChangeSupport(this);
     }
 
     @Override
     public void addBreakpointGroupListener(BreakpointGroupListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                listeners = BreakpointGroupEventMulticaster.add(listeners, listener);
-            }
+            multicaster.add(listener);
             propSupport.addPropertyChangeListener(listener);
         }
     }
@@ -71,17 +78,11 @@ public abstract class AbstractBreakpointGroup implements BreakpointGroup {
     /**
      * Notify breakpoint group listeners that this group has changed.
      *
-     * @param  type  type of change.
+     * @param type type of change.
      */
     protected void fireChange(BreakpointGroupEventType type) {
         BreakpointGroupEvent e = new BreakpointGroupEvent(this, type);
-        BreakpointGroupListener gl;
-        synchronized (this) {
-            gl = listeners;
-        }
-        if (gl != null) {
-            e.getType().fireEvent(e, gl);
-        }
+        e.getType().fireEvent(e, multicaster);
     }
 
     @Override
@@ -106,9 +107,7 @@ public abstract class AbstractBreakpointGroup implements BreakpointGroup {
     @Override
     public void removeBreakpointGroupListener(BreakpointGroupListener listener) {
         if (listener != null) {
-            synchronized (this) {
-                listeners = BreakpointGroupEventMulticaster.remove(listeners, listener);
-            }
+            multicaster.remove(listener);
             propSupport.removePropertyChangeListener(listener);
         }
     }
