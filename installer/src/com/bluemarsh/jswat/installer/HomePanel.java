@@ -14,14 +14,12 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.installer;
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,21 +35,27 @@ import javax.swing.event.DocumentListener;
 /**
  * Displays the home directory selection panel.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
-public class HomePanel extends InstallerPanel implements
-        ActionListener, DocumentListener {
-    /** silence compiler warnings */
+public class HomePanel extends InstallerPanel {
+
+    /**
+     * silence compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** True if home has been validated as okay, false otherwise. */
+    /**
+     * True if home has been validated as okay, false otherwise.
+     */
     private volatile boolean homeOkay;
-    /** List of paths where we should try to install. */
+    /**
+     * List of paths where we should try to install.
+     */
     private static final String[] CANDIDATE_PATH_LIST = {
         "C:\\Program Files",
         "D:\\Program Files",
+        "/Applications",
         "/opt",
-        "/usr/local",
-    };
+        "/usr/local",};
 
     /**
      * Creates new form HomePanel.
@@ -81,39 +85,50 @@ public class HomePanel extends InstallerPanel implements
         home += File.separator + "jswat-" + version;
         validateDirectory(home);
         homeTextField.setText(home);
-        homeTextField.getDocument().addDocumentListener(this);
-        browseButton.addActionListener(this);
-    }
+        homeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
-    @Override
-    public void actionPerformed(ActionEvent event) {
-        Object src = event.getSource();
-        if (src == browseButton) {
-            String home = homeTextField.getText();
-            JFileChooser jfc = new JFileChooser(home);
-            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            Window window = SwingUtilities.getWindowAncestor(this);
-            int response = jfc.showOpenDialog(window);
-            if (response == JFileChooser.APPROVE_OPTION) {
-                File dir = jfc.getSelectedFile();
-                String msg = validateDirectory(dir);
-                if (msg == null) {
-                    homeTextField.setText(dir.getAbsolutePath());
-                    messageLabel.setText("");
-                } else {
-                    messageLabel.setText(msg);
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String path = homeTextField.getText();
+                validateDirectory(path);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String path = homeTextField.getText();
+                validateDirectory(path);
+            }
+        });
+        browseButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                String home = homeTextField.getText();
+                JFileChooser jfc = new JFileChooser(home);
+                jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                Window window = SwingUtilities.getWindowAncestor(browseButton);
+                int response = jfc.showOpenDialog(window);
+                if (response == JFileChooser.APPROVE_OPTION) {
+                    File dir = jfc.getSelectedFile();
+                    String msg = validateDirectory(dir);
+                    if (msg == null) {
+                        homeTextField.setText(dir.getAbsolutePath());
+                        messageLabel.setText("");
+                    } else {
+                        messageLabel.setText(msg);
+                    }
                 }
             }
-        }
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
+        });
     }
 
     @Override
     public void doHide() {
-        Controller.getDefault().setProperty("home",  homeTextField.getText());
+        Controller.getDefault().setProperty("home", homeTextField.getText());
     }
 
     @Override
@@ -140,7 +155,7 @@ public class HomePanel extends InstallerPanel implements
     /**
      * Get the version number of the product from the properties file.
      *
-     * @return  version number, or null if file is missing.
+     * @return version number, or null if file is missing.
      */
     private String getVersion() {
         String version = null;
@@ -155,22 +170,10 @@ public class HomePanel extends InstallerPanel implements
         return version;
     }
 
-    @Override
-    public void insertUpdate(DocumentEvent e) {
-        String path = homeTextField.getText();
-        validateDirectory(path);
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        String path = homeTextField.getText();
-        validateDirectory(path);
-    }
-
     /**
      * Validate the given path and set the message label appropriately.
      *
-     * @param  path  selected home location.
+     * @param path selected home location.
      */
     private void validateDirectory(String path) {
         String msg = validateDirectory(new File(path));
@@ -184,11 +187,11 @@ public class HomePanel extends InstallerPanel implements
     }
 
     /**
-     * Validates the given directory and returns an error message if there
-     * is a problem with the location.
+     * Validates the given directory and returns an error message if there is a
+     * problem with the location.
      *
-     * @param  dir  selected home directory.
-     * @return  error message, or null if dir is suitable.
+     * @param dir selected home directory.
+     * @return error message, or null if dir is suitable.
      */
     private String validateDirectory(File dir) {
         String msg = null;
@@ -227,10 +230,10 @@ public class HomePanel extends InstallerPanel implements
         return msg;
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {

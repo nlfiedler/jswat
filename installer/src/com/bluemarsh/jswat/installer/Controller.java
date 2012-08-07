@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 
 package com.bluemarsh.jswat.installer;
@@ -116,15 +114,6 @@ public class Controller {
             mainFrame.addPanel(panel);
         }
         return panel;
-    }
-
-    /**
-     * Returns the set of installation properties.
-     *
-     * @return  install properties.
-     */
-    public Properties getProperties() {
-        return installProps;
     }
 
     /**

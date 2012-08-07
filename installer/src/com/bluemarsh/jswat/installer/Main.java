@@ -14,13 +14,10 @@
  *
  * The Original Software is JSwat Installer. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2006. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.installer;
 
 import java.awt.HeadlessException;
@@ -33,10 +30,13 @@ import java.awt.HeadlessException;
  */
 public class Main {
 
+    private Main() {
+    }
+
     /**
      * Starts the installer.
      *
-     * @param  args  the command line arguments.
+     * @param args the command line arguments.
      */
     public static void main(String[] args) {
         Controller control = Controller.getDefault();
