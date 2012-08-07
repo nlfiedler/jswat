@@ -14,127 +14,16 @@
  *
  * The Original Software is the JSwat Core Module. The Initial Developer of the
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2002-2010. All Rights Reserved.
+ * are Copyright (C) 2002-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 
 package com.bluemarsh.jswat.core.expr;
 
-import com.bluemarsh.jswat.parser.analysis.AnalysisAdapter;
 import com.bluemarsh.jswat.core.util.Strings;
-import com.bluemarsh.jswat.parser.node.EOF;
-import com.bluemarsh.jswat.parser.node.TAbstract;
-import com.bluemarsh.jswat.parser.node.TAnd;
-import com.bluemarsh.jswat.parser.node.TAssert;
-import com.bluemarsh.jswat.parser.node.TAssign;
-import com.bluemarsh.jswat.parser.node.TBitAnd;
-import com.bluemarsh.jswat.parser.node.TBitAndAssign;
-import com.bluemarsh.jswat.parser.node.TBitComplement;
-import com.bluemarsh.jswat.parser.node.TBitOr;
-import com.bluemarsh.jswat.parser.node.TBitOrAssign;
-import com.bluemarsh.jswat.parser.node.TBitXor;
-import com.bluemarsh.jswat.parser.node.TBitXorAssign;
-import com.bluemarsh.jswat.parser.node.TBoolean;
-import com.bluemarsh.jswat.parser.node.TBreak;
-import com.bluemarsh.jswat.parser.node.TByte;
-import com.bluemarsh.jswat.parser.node.TCase;
-import com.bluemarsh.jswat.parser.node.TCatch;
-import com.bluemarsh.jswat.parser.node.TChar;
-import com.bluemarsh.jswat.parser.node.TCharacterLiteral;
-import com.bluemarsh.jswat.parser.node.TClass;
-import com.bluemarsh.jswat.parser.node.TColon;
-import com.bluemarsh.jswat.parser.node.TComma;
-import com.bluemarsh.jswat.parser.node.TComplement;
-import com.bluemarsh.jswat.parser.node.TConst;
-import com.bluemarsh.jswat.parser.node.TContinue;
-import com.bluemarsh.jswat.parser.node.TDecimalIntegerLiteral;
-import com.bluemarsh.jswat.parser.node.TDefault;
-import com.bluemarsh.jswat.parser.node.TDiv;
-import com.bluemarsh.jswat.parser.node.TDivAssign;
-import com.bluemarsh.jswat.parser.node.TDo;
-import com.bluemarsh.jswat.parser.node.TDocumentationComment;
-import com.bluemarsh.jswat.parser.node.TDot;
-import com.bluemarsh.jswat.parser.node.TDouble;
-import com.bluemarsh.jswat.parser.node.TElse;
-import com.bluemarsh.jswat.parser.node.TEndOfLineComment;
-import com.bluemarsh.jswat.parser.node.TEq;
-import com.bluemarsh.jswat.parser.node.TExtends;
-import com.bluemarsh.jswat.parser.node.TFalse;
-import com.bluemarsh.jswat.parser.node.TFinal;
-import com.bluemarsh.jswat.parser.node.TFinally;
-import com.bluemarsh.jswat.parser.node.TFloat;
-import com.bluemarsh.jswat.parser.node.TFloatingPointLiteral;
-import com.bluemarsh.jswat.parser.node.TFor;
-import com.bluemarsh.jswat.parser.node.TGoto;
-import com.bluemarsh.jswat.parser.node.TGt;
-import com.bluemarsh.jswat.parser.node.TGteq;
-import com.bluemarsh.jswat.parser.node.THexIntegerLiteral;
-import com.bluemarsh.jswat.parser.node.TIdentifier;
-import com.bluemarsh.jswat.parser.node.TIf;
-import com.bluemarsh.jswat.parser.node.TImplements;
-import com.bluemarsh.jswat.parser.node.TImport;
-import com.bluemarsh.jswat.parser.node.TInstanceof;
-import com.bluemarsh.jswat.parser.node.TInt;
-import com.bluemarsh.jswat.parser.node.TInterface;
-import com.bluemarsh.jswat.parser.node.TLBrace;
-import com.bluemarsh.jswat.parser.node.TLBracket;
-import com.bluemarsh.jswat.parser.node.TLParenthese;
-import com.bluemarsh.jswat.parser.node.TLong;
-import com.bluemarsh.jswat.parser.node.TLt;
-import com.bluemarsh.jswat.parser.node.TLteq;
-import com.bluemarsh.jswat.parser.node.TMinus;
-import com.bluemarsh.jswat.parser.node.TMinusAssign;
-import com.bluemarsh.jswat.parser.node.TMinusMinus;
-import com.bluemarsh.jswat.parser.node.TMod;
-import com.bluemarsh.jswat.parser.node.TModAssign;
-import com.bluemarsh.jswat.parser.node.TNative;
-import com.bluemarsh.jswat.parser.node.TNeq;
-import com.bluemarsh.jswat.parser.node.TNew;
-import com.bluemarsh.jswat.parser.node.TNull;
-import com.bluemarsh.jswat.parser.node.TOctalIntegerLiteral;
-import com.bluemarsh.jswat.parser.node.TOr;
-import com.bluemarsh.jswat.parser.node.TPackage;
-import com.bluemarsh.jswat.parser.node.TPlus;
-import com.bluemarsh.jswat.parser.node.TPlusAssign;
-import com.bluemarsh.jswat.parser.node.TPlusPlus;
-import com.bluemarsh.jswat.parser.node.TPrivate;
-import com.bluemarsh.jswat.parser.node.TProtected;
-import com.bluemarsh.jswat.parser.node.TPublic;
-import com.bluemarsh.jswat.parser.node.TQuestion;
-import com.bluemarsh.jswat.parser.node.TRBrace;
-import com.bluemarsh.jswat.parser.node.TRBracket;
-import com.bluemarsh.jswat.parser.node.TRParenthese;
-import com.bluemarsh.jswat.parser.node.TReturn;
-import com.bluemarsh.jswat.parser.node.TSemicolon;
-import com.bluemarsh.jswat.parser.node.TShiftLeft;
-import com.bluemarsh.jswat.parser.node.TShiftLeftAssign;
-import com.bluemarsh.jswat.parser.node.TShort;
-import com.bluemarsh.jswat.parser.node.TSignedShiftRight;
-import com.bluemarsh.jswat.parser.node.TSignedShiftRightAssign;
-import com.bluemarsh.jswat.parser.node.TStar;
-import com.bluemarsh.jswat.parser.node.TStarAssign;
-import com.bluemarsh.jswat.parser.node.TStatic;
-import com.bluemarsh.jswat.parser.node.TStrictfp;
-import com.bluemarsh.jswat.parser.node.TStringLiteral;
-import com.bluemarsh.jswat.parser.node.TSuper;
-import com.bluemarsh.jswat.parser.node.TSwitch;
-import com.bluemarsh.jswat.parser.node.TSynchronized;
-import com.bluemarsh.jswat.parser.node.TThis;
-import com.bluemarsh.jswat.parser.node.TThrow;
-import com.bluemarsh.jswat.parser.node.TThrows;
-import com.bluemarsh.jswat.parser.node.TTraditionalComment;
-import com.bluemarsh.jswat.parser.node.TTransient;
-import com.bluemarsh.jswat.parser.node.TTrue;
-import com.bluemarsh.jswat.parser.node.TTry;
-import com.bluemarsh.jswat.parser.node.TUnsignedShiftRight;
-import com.bluemarsh.jswat.parser.node.TUnsignedShiftRightAssign;
-import com.bluemarsh.jswat.parser.node.TVoid;
-import com.bluemarsh.jswat.parser.node.TVolatile;
-import com.bluemarsh.jswat.parser.node.TWhile;
-import com.bluemarsh.jswat.parser.node.Token;
+import com.bluemarsh.jswat.parser.analysis.AnalysisAdapter;
+import com.bluemarsh.jswat.parser.node.*;
 import java.io.PrintStream;
 import java.util.EmptyStackException;
 import java.util.Stack;
@@ -189,7 +78,7 @@ class TreeBuilder extends AnalysisAdapter {
      * @return  the character.
      */
     protected static char translateChar(String charStr) {
-        if (charStr.length() == 0) {
+        if (charStr.isEmpty()) {
             throw new IllegalArgumentException("empty character");
         }
         // May just be a single character.
@@ -810,7 +699,7 @@ class TreeBuilder extends AnalysisAdapter {
         if (previousToken instanceof TIdentifier) {
             // The argument stack is assumed to be empty.
             Node n = argumentStack.pop();
-            MethodNode method = null;
+            MethodNode method;
             if (n instanceof IdentifierNode) {
                 IdentifierNode inode = (IdentifierNode) n;
                 method = new MethodNode(inode.getToken(), inode.getIdentifier());

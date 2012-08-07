@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2003-2010. All Rights Reserved.
+ * are Copyright (C) 2003-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 
 package com.bluemarsh.jswat.core.expr;
@@ -54,6 +52,13 @@ public class BasicEvaluatorTest {
 
             // binary: +, -
             new TestData("1 + 1", new Integer(2)),
+            new TestData("1 + -1", new Integer(0)),
+            new TestData("-1 + 1", new Integer(0)),
+            new TestData("-1 + -1", new Integer(-2)),
+            new TestData("1 - 1", new Integer(0)),
+            new TestData("1 - -1", new Integer(2)),
+            new TestData("-1 - 1", new Integer(-2)),
+            new TestData("-1 - -1", new Integer(0)),
             new TestData("\"abc\" + 123", "abc123"),
             new TestData("1 + true", "1true"),
             new TestData("1 + null", "1null"),
@@ -78,6 +83,10 @@ public class BasicEvaluatorTest {
 
             // mult, div, mod: *, /, %
             new TestData("1 * 2", new Integer(2)),
+            new TestData("1 * 1", new Integer(1)),
+            new TestData("1 * -1", new Integer(-1)),
+            new TestData("-1 * 1", new Integer(-1)),
+            new TestData("-1 * -1", new Integer(1)),
             new TestData("10 * 20", new Integer(200)),
             new TestData("-1 * 5", new Integer(-5)),
             new TestData("0 * 1", new Integer(0)),
