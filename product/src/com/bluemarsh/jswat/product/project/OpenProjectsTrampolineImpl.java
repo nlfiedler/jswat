@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2007. All Rights Reserved.
+ * are Copyright (C) 2006-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 
 package com.bluemarsh.jswat.product.project;
@@ -68,7 +66,7 @@ public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
     }
 
     @Override
-    public void openAPI(Project[] arg0, boolean arg1, boolean arg2) {
+    public void openAPI(Project[] arg0, boolean arg1) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

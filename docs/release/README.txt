@@ -1,7 +1,5 @@
 JSwat Debugger README
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$Id$
-
 JSwat is a Java debugger front-end, written for the Java Platform,
 utilizing the Java Platform Debugger Architecture (JPDA). The source
 code is licensed under the Common Development and Distribution License.
@@ -92,4 +90,4 @@ jswat-discuss@googlegroups.com, which can also be found on the web at
 http://groups.google.com/group/jswat-discuss
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-JSwat and related documentation are Copyright (C) 1999-2009
+JSwat and related documentation are Copyright (C) 1999-2012

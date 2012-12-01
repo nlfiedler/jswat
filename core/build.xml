@@ -48,7 +48,7 @@
         <taskdef name="sablecc" classpath="${sablecc.jar}"
                  classname="org.sablecc.ant.taskdef.Sablecc"/>
         <sablecc src="." outputdirectory="${output.dir}" includes="java1_4.sablecc"/>
-        <javac srcdir="${output.dir}" destdir="${build.dir}" debug="off"/>
+        <javac srcdir="${output.dir}" destdir="${build.dir}" debug="off" includeantruntime="false"/>
         <jar jarfile="lib/com-bluemarsh-jswat-parser.jar">
             <fileset dir="${build.dir}"/>
             <fileset dir="${output.dir}">

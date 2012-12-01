@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2009-2010. All Rights Reserved.
+ * are Copyright (C) 2009-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.nbcore;
 
@@ -37,7 +35,9 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.FileSystem;
+import org.openide.filesystems.Repository;
+//import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.NbPreferences;
 
@@ -61,7 +61,9 @@ public class NetBeansPlatformService implements PlatformService {
 
     @Override
     public void deleteFile(String name) throws IOException {
-        FileObject fo = FileUtil.getConfigFile(name);
+        FileSystem fs = Repository.getDefault().getDefaultFileSystem();
+        FileObject fo = fs.findResource(name);
+//        FileObject fo = FileUtil.getConfigFile(name);
         if (fo != null && fo.isData()) {
             fo.delete();
         }
@@ -85,7 +87,9 @@ public class NetBeansPlatformService implements PlatformService {
 
     @Override
     public InputStream readFile(String name) throws FileNotFoundException {
-        FileObject fo = FileUtil.getConfigFile(name);
+        FileSystem fs = Repository.getDefault().getDefaultFileSystem();
+        FileObject fo = fs.findResource(name);
+//        FileObject fo = FileUtil.getConfigFile(name);
         if (fo != null && fo.isData()) {
             return fo.getInputStream();
         }
@@ -118,9 +122,12 @@ public class NetBeansPlatformService implements PlatformService {
 
     @Override
     public OutputStream writeFile(String name) throws IOException {
-        FileObject fo = FileUtil.getConfigFile(name);
+        FileSystem fs = Repository.getDefault().getDefaultFileSystem();
+        FileObject fo = fs.findResource(name);
+//        FileObject fo = FileUtil.getConfigFile(name);
         if (fo == null) {
-            fo = FileUtil.getConfigRoot().createData(name);
+            fo = fs.getRoot().createData(name);
+//            fo = FileUtil.getConfigRoot().createData(name);
         }
         FileLock lock = fo.lock();
         locks.put(name, lock);

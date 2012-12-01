@@ -47,9 +47,9 @@
   (JDI) classes. Normally these are located in a file called
   <code>tools.jar</code> in the JDK <code>lib</code> directory. That
   jar will contain classes in a package called <code>com.sun.jdi</code>
-  and those are needed by JSwat. On the Mac, these classes are in the
+  and those are needed by JSwat. <strong>With Mac OS X, these classes are in the
   main <code>classes.jar</code> archive, so no extra setup is needed,
-  just build the projects. In fact, attempting to specify the path to a
+  just build the projects.</strong> In fact, attempting to specify the path to a
   non-existent <code>tools.jar</code> on a Mac would cause the build to
   fail, thus this setup must be done on a per developer basis.</p>
 
@@ -90,6 +90,7 @@ javac.classpath=\
       <pre>
 javac.classpath=\
     ../core/dist/com-bluemarsh-jswat-core.jar:\
+    ../core/lib/com-bluemarsh-jswat-parser.jar:\
     ../core/lib/org-openide-util.jar:\
     ../core/lib/org-openide-util-lookup.jar:\
     ${java.home}/../lib/tools.jar
@@ -111,7 +112,6 @@ javac.classpath=\
     ../cmd/dist/com-bluemarsh-jswat-cmd.jar:\
     ../core/lib/org-openide-util.jar:\
     ../core/lib/org-openide-util-lookup.jar:\
-    ../core/lib/com-bluemarsh-jswat-parser.jar:\
     ../bcel/release/modules/ext/bcel-5.2.jar:\
     lib/commons-cli-1.2.jar:\
     ${java.home}/../lib/tools.jar
