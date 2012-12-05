@@ -192,24 +192,9 @@
         <ant dir="installer" target="jar"/>
         <move file="installer/dist/installer.jar" tofile="jswat-${version}-installer.jar"/>
 
-        <!-- Make the source distribution (but clean first). -->
-        <ant target="clean" antfile="suite/build.xml" inheritall="false"/>
-        <zip destfile="jswat-${version}-src.zip">
-            <zipfileset dir="." prefix="jswat-${version}-src">
-                <exclude name="*.zip"/>
-                <exclude name="*installer.jar"/>
-                <exclude name="**/build.properties"/>
-                <exclude name="**/nbproject/private/**"/>
-                <exclude name="version.properties"/>
-            </zipfileset>
-        </zip>
-
         <!-- Calculate the file checksums. -->
         <antcall target="checksum">
             <param name="file" value="jswat-${version}-installer.jar"/>
-        </antcall>
-        <antcall target="checksum">
-            <param name="file" value="jswat-${version}-src.zip"/>
         </antcall>
     </target>
 
