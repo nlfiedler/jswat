@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2009. All Rights Reserved.
+ * are Copyright (C) 2004-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 
 package com.bluemarsh.jswat.ui.views;
@@ -163,6 +161,7 @@ public abstract class AbstractView extends TopComponent {
      * @param  columns  the columns to be restored.
      */
     protected static void restoreColumns(ObjectInput in, Node.Property[] columns) {
+        // TODO: get this working with new OutlineView
         try {
             int count = in.readInt();
             for (int ii = 0; ii < count; ii++) {
@@ -189,6 +188,7 @@ public abstract class AbstractView extends TopComponent {
      */
     protected static void saveColumns(ObjectOutput out, Node.Property[] columns)
             throws IOException {
+        // TODO: get this working with new OutlineView
         out.writeInt(columns.length);
         for (int ii = 0; ii < columns.length; ii++) {
             Boolean b = (Boolean) columns[ii].getValue("InvisibleInTreeTableView");

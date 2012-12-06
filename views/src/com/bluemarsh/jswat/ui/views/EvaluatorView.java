@@ -52,7 +52,7 @@ public class EvaluatorView extends AbstractView implements ExplorerManager.Provi
     /** Our explorer manager. */
     private ExplorerManager explorerManager;
     /** Component showing our nodes. */
-    private PersistentTreeTableView nodeView;
+    private PersistentOutlineView nodeView;
     /** Columns for the tree-table view. */
     private transient Node.Property[] columns;
 
@@ -65,8 +65,9 @@ public class EvaluatorView extends AbstractView implements ExplorerManager.Provi
         addSelectionListener(explorerManager);
 
         // Create the nodes view.
-        nodeView = new PersistentTreeTableView();
-        nodeView.setRootVisible(false);
+        nodeView = new PersistentOutlineView();
+        // TODO: no Outline?
+//        nodeView.getOutline().setRootVisible(false);
         columns = new Node.Property[] {
             new Column(VariableNode.PROP_NAME, true, true, false),
             new Column(VariableNode.PROP_TYPE, false, true, false),

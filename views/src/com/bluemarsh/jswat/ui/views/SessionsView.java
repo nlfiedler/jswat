@@ -77,7 +77,7 @@ public class SessionsView extends AbstractView
     /** Our explorer manager. */
     private ExplorerManager explorerManager;
     /** Component showing our nodes. */
-    private PersistentTreeTableView nodeView;
+    private PersistentOutlineView nodeView;
     /** Columns for the tree-table view. */
     private Node.Property[] columns;
 
@@ -98,8 +98,9 @@ public class SessionsView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the session view.
-        nodeView = new PersistentTreeTableView();
-        nodeView.setRootVisible(false);
+        nodeView = new PersistentOutlineView();
+        // TODO: no Outline?
+//        nodeView.getOutline().setRootVisible(false);
         columns = new Node.Property[]{
                     new Column(SessionNode.PROP_NAME, true, true),
                     new Column(SessionNode.PROP_HOST, false, true),

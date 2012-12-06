@@ -31,7 +31,7 @@ import org.openide.nodes.Children;
  * An AbstractNode subclass that offers features needed in many cases.
  *
  * <p>This class implements {@code Node.Cookie} since it is common for
- * the NetBeans TreeTableView to wrap our nodes inside a FilterNode, and
+ * the NetBeans OutlineView to wrap our nodes inside a FilterNode, and
  * by using getCookie() we can get the original node. Thus subclasses
  * that have actions which need to get the original node can register
  * via {@code AbstractNode.getCookieSet().add(node)}.</p>

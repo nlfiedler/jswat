@@ -81,7 +81,7 @@ public class ThreadsView extends AbstractView
     /** Our explorer manager. */
     private ExplorerManager explorerManager;
     /** Component showing our nodes. */
-    private PersistentTreeTableView nodeView;
+    private PersistentOutlineView nodeView;
     /** Columns for the tree-table view. */
     private transient Node.Property[] columns;
 
@@ -96,8 +96,9 @@ public class ThreadsView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the threads view.
-        nodeView = new PersistentTreeTableView();
-        nodeView.setRootVisible(false);
+        nodeView = new PersistentOutlineView();
+        // TODO: no Outline?
+//        nodeView.getOutline().setRootVisible(false);
         columns = new Node.Property[] {
             new Column(PROP_NAME, String.class, true, true, false),
             new Column(PROP_STATUS, String.class, false, true, false),
@@ -162,8 +163,8 @@ public class ThreadsView extends AbstractView
         Session session = sm.getCurrent();
         DebuggingContext dc = ContextProvider.getContext(session);
         List<Node> list = new LinkedList<Node>();
-        Node rootNode = explorerManager.getRootContext();
-        final List<String[]> expanded = getExpanded(nodeView, rootNode);
+//        Node rootNode = explorerManager.getRootContext();
+//        final List<String[]> expanded = getExpanded(nodeView, rootNode);
         if (session.isConnected()) {
             VirtualMachine vm = session.getConnection().getVM();
             List<ThreadGroupReference> groups = vm.topLevelThreadGroups();
@@ -178,7 +179,8 @@ public class ThreadsView extends AbstractView
             children.add(nodes);
             buildRoot(children);
             // Expand the branches that the user had expanded earlier.
-            expandPaths(expanded, nodeView, rootNode);
+            // TODO: get node expansion working
+//            expandPaths(expanded, nodeView, rootNode);
             // Expand the path leading to the current thread.
             ThreadReference thread = dc.getThread();
             if (thread != null) {

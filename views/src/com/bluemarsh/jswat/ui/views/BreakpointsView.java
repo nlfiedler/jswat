@@ -77,7 +77,7 @@ public class BreakpointsView extends AbstractView
     /** Our explorer manager. */
     private ExplorerManager explorerManager;
     /** Component showing our nodes. */
-    private PersistentTreeTableView nodeView;
+    private PersistentOutlineView nodeView;
     /** Columns for the tree-table view. */
     private transient Node.Property[] columns;
 
@@ -96,8 +96,9 @@ public class BreakpointsView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the view.
-        nodeView = new PersistentTreeTableView();
-        nodeView.setRootVisible(false);
+        nodeView = new PersistentOutlineView();
+// TODO: Outline not available?
+//        nodeView.getOutline().setRootVisible(false);
         columns = new Node.Property[] {
             new Column(Breakpoint.PROP_DESCRIPTION, String.class, true, true, false),
             new Column(Breakpoint.PROP_ENABLED, Boolean.TYPE, false, true, false),
@@ -172,12 +173,13 @@ public class BreakpointsView extends AbstractView
         Children children = new Children.Array();
         children.add(new Node[] { groupNode });
         buildRoot(children);
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                nodeView.expandAll();
-            }
-        });
+// TODO: get tree expansion working
+//        EventQueue.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                nodeView.expandAll();
+//            }
+//        });
     }
 
     @Override

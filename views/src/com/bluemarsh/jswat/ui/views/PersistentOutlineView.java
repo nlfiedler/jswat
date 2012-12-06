@@ -14,13 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2010. All Rights Reserved.
+ * are Copyright (C) 2004-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import java.awt.EventQueue;
@@ -33,17 +30,18 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import org.openide.ErrorManager;
 import org.openide.explorer.view.NodeTreeModel;
-import org.openide.explorer.view.TreeTableView;
+import org.openide.explorer.view.OutlineView;
 import org.openide.explorer.view.Visualizer;
 import org.openide.nodes.Node;
 
 /**
- * A TreeTableView subclass that persists the various settings, and
+ * An OutlineView subclass that persists the various settings, and
  * restores them as needed.
  *
  * @author  Nathan Fiedler
  */
-public class PersistentTreeTableView extends TreeTableView {
+public class PersistentOutlineView extends OutlineView {
+
     /** silence the compiler warnings */
     private static final long serialVersionUID = 1L;
 
@@ -56,32 +54,34 @@ public class PersistentTreeTableView extends TreeTableView {
     public void restoreColumnWidths(ObjectInput in) {
         // Must read from the stream immediately and not on another
         // thread, lest it be closed by the time that thread is run.
-        TableColumnModel tcm = treeTable.getColumnModel();
-        int count = tcm.getColumnCount();
-        final int[] widths = new int[count];
-        try {
-            for (int index = 0; index < count; index++) {
-                widths[index] = in.readInt();
-            }
-        }  catch (IOException ioe) {
-            // Could be reading an old instance which is missing data.
-            // In any case, ignore this as there is no use in reporting it
-            // (and return immediately so as not to invoke the runnable).
-            return;
-        }
-
-        // Changing Swing widgets must be done on the AWT event thread.
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // TreeTableView prohibits moving the tree
-                // column, so it is always offset zero.
-                setTreePreferredWidth(widths[0]);
-                for (int index = 1; index < widths.length; index++) {
-                    setTableColumnPreferredWidth(index - 1, widths[index]);
-                }
-            }
-            });
+// TODO: get OutlineView column widths persistence working
+//        TableColumnModel tcm = treeTable.getColumnModel();
+//        int count = tcm.getColumnCount();
+//        final int[] widths = new int[count];
+//        try {
+//            for (int index = 0; index < count; index++) {
+//                widths[index] = in.readInt();
+//            }
+//        } catch (IOException ioe) {
+//            // Could be reading an old instance which is missing data.
+//            // In any case, ignore this as there is no use in reporting it
+//            // (and return immediately so as not to invoke the runnable).
+//            return;
+//        }
+//
+//        // Changing Swing widgets must be done on the AWT event thread.
+//        EventQueue.invokeLater(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                // TreeTableView prohibits moving the tree
+//                // column, so it is always offset zero.
+//                setTreePreferredWidth(widths[0]);
+//                for (int index = 1; index < widths.length; index++) {
+//                    setTableColumnPreferredWidth(index - 1, widths[index]);
+//                }
+//            }
+//        });
     }
 
     /**
@@ -90,17 +90,18 @@ public class PersistentTreeTableView extends TreeTableView {
      * @param  out  the stream to serialize to.
      */
     public void saveColumnWidths(ObjectOutput out) {
-        try {
-            TableColumnModel tcm = treeTable.getColumnModel();
-            int count = tcm.getColumnCount();
-            for (int index = 0; index < count; index++) {
-                TableColumn tc = tcm.getColumn(index);
-                int width = tc.getWidth();
-                out.writeInt(width);
-            }
-        }  catch (IOException ioe) {
-            ErrorManager.getDefault().notify(ErrorManager.WARNING, ioe);
-        }
+// TODO: get OutlineView column widths persistence working
+//        try {
+//            TableColumnModel tcm = treeTable.getColumnModel();
+//            int count = tcm.getColumnCount();
+//            for (int index = 0; index < count; index++) {
+//                TableColumn tc = tcm.getColumn(index);
+//                int width = tc.getWidth();
+//                out.writeInt(width);
+//            }
+//        } catch (IOException ioe) {
+//            ErrorManager.getDefault().notify(ErrorManager.WARNING, ioe);
+//        }
     }
 
     /**
@@ -110,13 +111,13 @@ public class PersistentTreeTableView extends TreeTableView {
      * @param  node  node to be selected.
      */
     public void scrollAndSelectNode(Node node) {
-// XXX: this is not working at all!
+// TODO: get OutlineView column scroll/select working
         // It is basically guaranteed that the model is a NodeTreeModel.
-        NodeTreeModel model = (NodeTreeModel) tree.getModel();
-        TreeNode tn = Visualizer.findVisualizer(node);
-        TreeNode[] tnp = model.getPathToRoot(tn);
-        TreePath path = new TreePath(tnp);
-        tree.setSelectionPath(path);
-        tree.scrollPathToVisible(path);
+//        NodeTreeModel model = (NodeTreeModel) tree.getModel();
+//        TreeNode tn = Visualizer.findVisualizer(node);
+//        TreeNode[] tnp = model.getPathToRoot(tn);
+//        TreePath path = new TreePath(tnp);
+//        tree.setSelectionPath(path);
+//        tree.scrollPathToVisible(path);
     }
 }

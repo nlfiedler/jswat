@@ -83,7 +83,7 @@ public class VariablesView extends AbstractView
     /** Our explorer manager. */
     private ExplorerManager explorerManager;
     /** Component showing our nodes. */
-    private PersistentTreeTableView nodeView;
+    private PersistentOutlineView nodeView;
     /** Columns for the tree-table view. */
     private transient Node.Property[] columns;
 
@@ -96,8 +96,9 @@ public class VariablesView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the nodes view.
-        nodeView = new PersistentTreeTableView();
-        nodeView.setRootVisible(false);
+        nodeView = new PersistentOutlineView();
+        // TODO: no outline?
+//        nodeView.getOutline().setRootVisible(false);
         columns = new Node.Property[] {
             new Column(VariableNode.PROP_NAME, true, true, false),
             new Column(VariableNode.PROP_TYPE, false, true, false),
@@ -136,8 +137,8 @@ public class VariablesView extends AbstractView
         SessionManager sm = SessionProvider.getSessionManager();
         Session session = sm.getCurrent();
         List<Node> list = new LinkedList<Node>();
-        Node rootNode = explorerManager.getRootContext();
-        final List<String[]> expanded = getExpanded(nodeView, rootNode);
+//        Node rootNode = explorerManager.getRootContext();
+//        final List<String[]> expanded = getExpanded(nodeView, rootNode);
         if (session.isConnected()) {
             DebuggingContext dc = ContextProvider.getContext(session);
             ThreadReference thread = dc.getThread();
@@ -230,14 +231,15 @@ public class VariablesView extends AbstractView
         }
 
         // Must expand the nodes on the AWT event thread.
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // Need to refetch the root in case it was replaced.
-                Node rootNode = explorerManager.getRootContext();
-                expandPaths(expanded, nodeView, rootNode);
-            }
-        });
+        // TODO: get node expansion working
+//        EventQueue.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Need to refetch the root in case it was replaced.
+//                Node rootNode = explorerManager.getRootContext();
+//                expandPaths(expanded, nodeView, rootNode);
+//            }
+//        });
     }
 
     @Override

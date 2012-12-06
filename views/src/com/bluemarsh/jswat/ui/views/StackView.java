@@ -72,7 +72,7 @@ public class StackView extends AbstractView
     /** Our explorer manager. */
     private ExplorerManager explorerManager;
     /** Component showing node tree. */
-    private PersistentTreeTableView nodeView;
+    private PersistentOutlineView nodeView;
     /** Columns for the tree-table view. */
     private transient Node.Property[] columns;
 
@@ -86,8 +86,9 @@ public class StackView extends AbstractView
 
         // Create the stack view. We use a tree-table because it has
         // features that we want to utilize.
-        nodeView = new PersistentTreeTableView();
-        nodeView.setRootVisible(false);
+        nodeView = new PersistentOutlineView();
+        // TODO: no Outline?
+//        nodeView.getOutline().setRootVisible(false);
         columns = new Node.Property[] {
             new Column(StackFrameNode.PROP_LOCATION, true, false),
             new Column(StackFrameNode.PROP_SOURCE, false, true),
@@ -161,7 +162,7 @@ public class StackView extends AbstractView
             children.add(nodes);
             buildRoot(children);
             if (currentNode != null) {
-                final PersistentTreeTableView view = nodeView;
+                final PersistentOutlineView view = nodeView;
                 final Node node = currentNode;
                 EventQueue.invokeLater(new Runnable() {
                     @Override
