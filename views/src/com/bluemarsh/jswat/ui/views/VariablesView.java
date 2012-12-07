@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 
 package com.bluemarsh.jswat.ui.views;
@@ -97,8 +95,7 @@ public class VariablesView extends AbstractView
 
         // Create the nodes view.
         nodeView = new PersistentOutlineView();
-        // TODO: no outline?
-//        nodeView.getOutline().setRootVisible(false);
+        nodeView.getOutline().setRootVisible(false);
         columns = new Node.Property[] {
             new Column(VariableNode.PROP_NAME, true, true, false),
             new Column(VariableNode.PROP_TYPE, false, true, false),
