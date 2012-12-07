@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.nodes.stack;
 
@@ -65,7 +63,7 @@ public class PopFramesAction extends NodeAction {
                 if (session.isSuspended()) {
                     DebuggingContext dc = ContextProvider.getContext(session);
                     if (dc.getThread() != null) {
-                        GetFrameCookie gfc = nodes[0].getCookie(GetFrameCookie.class);
+                        GetFrameCookie gfc = nodes[0].getLookup().lookup(GetFrameCookie.class);
                         if (gfc != null) {
                             // Add one for easy comparison to check if this is
                             // the earliest frame, which can never be popped.
@@ -98,7 +96,7 @@ public class PopFramesAction extends NodeAction {
     @Override
     protected void performAction(Node[] nodes) {
         if (nodes != null && nodes.length == 1) {
-            GetFrameCookie gfc = nodes[0].getCookie(GetFrameCookie.class);
+            GetFrameCookie gfc = nodes[0].getLookup().lookup(GetFrameCookie.class);
             if (gfc != null) {
                 int index = gfc.getFrameIndex();
                 Session session = SessionProvider.getCurrentSession();

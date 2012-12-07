@@ -14,13 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.ui.editor;
 
 import com.bluemarsh.jswat.core.context.DebuggingContext;
@@ -51,6 +48,7 @@ import org.openide.util.RequestProcessor;
  * @author Nathan Fiedler
  */
 public class ToolTipAnnotation extends Annotation implements Runnable {
+
     /** The expression that we are to evaluate. */
     private String expression;
 
@@ -89,8 +87,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         int exprBegin = column;
         while (exprBegin > 0) {
             char ch = text.charAt(exprBegin);
-            if (!Character.isJavaIdentifierPart(ch)
-                && ch != '.' && ch != '[' && ch != ']') {
+            if (!Character.isJavaIdentifierPart(ch) && ch != '.' && ch != '[' && ch != ']') {
                 // We have actually decremented one too many, but we will
                 // compensate for that later.
                 break;
@@ -131,7 +128,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         if (dobj == null) {
             return null;
         }
-        EditorCookie ec = dobj.getCookie(EditorCookie.class);
+        EditorCookie ec = dobj.getLookup().lookup(EditorCookie.class);
         if (ec == null) {
             return null;
         }
@@ -152,7 +149,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
 
         // Perform the evaluation on another thread so we don't block
         // the user interface thread.
-        RequestProcessor.getDefault().post(this);                    
+        RequestProcessor.getDefault().post(this);
         return null;
     }
 

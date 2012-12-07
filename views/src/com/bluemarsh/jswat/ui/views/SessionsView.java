@@ -272,7 +272,7 @@ public class SessionsView extends AbstractView
         Node[] nodes = children.getNodes();
         Node[] remove = new Node[1];
         for (Node n : nodes) {
-            GetSessionCookie gsc = n.getCookie(GetSessionCookie.class);
+            GetSessionCookie gsc = n.getLookup().lookup(GetSessionCookie.class);
             if (gsc != null && gsc.getSession().equals(session)) {
                 remove[0] = n;
                 break;

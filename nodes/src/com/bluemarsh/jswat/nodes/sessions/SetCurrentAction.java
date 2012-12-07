@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2010. All Rights Reserved.
+ * are Copyright (C) 2004-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.nodes.sessions;
 
@@ -49,7 +47,7 @@ public class SetCurrentAction extends NodeAction {
         if (activatedNodes != null && activatedNodes.length == 1) {
             // Make sure selected session is not marked as current.
             Session current = SessionProvider.getCurrentSession();
-            GetSessionCookie gsc = activatedNodes[0].getCookie(
+            GetSessionCookie gsc = activatedNodes[0].getLookup().lookup(
                     GetSessionCookie.class);
             if (gsc != null) {
                 Session session = gsc.getSession();
@@ -72,7 +70,7 @@ public class SetCurrentAction extends NodeAction {
 
     @Override
     protected void performAction(Node[] activatedNodes) {
-        GetSessionCookie gsc = activatedNodes[0].getCookie(
+        GetSessionCookie gsc = activatedNodes[0].getLookup().lookup(
                 GetSessionCookie.class);
         if (gsc != null) {
             Session session = gsc.getSession();

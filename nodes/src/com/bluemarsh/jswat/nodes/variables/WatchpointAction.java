@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.nodes.variables;
 
@@ -57,7 +55,7 @@ public class WatchpointAction extends NodeAction {
     protected boolean enable(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length > 0) {
             for (Node n : activatedNodes) {
-                GetVariableCookie gvc = n.getCookie(GetVariableCookie.class);
+                GetVariableCookie gvc = n.getLookup().lookup(GetVariableCookie.class);
                 if (gvc == null) {
                     return false;
                 } else {
@@ -97,7 +95,7 @@ public class WatchpointAction extends NodeAction {
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
         BreakpointFactory bf = BreakpointProvider.getBreakpointFactory();
         for (Node n : activatedNodes) {
-            GetVariableCookie gvc = n.getCookie(GetVariableCookie.class);
+            GetVariableCookie gvc = n.getLookup().lookup(GetVariableCookie.class);
             if (gvc != null) {
                 Field field = gvc.getField();
                 if (field != null) {

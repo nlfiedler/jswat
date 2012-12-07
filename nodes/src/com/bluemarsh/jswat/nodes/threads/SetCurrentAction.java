@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.nodes.threads;
 
@@ -66,7 +64,7 @@ public class SetCurrentAction extends NodeAction {
     @Override
     protected void performAction(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length == 1) {
-            GetThreadCookie gtc = activatedNodes[0].getCookie(
+            GetThreadCookie gtc = activatedNodes[0].getLookup().lookup(
                     GetThreadCookie.class);
             if (gtc != null) {
                 ThreadReference tr = gtc.getThread();

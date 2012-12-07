@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2010. All Rights Reserved.
+ * are Copyright (C) 2004-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.nodes;
 
@@ -32,7 +30,7 @@ import org.openide.nodes.Children;
  *
  * <p>This class implements {@code Node.Cookie} since it is common for
  * the NetBeans OutlineView to wrap our nodes inside a FilterNode, and
- * by using getCookie() we can get the original node. Thus subclasses
+ * by using getLookup() we can get the original node. Thus subclasses
  * that have actions which need to get the original node can register
  * via {@code AbstractNode.getCookieSet().add(node)}.</p>
  *

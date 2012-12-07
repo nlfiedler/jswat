@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.ui.editor;
 
@@ -123,7 +121,7 @@ public class EditorSupport {
         }
         DataObject dobj = getDataObject(url);
         Node dnode = dobj.getNodeDelegate();
-        EditorCookie ec = dnode.getCookie(EditorCookie.class);
+        EditorCookie ec = dnode.getLookup().lookup(EditorCookie.class);
         if (ec != null) {
             // Need to track which annotations belong to which documents
             // so we can keep them updated as the documents change.
@@ -166,7 +164,7 @@ public class EditorSupport {
         if (js == null) {
             return "";
         }
-        EditorCookie ec = dataObject.getCookie(EditorCookie.class);
+        EditorCookie ec = dataObject.getLookup().lookup(EditorCookie.class);
         if (ec == null) {
             return "";
         }
@@ -255,7 +253,7 @@ public class EditorSupport {
         if (nodes == null || nodes.length != 1) {
             return null;
         }
-        return nodes[0].getCookie(EditorCookie.class);
+        return nodes[0].getLookup().lookup(EditorCookie.class);
     }
 
     /**
@@ -302,7 +300,7 @@ public class EditorSupport {
             dO = ((DataNode) n).getDataObject();
         }
         if (dO == null) {
-            dO = n.getCookie(DataObject.class);
+            dO = n.getLookup().lookup(DataObject.class);
         }
         if (dO == null) {
             return null;
@@ -364,7 +362,7 @@ public class EditorSupport {
         if (js == null) {
             return null;
         }
-        EditorCookie ec = dataObject.getCookie(EditorCookie.class);
+        EditorCookie ec = dataObject.getLookup().lookup(EditorCookie.class);
         if (ec == null) {
             return null;
         }
@@ -455,7 +453,7 @@ public class EditorSupport {
     private Line.Set getLineSet(String url) {
         DataObject dataObject = getDataObject(url);
         if (dataObject != null) {
-            LineCookie lineCookie = dataObject.getCookie(LineCookie.class);
+            LineCookie lineCookie = dataObject.getLookup().lookup(LineCookie.class);
             if (lineCookie != null) {
                 return lineCookie.getLineSet();
             }
@@ -475,7 +473,7 @@ public class EditorSupport {
             Line line = (Line) antbl;
             DataObject dobj = line.getLookup().lookup(DataObject.class);
             Node dnode = dobj.getNodeDelegate();
-            EditorCookie ec = dnode.getCookie(EditorCookie.class);
+            EditorCookie ec = dnode.getLookup().lookup(EditorCookie.class);
             Document doc = ec.getDocument();
             Set<Annotation> anns = documentAnnotations.get(doc);
             if (anns != null) {

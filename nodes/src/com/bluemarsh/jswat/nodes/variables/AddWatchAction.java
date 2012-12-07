@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.nodes.variables;
 
@@ -54,7 +52,7 @@ public class AddWatchAction extends NodeAction {
     protected boolean enable(Node[] activatedNodes) {
         if (activatedNodes != null && activatedNodes.length > 0) {
             for (Node n : activatedNodes) {
-                GetVariableCookie gvc = n.getCookie(GetVariableCookie.class);
+                GetVariableCookie gvc = n.getLookup().lookup(GetVariableCookie.class);
                 if (gvc == null) {
                     return false;
                 }
@@ -82,7 +80,7 @@ public class AddWatchAction extends NodeAction {
         WatchManager wm = WatchProvider.getWatchManager(session);
         WatchFactory wf = WatchProvider.getWatchFactory();
         for (Node n : activatedNodes) {
-            GetVariableCookie gvc = n.getCookie(GetVariableCookie.class);
+            GetVariableCookie gvc = n.getLookup().lookup(GetVariableCookie.class);
             if (gvc != null) {
                 StringBuilder name = new StringBuilder();
                 if (gvc.getKind() == Kind.THIS) {
@@ -93,8 +91,8 @@ public class AddWatchAction extends NodeAction {
                     name.insert(0, n.getName());
                     Node node = n.getParentNode();
                     while (node != null
-                            && node.getCookie(GetVariableCookie.class) != null
-                            && node.getCookie(GetVariableCookie.class).getKind() != Kind.THIS) {
+                            && node.getLookup().lookup(GetVariableCookie.class) != null
+                            && node.getLookup().lookup(GetVariableCookie.class).getKind() != Kind.THIS) {
                         // Add period separator for all but array access.
                         if (name.charAt(0) != '[') {
                             name.insert(0, '.');

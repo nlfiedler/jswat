@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2006. All Rights Reserved.
+ * are Copyright (C) 2004-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 
 package com.bluemarsh.jswat.nodes;
@@ -41,29 +39,35 @@ public class ShowSourceAction extends CookieAction {
         ShowSourceCookie.class
     };
 
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     protected Class[] cookieClasses() {
         return COOKIE_CLASSES;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(ShowSourceAction.class,
                 "LBL_ShowSourceAction_name");
     }
 
+    @Override
     protected int mode() {
         return CookieAction.MODE_EXACTLY_ONE;
     }
 
+    @Override
     protected void performAction(Node[] activatedNodes) {
-        ShowSourceCookie cookie = activatedNodes[0].getCookie(ShowSourceCookie.class);
+        ShowSourceCookie cookie = activatedNodes[0].getLookup().lookup(ShowSourceCookie.class);
         cookie.showSource();
     }
 }
