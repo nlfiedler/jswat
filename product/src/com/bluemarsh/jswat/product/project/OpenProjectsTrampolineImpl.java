@@ -66,7 +66,7 @@ public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
     }
 
     @Override
-    public void openAPI(Project[] arg0, boolean arg1) {
+    public void openAPI(Project[] arg0, boolean arg1, boolean arg2) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
