@@ -1,8 +1,8 @@
 # platform cluster first
-platform9
+platform
 # application cluster second
 jswat
 # and now the rest
-ide10
-java2
+ide
+java
 extra

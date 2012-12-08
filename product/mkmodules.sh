@@ -21,8 +21,8 @@ ALL=`mktemp -t ${script}` || exit 1
 
 # Create the list of all modules found in NetBeans IDE clusters.
 # Note that sed does not understand +, so must use * instead.
-IDE=$BASE/ide12/config/Modules
-JAVA=$BASE/java3/config/Modules
+IDE=$BASE/ide/config/Modules
+JAVA=$BASE/java/config/Modules
 find "$IDE" "$JAVA" -name "*.xml" -print0 |\
     xargs -0 grep -h "module name" |\
     sed 's/^.*"\(.*\)">$/\1/' |\
