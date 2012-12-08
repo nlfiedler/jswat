@@ -14,24 +14,22 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2008-2011. All Rights Reserved.
+ * are Copyright (C) 2008-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.product.project;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import org.netbeans.modules.project.uiapi.ActionsFactory;
+import org.netbeans.spi.project.ui.support.FileActionPerformer;
 import org.netbeans.spi.project.ui.support.ProjectActionPerformer;
 import org.openide.util.ContextAwareAction;
 
 /**
- * Satisfy requirements of the projectuiapi module. We do not support
- * projects so the implementation is empty.
+ * Satisfy requirements of the projectuiapi module. We do not support projects
+ * so the implementation is empty.
  *
  * @author Nathan Fiedler
  */
@@ -114,6 +112,11 @@ public class ActionsFactoryImpl implements ActionsFactory {
 
     @Override
     public Action setProjectConfigurationAction() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Action fileSensitiveAction(FileActionPerformer fap, String string, Icon icon) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

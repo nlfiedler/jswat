@@ -460,6 +460,7 @@ public class NetBeansPathManager extends AbstractPathManager {
         @Override
         public URL getURL() {
             try {
+                // TODO: fix deprecated API
                 return fileObject.getURL();
             } catch (FileStateInvalidException fsie) {
                 ErrorManager.getDefault().notify(fsie);
