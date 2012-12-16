@@ -18,19 +18,18 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-
 package com.bluemarsh.jswat.ui.views;
 
-import com.bluemarsh.jswat.core.session.Session;
-import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.breakpoint.Breakpoint;
-import com.bluemarsh.jswat.core.breakpoint.BreakpointGroup;
-import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
-import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointEvent;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointGroup;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointGroupEvent;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointGroupListener;
 import com.bluemarsh.jswat.core.breakpoint.BreakpointListener;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointManager;
+import com.bluemarsh.jswat.core.breakpoint.BreakpointProvider;
+import com.bluemarsh.jswat.core.session.Session;
+import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionManagerEvent;
 import com.bluemarsh.jswat.core.session.SessionManagerListener;
 import com.bluemarsh.jswat.core.session.SessionProvider;
@@ -40,10 +39,6 @@ import com.bluemarsh.jswat.nodes.breakpoints.BreakpointNode;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -55,10 +50,10 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.nodes.PropertySupport;
 import org.openide.util.NbBundle;
 
 /**
@@ -70,14 +65,19 @@ import org.openide.util.NbBundle;
 public class BreakpointsView extends AbstractView
         implements BreakpointListener, BreakpointGroupListener,
         ExplorerManager.Provider, SessionManagerListener {
-    /** silence the compiler warnings */
+
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** Our explorer manager. */
+    /**
+     * Our explorer manager.
+     */
     private ExplorerManager explorerManager;
-    /** Component showing our nodes. */
+    /**
+     * Component showing our nodes.
+     */
     private PersistentOutlineView nodeView;
-    /** Columns for the tree-table view. */
-    private transient Node.Property[] columns;
 
     /**
      * Creates a new instance of BreakpointsView.
@@ -94,18 +94,35 @@ public class BreakpointsView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the view.
-        nodeView = new PersistentOutlineView();
+        String columnLabel = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_BreakpointsView_Column_Name_"
+                + Breakpoint.PROP_DESCRIPTION);
+        nodeView = new PersistentOutlineView(columnLabel);
         nodeView.getOutline().setRootVisible(false);
-        columns = new Node.Property[] {
-            new Column(Breakpoint.PROP_DESCRIPTION, String.class, true, true, false),
-            new Column(Breakpoint.PROP_ENABLED, Boolean.TYPE, false, true, false),
-            new Column(Breakpoint.PROP_RESOLVED, Boolean.TYPE, false, true, true),
-        };
-        nodeView.setProperties(columns);
+        nodeView.setPropertyColumnDescription(columnLabel, NbBundle.getMessage(
+                BreakpointsView.class, "CTL_BreakpointsView_Column_Desc_"
+                + Breakpoint.PROP_DESCRIPTION));
+        addColumn(nodeView, Breakpoint.PROP_ENABLED);
+        addColumn(nodeView, Breakpoint.PROP_RESOLVED);
         // This, oddly enough, enables the column hiding feature.
         nodeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setLayout(new BorderLayout());
         add(nodeView, BorderLayout.CENTER);
+    }
+
+    /**
+     * Adds a column to the outline view, with attributes extracted from the
+     * properties associated with the given name.
+     *
+     * @param view the outline view to modify.
+     * @param name the name of the property column to add.
+     */
+    private void addColumn(OutlineView view, String name) {
+        String displayName = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_BreakpointsView_Column_Name_" + name);
+        String description = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_BreakpointsView_Column_Desc_" + name);
+        view.addPropertyColumn(name, displayName, description);
     }
 
     @Override
@@ -118,7 +135,7 @@ public class BreakpointsView extends AbstractView
             Children children = gn.getChildren();
             NodeFactory factory = NodeFactory.getDefault();
             BreakpointNode bn = factory.createBreakpointNode(bp);
-            children.add(new Node[] { bn });
+            children.add(new Node[]{bn});
         }
         // Else, this is an event for a different session.
     }
@@ -131,7 +148,7 @@ public class BreakpointsView extends AbstractView
         if (bn != null) {
             BreakpointGroupNode gn = (BreakpointGroupNode) bn.getParentNode();
             Children children = gn.getChildren();
-            children.remove(new Node[] { bn });
+            children.remove(new Node[]{bn});
         }
         // Else, this is an event for a different session.
     }
@@ -143,7 +160,7 @@ public class BreakpointsView extends AbstractView
     /**
      * Build a new root node and set it to be the explorer's root context.
      *
-     * @param  kids  root node's children, or Children.LEAF if none.
+     * @param kids root node's children, or Children.LEAF if none.
      */
     private void buildRoot(Children kids) {
         // Use a simple root node for which we can set the display name;
@@ -160,7 +177,7 @@ public class BreakpointsView extends AbstractView
     /**
      * Constructs the node tree to reflect the current breakpoints and groups.
      *
-     * @param  session  session from which to retrieve breakpoints.
+     * @param session session from which to retrieve breakpoints.
      */
     protected void buildTree(Session session) {
         BreakpointManager bm = BreakpointProvider.getBreakpointManager(session);
@@ -168,15 +185,14 @@ public class BreakpointsView extends AbstractView
         BreakpointGroupNode groupNode = factory.createBreakpointGroupNode(
                 bm.getDefaultGroup());
         Children children = new Children.Array();
-        children.add(new Node[] { groupNode });
+        children.add(new Node[]{groupNode});
         buildRoot(children);
-// TODO: get tree expansion working
-//        EventQueue.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                nodeView.expandAll();
-//            }
-//        });
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                expandAll(nodeView);
+            }
+        });
     }
 
     @Override
@@ -224,8 +240,8 @@ public class BreakpointsView extends AbstractView
     /**
      * Finds the node for the given breakpoint.
      *
-     * @param  bp  breakpoint for which to find node.
-     * @return  corresponding breakpoint node, or null if none found.
+     * @param bp breakpoint for which to find node.
+     * @return corresponding breakpoint node, or null if none found.
      */
     private BreakpointNode findBreakpointNode(Breakpoint bp) {
         Queue<Node> queue = new LinkedList<Node>();
@@ -240,9 +256,9 @@ public class BreakpointsView extends AbstractView
                 }
             }
             Children children = node.getChildren();
-            Enumeration enm = children.nodes();
+            Enumeration<Node> enm = children.nodes();
             while (enm.hasMoreElements()) {
-                Node child = (Node) enm.nextElement();
+                Node child = enm.nextElement();
                 queue.offer(child);
             }
         }
@@ -252,8 +268,8 @@ public class BreakpointsView extends AbstractView
     /**
      * Finds the node for the given breakpoint group.
      *
-     * @param  bp  breakpoint group for which to find node.
-     * @return  corresponding group node, or null if none found.
+     * @param bp breakpoint group for which to find node.
+     * @return corresponding group node, or null if none found.
      */
     private BreakpointGroupNode findGroupNode(BreakpointGroup bg) {
         Queue<Node> queue = new LinkedList<Node>();
@@ -268,9 +284,9 @@ public class BreakpointsView extends AbstractView
                 }
             }
             Children children = node.getChildren();
-            Enumeration enm = children.nodes();
+            Enumeration<Node> enm = children.nodes();
             while (enm.hasMoreElements()) {
-                Node child = (Node) enm.nextElement();
+                Node child = enm.nextElement();
                 queue.offer(child);
             }
         }
@@ -307,7 +323,7 @@ public class BreakpointsView extends AbstractView
             if (gn != null) {
                 NodeFactory factory = NodeFactory.getDefault();
                 BreakpointGroupNode child = factory.createBreakpointGroupNode(bg);
-                gn.getChildren().add(new Node[] { child });
+                gn.getChildren().add(new Node[]{child});
             }
             // Else, this is an event for a different session.
         }
@@ -322,7 +338,7 @@ public class BreakpointsView extends AbstractView
         if (gn != null) {
             BreakpointGroupNode parent = (BreakpointGroupNode) gn.getParentNode();
             Children children = parent.getChildren();
-            children.remove(new Node[] { gn });
+            children.remove(new Node[]{gn});
         }
         // Else, this is an event for a different session.
     }
@@ -339,48 +355,47 @@ public class BreakpointsView extends AbstractView
         // are the ones that need to update the node hierarchy.
         String pname = event.getPropertyName();
         Object src = event.getSource();
-        if (pname.equals(Breakpoint.PROP_BREAKPOINTGROUP) &&
-                src instanceof Breakpoint) {
+        if (pname.equals(Breakpoint.PROP_BREAKPOINTGROUP)
+                && src instanceof Breakpoint) {
             // Find the breakpoint node and move it to the new parent node.
             Breakpoint bp = (Breakpoint) src;
             BreakpointNode bn = findBreakpointNode(bp);
             if (bn != null) {
                 BreakpointGroupNode gn = (BreakpointGroupNode) bn.getParentNode();
                 Children children = gn.getChildren();
-                children.remove(new Node[] { bn });
+                children.remove(new Node[]{bn});
                 BreakpointGroup bg = bp.getBreakpointGroup();
                 gn = findGroupNode(bg);
                 if (gn != null) {
                     children = gn.getChildren();
-                    children.add(new Node[] { bn });
+                    children.add(new Node[]{bn});
                 }
             }
-        } else if (pname.equals(BreakpointGroup.PROP_PARENT) &&
-                src instanceof BreakpointGroup) {
+        } else if (pname.equals(BreakpointGroup.PROP_PARENT)
+                && src instanceof BreakpointGroup) {
             // Find the group node and move it to the new parent node.
             BreakpointGroup bg = (BreakpointGroup) src;
             BreakpointGroupNode gn = findGroupNode(bg);
             if (gn != null) {
                 BreakpointGroupNode parentNode = (BreakpointGroupNode) gn.getParentNode();
                 Children children = parentNode.getChildren();
-                children.remove(new Node[] { gn });
+                children.remove(new Node[]{gn});
                 BreakpointGroup parentGroup = bg.getParent();
                 parentNode = findGroupNode(parentGroup);
                 if (parentNode != null) {
                     children = parentNode.getChildren();
-                    children.add(new Node[] { gn });
+                    children.add(new Node[]{gn});
                 }
             }
         }
     }
 
-    @Override
-    public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-        restoreColumns(in, columns);
-        nodeView.setProperties(columns);
-        nodeView.restoreColumnWidths(in);
+    // Secret, undocumented method that NetBeans calls?
+    void readProperties(java.util.Properties p) {
+        String version = p.getProperty("version");
+        if (version.equals("1.0")) {
+            nodeView.readSettings(p, "Breakpoints");
+        }
     }
 
     @Override
@@ -405,46 +420,11 @@ public class BreakpointsView extends AbstractView
         buildTree(session);
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-        saveColumns(out, columns);
-        nodeView.saveColumnWidths(out);
-    }
-
-    /**
-     * A column for the breakpoints table.
-     *
-     * @author  Nathan Fiedler
-     */
-    protected class Column extends PropertySupport.ReadOnly {
-        /** The keyword for this column. */
-        private String key;
-
-        /**
-         * Constructs a new instance of Column.
-         *
-         * @param  key       keyword for this column.
-         * @param  type      type of column data.
-         * @param  tree      true if this is the 'tree' column, false if 'table' column.
-         * @param  sortable  true if this is sortable column, false otherwise.
-         * @param  hidden    true to hide this column initially.
-         */
-        @SuppressWarnings("unchecked")
-        public Column(String key, Class type, boolean tree, boolean sortable, boolean hidden) {
-            super(key, type,
-                  NbBundle.getMessage(Column.class, "CTL_BreakpointsView_Column_Name_" + key),
-                  NbBundle.getMessage(Column.class, "CTL_BreakpointsView_Column_Desc_" + key));
-            this.key = key;
-            setValue("TreeColumnTTV", Boolean.valueOf(tree));
-            setValue("ComparableColumnTTV", Boolean.valueOf(sortable));
-            setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
-        }
-
-        @Override
-        public Object getValue()
-                throws IllegalAccessException, InvocationTargetException {
-            return key;
-        }
+    // Secret, undocumented method that NetBeans calls?
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        nodeView.writeSettings(p, "Breakpoints");
     }
 }

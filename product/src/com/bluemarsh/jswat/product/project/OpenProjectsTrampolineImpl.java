@@ -18,7 +18,6 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-
 package com.bluemarsh.jswat.product.project;
 
 import java.beans.PropertyChangeListener;
@@ -27,10 +26,10 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
 
 /**
- * Satisfy a requirement of the projectuiapi module that there be a
- * trampoline for open projects, even though we don't support projects.
+ * Satisfy a requirement of the projectuiapi module that there be a trampoline
+ * for open projects, even though we don't support projects.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
 
@@ -62,11 +61,10 @@ public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
 
     @Override
     public Future<Project[]> openProjectsAPI() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
     @Override
     public void openAPI(Project[] arg0, boolean arg1, boolean arg2) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

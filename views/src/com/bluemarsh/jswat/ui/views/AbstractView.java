@@ -18,7 +18,6 @@
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import com.bluemarsh.jswat.core.session.Session;
@@ -30,12 +29,17 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import org.netbeans.swing.outline.Outline;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.view.OutlineView;
 import org.openide.explorer.view.TreeView;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeNotFoundException;
@@ -43,10 +47,11 @@ import org.openide.nodes.NodeOp;
 import org.openide.windows.TopComponent;
 
 /**
- * Overrides <code>TopComponent</code> to provide a few convenience methods
- * for the views in the JSwat UI module.
+ * Overrides
+ * <code>TopComponent</code> to provide a few convenience methods for the views
+ * in the JSwat UI module.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public abstract class AbstractView extends TopComponent {
 
@@ -60,7 +65,7 @@ public abstract class AbstractView extends TopComponent {
      * Creates a listener to track the selected nodes in the given explorer
      * manager, settingn those nodes as activated.
      *
-     * @param  em  explorer manager to listen to.
+     * @param em explorer manager to listen to.
      */
     protected void addSelectionListener(ExplorerManager em) {
         em.addPropertyChangeListener(new PropertyChangeListener() {
@@ -79,11 +84,13 @@ public abstract class AbstractView extends TopComponent {
     /**
      * Expands the set of node paths in the view.
      *
-     * @param  paths  list of node path names to expand.
-     * @param  view   tree view to traverse.
-     * @param  root   root of the node tree.
+     * @param paths list of node path names to expand.
+     * @param view tree view to traverse.
+     * @param root root of the node tree.
      */
     protected static void expandPaths(List<String[]> paths, TreeView view, Node root) {
+// TODO: would using TreePathSupport work better?
+// OutlineView.getOutline().getOutlineModel().getTreePathSupport()
         for (String[] path : paths) {
             try {
                 Node node = NodeOp.findPath(root, path);
@@ -99,14 +106,16 @@ public abstract class AbstractView extends TopComponent {
 
     /**
      * Determines the list of paths of expanded nodes. Use this to take a
-     * snapshot of the expanded state of the view, then later re-expand
-     * the nodes with the same names after the tree has been rebuilt.
+     * snapshot of the expanded state of the view, then later re-expand the
+     * nodes with the same names after the tree has been rebuilt.
      *
-     * @param  view  tree view to traverse.
-     * @param  root  root of the node tree.
-     * @return  list of expanded paths.
+     * @param view tree view to traverse.
+     * @param root root of the node tree.
+     * @return list of expanded paths.
      */
     protected static List<String[]> getExpanded(TreeView view, Node root) {
+// TODO: would using TreePathSupport work better?
+// OutlineView.getOutline().getOutlineModel().getTreePathSupport()
         List<String[]> paths = new LinkedList<String[]>();
         Stack<Node> stack = new Stack<Node>();
         stack.push(root);
@@ -133,10 +142,46 @@ public abstract class AbstractView extends TopComponent {
     }
 
     /**
+     * Expands all paths.
+     */
+    public void expandAll(OutlineView view) {
+        // TODO: doesn't seem to work
+        // Borrowed from TreeView source in openide.explorer module...
+        Outline outline = view.getOutline();
+        TreeNode root = (TreeNode) outline.getOutlineModel().getRoot();
+        expandOrCollapseAll(outline, new TreePath(root), true);
+    }
+
+    /**
+     * Expand or collapse a tree path and its descendants.
+     *
+     * @param tree    outline on which to operate.
+     * @param parent  parent tree path.
+     * @param expand  true to expand, false to collapse.
+     */
+    @SuppressWarnings("unchecked")
+    private void expandOrCollapseAll(Outline tree, TreePath parent, boolean expand) {
+        // Borrowed from TreeView source in openide.explorer module...
+        TreeNode node = (TreeNode) parent.getLastPathComponent();
+        if (node.getChildCount() > 0) {
+            for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
+                TreeNode n = e.nextElement();
+                TreePath path = parent.pathByAddingChild(n);
+                expandOrCollapseAll(tree, path, expand);
+            }
+        }
+        if (expand) {
+            tree.expandPath(parent);
+        } else {
+            tree.collapsePath(parent);
+        }
+    }
+
+    /**
      * Checks if the given Session is the current session or not.
      *
-     * @param  session  session to compare.
-     * @return  true if current session, false otherwise.
+     * @param session session to compare.
+     * @return true if current session, false otherwise.
      */
     protected static boolean isCurrent(Session session) {
         SessionManager sm = SessionProvider.getSessionManager();
@@ -147,8 +192,8 @@ public abstract class AbstractView extends TopComponent {
     /**
      * Checks if the given event is for the current session or not.
      *
-     * @param  sevt  session event.
-     * @return  true if current session, false otherwise.
+     * @param sevt session event.
+     * @return true if current session, false otherwise.
      */
     protected static boolean isCurrent(SessionEvent sevt) {
         return isCurrent(sevt.getSession());
@@ -157,60 +202,21 @@ public abstract class AbstractView extends TopComponent {
     /**
      * Restore the column settings from the input stream.
      *
-     * @param  in       the stream to deserialize from.
-     * @param  columns  the columns to be restored.
+     * @param in the stream to deserialize from.
+     * @param columns the columns to be restored.
      */
     protected static void restoreColumns(ObjectInput in, Node.Property[] columns) {
-        // TODO: get this working with new OutlineView
-        try {
-            int count = in.readInt();
-            for (int ii = 0; ii < count; ii++) {
-                boolean b = in.readBoolean();
-                columns[ii].setValue("InvisibleInTreeTableView", Boolean.valueOf(b));
-                int i = in.readInt();
-                columns[ii].setValue("OrderNumberTTV", Integer.valueOf(i));
-                b = in.readBoolean();
-                columns[ii].setValue("SortingColumnTTV", Boolean.valueOf(b));
-                b = in.readBoolean();
-                columns[ii].setValue("DescendingOrderTTV", Boolean.valueOf(b));
-            }
-        } catch (Exception e) {
-            // Could be reading an old instance which is missing data.
-            // In any case, ignore this as there is no use in reporting it.
-        }
+        // TODO: remove these, OutlineView.readSettings() replaces this
     }
 
     /**
      * Save the column settings to the output stream.
      *
-     * @param  out      the stream to serialize to.
-     * @param  columns  the columns to be saved.
+     * @param out the stream to serialize to.
+     * @param columns the columns to be saved.
      */
     protected static void saveColumns(ObjectOutput out, Node.Property[] columns)
             throws IOException {
-        // TODO: get this working with new OutlineView
-        out.writeInt(columns.length);
-        for (int ii = 0; ii < columns.length; ii++) {
-            Boolean b = (Boolean) columns[ii].getValue("InvisibleInTreeTableView");
-            if (b == null) {
-                b = Boolean.FALSE;
-            }
-            out.writeBoolean(b.booleanValue());
-            Integer i = (Integer) columns[ii].getValue("OrderNumberTTV");
-            if (i == null) {
-                i = new Integer(ii);
-            }
-            out.writeInt(i.intValue());
-            b = (Boolean) columns[ii].getValue("SortingColumnTTV");
-            if (b == null) {
-                b = Boolean.FALSE;
-            }
-            out.writeBoolean(b.booleanValue());
-            b = (Boolean) columns[ii].getValue("DescendingOrderTTV");
-            if (b == null) {
-                b = Boolean.FALSE;
-            }
-            out.writeBoolean(b.booleanValue());
-        }
+        // TODO: remove these, OutlineView.writeSettings() replaces this
     }
 }

@@ -14,11 +14,9 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2010. All Rights Reserved.
+ * are Copyright (C) 2005-2012. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
 package com.bluemarsh.jswat.nbcore.path;
 
@@ -52,7 +50,6 @@ import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
@@ -459,13 +456,7 @@ public class NetBeansPathManager extends AbstractPathManager {
 
         @Override
         public URL getURL() {
-            try {
-                // TODO: fix deprecated API
-                return fileObject.getURL();
-            } catch (FileStateInvalidException fsie) {
-                ErrorManager.getDefault().notify(fsie);
-            }
-            return null;
+            return fileObject.toURL();
         }
 
         @Override

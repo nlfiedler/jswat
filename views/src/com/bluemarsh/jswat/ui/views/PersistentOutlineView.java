@@ -20,95 +20,56 @@
  */
 package com.bluemarsh.jswat.ui.views;
 
-import java.awt.EventQueue;
-import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import org.openide.ErrorManager;
-import org.openide.explorer.view.NodeTreeModel;
 import org.openide.explorer.view.OutlineView;
-import org.openide.explorer.view.Visualizer;
 import org.openide.nodes.Node;
 
 /**
- * An OutlineView subclass that persists the various settings, and
- * restores them as needed.
+ * An OutlineView subclass that persists the various settings, and restores them
+ * as needed.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public class PersistentOutlineView extends OutlineView {
 
-    /** silence the compiler warnings */
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
 
+    protected PersistentOutlineView() {
+        super();
+    }
+
+    protected PersistentOutlineView(String nodesColumnLabel) {
+        super(nodesColumnLabel);
+    }
+
     /**
-     * Restore the column width values from the input stream (performed
-     * on the AWT event thread since this affects Swing components).
+     * Restore the column width values from the input stream (performed on the
+     * AWT event thread since this affects Swing components).
      *
-     * @param  int  the stream to deserialize from.
+     * @param int the stream to deserialize from.
      */
     public void restoreColumnWidths(ObjectInput in) {
-        // Must read from the stream immediately and not on another
-        // thread, lest it be closed by the time that thread is run.
-// TODO: get OutlineView column widths persistence working
-//        TableColumnModel tcm = treeTable.getColumnModel();
-//        int count = tcm.getColumnCount();
-//        final int[] widths = new int[count];
-//        try {
-//            for (int index = 0; index < count; index++) {
-//                widths[index] = in.readInt();
-//            }
-//        } catch (IOException ioe) {
-//            // Could be reading an old instance which is missing data.
-//            // In any case, ignore this as there is no use in reporting it
-//            // (and return immediately so as not to invoke the runnable).
-//            return;
-//        }
-//
-//        // Changing Swing widgets must be done on the AWT event thread.
-//        EventQueue.invokeLater(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                // TreeTableView prohibits moving the tree
-//                // column, so it is always offset zero.
-//                setTreePreferredWidth(widths[0]);
-//                for (int index = 1; index < widths.length; index++) {
-//                    setTableColumnPreferredWidth(index - 1, widths[index]);
-//                }
-//            }
-//        });
+// TODO: replace with call to OutlineView.readSettings()
     }
 
     /**
      * Save the column width values to the output stream.
      *
-     * @param  out  the stream to serialize to.
+     * @param out the stream to serialize to.
      */
     public void saveColumnWidths(ObjectOutput out) {
-// TODO: get OutlineView column widths persistence working
-//        try {
-//            TableColumnModel tcm = treeTable.getColumnModel();
-//            int count = tcm.getColumnCount();
-//            for (int index = 0; index < count; index++) {
-//                TableColumn tc = tcm.getColumn(index);
-//                int width = tc.getWidth();
-//                out.writeInt(width);
-//            }
-//        } catch (IOException ioe) {
-//            ErrorManager.getDefault().notify(ErrorManager.WARNING, ioe);
-//        }
+// TODO: replace with call to OutlineView.writeSettings()
     }
 
     /**
-     * Select the given node in the tree, scrolling as needed to make the
-     * node visible, as well as expanding the path to the node.
+     * Select the given node in the tree, scrolling as needed to make the node
+     * visible, as well as expanding the path to the node.
      *
-     * @param  node  node to be selected.
+     * @param node node to be selected.
      */
     public void scrollAndSelectNode(Node node) {
 // TODO: get OutlineView column scroll/select working
