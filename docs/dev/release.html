@@ -3,6 +3,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta name="generator" content=
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.10), see www.w3.org" />
+
   <title>JSwat - Making a Release</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -12,41 +15,37 @@
 
   <h3>Requirements</h3>
 
-  <p>See the <a href="compile.html">compiling</a> document to learn the
-  requirements and basic setup for compiling JSwat from source
+  <p>See the <a href="compile.html">compiling</a> document to learn
+  the requirements and basic setup for compiling JSwat from source
   code.</p>
 
   <h3>Prerequisites</h3>
 
-  <p>If the API for the JSwat modules has changed in any way, be sure
-  to appropriately increment the module specification version. This
-  value is specified in the module <code>manifest.mf</code> file.</p>
+  <p>If the API for the JSwat modules has changed in any way, be
+  sure to appropriately increment the module specification version.
+  This value is specified in the module <code>manifest.mf</code>
+  file.</p>
 
   <h3>Making the Build</h3>
 
   <p>Building JSwat for general release is very straight-forward.
-  Simply open a command prompt and change to the directory containing
-  the main <code>build.xml</code> file. Then invoke the following
-  command:</p>
+  Simply right-click on the suite project in NetBeans and select
+  <strong>Installers</strong> from the <em>Package as</em>
+  menu.</p>
 
-  <blockquote>
-    <kbd>ant -Dversion=<em>x.y</em> dist</kbd>
-  </blockquote>
-
-  <p>This will generate both the source and binary packages. The binary
-  distribution is packed into a <code>.jar</code> file and should be
-  released as-is. The source distribution is packed in a
-  <code>.zip</code> file, which is generally supported on Unix
-  platforms as well as on Microsoft Windows.</p>
+  <p>This will generate both installers and a generic zip file.</p>
 
   <h3>Testing the Build</h3>
 
-  <p>The following are some quick and basic steps for verifying that
-  build is reasonably free of critical bugs. Each step is important and
-  there for a reason; they must not be skipped over.</p>
+  <p>The following are some quick and basic steps for verifying
+  that build is reasonably free of critical bugs. Each step is
+  important and there for a reason; they must not be skipped
+  over.</p>
 
   <ol>
-    <li>Delete the <code>~/.jswat</code> user directory</li>
+    <li>Delete the <code>~/.jswat</code> user directory (on Mac OS
+    X this is <code>~/Library/Application
+    Support/JSwat</code>)</li>
 
     <li>Install the debugger using the generated installer</li>
 
@@ -63,8 +62,8 @@
 
     <li>Close the debugger</li>
 
-    <li>Examine the <code>messages.log</code> file for any errors or
-    warnings</li>
+    <li>Examine the <code>messages.log</code> file for any errors
+    or warnings</li>
 
     <li>Delete the <code>messages.log</code> file</li>
 
@@ -72,8 +71,8 @@
 
     <li>Close the debugger</li>
 
-    <li>Examine the <code>messages.log</code> file for any errors or
-    warnings</li>
+    <li>Examine the <code>messages.log</code> file for any errors
+    or warnings</li>
   </ol>
 
   <h4>Testing against Older Releases</h4>
@@ -83,29 +82,29 @@
   following outline provides some ideas on how to do that.</p>
 
   <ol>
-    <li>Install previous release version, run it, create something of
-    everything (sessions, breakpoints, watches)</li>
+    <li>Install previous release version, run it, create something
+    of everything (sessions, breakpoints, watches)</li>
 
-    <li>Install the new version and start it, watching the log for any
-    issues</li>
+    <li>Install the new version and start it, watching the log for
+    any issues</li>
 
-    <li>Make sure everything appears as before (sessions, breakpoints,
-    watches)</li>
+    <li>Make sure everything appears as before (sessions,
+    breakpoints, watches)</li>
   </ol>
 
   <h3>Releasing the Build</h3>
 
   <ol>
-    <li>Upload the binary and source to <a href=
-    "http://code.google.com/p/jswat/">Google Code</a>, and optionally
-    remove an older release.</li>
+    <li>Upload the installers and zip file to <a href=
+    "http://code.google.com/p/jswat/">Google Code</a>, and
+    optionally remove an older release.</li>
 
     <li>Update the <a href=
     "http://freecode.com/projects/jswat">Freecode</a> entry</li>
 
     <li>Update the <a href=
-    "http://en.wikipedia.org/wiki/JSwat">Wikipedia</a> entry (release
-    date, version)</li>
+    "http://en.wikipedia.org/wiki/JSwat">Wikipedia</a> entry
+    (release date, version)</li>
 
     <li>Send an announcement to the <em>jswat-discuss</em> Google
     Group.</li>

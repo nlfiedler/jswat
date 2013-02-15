@@ -1,8 +1,0 @@
-# platform cluster first
-platform
-# application cluster second
-jswat
-# and now the rest
-ide
-java
-extra

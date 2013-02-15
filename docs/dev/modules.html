@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org" />
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.10), see www.w3.org" />
 
   <title>JSwat - Writing New Modules</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -14,11 +14,12 @@
 <body>
   <h2>Writing New Modules</h2>
 
-  <p>Writing new modules for JSwat is as easy as writing new modules
-  for the NetBeans Platform. Simply use the NetBeans IDE 5.5 or later
-  to quickly set up a module project. Prior to starting, see the
-  instructions on <a href="compile.html">compiling</a> JSwat to get
-  your build environment set up correctly.</p>
+  <p>Writing new modules for JSwat is as easy as writing new
+  modules for the NetBeans Platform. Simply use the NetBeans IDE
+  5.5 or later to quickly set up a module project. Prior to
+  starting, see the instructions on <a href=
+  "compile.html">compiling</a> JSwat to get your build environment
+  set up correctly.</p>
 
   <p>To learn more about using NetBeans IDE module support, see the
   built-in help, and the web site <a href=
@@ -27,11 +28,8 @@
   <h3>What <em>not</em> to Check In</h3>
 
   <p>Try to avoid checking in the <code>nbproject/private</code>
-  directory into the source repository. To achieve this, set the
-  <code>svn:ignore</code> property on the <code>nbproject</code>
-  directory of the module, like so:</p>
-  <pre>
-svn ps svn:ignore private module/nbproject
-</pre>
+  directory into the source repository. It is advised to add the
+  path to the <code>.gitignore</code> file at the top of the source
+  tree.</p>
 </body>
 </html>

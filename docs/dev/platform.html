@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.3.6), see www.w3.org" />
+  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.10), see www.w3.org" />
 
   <title>JSwat - Updating the Platform</title>
   <link href="../style.css" rel="stylesheet" type="text/css" />
@@ -14,68 +14,39 @@
 <body>
   <h2>How to Update the Platform</h2>
 
-  <p>This page documents the process for updating the NetBeans Platform
-  on which JSwat is based. For instance, going from NetBeans 5.5 to 6.0
-  was a bit of an undertaking. These are the basic steps to follow in
-  making the transition.</p>
+  <p>This page documents the process for updating the NetBeans
+  Platform on which JSwat is based. For instance, going from
+  NetBeans 5.5 to 6.0 was a bit of an undertaking. These are the
+  basic steps to follow in making the transition.</p>
 
   <h3>Update Process</h3>
 
   <ol>
-    <li>Copy the new <code>org-openide-util.jar</code> from NetBeans
-    <code>platform</code> directory to the <code>core/lib</code> folder
-    of the core project. <em>Note that this file is not used when
-    running in NetBeans.</em></li>
+    <li>Copy the new <code>org-openide-util.jar</code> from
+    NetBeans <code>platform</code> directory to the
+    <code>core/lib</code> folder of the core project. <em>Note that
+    this file is not used when running in NetBeans.</em></li>
 
-    <li>Update cluster values ide*, platform*, jswat* (e.g. ide7 to
-    ide8):
-
-      <ul>
-        <li><code>build.xml</code></li>
-
-        <li><code>nbproject/platform.properties</code></li>
-
-        <li><code>launcher/jswat.clusters</code></li>
-
-        <li>Installer source code</li>
-      </ul>
-    </li>
-
-    <li>Run <code>product/mkmodules.sh</code> to recreate disabled
-    modules list.</li>
-
-    <li>Run <code>product/findmodules.sh</code> to recreate the list of
-    <code>jar</code> and <code>xml</code> files to be included in the
-    <code>build.xml</code> file.</li>
-
-    <li>Recompile the <a href="launchers.html">launcher</a> for
-    Windows.</li>
+    <li>Open the module suite in NetBeans and disable all of the
+    modules in the <em>Libraries</em> section of the project
+    properties, then click the <strong>Resolve</strong> button to
+    automatically correct the module dependencies.</li>
 
     <li>Look for API changes in the NetBeans modules.</li>
 
     <li>Clean and <a href="compile.html">build</a> to check for
-    problems.
+    problems. Check for any deprecated API warnings.</li>
 
-      <ul>
-        <li>Look for exceptions, warnings, or other error messages in
-        the <code>messages.log</code> file.</li>
-
-        <li>Check that the version number is replaced during the build
-        (e.g. should <em>not</em> see <code>@version@</code> in the
-        About dialog).</li>
-
-        <li>Run through the <a href="release.html">release</a> testing
-        steps to make sure the basic debugging functionality is
-        working.</li>
-      </ul>
-    </li>
+    <li>Run the debugger and look for exceptions, warnings, or
+    other error messages in the <strong>Output</strong> window of
+    the IDE.</li>
   </ol>
 
   <h3>Test Procedure</h3>
 
   <p>It seems that when upgrading to a new release of NetBeans that
-  some features stop working correctly. Ones that are often overlooked
-  include the following.</p>
+  some features stop working correctly. Ones that are often
+  overlooked include the following.</p>
 
   <ul>
     <li>node double-click</li>
