@@ -1,8 +1,7 @@
-/build
 /bcel/build
 /bcel/nbproject/private
-/cli/dist
 /cli/build
+/cli/dist
 /cli/nbproject/private
 /cmd/build
 /cmd/dist
@@ -13,10 +12,6 @@
 /core/test/integration/build
 /help/build
 /help/nbproject/private
-/installer/build
-/installer/dist
-/installer/nbproject/private
-/launcher/windows/jswat.res
 /nbcore/build
 /nbcore/nbproject/private
 /nodes/build
