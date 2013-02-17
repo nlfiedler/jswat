@@ -26,12 +26,23 @@
     <code>core/lib</code> folder of the core project. <em>Note that
     this file is not used when running in NetBeans.</em></li>
 
-    <li>Open the module suite in NetBeans and disable all of the
-    modules in the <em>Libraries</em> section of the project
-    properties. Select the <tt>Platform</tt> cluster since we need
-    <em>all</em> of the modules in the platform. Then click the
-    <strong>Resolve</strong> button to automatically correct the
-    module dependencies.</li>
+    <li>Update the module dependencies:
+
+      <ol>
+        <li>Open the module suite in NetBeans and disable all of
+        the modules in the <em>Libraries</em> section of the
+        project properties.</li>
+
+        <li>Select the <tt>Platform</tt> cluster since we need
+        <em>all</em> of the modules in the platform.</li>
+
+        <li>Open the <tt>Java</tt> cluster and enable the <tt>Java
+        Editor</tt> module.</li>
+
+        <li>Click the <strong>Resolve</strong> button to
+        automatically correct the module dependencies.</li>
+      </ol>
+    </li>
 
     <li>Look for API changes in the NetBeans modules.</li>
 
