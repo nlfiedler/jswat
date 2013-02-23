@@ -14,11 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2012. All Rights Reserved.
+ * are Copyright (C) 2005-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import com.bluemarsh.jswat.core.connect.JvmConnection;
@@ -41,11 +40,7 @@ import com.sun.jdi.VirtualMachine;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -72,7 +67,6 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeNotFoundException;
 import org.openide.nodes.NodeOp;
-import org.openide.nodes.PropertySupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CallbackSystemAction;
@@ -84,25 +78,36 @@ import org.openide.windows.WindowManager;
 /**
  * Class ClassesView displays the class loaders and their defined classes.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public class ClassesView extends AbstractView
         implements ExplorerManager.Provider, Runnable, SessionListener,
         SessionManagerListener {
-    /** silence the compiler warnings */
+
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** The singleton instance of this class. */
+    /**
+     * The singleton instance of this class.
+     */
     private static ClassesView theInstance;
-    /** Preferred window system identifier for this window. */
+    /**
+     * Preferred window system identifier for this window.
+     */
     public static final String PREFERRED_ID = "classes";
-    /** Our explorer manager. */
+    /**
+     * Our explorer manager.
+     */
     private ExplorerManager explorerManager;
-    /** Component showing our nodes. */
+    /**
+     * Component showing our nodes.
+     */
     private PersistentOutlineView nodeView;
-    /** Lists of classes, keyed by the VirtualMachine. */
+    /**
+     * Lists of classes, keyed by the VirtualMachine.
+     */
     private Map<VirtualMachine, WeakReference<List<ReferenceType>>> classesCache;
-    /** Columns for the tree-table view. */
-    private transient Node.Property[] columns;
 
     /**
      * Constructs a new instance of ClassesView. Clients should not construct
@@ -110,8 +115,7 @@ public class ClassesView extends AbstractView
      * instance from the window system.
      */
     public ClassesView() {
-        classesCache = new HashMap<VirtualMachine,
-                WeakReference<List<ReferenceType>>>();
+        classesCache = new HashMap<VirtualMachine, WeakReference<List<ReferenceType>>>();
         explorerManager = new ExplorerManager();
         ActionMap map = getActionMap();
         CallbackSystemAction globalFindAction =
@@ -130,13 +134,14 @@ public class ClassesView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the classes view.
-        nodeView = new PersistentOutlineView();
+        String columnLabel = NbBundle.getMessage(
+                ClassesView.class, "CTL_ClassesView_Column_Name_"
+                + Node.PROP_NAME);
+        nodeView = new PersistentOutlineView(columnLabel);
         nodeView.getOutline().setRootVisible(false);
-        columns = new Node.Property[] {
-            // The Name column is always sorted, so disallow sortability.
-            new Column(Node.PROP_NAME, true, false, false),
-        };
-        nodeView.setProperties(columns);
+        nodeView.setPropertyColumnDescription(columnLabel, NbBundle.getMessage(
+                ClassesView.class, "CTL_ClassesView_Column_Desc_"
+                + Node.PROP_NAME));
         // This, oddly enough, enables the column hiding feature.
         nodeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setLayout(new BorderLayout());
@@ -146,7 +151,7 @@ public class ClassesView extends AbstractView
     /**
      * Build a new root node and set it to be the explorer's root context.
      *
-     * @param  kids  root node's children, or Children.LEAF if none.
+     * @param kids root node's children, or Children.LEAF if none.
      */
     private void buildRoot(Children kids) {
         // Use a simple root node for which we can set the display name;
@@ -154,9 +159,8 @@ public class ClassesView extends AbstractView
         Node rootNode = new AbstractNode(kids) {
             @Override
             public Action[] getActions(boolean b) {
-                return new Action[] {
-                    SystemAction.get(RefreshAction.class),
-                };
+                return new Action[]{
+                            SystemAction.get(RefreshAction.class)};
             }
         };
         // Surprisingly, this becomes the name and description of the first column.
@@ -294,35 +298,35 @@ public class ClassesView extends AbstractView
     }
 
     /**
-     * Obtain the window instance, first by looking for it in the window
-     * system, then if not found, creating the instance.
+     * Obtain the window instance, first by looking for it in the window system,
+     * then if not found, creating the instance.
      *
-     * @return  the window instance.
+     * @return the window instance.
      */
     public static synchronized ClassesView findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(
                 PREFERRED_ID);
         if (win == null) {
             ErrorManager.getDefault().log(ErrorManager.WARNING,
-                    "Cannot find '" + PREFERRED_ID +
-                    "' component in the window system");
+                    "Cannot find '" + PREFERRED_ID
+                    + "' component in the window system");
             return getDefault();
         }
         if (win instanceof ClassesView) {
             return (ClassesView) win;
         }
         ErrorManager.getDefault().log(ErrorManager.WARNING,
-                "There seem to be multiple components with the '" +
-                PREFERRED_ID + "' ID, this a potential source of errors");
+                "There seem to be multiple components with the '"
+                + PREFERRED_ID + "' ID, this a potential source of errors");
         return getDefault();
     }
 
     /**
-     * Retrieves the cached list of classes for the given virtual machine,
-     * if available and not already garbage collected.
+     * Retrieves the cached list of classes for the given virtual machine, if
+     * available and not already garbage collected.
      *
-     * @param  vm  virtual machine.
-     * @return  all classes from vm, or empty if disconnected.
+     * @param vm virtual machine.
+     * @return all classes from vm, or empty if disconnected.
      */
     protected List<ReferenceType> getClasses(VirtualMachine vm) {
         WeakReference<List<ReferenceType>> ref = classesCache.get(vm);
@@ -342,7 +346,7 @@ public class ClassesView extends AbstractView
      * Returns the single instance of this class, creating it if necessary.
      * Clients should not call this method, but instead use findInstance().
      *
-     * @return  instance of this class.
+     * @return instance of this class.
      */
     public static synchronized ClassesView getDefault() {
         if (theInstance == null) {
@@ -385,13 +389,12 @@ public class ClassesView extends AbstractView
         return PREFERRED_ID;
     }
 
-    @Override
-    public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-        restoreColumns(in, columns);
-        nodeView.setProperties(columns);
-        nodeView.restoreColumnWidths(in);
+    // Secret, undocumented method that NetBeans calls?
+    void readProperties(java.util.Properties p) {
+        String version = p.getProperty("version");
+        if (version.equals("1.0")) {
+            nodeView.readSettings(p, "Classes");
+        }
     }
 
     @Override
@@ -427,17 +430,18 @@ public class ClassesView extends AbstractView
         }
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-        saveColumns(out, columns);
-        nodeView.saveColumnWidths(out);
+    // Secret, undocumented method that NetBeans calls?
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        nodeView.writeSettings(p, "Classes");
     }
 
     /**
      * A Comparator for ClassLoaderReference objects.
      *
-     * @author  Nathan Fiedler
+     * @author Nathan Fiedler
      */
     private static class LoaderComparator implements Comparator<ClassLoaderReference> {
 
@@ -476,59 +480,34 @@ public class ClassesView extends AbstractView
     }
 
     /**
-     * A column for the session table.
-     *
-     * @author  Nathan Fiedler
-     */
-    private class Column extends PropertySupport.ReadOnly {
-        /** The keyword for this column. */
-        private String key;
-
-        /**
-         * Constructs a new instance of Column.
-         *
-         * @param  key       keyword for this column.
-         * @param  tree      true if this is the 'tree' column, false if 'table' column.
-         * @param  sortable  true if this is sortable column, false otherwise.
-         * @param  hidden    true to hide this column initially.
-         */
-        @SuppressWarnings("unchecked")
-        public Column(String key, boolean tree, boolean sortable, boolean hidden) {
-            super(key, String.class,
-                  NbBundle.getMessage(Column.class, "CTL_ClassesView_Column_Name_" + key),
-                  NbBundle.getMessage(Column.class, "CTL_ClassesView_Column_Desc_" + key));
-            this.key = key;
-            setValue("TreeColumnTTV", Boolean.valueOf(tree));
-            setValue("ComparableColumnTTV", Boolean.valueOf(sortable));
-            setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
-        }
-
-        @Override
-        public Object getValue() throws IllegalAccessException, InvocationTargetException {
-            return key;
-        }
-    }
-
-    /**
      * Implements the action of finding a class by substring.
      *
-     * @author  Nathan Fiedler
+     * @author Nathan Fiedler
      */
     private static class ClassesFindAction extends AbstractAction // TODO: needs a keyboard shortcut
             implements Findable {
-        /** The associated view for this finder. */
+
+        /**
+         * The associated view for this finder.
+         */
         private ClassesView view;
-        /** silence the compiler warnings */
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
-        /** Panel, if it has been created. */
+        /**
+         * Panel, if it has been created.
+         */
         private FindPanel panel;
-        /** Index of the previous match, within the all-classes list. */
+        /**
+         * Index of the previous match, within the all-classes list.
+         */
         private int previousMatchIndex;
 
         /**
          * Creates a new instance of ClassesFindAction.
          *
-         * @param  view  the associated view.
+         * @param view the associated view.
          */
         public ClassesFindAction(ClassesView view) {
             this.view = view;
@@ -556,7 +535,7 @@ public class ClassesView extends AbstractView
 
         @Override
         public boolean findNext(String query) {
-            query = query.toLowerCase();
+            String query_ = query.toLowerCase();
             Session session = SessionProvider.getSessionManager().getCurrent();
             JvmConnection jvmc = session.getConnection();
             if (jvmc != null) {
@@ -582,7 +561,7 @@ public class ClassesView extends AbstractView
                             // Ignore array types, they are not shown.
                             if (!(clazz instanceof ArrayType)) {
                                 String name = clazz.name().toLowerCase();
-                                if (name.contains(query)) {
+                                if (name.contains(query_)) {
                                     match = clazz;
                                     break;
                                 }
@@ -613,7 +592,7 @@ public class ClassesView extends AbstractView
 
         @Override
         public boolean findPrevious(String query) {
-            query = query.toLowerCase();
+            String query_ = query.toLowerCase();
             Session session = SessionProvider.getSessionManager().getCurrent();
             JvmConnection jvmc = session.getConnection();
             if (jvmc != null) {
@@ -639,7 +618,7 @@ public class ClassesView extends AbstractView
                             // Ignore array types, they are not shown.
                             if (!(clazz instanceof ArrayType)) {
                                 String name = clazz.name().toLowerCase();
-                                if (name.contains(query)) {
+                                if (name.contains(query_)) {
                                     match = clazz;
                                     break;
                                 }
@@ -671,8 +650,8 @@ public class ClassesView extends AbstractView
         /**
          * Locates the Node that represents the given class.
          *
-         * @param  clazz  reference type for which to find node.
-         * @return  node for class, or null if none.
+         * @param clazz reference type for which to find node.
+         * @return node for class, or null if none.
          */
         private Node locateNode(ReferenceType clazz) {
             ClassLoaderReference loader = clazz.classLoader();
@@ -696,10 +675,13 @@ public class ClassesView extends AbstractView
     /**
      * Implements the action of refreshing the node tree.
      *
-     * @author  Nathan Fiedler
+     * @author Nathan Fiedler
      */
     public static class RefreshAction extends NodeAction {
-        /** silence the compiler warnings */
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
 
         @Override

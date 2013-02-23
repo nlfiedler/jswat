@@ -14,13 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2009. All Rights Reserved.
+ * are Copyright (C) 2005-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
- *
- * $Id$
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import com.bluemarsh.jswat.core.path.PathManager;
@@ -77,20 +74,31 @@ import org.openide.windows.WindowManager;
 /**
  * Class SourcesView displays the source path entries for the current Session.
  *
- * @author  Nathan Fiedler
+ * @author Nathan Fiedler
  */
 public class SourcesView extends AbstractView
         implements ExplorerManager.Provider, PropertyChangeListener,
         SessionManagerListener {
-    /** silence the compiler warnings */
+
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** The singleton instance of this class. */
+    /**
+     * The singleton instance of this class.
+     */
     private static SourcesView theInstance;
-    /** Preferred window system identifier for this window. */
+    /**
+     * Preferred window system identifier for this window.
+     */
     public static final String PREFERRED_ID = "sources";
-    /** Our explorer manager. */
+    /**
+     * Our explorer manager.
+     */
     private ExplorerManager explorerManager;
-    /** Component showing node tree. */
+    /**
+     * Component showing node tree.
+     */
     private TreeView nodeView;
 
     /**
@@ -113,7 +121,7 @@ public class SourcesView extends AbstractView
     /**
      * Build a new root node and set it to be the explorer's root context.
      *
-     * @param  kids  root node's children, or Children.LEAF if none.
+     * @param kids root node's children, or Children.LEAF if none.
      */
     private void buildRoot(Children kids) {
         // Use a simple root node for which we can set the display name;
@@ -121,10 +129,9 @@ public class SourcesView extends AbstractView
         Node rootNode = new AbstractNode(kids) {
             @Override
             public Action[] getActions(boolean b) {
-                return new Action[] {
-                    SystemAction.get(EditAction.class),
-                    SystemAction.get(RefreshAction.class),
-                };
+                return new Action[]{
+                            SystemAction.get(EditAction.class),
+                            SystemAction.get(RefreshAction.class),};
             }
         };
         explorerManager.setRootContext(rootNode);
@@ -136,8 +143,8 @@ public class SourcesView extends AbstractView
     private void buildTree() {
         // Populate the root node with children.
         List<Node> list = new LinkedList<Node>();
-        Node rootNode = explorerManager.getRootContext();
-        final List<String[]> expanded = getExpanded(nodeView, rootNode);
+//        Node rootNode = explorerManager.getRootContext();
+//        final List<String[]> expanded = getExpanded(nodeView, rootNode);
         SessionManager sm = SessionProvider.getSessionManager();
         Session session = sm.getCurrent();
 
@@ -165,14 +172,15 @@ public class SourcesView extends AbstractView
         }
 
         // Must expand the nodes on the AWT event thread.
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                // Need to refetch the root in case it was replaced.
-                Node rootNode = explorerManager.getRootContext();
-                expandPaths(expanded, nodeView, rootNode);
-            }
-        });
+// TODO: get tree expansion working
+//        EventQueue.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Need to refetch the root in case it was replaced.
+//                Node rootNode = explorerManager.getRootContext();
+//                expandPaths(expanded, nodeView, rootNode);
+//            }
+//        });
     }
 
     public void closing(SessionEvent sevt) {
@@ -201,47 +209,47 @@ public class SourcesView extends AbstractView
         buildTree();
         // Start listening to everything that affects our tree.
         SessionManager sm = SessionProvider.getSessionManager();
-        sm.addSessionManagerListener(this);
+        sm.addSessionManagerListener(SourcesView.this);
         Iterator<Session> iter = sm.iterateSessions();
         while (iter.hasNext()) {
             Session session = iter.next();
             PathManager pm = PathProvider.getPathManager(session);
-            pm.addPropertyChangeListener(this);
+            pm.addPropertyChangeListener(SourcesView.this);
         }
     }
 
     /**
-     * Obtain the window instance, first by looking for it in the window
-     * system, then if not found, creating the instance.
+     * Obtain the window instance, first by looking for it in the window system,
+     * then if not found, creating the instance.
      *
-     * @return  the window instance.
+     * @return the window instance.
      */
     public static synchronized SourcesView findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(
                 PREFERRED_ID);
         if (win == null) {
             ErrorManager.getDefault().log(ErrorManager.WARNING,
-                    "Cannot find '" + PREFERRED_ID +
-                    "' component in the window system");
+                    "Cannot find '" + PREFERRED_ID
+                    + "' component in the window system");
             return getDefault();
         }
         if (win instanceof SourcesView) {
             return (SourcesView) win;
         }
         ErrorManager.getDefault().log(ErrorManager.WARNING,
-                "There seem to be multiple components with the '" +
-                PREFERRED_ID + "' ID, this a potential source of errors");
+                "There seem to be multiple components with the '"
+                + PREFERRED_ID + "' ID, this a potential source of errors");
         return getDefault();
     }
 
     /**
-     * Scans the directory structure starting at root, looking for folders
-     * that are either empty or contain files, adding them to the set.
+     * Scans the directory structure starting at root, looking for folders that
+     * are either empty or contain files, adding them to the set.
      *
-     * @param  children  set to which nodes are added.
-     * @param  fo        file object to examine.
-     * @param  root      root of the package hierarchy.
-     * @param  query     true to query for visibility of files.
+     * @param children set to which nodes are added.
+     * @param fo file object to examine.
+     * @param root root of the package hierarchy.
+     * @param query true to query for visibility of files.
      */
     private static void findVisiblePackages(Set<Node> children,
             FileObject fo, FileObject root, boolean query) {
@@ -254,7 +262,7 @@ public class SourcesView extends AbstractView
         FileObject[] kids = fo.getChildren();
         boolean hasSubfolders = false;
         boolean hasFiles = false;
-        for (int ii = 0; ii < kids.length; ii++) {            
+        for (int ii = 0; ii < kids.length; ii++) {
             if (!query || vq.isVisible(kids[ii])) {
                 if (kids[ii].isFolder()) {
                     findVisiblePackages(children, kids[ii], root, query);
@@ -275,7 +283,7 @@ public class SourcesView extends AbstractView
      * Returns the single instance of this class, creating it if necessary.
      * Clients should not call this method, but instead use findInstance().
      *
-     * @return  instance of this class.
+     * @return instance of this class.
      */
     public static synchronized SourcesView getDefault() {
         if (theInstance == null) {
@@ -310,26 +318,28 @@ public class SourcesView extends AbstractView
     }
 
     /**
-     * Check whether a package is empty (devoid of files except for subpackages).
+     * Check whether a package is empty (devoid of files except for
+     * subpackages).
      *
-     * @param  fo  file object to check.
+     * @param fo file object to check.
      */
     private static boolean isEmpty(FileObject fo) {
         return isEmpty(fo, true);
     }
 
     /**
-     * Check whether a package is empty (devoid of files except for subpackages).
+     * Check whether a package is empty (devoid of files except for
+     * subpackages).
      *
-     * @param  fo       file object to check.
-     * @param  recurse  specifies whether to check if subpackages are empty too.
+     * @param fo file object to check.
+     * @param recurse specifies whether to check if subpackages are empty too.
      */
     private static boolean isEmpty(FileObject fo, boolean recurse) {
         if (fo != null) {
             FileObject[] kids = fo.getChildren();
             for (int ii = 0; ii < kids.length; ii++) {
-                if (!kids[ii].isFolder() &&
-                        VisibilityQuery.getDefault().isVisible(kids[ii])) {
+                if (!kids[ii].isFolder()
+                        && VisibilityQuery.getDefault().isVisible(kids[ii])) {
                     return false;
                 } else if (recurse && !isEmpty(kids[ii])) {
                     return false;
@@ -378,18 +388,23 @@ public class SourcesView extends AbstractView
     /**
      * Represents a source root in the node tree.
      *
-     * @author  Nathan Fiedler
+     * @author Nathan Fiedler
      */
     private static class SourceRootNode extends AbstractNode {
-        /** Root of this subtree. */
+
+        /**
+         * Root of this subtree.
+         */
         private FileObject sourceRoot;
-        /** The display name for this node. */
+        /**
+         * The display name for this node.
+         */
         private String displayName;
 
         /**
          * Constructs a new instance of SourceRootNode.
          *
-         * @param  root  a sourcepath entry.
+         * @param root a sourcepath entry.
          */
         public SourceRootNode(FileObject root) {
             super(new SRNChildren(root));
@@ -408,16 +423,19 @@ public class SourcesView extends AbstractView
     /**
      * Children of the source root node.
      *
-     * @author  Nathan Fiedler
+     * @author Nathan Fiedler
      */
     private static class SRNChildren extends Children.SortedArray {
-        /** Root of this subtree. */
+
+        /**
+         * Root of this subtree.
+         */
         private FileObject sourceRoot;
 
         /**
          * Constructs a new instance of SRNChildren.
          *
-         * @param  root  a sourcepath entry.
+         * @param root a sourcepath entry.
          */
         public SRNChildren(FileObject root) {
             sourceRoot = root;
@@ -431,7 +449,7 @@ public class SourcesView extends AbstractView
             FileObject[] kids = sourceRoot.getChildren();
             boolean archive = FileUtil.isArchiveFile(sourceRoot);
             VisibilityQuery vq = VisibilityQuery.getDefault();
-            for (int ii = 0; ii < kids.length; ii++) {            
+            for (int ii = 0; ii < kids.length; ii++) {
                 if (archive || vq.isVisible(kids[ii])) {
                     if (kids[ii].isFolder()) {
                         findVisiblePackages(children, kids[ii],
@@ -458,27 +476,34 @@ public class SourcesView extends AbstractView
     /**
      * Represents a package in the node tree.
      *
-     * @author  Nathan Fiedler
+     * @author Nathan Fiedler
      */
     private static class PackageNode extends FilterNode
             implements Comparable<Node> {
-        /** Filter for hiding child folders, which are already shown. */
+
+        /**
+         * Filter for hiding child folders, which are already shown.
+         */
         private static final DataFilter FILTER = new NoFoldersDataFilter();
-        /** Root of this subtree. */
+        /**
+         * Root of this subtree.
+         */
         private FileObject sourcePkg;
-        /** The display name for this node. */
+        /**
+         * The display name for this node.
+         */
         private String displayName;
 
         /**
          * Constructs a new instance of PackageNode.
          *
-         * @param  root    root of the package.
-         * @param  folder  a package within root.
+         * @param root root of the package.
+         * @param folder a package within root.
          */
         public PackageNode(FileObject root, DataFolder folder) {
             // DataFolder children are loaded on demand.
-            super(folder.getNodeDelegate(), isEmpty(folder) ? Children.LEAF :
-                    folder.createNodeChildren(FILTER));
+            super(folder.getNodeDelegate(), isEmpty(folder) ? Children.LEAF
+                    : folder.createNodeChildren(FILTER));
             sourcePkg = folder.getPrimaryFile();
             String path = FileUtil.getRelativePath(root, sourcePkg);
             displayName = path.replace('/', '.');
@@ -521,8 +546,8 @@ public class SourcesView extends AbstractView
         /**
          * Determines if the given folder is empty or not.
          *
-         * @param  folder  data folder to check.
-         * @return  true if folder is empty, false otherwise.
+         * @param folder data folder to check.
+         * @return true if folder is empty, false otherwise.
          */
         private static boolean isEmpty(DataFolder folder) {
             if (folder == null) {
@@ -558,7 +583,10 @@ public class SourcesView extends AbstractView
      */
     private static class NoFoldersDataFilter
             implements ChangeListener, ChangeableDataFilter {
-        /** silence the compiler warnings */
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
         EventListenerList ell = new EventListenerList();
 
@@ -603,10 +631,13 @@ public class SourcesView extends AbstractView
     /**
      * Implements the action of displaying the source path editor.
      *
-     * @author  Nathan Fiedler
+     * @author Nathan Fiedler
      */
     public static class EditAction extends NodeAction {
-        /** silence the compiler warnings */
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -670,10 +701,13 @@ public class SourcesView extends AbstractView
     /**
      * Implements the action of refreshing the node tree.
      *
-     * @author  Nathan Fiedler
+     * @author Nathan Fiedler
      */
     public static class RefreshAction extends NodeAction {
-        /** silence the compiler warnings */
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
 
         @Override
