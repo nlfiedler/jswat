@@ -40,7 +40,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -375,18 +374,17 @@ public class NetBeansPathManager extends AbstractPathManager {
             // Check if the files are actually archives, and get the root
             // of the archive as a file object; the classpath support does
             // not like receiving the archive file itself.
-            Set<FileObject> nrts = new HashSet<FileObject>();
+            List<FileObject> fobjs = new ArrayList<FileObject>();
             for (String root : roots) {
                 FileObject fobj = PathConverter.toFileObject(root);
                 if (fobj != null) {
                     fobj = PathConverter.convertToRoot(fobj);
-                    nrts.add(fobj);
+                    fobjs.add(fobj);
                 }
             }
-            List<FileObject> fobjs = new ArrayList<FileObject>(nrts);
             sourcePath = PathConverter.toStrings(fobjs);
-            FileObject[] arr = new FileObject[nrts.size()];
-            arr = nrts.toArray(arr);
+            FileObject[] arr = new FileObject[fobjs.size()];
+            arr = fobjs.toArray(arr);
             try {
                 sourcePathLookup = ClassPathSupport.createClassPath(arr);
             } catch (IllegalArgumentException iae) {
