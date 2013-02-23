@@ -14,24 +14,35 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2006-2012. All Rights Reserved.
+ * are Copyright (C) 2006-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
 package com.bluemarsh.jswat.product.project;
 
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 
 /**
  * Satisfy a requirement of the projectuiapi module that there be a trampoline
  * for open projects, even though we don't support projects.
- *
+ * <p/>
  * @author Nathan Fiedler
  */
 public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
+
+    /**
+     * Our single fake project instance.
+     */
+    private static final JSwatProject theProject = new JSwatProject();
 
     @Override
     public void closeAPI(Project[] project) {
@@ -39,12 +50,12 @@ public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
 
     @Override
     public Project getMainProject() {
-        return null;
+        return theProject;
     }
 
     @Override
     public Project[] getOpenProjectsAPI() {
-        return new Project[0];
+        return new Project[]{theProject};
     }
 
     @Override
@@ -61,10 +72,52 @@ public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
 
     @Override
     public Future<Project[]> openProjectsAPI() {
-        return null;
+        return new Future<Project[]>() {
+            @Override
+            public boolean cancel(boolean bln) {
+                return true;
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+
+            @Override
+            public boolean isDone() {
+                return true;
+            }
+
+            @Override
+            public Project[] get() throws InterruptedException, ExecutionException {
+                return new Project[]{theProject};
+            }
+
+            @Override
+            public Project[] get(long l, TimeUnit tu) throws InterruptedException, ExecutionException, TimeoutException {
+                return new Project[]{theProject};
+            }
+        };
     }
 
     @Override
     public void openAPI(Project[] arg0, boolean arg1, boolean arg2) {
+    }
+
+    /**
+     * A fake project used to avoid null pointer exceptions in NetBeans.
+     */
+    private static class JSwatProject implements Project {
+
+        @Override
+        public FileObject getProjectDirectory() {
+            // return a dummy path for now
+            return FileUtil.getConfigRoot();
+        }
+
+        @Override
+        public Lookup getLookup() {
+            return Lookup.getDefault();
+        }
     }
 }

@@ -46,7 +46,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.api.java.classpath.ClassPath;
-//import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
@@ -270,17 +270,16 @@ public class NetBeansPathManager extends AbstractPathManager {
      */
     @SuppressWarnings("unchecked")
     private void registerClassPath() {
-// XXX: results in NPE in NetBeans project code
-//        GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
-//        Set<ClassPath> paths = gpr.getPaths(ClassPath.COMPILE);
-//        if (paths.size() > 0) {
-//            ClassPath[] arr = paths.toArray(new ClassPath[paths.size()]);
-//            gpr.unregister(ClassPath.COMPILE, arr);
-//        }
-//        if (classPathLookup != null) {
-//            ClassPath[] arr = new ClassPath[]{classPathLookup};
-//            gpr.register(ClassPath.COMPILE, arr);
-//        }
+        GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
+        Set<ClassPath> paths = gpr.getPaths(ClassPath.COMPILE);
+        if (paths.size() > 0) {
+            ClassPath[] arr = paths.toArray(new ClassPath[paths.size()]);
+            gpr.unregister(ClassPath.COMPILE, arr);
+        }
+        if (classPathLookup != null) {
+            ClassPath[] arr = new ClassPath[]{classPathLookup};
+            gpr.register(ClassPath.COMPILE, arr);
+        }
     }
 
     /**
@@ -291,17 +290,16 @@ public class NetBeansPathManager extends AbstractPathManager {
      */
     @SuppressWarnings("unchecked")
     private void registerSourcePath() {
-// XXX: results in NPE in NetBeans project code
-//        GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
-//        Set<ClassPath> paths = gpr.getPaths(ClassPath.SOURCE);
-//        if (paths.size() > 0) {
-//            ClassPath[] arr = paths.toArray(new ClassPath[paths.size()]);
-//            gpr.unregister(ClassPath.SOURCE, arr);
-//        }
-//        if (sourcePathLookup != null) {
-//            ClassPath[] arr = new ClassPath[]{sourcePathLookup};
-//            gpr.register(ClassPath.SOURCE, arr);
-//        }
+        GlobalPathRegistry gpr = GlobalPathRegistry.getDefault();
+        Set<ClassPath> paths = gpr.getPaths(ClassPath.SOURCE);
+        if (paths.size() > 0) {
+            ClassPath[] arr = paths.toArray(new ClassPath[paths.size()]);
+            gpr.unregister(ClassPath.SOURCE, arr);
+        }
+        if (sourcePathLookup != null) {
+            ClassPath[] arr = new ClassPath[]{sourcePathLookup};
+            gpr.register(ClassPath.SOURCE, arr);
+        }
     }
 
     @Override
