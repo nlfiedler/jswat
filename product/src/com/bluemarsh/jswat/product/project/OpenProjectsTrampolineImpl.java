@@ -26,6 +26,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.ProjectGroup;
+import org.netbeans.api.project.ui.ProjectGroupChangeListener;
 import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -102,6 +104,19 @@ public class OpenProjectsTrampolineImpl implements OpenProjectsTrampoline {
 
     @Override
     public void openAPI(Project[] arg0, boolean arg1, boolean arg2) {
+    }
+
+    @Override
+    public ProjectGroup getActiveProjectGroupAPI() {
+        return null;
+    }
+
+    @Override
+    public void addProjectGroupChangeListenerAPI(ProjectGroupChangeListener pl) {
+    }
+
+    @Override
+    public void removeProjectGroupChangeListenerAPI(ProjectGroupChangeListener pl) {
     }
 
     /**
