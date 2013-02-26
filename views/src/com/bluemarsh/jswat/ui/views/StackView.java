@@ -14,11 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2012. All Rights Reserved.
+ * are Copyright (C) 2005-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
@@ -41,37 +40,42 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VMDisconnectedException;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JScrollPane;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.nodes.PropertySupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
 /**
  * Class StackView displays the call stack of the current thread.
- *
- * @author  Nathan Fiedler
+ * <p/>
+ * @author Nathan Fiedler
  */
 public class StackView extends AbstractView
         implements ExplorerManager.Provider, ContextListener, SessionListener,
         SessionManagerListener {
-    /** silence the compiler warnings */
+
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** Our explorer manager. */
+    /**
+     * Our explorer manager.
+     */
     private ExplorerManager explorerManager;
-    /** Component showing node tree. */
+    /**
+     * Component showing node tree.
+     */
     private PersistentOutlineView nodeView;
-    /** Columns for the tree-table view. */
+    /**
+     * Columns for the tree-table view.
+     */
     private transient Node.Property[] columns;
 
     /**
@@ -82,16 +86,17 @@ public class StackView extends AbstractView
         buildRoot(Children.LEAF);
         addSelectionListener(explorerManager);
 
-        // Create the stack view. We use a tree-table because it has
-        // features that we want to utilize.
-        nodeView = new PersistentOutlineView();
+        // Create the view.
+        String columnLabel = NbBundle.getMessage(
+                StackView.class, "CTL_StackView_Column_Name_"
+                + StackFrameNode.PROP_LOCATION);
+        nodeView = new PersistentOutlineView(columnLabel);
         nodeView.getOutline().setRootVisible(false);
-        columns = new Node.Property[] {
-            new Column(StackFrameNode.PROP_LOCATION, true, false),
-            new Column(StackFrameNode.PROP_SOURCE, false, true),
-            new Column(StackFrameNode.PROP_CODEINDEX, false, true),
-        };
-        nodeView.setProperties(columns);
+        nodeView.setPropertyColumnDescription(columnLabel, NbBundle.getMessage(
+                StackView.class, "CTL_StackView_Column_Desc_"
+                + StackFrameNode.PROP_LOCATION));
+        addColumn(nodeView, StackFrameNode.PROP_SOURCE);
+        addColumn(nodeView, StackFrameNode.PROP_CODEINDEX);
         // This, oddly enough, enables the column hiding feature.
         nodeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setLayout(new BorderLayout());
@@ -99,9 +104,24 @@ public class StackView extends AbstractView
     }
 
     /**
+     * Adds a column to the outline view, with attributes extracted from the
+     * properties associated with the given name.
+     * <p/>
+     * @param view the outline view to modify.
+     * @param name the name of the property column to add.
+     */
+    private void addColumn(OutlineView view, String name) {
+        String displayName = NbBundle.getMessage(
+                StackView.class, "CTL_StackView_Column_Name_" + name);
+        String description = NbBundle.getMessage(
+                StackView.class, "CTL_StackView_Column_Desc_" + name);
+        view.addPropertyColumn(name, displayName, description);
+    }
+
+    /**
      * Build a new root node and set it to be the explorer's root context.
-     *
-     * @param  kids  root node's children, or Children.LEAF if none.
+     * <p/>
+     * @param kids root node's children, or Children.LEAF if none.
      */
     private void buildRoot(Children kids) {
         // Use a simple root node for which we can set the display name;
@@ -109,11 +129,11 @@ public class StackView extends AbstractView
         Node rootNode = new AbstractNode(kids);
         // Surprisingly, this becomes the name and description of the first column.
         rootNode.setDisplayName(NbBundle.getMessage(
-                StackView.class, "CTL_StackView_Column_Name_" +
-                StackFrameNode.PROP_LOCATION));
+                StackView.class, "CTL_StackView_Column_Name_"
+                + StackFrameNode.PROP_LOCATION));
         rootNode.setShortDescription(NbBundle.getMessage(
-                StackView.class, "CTL_StackView_Column_Desc_" +
-                StackFrameNode.PROP_LOCATION));
+                StackView.class, "CTL_StackView_Column_Desc_"
+                + StackFrameNode.PROP_LOCATION));
         explorerManager.setRootContext(rootNode);
     }
 
@@ -300,13 +320,12 @@ public class StackView extends AbstractView
         return getClass().getName();
     }
 
-    @Override
-    public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-        restoreColumns(in, columns);
-        nodeView.setProperties(columns);
-        nodeView.restoreColumnWidths(in);
+    // Secret, undocumented method that NetBeans calls?
+    void readProperties(java.util.Properties p) {
+        String version = p.getProperty("version");
+        if (version.equals("1.0")) {
+            nodeView.readSettings(p, "Stack");
+        }
     }
 
     @Override
@@ -341,44 +360,11 @@ public class StackView extends AbstractView
         }
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-        saveColumns(out, columns);
-        nodeView.saveColumnWidths(out);
-    }
-
-    /**
-     * A column for the session table.
-     *
-     * @author  Nathan Fiedler
-     */
-    protected class Column extends PropertySupport.ReadOnly {
-        /** The keyword for this column. */
-        private String key;
-
-        /**
-         * Constructs a new instance of Column.
-         *
-         * @param  key     keyword for this column.
-         * @param  tree    true if this is the 'tree' column, false if 'table' column.
-         * @param  hidden  true to hide this column initially.
-         */
-        @SuppressWarnings("unchecked")
-        public Column(String key, boolean tree, boolean hidden) {
-            super(key, String.class,
-                  NbBundle.getMessage(Column.class, "CTL_StackView_Column_Name_" + key),
-                  NbBundle.getMessage(Column.class, "CTL_StackView_Column_Desc_" + key));
-            this.key = key;
-            setValue("TreeColumnTTV", Boolean.valueOf(tree));
-            setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
-            // Stack should not be sortable as that makes no sense whatsoever.
-        }
-
-        @Override
-        public Object getValue()
-                throws IllegalAccessException, InvocationTargetException {
-            return key;
-        }
+    // Secret, undocumented method that NetBeans calls?
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        nodeView.writeSettings(p, "Stack");
     }
 }
