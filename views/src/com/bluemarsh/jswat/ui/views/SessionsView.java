@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2012. All Rights Reserved.
+ * are Copyright (C) 2004-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
@@ -31,10 +31,6 @@ import com.bluemarsh.jswat.nodes.sessions.FinishAllAction;
 import com.bluemarsh.jswat.nodes.sessions.GetSessionCookie;
 import com.bluemarsh.jswat.nodes.sessions.SessionNode;
 import java.awt.BorderLayout;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,10 +43,10 @@ import javax.swing.KeyStroke;
 import org.openide.ErrorManager;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.nodes.PropertySupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.SystemAction;
@@ -58,26 +54,34 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
- * Class SessionsView displays the open sessions and permits actions to
- * be performed on those sessions.
- *
- * @author  Nathan Fiedler
+ * Class SessionsView displays the open sessions and permits actions to be
+ * performed on those sessions.
+ * <p/>
+ * @author Nathan Fiedler
  */
 public class SessionsView extends AbstractView
         implements ExplorerManager.Provider, SessionManagerListener {
 
-    /** silence the compiler warnings */
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** The singleton instance of this class. */
+    /**
+     * The singleton instance of this class.
+     */
     private static SessionsView theInstance;
-    /** Preferred window system identifier for this window. */
+    /**
+     * Preferred window system identifier for this window.
+     */
     public static final String PREFERRED_ID = "sessions";
-    /** Our explorer manager. */
+    /**
+     * Our explorer manager.
+     */
     private ExplorerManager explorerManager;
-    /** Component showing our nodes. */
+    /**
+     * Component showing our nodes.
+     */
     private PersistentOutlineView nodeView;
-    /** Columns for the tree-table view. */
-    private Node.Property[] columns;
 
     /**
      * Constructs a new instance of SessionsView. Clients should not construct
@@ -96,15 +100,14 @@ public class SessionsView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the session view.
-        nodeView = new PersistentOutlineView();
+        String columnLabel = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_SessionsView_Column_Name_"
+                + SessionNode.PROP_NAME);
+        nodeView = new PersistentOutlineView(columnLabel);
         nodeView.getOutline().setRootVisible(false);
-        columns = new Node.Property[]{
-                    new Column(SessionNode.PROP_NAME, true, true),
-                    new Column(SessionNode.PROP_HOST, false, true),
-                    new Column(SessionNode.PROP_STATE, false, true),
-                    new Column(SessionNode.PROP_LANG, false, true)
-                };
-        nodeView.setProperties(columns);
+        addColumn(nodeView, SessionNode.PROP_HOST);
+        addColumn(nodeView, SessionNode.PROP_STATE);
+        addColumn(nodeView, SessionNode.PROP_LANG);
         // This, oddly enough, enables the column hiding feature.
         nodeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setLayout(new BorderLayout());
@@ -112,21 +115,35 @@ public class SessionsView extends AbstractView
     }
 
     /**
+     * Adds a column to the outline view, with attributes extracted from the
+     * properties associated with the given name.
+     * <p/>
+     * @param view the outline view to modify.
+     * @param name the name of the property column to add.
+     */
+    private void addColumn(OutlineView view, String name) {
+        String displayName = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_SessionsView_Column_Name_" + name);
+        String description = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_SessionsView_Column_Desc_" + name);
+        view.addPropertyColumn(name, displayName, description);
+    }
+
+    /**
      * Build a new root node and set it to be the explorer's root context.
-     *
-     * @param  kids  root node's children, or Children.LEAF if none.
+     * <p/>
+     * @param kids root node's children, or Children.LEAF if none.
      */
     private void buildRoot(Children kids) {
         // Use a simple root node for which we can set the display name;
         // otherwise the logical root's properties affect the table headers.
         Node rootNode = new AbstractNode(kids) {
-
             @Override
             public Action[] getActions(boolean b) {
                 return new Action[]{
-                            SystemAction.get(CreateSessionAction.class),
-                            SystemAction.get(FinishAllAction.class)
-                        };
+                    SystemAction.get(CreateSessionAction.class),
+                    SystemAction.get(FinishAllAction.class)
+                };
             }
         };
         // Surprisingly, this becomes the name and description of the first column.
@@ -138,8 +155,8 @@ public class SessionsView extends AbstractView
     }
 
     /**
-     * Builds the session node tree for the first time. Should be called
-     * just once, when the top component is first shown.
+     * Builds the session node tree for the first time. Should be called just
+     * once, when the top component is first shown.
      */
     private void buildTree() {
         // Populate the root node with SessionNode children.
@@ -179,10 +196,10 @@ public class SessionsView extends AbstractView
     }
 
     /**
-     * Obtain the window instance, first by looking for it in the window
-     * system, then if not found, creating the instance.
-     *
-     * @return  the window instance.
+     * Obtain the window instance, first by looking for it in the window system,
+     * then if not found, creating the instance.
+     * <p/>
+     * @return the window instance.
      */
     public static synchronized SessionsView findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(
@@ -205,8 +222,8 @@ public class SessionsView extends AbstractView
     /**
      * Returns the single instance of this class, creating it if necessary.
      * Clients should not call this method, but instead use findInstance().
-     *
-     * @return  instance of this class.
+     * <p/>
+     * @return instance of this class.
      */
     public static synchronized SessionsView getDefault() {
         if (theInstance == null) {
@@ -245,13 +262,12 @@ public class SessionsView extends AbstractView
         return PREFERRED_ID;
     }
 
-    @Override
-    public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-        restoreColumns(in, columns);
-        nodeView.setProperties(columns);
-        nodeView.restoreColumnWidths(in);
+    // Secret, undocumented method that NetBeans calls?
+    void readProperties(java.util.Properties p) {
+        String version = p.getProperty("version");
+        if (version.equals("1.0")) {
+            nodeView.readSettings(p, "Sessions");
+        }
     }
 
     @Override
@@ -285,44 +301,11 @@ public class SessionsView extends AbstractView
     public void sessionSetCurrent(SessionManagerEvent e) {
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-        saveColumns(out, columns);
-        nodeView.saveColumnWidths(out);
-    }
-
-    /**
-     * A column for the session table.
-     *
-     * @author  Nathan Fiedler
-     */
-    protected class Column extends PropertySupport.ReadOnly {
-
-        /** The keyword for this column. */
-        private String key;
-
-        /**
-         * Constructs a new instance of Column.
-         *
-         * @param  key       keyword for this column.
-         * @param  tree      true if this is the 'tree' column, false if 'table' column.
-         * @param  sortable  true if this is sortable column, false otherwise.
-         */
-        @SuppressWarnings("unchecked")
-        public Column(String key, boolean tree, boolean sortable) {
-            super(key, String.class,
-                    NbBundle.getMessage(Column.class, "CTL_SessionsView_Column_Name_" + key),
-                    NbBundle.getMessage(Column.class, "CTL_SessionsView_Column_Desc_" + key));
-            this.key = key;
-            setValue("TreeColumnTTV", Boolean.valueOf(tree));
-            setValue("ComparableColumnTTV", Boolean.valueOf(sortable));
-        }
-
-        @Override
-        public Object getValue()
-                throws IllegalAccessException, InvocationTargetException {
-            return key;
-        }
+    // Secret, undocumented method that NetBeans calls?
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        nodeView.writeSettings(p, "Sessions");
     }
 }
