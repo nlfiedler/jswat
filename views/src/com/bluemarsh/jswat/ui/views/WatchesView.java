@@ -14,11 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2012. All Rights Reserved.
+ * are Copyright (C) 2005-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import com.bluemarsh.jswat.core.context.ContextEvent;
@@ -53,12 +52,8 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
 import com.sun.jdi.VoidValue;
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -74,11 +69,11 @@ import org.openide.NotifyDescriptor;
 import org.openide.actions.DeleteAction;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
-import org.openide.nodes.PropertySupport;
 import org.openide.nodes.Sheet;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
@@ -90,24 +85,33 @@ import org.openide.windows.WindowManager;
 
 /**
  * Class WatchesView evaluates a set of expressions and shows their values.
- *
- * @author  Nathan Fiedler
+ * <p/>
+ * @author Nathan Fiedler
  */
 public class WatchesView extends AbstractView
         implements ContextListener, ExplorerManager.Provider, SessionListener,
         SessionManagerListener, WatchListener {
-    /** silence the compiler warnings */
+
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** The singleton instance of this class. */
+    /**
+     * The singleton instance of this class.
+     */
     private static WatchesView theInstance;
-    /** Preferred window system identifier for this window. */
+    /**
+     * Preferred window system identifier for this window.
+     */
     public static final String PREFERRED_ID = "watches";
-    /** Our explorer manager. */
+    /**
+     * Our explorer manager.
+     */
     private ExplorerManager explorerManager;
-    /** Component showing our nodes. */
+    /**
+     * Component showing our nodes.
+     */
     private PersistentOutlineView nodeView;
-    /** Columns for the tree-table view. */
-    private transient Node.Property[] columns;
 
     /**
      * Constructs a new instance of WatchesView. Clients should not construct
@@ -126,14 +130,13 @@ public class WatchesView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the nodes view.
-        nodeView = new PersistentOutlineView();
+        String columnLabel = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_WatchesView_Column_Name_"
+                + VariableNode.PROP_NAME);
+        nodeView = new PersistentOutlineView(columnLabel);
         nodeView.getOutline().setRootVisible(false);
-        columns = new Node.Property[] {
-            new Column(VariableNode.PROP_NAME, true, true, false),
-            new Column(VariableNode.PROP_TYPE, false, true, false),
-            new Column(VariableNode.PROP_VALUE, false, true, false),
-        };
-        nodeView.setProperties(columns);
+        addColumn(nodeView, VariableNode.PROP_TYPE);
+        addColumn(nodeView, VariableNode.PROP_VALUE);
         // This, oddly enough, enables the column hiding feature.
         nodeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setLayout(new BorderLayout());
@@ -141,28 +144,43 @@ public class WatchesView extends AbstractView
     }
 
     /**
-     * Build a new root node and set it to be the explorer's root context.
-     *
-     * @param  kids  root node's children, or Children.LEAF if none.
+     * Adds a column to the outline view, with attributes extracted from the
+     * properties associated with the given name.
+     * <p/>
+     * @param view the outline view to modify.
+     * @param name the name of the property column to add.
      */
-    void buildRoot(Children kids) {
+    private void addColumn(OutlineView view, String name) {
+        String displayName = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_WatchesView_Column_Name_" + name);
+        String description = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_WatchesView_Column_Desc_" + name);
+        view.addPropertyColumn(name, displayName, description);
+    }
+
+    /**
+     * Build a new root node and set it to be the explorer's root context.
+     * <p/>
+     * @param kids root node's children, or Children.LEAF if none.
+     */
+    private void buildRoot(Children kids) {
         // Use a simple root node for which we can set the display name;
         // otherwise the logical root's properties affect the table headers.
         Node rootNode = new AbstractNode(kids) {
             @Override
             public Action[] getActions(boolean b) {
-                return new Action[] {
+                return new Action[]{
                     SystemAction.get(NewWatchAction.class)
                 };
             }
         };
         // Surprisingly, this becomes the name and description of the first column.
         rootNode.setDisplayName(NbBundle.getMessage(
-                WatchesView.class, "CTL_WatchesView_Column_Name_" +
-                VariableNode.PROP_NAME));
+                WatchesView.class, "CTL_WatchesView_Column_Name_"
+                + VariableNode.PROP_NAME));
         rootNode.setShortDescription(NbBundle.getMessage(
-                WatchesView.class, "CTL_WatchesView_Column_Desc_" +
-                VariableNode.PROP_NAME));
+                WatchesView.class, "CTL_WatchesView_Column_Desc_"
+                + VariableNode.PROP_NAME));
         explorerManager.setRootContext(rootNode);
     }
 
@@ -287,10 +305,10 @@ public class WatchesView extends AbstractView
 
     /**
      * Creates a watch and adds it to the current watch manager.
-     *
-     * @param  expression  the expression to evaluate.
-     * @param  fixed       if true, create a fixed watch.
-     * @return  error message, or null if successful.
+     * <p/>
+     * @param expression the expression to evaluate.
+     * @param fixed      if true, create a fixed watch.
+     * @return error message, or null if successful.
      */
     private static String createWatch(String expression, boolean fixed) {
         Session session = SessionProvider.getCurrentSession();
@@ -337,13 +355,13 @@ public class WatchesView extends AbstractView
     }
 
     /**
-     * Evaluates the given expression, converting it to a Node as created
-     * by the VariableFactory class.
-     *
-     * @param  expr    expression to evaluate.
-     * @param  thread  debuggee thread on which to perform evaluation.
-     * @param  frame   frame in thread in which to access variables.
-     * @return  node representing the evaluation.
+     * Evaluates the given expression, converting it to a Node as created by the
+     * VariableFactory class.
+     * <p/>
+     * @param expr   expression to evaluate.
+     * @param thread debuggee thread on which to perform evaluation.
+     * @param frame  frame in thread in which to access variables.
+     * @return node representing the evaluation.
      */
     private Node evaluate(String expr, ThreadReference thread, int frame) {
         String msg = null;
@@ -404,34 +422,34 @@ public class WatchesView extends AbstractView
     }
 
     /**
-     * Obtain the window instance, first by looking for it in the window
-     * system, then if not found, creating the instance.
-     *
-     * @return  the window instance.
+     * Obtain the window instance, first by looking for it in the window system,
+     * then if not found, creating the instance.
+     * <p/>
+     * @return the window instance.
      */
     public static synchronized WatchesView findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(
                 PREFERRED_ID);
         if (win == null) {
             ErrorManager.getDefault().log(ErrorManager.WARNING,
-                    "Cannot find '" + PREFERRED_ID +
-                    "' component in the window system");
+                    "Cannot find '" + PREFERRED_ID
+                    + "' component in the window system");
             return getDefault();
         }
         if (win instanceof WatchesView) {
             return (WatchesView) win;
         }
         ErrorManager.getDefault().log(ErrorManager.WARNING,
-                "There seem to be multiple components with the '" +
-                PREFERRED_ID + "' ID, this a potential source of errors");
+                "There seem to be multiple components with the '"
+                + PREFERRED_ID + "' ID, this a potential source of errors");
         return getDefault();
     }
 
     /**
      * Returns the single instance of this class, creating it if necessary.
      * Clients should not call this method, but instead use findInstance().
-     *
-     * @return  instance of this class.
+     * <p/>
+     * @return instance of this class.
      */
     public static synchronized WatchesView getDefault() {
         if (theInstance == null) {
@@ -474,13 +492,12 @@ public class WatchesView extends AbstractView
         return PREFERRED_ID;
     }
 
-    @Override
-    public void readExternal(ObjectInput in)
-    throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-        restoreColumns(in, columns);
-        nodeView.setProperties(columns);
-        nodeView.restoreColumnWidths(in);
+    // Secret, undocumented method that NetBeans calls?
+    void readProperties(java.util.Properties p) {
+        String version = p.getProperty("version");
+        if (version.equals("1.0")) {
+            nodeView.readSettings(p, "Watches");
+        }
     }
 
     @Override
@@ -531,63 +548,32 @@ public class WatchesView extends AbstractView
         buildTree();
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-        saveColumns(out, columns);
-        nodeView.saveColumnWidths(out);
+    // Secret, undocumented method that NetBeans calls?
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        nodeView.writeSettings(p, "Watches");
     }
 
     /**
-     * A column for the session table.
-     *
-     * @author  Nathan Fiedler
-     */
-    private class Column extends PropertySupport.ReadOnly {
-        /** The keyword for this column. */
-        private String key;
-
-        /**
-         * Constructs a new instance of Column.
-         *
-         * @param  key       keyword for this column.
-         * @param  tree      true if this is the 'tree' column, false if 'table' column.
-         * @param  sortable  true if this is sortable column, false otherwise.
-         * @param  hidden    true to hide this column initially.
-         */
-        @SuppressWarnings("unchecked")
-        public Column(String key, boolean tree, boolean sortable, boolean hidden) {
-            super(key, String.class,
-                    NbBundle.getMessage(Column.class, "CTL_WatchesView_Column_Name_" + key),
-                    NbBundle.getMessage(Column.class, "CTL_WatchesView_Column_Desc_" + key));
-            this.key = key;
-            setValue("TreeColumnTTV", Boolean.valueOf(tree));
-            setValue("ComparableColumnTTV", Boolean.valueOf(sortable));
-            setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
-        }
-
-        @Override
-        public Object getValue() throws IllegalAccessException,
-                InvocationTargetException {
-            return key;
-        }
-    }
-
-    /**
-     * Class WatchNode wraps a node from the VariableFactory and shows
-     * a different icon and provides an action to remove the watch.
-     *
-     * @author  Nathan Fiedler
+     * Class WatchNode wraps a node from the VariableFactory and shows a
+     * different icon and provides an action to remove the watch.
+     * <p/>
+     * @author Nathan Fiedler
      */
     protected class WatchNode extends FilterNode {
-        /** The watch for this node. */
+
+        /**
+         * The watch for this node.
+         */
         private Watch watch;
 
         /**
          * Constructs a new instance of WatchNode.
-         *
-         * @param  original  Node being filtered.
-         * @param  watch     the watch.
+         * <p/>
+         * @param original Node being filtered.
+         * @param watch    the watch.
          */
         public WatchNode(Node original, Watch watch) {
             super(original);
@@ -609,7 +595,7 @@ public class WatchesView extends AbstractView
 
         @Override
         public Action[] getActions(boolean context) {
-            Action[] actions = new Action[] {
+            Action[] actions = new Action[]{
                 SystemAction.get(NewFixedWatchAction.class),
                 SystemAction.get(DeleteAction.class)
             };
@@ -641,8 +627,8 @@ public class WatchesView extends AbstractView
 
         /**
          * Returns the watch this node represents.
-         *
-         * @return  watch.
+         * <p/>
+         * @return watch.
          */
         public Watch getWatch() {
             return watch;
@@ -650,20 +636,23 @@ public class WatchesView extends AbstractView
     }
 
     /**
-     * Class FixedWatchNode wraps a node from the VariableFactory and shows
-     * a different icon and provides an action to remove the fixed watch.
-     *
-     * @author  Nathan Fiedler
+     * Class FixedWatchNode wraps a node from the VariableFactory and shows a
+     * different icon and provides an action to remove the fixed watch.
+     * <p/>
+     * @author Nathan Fiedler
      */
     protected class FixedWatchNode extends FilterNode {
-        /** The watch for this node. */
+
+        /**
+         * The watch for this node.
+         */
         private Watch watch;
 
         /**
          * Constructs a new instance of WatchNode.
-         *
-         * @param  original  Node being filtered.
-         * @param  watch     the watch.
+         * <p/>
+         * @param original Node being filtered.
+         * @param watch    the watch.
          */
         public FixedWatchNode(Node original, Watch watch) {
             super(original);
@@ -685,7 +674,7 @@ public class WatchesView extends AbstractView
 
         @Override
         public Action[] getActions(boolean context) {
-            Action[] actions = new Action[] {
+            Action[] actions = new Action[]{
                 SystemAction.get(DeleteAction.class)
             };
             return (Action[]) Arrays.join(super.getActions(context), actions);
@@ -717,20 +706,25 @@ public class WatchesView extends AbstractView
 
     /**
      * Class ExpressionNode represents the evaluated expression results.
-     *
-     * @author  Nathan Fiedler
+     * <p/>
+     * @author Nathan Fiedler
      */
     protected class ExpressionNode extends VariableNode {
-        /** The value of the expression. */
+
+        /**
+         * The value of the expression.
+         */
         private String exprValue;
-        /** If true, node represents a message to the user. */
+        /**
+         * If true, node represents a message to the user.
+         */
         private boolean isMessage;
 
         /**
          * Constructs a new instance of ExpressionNode.
-         *
-         * @param  expr   evaluated expression.
-         * @param  value  the value of the expression.
+         * <p/>
+         * @param expr  evaluated expression.
+         * @param value the value of the expression.
          */
         public ExpressionNode(String expr, String value) {
             super(Children.LEAF, expr, "", VariableNode.Kind.FIELD);
@@ -739,10 +733,10 @@ public class WatchesView extends AbstractView
 
         /**
          * Constructs a new instance of ExpressionNode.
-         *
-         * @param  expr     evaluated expression.
-         * @param  value    the value of the expression.
-         * @param  message  true if this node is used for a message.
+         * <p/>
+         * @param expr    evaluated expression.
+         * @param value   the value of the expression.
+         * @param message true if this node is used for a message.
          */
         public ExpressionNode(String expr, String value, boolean message) {
             this(expr, value);
@@ -760,8 +754,8 @@ public class WatchesView extends AbstractView
         /**
          * Indicates if this node is a message node, rather than one that
          * displays an evaluated expression.
-         *
-         * @return  true if merely a message, false if evaluated result.
+         * <p/>
+         * @return true if merely a message, false if evaluated result.
          */
         public boolean isMessageNode() {
             return isMessage;
@@ -770,11 +764,14 @@ public class WatchesView extends AbstractView
 
     /**
      * Implements the action of adding a watch expression.
-     *
-     * @author  Nathan Fiedler
+     * <p/>
+     * @author Nathan Fiedler
      */
     public static class NewWatchAction extends NodeAction {
-        /** silence the compiler warnings */
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -822,13 +819,15 @@ public class WatchesView extends AbstractView
     }
 
     /**
-     * Implements the action of creating a fixed watch from an
-     * expression watch.
-     *
-     * @author  Nathan Fiedler
+     * Implements the action of creating a fixed watch from an expression watch.
+     * <p/>
+     * @author Nathan Fiedler
      */
     public static class NewFixedWatchAction extends NodeAction {
-        /** silence the compiler warnings */
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -838,8 +837,8 @@ public class WatchesView extends AbstractView
 
         @Override
         protected boolean enable(Node[] activatedNodes) {
-            if (activatedNodes != null && activatedNodes.length == 1 &&
-                    activatedNodes[0] instanceof WatchNode) {
+            if (activatedNodes != null && activatedNodes.length == 1
+                    && activatedNodes[0] instanceof WatchNode) {
                 return true;
             }
             return false;
@@ -858,8 +857,8 @@ public class WatchesView extends AbstractView
 
         @Override
         protected void performAction(Node[] activatedNodes) {
-            if (activatedNodes != null && activatedNodes.length == 1 &&
-                    activatedNodes[0] instanceof WatchNode) {
+            if (activatedNodes != null && activatedNodes.length == 1
+                    && activatedNodes[0] instanceof WatchNode) {
                 WatchNode node = (WatchNode) activatedNodes[0];
                 Watch watch = node.getWatch();
                 if (watch instanceof ExpressionWatch) {
