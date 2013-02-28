@@ -14,11 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2012. All Rights Reserved.
+ * are Copyright (C) 2005-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import com.bluemarsh.jswat.core.context.ContextEvent;
@@ -49,11 +48,6 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VMDisconnectedException;
 import com.sun.jdi.Value;
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,28 +55,37 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JScrollPane;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.nodes.PropertySupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
 /**
  * Class VariablesView displays the class loaders and their defined classes.
- *
- * @author  Nathan Fiedler
+ * <p/>
+ * @author Nathan Fiedler
  */
 public class VariablesView extends AbstractView
         implements ContextListener, ExplorerManager.Provider, SessionListener,
         SessionManagerListener {
-    /** silence the compiler warnings */
+
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** Our explorer manager. */
+    /**
+     * Our explorer manager.
+     */
     private ExplorerManager explorerManager;
-    /** Component showing our nodes. */
+    /**
+     * Component showing our nodes.
+     */
     private PersistentOutlineView nodeView;
-    /** Columns for the tree-table view. */
+    /**
+     * Columns for the tree-table view.
+     */
     private transient Node.Property[] columns;
 
     /**
@@ -94,14 +97,13 @@ public class VariablesView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the nodes view.
-        nodeView = new PersistentOutlineView();
+        String columnLabel = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_VariablesView_Column_Name_"
+                + VariableNode.PROP_NAME);
+        nodeView = new PersistentOutlineView(columnLabel);
         nodeView.getOutline().setRootVisible(false);
-        columns = new Node.Property[] {
-            new Column(VariableNode.PROP_NAME, true, true, false),
-            new Column(VariableNode.PROP_TYPE, false, true, false),
-            new Column(VariableNode.PROP_VALUE, false, true, false),
-        };
-        nodeView.setProperties(columns);
+        addColumn(nodeView, VariableNode.PROP_TYPE);
+        addColumn(nodeView, VariableNode.PROP_VALUE);
         // This, oddly enough, enables the column hiding feature.
         nodeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setLayout(new BorderLayout());
@@ -109,9 +111,24 @@ public class VariablesView extends AbstractView
     }
 
     /**
+     * Adds a column to the outline view, with attributes extracted from the
+     * properties associated with the given name.
+     * <p/>
+     * @param view the outline view to modify.
+     * @param name the name of the property column to add.
+     */
+    private void addColumn(OutlineView view, String name) {
+        String displayName = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_VariablesView_Column_Name_" + name);
+        String description = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_VariablesView_Column_Desc_" + name);
+        view.addPropertyColumn(name, displayName, description);
+    }
+
+    /**
      * Build a new root node and set it to be the explorer's root context.
-     *
-     * @param  kids  root node's children, or Children.LEAF if none.
+     * <p/>
+     * @param kids root node's children, or Children.LEAF if none.
      */
     private void buildRoot(Children kids) {
         // Use a simple root node for which we can set the display name;
@@ -119,11 +136,11 @@ public class VariablesView extends AbstractView
         Node rootNode = new AbstractNode(kids);
         // Surprisingly, this becomes the name and description of the first column.
         rootNode.setDisplayName(NbBundle.getMessage(
-                VariablesView.class, "CTL_VariablesView_Column_Name_" +
-                VariableNode.PROP_NAME));
+                VariablesView.class, "CTL_VariablesView_Column_Name_"
+                + VariableNode.PROP_NAME));
         rootNode.setShortDescription(NbBundle.getMessage(
-                VariablesView.class, "CTL_VariablesView_Column_Desc_" +
-                VariableNode.PROP_NAME));
+                VariablesView.class, "CTL_VariablesView_Column_Desc_"
+                + VariableNode.PROP_NAME));
         explorerManager.setRootContext(rootNode);
     }
 
@@ -346,13 +363,12 @@ public class VariablesView extends AbstractView
         return getClass().getName();
     }
 
-    @Override
-    public void readExternal(ObjectInput in)
-    throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-        restoreColumns(in, columns);
-        nodeView.setProperties(columns);
-        nodeView.restoreColumnWidths(in);
+    // Secret, undocumented method that NetBeans calls?
+    void readProperties(java.util.Properties p) {
+        String version = p.getProperty("version");
+        if (version.equals("1.0")) {
+            nodeView.readSettings(p, "Variables");
+        }
     }
 
     @Override
@@ -387,45 +403,11 @@ public class VariablesView extends AbstractView
         }
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-        saveColumns(out, columns);
-        nodeView.saveColumnWidths(out);
-    }
-
-    /**
-     * A column for the session table.
-     *
-     * @author  Nathan Fiedler
-     */
-    private class Column extends PropertySupport.ReadOnly {
-        /** The keyword for this column. */
-        private String key;
-
-        /**
-         * Constructs a new instance of Column.
-         *
-         * @param  key       keyword for this column.
-         * @param  tree      true if this is the 'tree' column, false if 'table' column.
-         * @param  sortable  true if this is sortable column, false otherwise.
-         * @param  hidden    true to hide this column initially.
-         */
-        @SuppressWarnings("unchecked")
-        public Column(String key, boolean tree, boolean sortable, boolean hidden) {
-            super(key, String.class,
-                    NbBundle.getMessage(Column.class, "CTL_VariablesView_Column_Name_" + key),
-                    NbBundle.getMessage(Column.class, "CTL_VariablesView_Column_Desc_" + key));
-            this.key = key;
-            setValue("TreeColumnTTV", Boolean.valueOf(tree));
-            setValue("ComparableColumnTTV", Boolean.valueOf(sortable));
-            setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
-        }
-
-        @Override
-        public Object getValue() throws IllegalAccessException,
-                InvocationTargetException {
-            return key;
-        }
+    // Secret, undocumented method that NetBeans calls?
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        nodeView.writeSettings(p, "Variables");
     }
 }
