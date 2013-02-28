@@ -14,11 +14,10 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2005-2012. All Rights Reserved.
+ * are Copyright (C) 2005-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
-
 package com.bluemarsh.jswat.ui.views;
 
 import com.bluemarsh.jswat.core.context.ContextProvider;
@@ -38,10 +37,6 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VirtualMachine;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -51,10 +46,10 @@ import javax.swing.Action;
 import javax.swing.JScrollPane;
 import org.openide.ErrorManager;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.nodes.PropertySupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.NodeAction;
@@ -64,24 +59,33 @@ import org.openide.windows.WindowManager;
 
 /**
  * Class ThreadsView displays the thread groups and their threads.
- *
- * @author  Nathan Fiedler
+ * <p/>
+ * @author Nathan Fiedler
  */
 public class ThreadsView extends AbstractView
         implements ExplorerManager.Provider, SessionListener,
         SessionManagerListener, ThreadConstants {
-    /** silence the compiler warnings */
+
+    /**
+     * silence the compiler warnings
+     */
     private static final long serialVersionUID = 1L;
-    /** The singleton instance of this class. */
+    /**
+     * The singleton instance of this class.
+     */
     private static ThreadsView theInstance;
-    /** Preferred window system identifier for this window. */
+    /**
+     * Preferred window system identifier for this window.
+     */
     public static final String PREFERRED_ID = "threads";
-    /** Our explorer manager. */
+    /**
+     * Our explorer manager.
+     */
     private ExplorerManager explorerManager;
-    /** Component showing our nodes. */
+    /**
+     * Component showing our nodes.
+     */
     private PersistentOutlineView nodeView;
-    /** Columns for the tree-table view. */
-    private transient Node.Property[] columns;
 
     /**
      * Constructs a new instance of ThreadsView. Clients should not construct
@@ -94,15 +98,14 @@ public class ThreadsView extends AbstractView
         addSelectionListener(explorerManager);
 
         // Create the threads view.
-        nodeView = new PersistentOutlineView();
+        String columnLabel = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_BreakpointsView_Column_Name_"
+                + PROP_NAME);
+        nodeView = new PersistentOutlineView(columnLabel);
         nodeView.getOutline().setRootVisible(false);
-        columns = new Node.Property[] {
-            new Column(PROP_NAME, String.class, true, true, false),
-            new Column(PROP_STATUS, String.class, false, true, false),
-            new Column(PROP_ID, Long.class, false, true, true),
-            new Column(PROP_CLASS, String.class, false, true, true),
-        };
-        nodeView.setProperties(columns);
+        addColumn(nodeView, PROP_STATUS);
+        addColumn(nodeView, PROP_ID);
+        addColumn(nodeView, PROP_CLASS);
         // This, oddly enough, enables the column hiding feature.
         nodeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setLayout(new BorderLayout());
@@ -110,9 +113,24 @@ public class ThreadsView extends AbstractView
     }
 
     /**
+     * Adds a column to the outline view, with attributes extracted from the
+     * properties associated with the given name.
+     * <p/>
+     * @param view the outline view to modify.
+     * @param name the name of the property column to add.
+     */
+    private void addColumn(OutlineView view, String name) {
+        String displayName = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_ThreadsView_Column_Name_" + name);
+        String description = NbBundle.getMessage(
+                BreakpointsView.class, "CTL_ThreadsView_Column_Desc_" + name);
+        view.addPropertyColumn(name, displayName, description);
+    }
+
+    /**
      * Build a new root node and set it to be the explorer's root context.
-     *
-     * @param  kids  root node's children, or Children.LEAF if none.
+     * <p/>
+     * @param kids root node's children, or Children.LEAF if none.
      */
     private void buildRoot(Children kids) {
         // Use a simple root node for which we can set the display name;
@@ -120,9 +138,8 @@ public class ThreadsView extends AbstractView
         Node rootNode = new AbstractNode(kids) {
             @Override
             public Action[] getActions(boolean b) {
-                return new Action[] {
-                    SystemAction.get(RefreshAction.class),
-                };
+                return new Action[]{
+                    SystemAction.get(RefreshAction.class),};
             }
         };
         // Surprisingly, this becomes the name and description of the first column.
@@ -152,8 +169,8 @@ public class ThreadsView extends AbstractView
     }
 
     /**
-     * Builds the group/thread node tree for the current session on
-     * the AWT event dispatching thread.
+     * Builds the group/thread node tree for the current session on the AWT
+     * event dispatching thread.
      */
     private void buildTreeInAWTThread() {
         SessionManager sm = SessionProvider.getSessionManager();
@@ -241,34 +258,34 @@ public class ThreadsView extends AbstractView
     }
 
     /**
-     * Obtain the window instance, first by looking for it in the window
-     * system, then if not found, creating the instance.
-     *
-     * @return  the window instance.
+     * Obtain the window instance, first by looking for it in the window system,
+     * then if not found, creating the instance.
+     * <p/>
+     * @return the window instance.
      */
     public static synchronized ThreadsView findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(
                 PREFERRED_ID);
         if (win == null) {
             ErrorManager.getDefault().log(ErrorManager.WARNING,
-                    "Cannot find '" + PREFERRED_ID +
-                    "' component in the window system");
+                    "Cannot find '" + PREFERRED_ID
+                    + "' component in the window system");
             return getDefault();
         }
         if (win instanceof ThreadsView) {
             return (ThreadsView) win;
         }
         ErrorManager.getDefault().log(ErrorManager.WARNING,
-                "There seem to be multiple components with the '" +
-                PREFERRED_ID + "' ID, this a potential source of errors");
+                "There seem to be multiple components with the '"
+                + PREFERRED_ID + "' ID, this a potential source of errors");
         return getDefault();
     }
 
     /**
      * Finds the node for the given thread.
-     *
-     * @param  thread  thread for which to find node.
-     * @return  corresponding thread node, or null if none found.
+     * <p/>
+     * @param thread thread for which to find node.
+     * @return corresponding thread node, or null if none found.
      */
     private ThreadNode findThreadNode(ThreadReference thread) {
         Queue<Node> queue = new LinkedList<Node>();
@@ -283,9 +300,9 @@ public class ThreadsView extends AbstractView
                 }
             }
             Children children = node.getChildren();
-            Enumeration enm = children.nodes();
+            Enumeration<Node> enm = children.nodes();
             while (enm.hasMoreElements()) {
-                Node child = (Node) enm.nextElement();
+                Node child = enm.nextElement();
                 queue.offer(child);
             }
         }
@@ -295,8 +312,8 @@ public class ThreadsView extends AbstractView
     /**
      * Returns the single instance of this class, creating it if necessary.
      * Clients should not call this method, but instead use findInstance().
-     *
-     * @return  instance of this class.
+     * <p/>
+     * @return instance of this class.
      */
     public static synchronized ThreadsView getDefault() {
         if (theInstance == null) {
@@ -339,13 +356,12 @@ public class ThreadsView extends AbstractView
     public void opened(Session session) {
     }
 
-    @Override
-    public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
-        super.readExternal(in);
-        restoreColumns(in, columns);
-        nodeView.setProperties(columns);
-        nodeView.restoreColumnWidths(in);
+    // Secret, undocumented method that NetBeans calls?
+    void readProperties(java.util.Properties p) {
+        String version = p.getProperty("version");
+        if (version.equals("1.0")) {
+            nodeView.readSettings(p, "Threads");
+        }
     }
 
     @Override
@@ -376,56 +392,24 @@ public class ThreadsView extends AbstractView
         }
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        super.writeExternal(out);
-        saveColumns(out, columns);
-        nodeView.saveColumnWidths(out);
-    }
-
-    /**
-     * A column for the threads table.
-     *
-     * @author  Nathan Fiedler
-     */
-    protected class Column extends PropertySupport.ReadOnly {
-        /** The keyword for this column. */
-        private String key;
-
-        /**
-         * Constructs a new instance of Column.
-         *
-         * @param  key       keyword for this column.
-         * @param  type      type of the property (e.g. String.class, Long.class).
-         * @param  tree      true if this is the 'tree' column, false if 'table' column.
-         * @param  sortable  true if this is sortable column, false otherwise.
-         * @param  hidden    true to hide this column initially.
-         */
-        @SuppressWarnings("unchecked")
-        public Column(String key, Class type, boolean tree, boolean sortable, boolean hidden) {
-            super(key, type,
-                  NbBundle.getMessage(Column.class, "CTL_ThreadsView_Column_Name_" + key),
-                  NbBundle.getMessage(Column.class, "CTL_ThreadsView_Column_Desc_" + key));
-            this.key = key;
-            setValue("TreeColumnTTV", Boolean.valueOf(tree));
-            setValue("ComparableColumnTTV", Boolean.valueOf(sortable));
-            setValue("InvisibleInTreeTableView", Boolean.valueOf(hidden));
-        }
-
-        @Override
-        public Object getValue()
-                throws IllegalAccessException, InvocationTargetException {
-            return key;
-        }
+    // Secret, undocumented method that NetBeans calls?
+    void writeProperties(java.util.Properties p) {
+        // better to version settings since initial version as advocated at
+        // http://wiki.apidesign.org/wiki/PropertyFiles
+        p.setProperty("version", "1.0");
+        nodeView.writeSettings(p, "Threads");
     }
 
     /**
      * Implements the action of refreshing the node tree.
-     *
-     * @author  Nathan Fiedler
+     * <p/>
+     * @author Nathan Fiedler
      */
     public static class RefreshAction extends NodeAction {
-        /** silence the compiler warnings */
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
 
         @Override
