@@ -14,7 +14,7 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2012. All Rights Reserved.
+ * are Copyright (C) 2004-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
@@ -26,9 +26,6 @@ import com.bluemarsh.jswat.core.session.SessionManager;
 import com.bluemarsh.jswat.core.session.SessionProvider;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -50,7 +47,7 @@ import org.openide.windows.TopComponent;
  * Overrides
  * <code>TopComponent</code> to provide a few convenience methods for the views
  * in the JSwat UI module.
- *
+ * <p/>
  * @author Nathan Fiedler
  */
 public abstract class AbstractView extends TopComponent {
@@ -64,7 +61,7 @@ public abstract class AbstractView extends TopComponent {
     /**
      * Creates a listener to track the selected nodes in the given explorer
      * manager, settingn those nodes as activated.
-     *
+     * <p/>
      * @param em explorer manager to listen to.
      */
     protected void addSelectionListener(ExplorerManager em) {
@@ -83,10 +80,10 @@ public abstract class AbstractView extends TopComponent {
 
     /**
      * Expands the set of node paths in the view.
-     *
+     * <p/>
      * @param paths list of node path names to expand.
-     * @param view tree view to traverse.
-     * @param root root of the node tree.
+     * @param view  tree view to traverse.
+     * @param root  root of the node tree.
      */
     protected static void expandPaths(List<String[]> paths, TreeView view, Node root) {
 // TODO: would using TreePathSupport work better?
@@ -108,7 +105,7 @@ public abstract class AbstractView extends TopComponent {
      * Determines the list of paths of expanded nodes. Use this to take a
      * snapshot of the expanded state of the view, then later re-expand the
      * nodes with the same names after the tree has been rebuilt.
-     *
+     * <p/>
      * @param view tree view to traverse.
      * @param root root of the node tree.
      * @return list of expanded paths.
@@ -154,10 +151,10 @@ public abstract class AbstractView extends TopComponent {
 
     /**
      * Expand or collapse a tree path and its descendants.
-     *
-     * @param tree    outline on which to operate.
-     * @param parent  parent tree path.
-     * @param expand  true to expand, false to collapse.
+     * <p/>
+     * @param tree   outline on which to operate.
+     * @param parent parent tree path.
+     * @param expand true to expand, false to collapse.
      */
     @SuppressWarnings("unchecked")
     private void expandOrCollapseAll(Outline tree, TreePath parent, boolean expand) {
@@ -179,7 +176,7 @@ public abstract class AbstractView extends TopComponent {
 
     /**
      * Checks if the given Session is the current session or not.
-     *
+     * <p/>
      * @param session session to compare.
      * @return true if current session, false otherwise.
      */
@@ -191,32 +188,11 @@ public abstract class AbstractView extends TopComponent {
 
     /**
      * Checks if the given event is for the current session or not.
-     *
+     * <p/>
      * @param sevt session event.
      * @return true if current session, false otherwise.
      */
     protected static boolean isCurrent(SessionEvent sevt) {
         return isCurrent(sevt.getSession());
-    }
-
-    /**
-     * Restore the column settings from the input stream.
-     *
-     * @param in the stream to deserialize from.
-     * @param columns the columns to be restored.
-     */
-    protected static void restoreColumns(ObjectInput in, Node.Property[] columns) {
-        // TODO: remove these, OutlineView.readSettings() replaces this
-    }
-
-    /**
-     * Save the column settings to the output stream.
-     *
-     * @param out the stream to serialize to.
-     * @param columns the columns to be saved.
-     */
-    protected static void saveColumns(ObjectOutput out, Node.Property[] columns)
-            throws IOException {
-        // TODO: remove these, OutlineView.writeSettings() replaces this
     }
 }
