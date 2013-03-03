@@ -31,13 +31,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import org.netbeans.swing.outline.Outline;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.OutlineView;
-import org.openide.explorer.view.TreeView;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeNotFoundException;
 import org.openide.nodes.NodeOp;
@@ -85,9 +83,7 @@ public abstract class AbstractView extends TopComponent {
      * @param view  tree view to traverse.
      * @param root  root of the node tree.
      */
-    protected static void expandPaths(List<String[]> paths, TreeView view, Node root) {
-// TODO: would using TreePathSupport work better?
-// OutlineView.getOutline().getOutlineModel().getTreePathSupport()
+    protected static void expandPaths(List<String[]> paths, OutlineView view, Node root) {
         for (String[] path : paths) {
             try {
                 Node node = NodeOp.findPath(root, path);
@@ -110,27 +106,26 @@ public abstract class AbstractView extends TopComponent {
      * @param root root of the node tree.
      * @return list of expanded paths.
      */
-    protected static List<String[]> getExpanded(TreeView view, Node root) {
-// TODO: would using TreePathSupport work better?
-// OutlineView.getOutline().getOutlineModel().getTreePathSupport()
-        List<String[]> paths = new LinkedList<String[]>();
-        Stack<Node> stack = new Stack<Node>();
-        stack.push(root);
+    protected static List<String[]> getExpanded(OutlineView view, Node root) {
+//        Stack<Node> stack = new Stack<Node>();
+//        stack.push(root);
         Set<Node> expanded = new HashSet<Node>();
-        while (!stack.empty()) {
-            Node node = stack.pop();
-            if (view.isExpanded(node)) {
-                Node[] kids = node.getChildren().getNodes();
-                for (Node kid : kids) {
-                    stack.push(kid);
-                }
-            } else {
-                Node parent = node.getParentNode();
-                if (parent != null) {
-                    expanded.add(parent);
-                }
-            }
-        }
+// TODO: the OutlineView.isExpanded() call is blocking(?) and makes views freeze
+//        while (!stack.empty()) {
+//            Node node = stack.pop();
+//            if (view.isExpanded(node)) {
+//                Node[] kids = node.getChildren().getNodes();
+//                for (Node kid : kids) {
+//                    stack.push(kid);
+//                }
+//            } else {
+//                Node parent = node.getParentNode();
+//                if (parent != null) {
+//                    expanded.add(parent);
+//                }
+//            }
+//        }
+        List<String[]> paths = new LinkedList<String[]>();
         for (Node node : expanded) {
             String[] path = NodeOp.createPath(node, root);
             paths.add(path);
@@ -142,7 +137,7 @@ public abstract class AbstractView extends TopComponent {
      * Expands all paths.
      */
     public void expandAll(OutlineView view) {
-        // TODO: doesn't seem to work
+        // TODO: OutlineView.expandPath() doesn't seem to work
         // Borrowed from TreeView source in openide.explorer module...
         Outline outline = view.getOutline();
         TreeNode root = (TreeNode) outline.getOutlineModel().getRoot();

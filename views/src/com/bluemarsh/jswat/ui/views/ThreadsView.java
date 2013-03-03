@@ -177,8 +177,8 @@ public class ThreadsView extends AbstractView
         Session session = sm.getCurrent();
         DebuggingContext dc = ContextProvider.getContext(session);
         List<Node> list = new LinkedList<Node>();
-//        Node rootNode = explorerManager.getRootContext();
-//        final List<String[]> expanded = getExpanded(nodeView, rootNode);
+        Node rootNode = explorerManager.getRootContext();
+        final List<String[]> expanded = getExpanded(nodeView, rootNode);
         if (session.isConnected()) {
             VirtualMachine vm = session.getConnection().getVM();
             List<ThreadGroupReference> groups = vm.topLevelThreadGroups();
@@ -193,8 +193,7 @@ public class ThreadsView extends AbstractView
             children.add(nodes);
             buildRoot(children);
             // Expand the branches that the user had expanded earlier.
-            // TODO: get node expansion working
-//            expandPaths(expanded, nodeView, rootNode);
+            expandPaths(expanded, nodeView, rootNode);
             // Expand the path leading to the current thread.
             ThreadReference thread = dc.getThread();
             if (thread != null) {

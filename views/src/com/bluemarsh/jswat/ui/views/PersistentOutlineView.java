@@ -14,21 +14,19 @@
  *
  * The Original Software is JSwat. The Initial Developer of the Original
  * Software is Nathan L. Fiedler. Portions created by Nathan L. Fiedler
- * are Copyright (C) 2004-2012. All Rights Reserved.
+ * are Copyright (C) 2004-2013. All Rights Reserved.
  *
  * Contributor(s): Nathan L. Fiedler.
  */
 package com.bluemarsh.jswat.ui.views;
 
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.Node;
 
 /**
  * An OutlineView subclass that persists the various settings, and restores them
  * as needed.
- *
+ * <p/>
  * @author Nathan Fiedler
  */
 public class PersistentOutlineView extends OutlineView {
@@ -47,28 +45,9 @@ public class PersistentOutlineView extends OutlineView {
     }
 
     /**
-     * Restore the column width values from the input stream (performed on the
-     * AWT event thread since this affects Swing components).
-     *
-     * @param int the stream to deserialize from.
-     */
-    public void restoreColumnWidths(ObjectInput in) {
-// TODO: replace with call to OutlineView.readSettings()
-    }
-
-    /**
-     * Save the column width values to the output stream.
-     *
-     * @param out the stream to serialize to.
-     */
-    public void saveColumnWidths(ObjectOutput out) {
-// TODO: replace with call to OutlineView.writeSettings()
-    }
-
-    /**
      * Select the given node in the tree, scrolling as needed to make the node
      * visible, as well as expanding the path to the node.
-     *
+     * <p/>
      * @param node node to be selected.
      */
     public void scrollAndSelectNode(Node node) {

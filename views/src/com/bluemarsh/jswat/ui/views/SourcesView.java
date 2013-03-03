@@ -31,7 +31,6 @@ import com.bluemarsh.jswat.core.session.SessionProvider;
 import com.bluemarsh.jswat.nbcore.path.PathConverter;
 import com.bluemarsh.jswat.ui.components.PathEditorPanel;
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -73,7 +72,7 @@ import org.openide.windows.WindowManager;
 
 /**
  * Class SourcesView displays the source path entries for the current Session.
- *
+ * <p/>
  * @author Nathan Fiedler
  */
 public class SourcesView extends AbstractView
@@ -120,7 +119,7 @@ public class SourcesView extends AbstractView
 
     /**
      * Build a new root node and set it to be the explorer's root context.
-     *
+     * <p/>
      * @param kids root node's children, or Children.LEAF if none.
      */
     private void buildRoot(Children kids) {
@@ -130,8 +129,8 @@ public class SourcesView extends AbstractView
             @Override
             public Action[] getActions(boolean b) {
                 return new Action[]{
-                            SystemAction.get(EditAction.class),
-                            SystemAction.get(RefreshAction.class),};
+                    SystemAction.get(EditAction.class),
+                    SystemAction.get(RefreshAction.class),};
             }
         };
         explorerManager.setRootContext(rootNode);
@@ -143,8 +142,6 @@ public class SourcesView extends AbstractView
     private void buildTree() {
         // Populate the root node with children.
         List<Node> list = new LinkedList<Node>();
-//        Node rootNode = explorerManager.getRootContext();
-//        final List<String[]> expanded = getExpanded(nodeView, rootNode);
         SessionManager sm = SessionProvider.getSessionManager();
         Session session = sm.getCurrent();
 
@@ -170,17 +167,6 @@ public class SourcesView extends AbstractView
         } else {
             buildRoot(Children.LEAF);
         }
-
-        // Must expand the nodes on the AWT event thread.
-// TODO: get tree expansion working
-//        EventQueue.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Need to refetch the root in case it was replaced.
-//                Node rootNode = explorerManager.getRootContext();
-//                expandPaths(expanded, nodeView, rootNode);
-//            }
-//        });
     }
 
     public void closing(SessionEvent sevt) {
@@ -221,7 +207,7 @@ public class SourcesView extends AbstractView
     /**
      * Obtain the window instance, first by looking for it in the window system,
      * then if not found, creating the instance.
-     *
+     * <p/>
      * @return the window instance.
      */
     public static synchronized SourcesView findInstance() {
@@ -245,11 +231,11 @@ public class SourcesView extends AbstractView
     /**
      * Scans the directory structure starting at root, looking for folders that
      * are either empty or contain files, adding them to the set.
-     *
+     * <p/>
      * @param children set to which nodes are added.
-     * @param fo file object to examine.
-     * @param root root of the package hierarchy.
-     * @param query true to query for visibility of files.
+     * @param fo       file object to examine.
+     * @param root     root of the package hierarchy.
+     * @param query    true to query for visibility of files.
      */
     private static void findVisiblePackages(Set<Node> children,
             FileObject fo, FileObject root, boolean query) {
@@ -282,7 +268,7 @@ public class SourcesView extends AbstractView
     /**
      * Returns the single instance of this class, creating it if necessary.
      * Clients should not call this method, but instead use findInstance().
-     *
+     * <p/>
      * @return instance of this class.
      */
     public static synchronized SourcesView getDefault() {
@@ -320,7 +306,7 @@ public class SourcesView extends AbstractView
     /**
      * Check whether a package is empty (devoid of files except for
      * subpackages).
-     *
+     * <p/>
      * @param fo file object to check.
      */
     private static boolean isEmpty(FileObject fo) {
@@ -330,8 +316,8 @@ public class SourcesView extends AbstractView
     /**
      * Check whether a package is empty (devoid of files except for
      * subpackages).
-     *
-     * @param fo file object to check.
+     * <p/>
+     * @param fo      file object to check.
      * @param recurse specifies whether to check if subpackages are empty too.
      */
     private static boolean isEmpty(FileObject fo, boolean recurse) {
@@ -387,7 +373,7 @@ public class SourcesView extends AbstractView
 
     /**
      * Represents a source root in the node tree.
-     *
+     * <p/>
      * @author Nathan Fiedler
      */
     private static class SourceRootNode extends AbstractNode {
@@ -403,7 +389,7 @@ public class SourcesView extends AbstractView
 
         /**
          * Constructs a new instance of SourceRootNode.
-         *
+         * <p/>
          * @param root a sourcepath entry.
          */
         public SourceRootNode(FileObject root) {
@@ -422,7 +408,7 @@ public class SourcesView extends AbstractView
 
     /**
      * Children of the source root node.
-     *
+     * <p/>
      * @author Nathan Fiedler
      */
     private static class SRNChildren extends Children.SortedArray {
@@ -434,7 +420,7 @@ public class SourcesView extends AbstractView
 
         /**
          * Constructs a new instance of SRNChildren.
-         *
+         * <p/>
          * @param root a sourcepath entry.
          */
         public SRNChildren(FileObject root) {
@@ -475,7 +461,7 @@ public class SourcesView extends AbstractView
 
     /**
      * Represents a package in the node tree.
-     *
+     * <p/>
      * @author Nathan Fiedler
      */
     private static class PackageNode extends FilterNode
@@ -496,8 +482,8 @@ public class SourcesView extends AbstractView
 
         /**
          * Constructs a new instance of PackageNode.
-         *
-         * @param root root of the package.
+         * <p/>
+         * @param root   root of the package.
          * @param folder a package within root.
          */
         public PackageNode(FileObject root, DataFolder folder) {
@@ -545,7 +531,7 @@ public class SourcesView extends AbstractView
 
         /**
          * Determines if the given folder is empty or not.
-         *
+         * <p/>
          * @param folder data folder to check.
          * @return true if folder is empty, false otherwise.
          */
@@ -630,7 +616,7 @@ public class SourcesView extends AbstractView
 
     /**
      * Implements the action of displaying the source path editor.
-     *
+     * <p/>
      * @author Nathan Fiedler
      */
     public static class EditAction extends NodeAction {
@@ -700,7 +686,7 @@ public class SourcesView extends AbstractView
 
     /**
      * Implements the action of refreshing the node tree.
-     *
+     * <p/>
      * @author Nathan Fiedler
      */
     public static class RefreshAction extends NodeAction {

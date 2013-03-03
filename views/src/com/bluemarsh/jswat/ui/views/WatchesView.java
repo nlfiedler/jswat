@@ -52,6 +52,7 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
 import com.sun.jdi.VoidValue;
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -188,8 +189,8 @@ public class WatchesView extends AbstractView
      * Build the tree of watch expressions, including their values.
      */
     private void buildTree() {
-//        Node rootNode = explorerManager.getRootContext();
-//        final List<String[]> expanded = getExpanded(nodeView, rootNode);
+        Node rootNode = explorerManager.getRootContext();
+        final List<String[]> expanded = getExpanded(nodeView, rootNode);
         Session session = SessionProvider.getCurrentSession();
         DebuggingContext dc = ContextProvider.getContext(session);
         ThreadReference thread = dc.getThread();
@@ -222,15 +223,14 @@ public class WatchesView extends AbstractView
         buildRoot(children);
 
         // Must expand the nodes on the AWT event thread.
-        // TODO: get node expansion working
-//        EventQueue.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Need to refetch the root in case it was replaced.
-//                Node rootNode = explorerManager.getRootContext();
-//                expandPaths(expanded, nodeView, rootNode);
-//            }
-//        });
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                // Need to refetch the root in case it was replaced.
+                Node rootNode = explorerManager.getRootContext();
+                expandPaths(expanded, nodeView, rootNode);
+            }
+        });
     }
 
     @Override

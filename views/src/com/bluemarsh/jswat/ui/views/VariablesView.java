@@ -48,6 +48,7 @@ import com.sun.jdi.ThreadReference;
 import com.sun.jdi.VMDisconnectedException;
 import com.sun.jdi.Value;
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -151,8 +152,8 @@ public class VariablesView extends AbstractView
         SessionManager sm = SessionProvider.getSessionManager();
         Session session = sm.getCurrent();
         List<Node> list = new LinkedList<Node>();
-//        Node rootNode = explorerManager.getRootContext();
-//        final List<String[]> expanded = getExpanded(nodeView, rootNode);
+        Node rootNode = explorerManager.getRootContext();
+        final List<String[]> expanded = getExpanded(nodeView, rootNode);
         if (session.isConnected()) {
             DebuggingContext dc = ContextProvider.getContext(session);
             ThreadReference thread = dc.getThread();
@@ -245,15 +246,14 @@ public class VariablesView extends AbstractView
         }
 
         // Must expand the nodes on the AWT event thread.
-        // TODO: get node expansion working
-//        EventQueue.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Need to refetch the root in case it was replaced.
-//                Node rootNode = explorerManager.getRootContext();
-//                expandPaths(expanded, nodeView, rootNode);
-//            }
-//        });
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                // Need to refetch the root in case it was replaced.
+                Node rootNode = explorerManager.getRootContext();
+                expandPaths(expanded, nodeView, rootNode);
+            }
+        });
     }
 
     @Override
