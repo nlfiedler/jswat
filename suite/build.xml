@@ -28,7 +28,7 @@
     <description>Builds the module suite JSwat.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <property name="version" value="2013.x"/>
+    <property name="version" value="2013.1"/>
 
     <target name="testuserdir-delete">
         <!-- Do nothing in the hopes that our userdir will stick around. -->
