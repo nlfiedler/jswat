@@ -1,89 +1,91 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta name="generator" content=
-  "HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.10), see www.w3.org" />
-
-  <title>JSwat - Updating the Platform</title>
-  <link href="../style.css" rel="stylesheet" type="text/css" />
-</head>
-
-<body>
-  <h2>How to Update the Platform</h2>
-
-  <p>This page documents the process for updating the NetBeans
-  Platform on which JSwat is based. For instance, going from
-  NetBeans 5.5 to 6.0 was a bit of an undertaking. These are the
-  basic steps to follow in making the transition.</p>
-
-  <h3>Update Process</h3>
-
-  <ol>
-    <li>Copy the new <code>org-openide-util.jar</code> from
-    NetBeans <code>platform</code> directory to the
-    <code>core/lib</code> folder of the core project. <em>Note that
-    this file is not used when running in NetBeans.</em></li>
-
-    <li>Update the module dependencies:
-
-      <ol>
-        <li>Open the module suite in NetBeans and disable all of
-        the modules in the <em>Libraries</em> section of the
-        project properties.</li>
-
-        <li>Select the <tt>Platform</tt> cluster since we need
-        <em>all</em> of the modules in the platform.</li>
-
-        <li>Open the <tt>IDE</tt> cluster and enable the <tt>Lexer to
-        NetBeans Bridge</tt> module (for syntax highlighting to work).</li>
-
-        <li>Open the <tt>IDE</tt> cluster and enable the <tt>Plain Editor</tt>
-        module (for plain text editing functionality).</li>
-
-        <li>Open the <tt>IDE</tt> cluster and enable the <tt>User Utilities</tt>
-        module (for Open File item in File menu).</li>
-
-        <li>Open the <tt>Java</tt> cluster and enable the <tt>Java
-        Editor</tt> module (for basic Java editor functionality).</li>
-
-        <li>Open the <tt>Java</tt> cluster and enable the <tt>Java -
-        Navigation</tt> module (for Java support in Navigator view).</li>
-
-        <li>Click the <strong>Resolve</strong> button to
-        automatically correct the module dependencies.</li>
-
-        <li>Finally, be sure to <strong>Clean</strong> and <strong>Build</strong>
-        for the module changes to take effect.</li>
-      </ol>
-    </li>
-
-    <li>Look for API changes in the NetBeans modules.</li>
-
-    <li>Clean and <a href="compile.html">build</a> to check for
-    problems. Check for any deprecated API warnings.</li>
-
-    <li>Run the debugger and look for exceptions, warnings, or
-    other error messages in the <strong>Output</strong> window of
-    the IDE.</li>
-  </ol>
-
-  <h3>Test Procedure</h3>
-
-  <p>It seems that when upgrading to a new release of NetBeans that
-  some features stop working correctly. Ones that are often
-  overlooked include the following.</p>
-
-  <ul>
-    <li>node double-click</li>
-
-    <li>node right-click actions</li>
-
-    <li>Find feature in Classes view (activating, exposing
-    matches)</li>
-
-    <li>expanded node refresh</li>
-  </ul>
-</body>
+  <head>
+    <title>
+      JSwat - Updating the Platform
+    </title>
+    <link href="../style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h2>
+      How to Update the Platform
+    </h2>
+    <p>
+      This page documents the process for updating the NetBeans
+      Platform on which JSwat is based. For instance, going from
+      NetBeans 5.5 to 6.0 was a bit of an undertaking. These are the
+      basic steps to follow in making the transition.
+    </p>
+    <h3>
+      Update Process
+    </h3>
+    <ol>
+      <li>Copy the new <code>org-openide-util.jar</code> and
+      <code>org-openide-util-lookup.jar</code> from NetBeans
+      <code>platform</code> directory to the <code>core/lib</code>
+      folder of the core project. <em>Note that this file is not used
+      when running in NetBeans.</em>
+      </li>
+      <li>Update the module dependencies:
+        <ol>
+          <li>Open the module suite in NetBeans and disable all of the
+          modules in the <em>Libraries</em> section of the project
+          properties.
+          </li>
+          <li>Select the <tt>Platform</tt> cluster since we need
+          <em>all</em> of the modules in the platform.
+          </li>
+          <li>Open the <tt>IDE</tt> cluster and enable the <tt>Lexer to
+          NetBeans Bridge</tt> module (for syntax highlighting to
+          work).
+          </li>
+          <li>Open the <tt>IDE</tt> cluster and enable the <tt>Plain
+          Editor</tt> module (for plain text editing functionality).
+          </li>
+          <li>Open the <tt>IDE</tt> cluster and enable the <tt>User
+          Utilities</tt> module (for Open File item in File menu).
+          </li>
+          <li>Open the <tt>Java</tt> cluster and enable the <tt>Java
+          Editor</tt> module (for basic Java editor functionality).
+          </li>
+          <li>Open the <tt>Java</tt> cluster and enable the <tt>Java -
+          Navigation</tt> module (for Java support in Navigator view).
+          </li>
+          <li>Click the <strong>Resolve</strong> button to
+          automatically correct the module dependencies.
+          </li>
+          <li>Finally, be sure to <strong>Clean</strong> and
+          <strong>Build</strong> for the module changes to take effect.
+          </li>
+        </ol>
+      </li>
+      <li>Look for API changes in the NetBeans modules.
+      </li>
+      <li>Clean and <a href="compile.html">build</a> to check for
+      problems. Check for any deprecated API warnings.
+      </li>
+      <li>Run the debugger and look for exceptions, warnings, or other
+      error messages in the <strong>Output</strong> window of the IDE.
+      </li>
+    </ol>
+    <h3>
+      Test Procedure
+    </h3>
+    <p>
+      It seems that when upgrading to a new release of NetBeans that
+      some features stop working correctly. Ones that are often
+      overlooked include the following.
+    </p>
+    <ul>
+      <li>node double-click
+      </li>
+      <li>node right-click actions
+      </li>
+      <li>Find feature in Classes view (activating, exposing matches)
+      </li>
+      <li>expanded node refresh
+      </li>
+    </ul>
+  </body>
 </html>
