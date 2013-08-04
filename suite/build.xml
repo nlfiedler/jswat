@@ -29,6 +29,7 @@
     <import file="nbproject/build-impl.xml"/>
 
     <property name="version" value="2013.1"/>
+    <property name="app.conf" location="${basedir}/etc/app.conf"/>
 
     <target name="testuserdir-delete">
         <!-- Do nothing in the hopes that our userdir will stick around. -->
