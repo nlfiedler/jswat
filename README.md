@@ -11,9 +11,9 @@ and Java-like expression evaluation, including method invocation.
 ## Getting Help ##
 
 Asking for help is as easy as posting a message to the jswat-discuss Google
-Group (link in the sidebar). Be sure to read the README file that is included
-with JSwat, the troubleshooting section of the Installation instructions, as
-well as any pertinent help topics, before asking questions.
+Group. Be sure to read the README file that is included with JSwat, the
+troubleshooting section of the Installation instructions, as well as any
+pertinent help topics, before asking questions.
 
 ## Contributing ##
 
