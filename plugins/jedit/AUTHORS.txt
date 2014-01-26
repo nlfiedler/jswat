@@ -1,7 +1,0 @@
-JEDIT PLUGIN AUTHORS  (-*- text -*-)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$Id: AUTHORS.txt 14 2007-06-02 23:50:55Z nfiedler $
-
-Original author:        David Taylor
-Second maintainer:      Stefano Maestri
-Current maintainer:     Nathan Fiedler
