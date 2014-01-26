@@ -8,6 +8,13 @@ code navigator; movable display panels showing threads, call stack, visible
 variables, and loaded classes; command interface for more advanced features;
 and Java-like expression evaluation, including method invocation.
 
+## Downloads ##
+
+For the time being, the compiled binaries of JSwat are still available on
+[Google Code](https://code.google.com/p/jswat/downloads/list). However,
+that will have to change due to the change in policy regarding downloads
+hosting on Google Code.
+
 ## Getting Help ##
 
 Asking for help is as easy as posting a message to the jswat-discuss Google
