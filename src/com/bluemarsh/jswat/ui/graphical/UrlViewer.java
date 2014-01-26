@@ -1,6 +1,5 @@
-/*********************************************************************
- *
- *      Copyright (C) 2002-2005 Nathan Fiedler
+/*
+ *      Copyright (C) 2002-2014 Nathan Fiedler
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,11 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * $Id: UrlViewer.java 14 2007-06-02 23:50:55Z nfiedler $
- *
- ********************************************************************/
-
+ */
 package com.bluemarsh.jswat.ui.graphical;
 
 import com.bluemarsh.jswat.ui.Bundle;
@@ -69,30 +64,49 @@ import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 
 /**
- * Class <code>UrlViewer</code> handles the displaying of content
- * referenced by a URL. It handles the hyperlinks and automatically
- * follows them to the referenced content.
- *
- * @author  Nathan Fiedler
+ * Class <code>UrlViewer</code> handles the displaying of content referenced by
+ * a URL. It handles the hyperlinks and automatically follows them to the
+ * referenced content.
+ * <p>
+ * @author Nathan Fiedler
  */
 public class UrlViewer implements ActionListener, HyperlinkListener {
-    /** Suffix added to commnd strings to find images. */
+
+    /**
+     * Suffix added to commnd strings to find images.
+     */
     private static final String TOOLBAR_IMAGE_SUFFIX = "ToolbarImage";
-    /** Suffix added to commnd strings to find tooltips. */
+    /**
+     * Suffix added to commnd strings to find tooltips.
+     */
     private static final String TIP_SUFFIX = "Tooltip";
-    /** Logger. */
-    private static Logger logger;
-    /** Frame the help is displayed in. */
+    /**
+     * Logger.
+     */
+    private static final Logger logger;
+    /**
+     * Frame the help is displayed in.
+     */
     private JFrame frame;
-    /** The editor pane displaying the content. */
+    /**
+     * The editor pane displaying the content.
+     */
     private JEditorPane editorPane;
-    /** Button to go back through history. */
+    /**
+     * Button to go back through history.
+     */
     private JButton backButton;
-    /** Button to go forard through history. */
+    /**
+     * Button to go forard through history.
+     */
     private JButton forwardButton;
-    /** History of visited URL or String objects. */
+    /**
+     * History of visited URL or String objects.
+     */
     private List historyList;
-    /** Offset within the history marking the current position. */
+    /**
+     * Offset within the history marking the current position.
+     */
     private int historyIndex;
 
     static {
@@ -103,9 +117,9 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Constructs a frame to show the given help screen.
-     *
-     * @param  url    help screen to be shown.
-     * @param  frame  parent window.
+     * <p>
+     * @param url   help screen to be shown.
+     * @param frame parent window.
      */
     public static void showHelp(URL url, Frame frame) {
         if (logger.isLoggable(Level.INFO)) {
@@ -116,10 +130,10 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Constructs a frame to show the given content.
-     *
-     * @param  url    content to be shown.
-     * @param  title  title of the content.
-     * @param  frame  parent window.
+     * <p>
+     * @param url   content to be shown.
+     * @param title title of the content.
+     * @param frame parent window.
      */
     public static void showURL(URL url, String title, Frame frame) {
         if (logger.isLoggable(Level.INFO)) {
@@ -130,10 +144,10 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Constructs a UrlViewer to show plain content.
-     *
-     * @param  topFrame  frame on which to center.
-     * @param  title     title of the content.
-     * @param  url       content to be shown.
+     * <p>
+     * @param topFrame frame on which to center.
+     * @param title    title of the content.
+     * @param url      content to be shown.
      */
     public UrlViewer(Frame topFrame, String title, URL url) {
         GridBagLayout gbl = new GridBagLayout();
@@ -174,10 +188,10 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Constructs a UrlViewer to display help screens.
-     *
-     * @param  topFrame  frame on which to center.
-     * @param  url       content to be shown.
-     * @param  title     title of the content.
+     * <p>
+     * @param topFrame frame on which to center.
+     * @param url      content to be shown.
+     * @param title    title of the content.
      */
     public UrlViewer(Frame topFrame, URL url, String title) {
         historyList = new ArrayList();
@@ -248,8 +262,8 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Invoked when a button has been pressed.
-     *
-     * @param  e  action event.
+     * <p>
+     * @param e action event.
      */
     public void actionPerformed(ActionEvent e) {
         JButton button = (JButton) e.getSource();
@@ -259,7 +273,7 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
         } else if (action.equals("copy")) {
             // Any text selected?
             if (editorPane.getSelectionStart()
-                == editorPane.getSelectionEnd()) {
+                    == editorPane.getSelectionEnd()) {
                 // No, select all text.
                 editorPane.selectAll();
                 // Copy the text.
@@ -290,15 +304,15 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Creates a button.
-     *
-     * @param  key  action command name.
-     * @return  new button.
+     * <p>
+     * @param key action command name.
+     * @return new button.
      */
     protected JButton createButton(String key) {
         URL url = Bundle.getResource("UrlViewer." + key
-                                     + TOOLBAR_IMAGE_SUFFIX);
+                + TOOLBAR_IMAGE_SUFFIX);
         JButton b = url != null
-            ? new JButton(new ImageIcon(url)) : new JButton(key);
+                ? new JButton(new ImageIcon(url)) : new JButton(key);
         b.setRequestFocusEnabled(false);
         b.setMargin(new Insets(1, 1, 1, 1));
 
@@ -334,8 +348,8 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Called when a hypertext link is updated.
-     *
-     * @param  he  hyperlink event.
+     * <p>
+     * @param he hyperlink event.
      */
     public void hyperlinkUpdate(HyperlinkEvent he) {
         if (he.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -348,8 +362,8 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Reports the given exception to a new page.
-     *
-     * @param  e  exception to report.
+     * <p>
+     * @param e exception to report.
      */
     protected void reportException(Exception e) {
         showPage(Strings.exceptionToString(e));
@@ -371,14 +385,14 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
             Bundle.getString("UrlViewer.searchStringField"),
             new JTextField(query, 25),
             new JCheckBox(Bundle.getString("UrlViewer.searchIgnoreCase"),
-                          ignoreCase)
+            ignoreCase)
         };
 
         // Ask the user for the search phrase.
         int response = JOptionPane.showOptionDialog(
-            frame, messages, Bundle.getString("UrlViewer.searchTitle"),
-            JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-            null, null, null);
+                frame, messages, Bundle.getString("UrlViewer.searchTitle"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, null, null);
         query = ((JTextField) messages[1]).getText();
         ignoreCase = ((JCheckBox) messages[2]).isSelected();
 
@@ -392,7 +406,7 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
         prefs.putBoolean("searchIgnoreCase", ignoreCase);
 
         Pattern pattern = Pattern.compile(query, ignoreCase
-                                          ? Pattern.CASE_INSENSITIVE : 0);
+                ? Pattern.CASE_INSENSITIVE : 0);
 
         // Get the names of the help files.
         String[] names = Strings.tokenize(Bundle.getString("helpFiles"));
@@ -402,9 +416,9 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
         for (int ii = 0; ii < names.length; ii++) {
             // Open each of the help files.
-            InputStream is =
-                com.bluemarsh.jswat.Bundle.class.getResourceAsStream(
-                    "resources/" + names[ii]);
+            InputStream is
+                    = com.bluemarsh.jswat.Bundle.class.getResourceAsStream(
+                            "resources/" + names[ii]);
             String contents = null;
 
             try {
@@ -438,7 +452,7 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
             if (matcher.find()) {
                 // Make a URL and add it to the list of results.
                 URL url = com.bluemarsh.jswat.Bundle.class.getResource(
-                    "resources/" + names[ii]);
+                        "resources/" + names[ii]);
                 results.add(new SearchResultEntry(title, url));
             }
         }
@@ -446,7 +460,7 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
         if (results.size() > 0) {
             // Show the search results in a dialog.
             SearchResultsDialog srd = new SearchResultsDialog(
-                frame, results.toArray());
+                    frame, results.toArray());
             srd.pack();
             srd.setLocationRelativeTo(frame);
             srd.setResizable(false);
@@ -454,16 +468,16 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
         } else {
             // No matches were found.
             JOptionPane.showMessageDialog(
-                frame, Bundle.getString("UrlViewer.searchNoMatch"),
-                Bundle.getString("UrlViewer.searchTitle"),
-                JOptionPane.ERROR_MESSAGE);
+                    frame, Bundle.getString("UrlViewer.searchNoMatch"),
+                    Bundle.getString("UrlViewer.searchTitle"),
+                    JOptionPane.ERROR_MESSAGE);
         }
     } // search
 
     /**
      * Show the given page.
-     *
-     * @param  page  a URL or String.
+     * <p>
+     * @param page a URL or String.
      */
     protected void showPage(Object page) {
         if (page instanceof URL) {
@@ -476,11 +490,11 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
     } // showPage
 
     /**
-     * Show the given page. Using this method to show HTML will result
-     * in links that do not work. Apparently JEditorPane only supports
-     * hyperlinks if the setPage() method is used.
-     *
-     * @param  page  a String.
+     * Show the given page. Using this method to show HTML will result in links
+     * that do not work. Apparently JEditorPane only supports hyperlinks if the
+     * setPage() method is used.
+     * <p>
+     * @param page a String.
      */
     protected void showPage(String page) {
         if (logger.isLoggable(Level.INFO)) {
@@ -489,7 +503,7 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
         EditorKit kit = editorPane.getEditorKit();
         Document doc = kit.createDefaultDocument();
         try {
-            kit.read(new StringReader((String) page), doc, 0);
+            kit.read(new StringReader(page), doc, 0);
         } catch (BadLocationException ble) {
             // zero cannot be a bad location
         } catch (IOException ioe) {
@@ -500,8 +514,8 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
     /**
      * Show the given page.
-     *
-     * @param  page  a URL.
+     * <p>
+     * @param page a URL.
      */
     protected void showPage(URL page) {
         if (logger.isLoggable(Level.INFO)) {
@@ -519,11 +533,10 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
     } // showPage
 
     /**
-     * Show the given page, adding it to the history and dealing with
-     * erasing forward history, and enabling the controls as
-     * appropriate.
-     *
-     * @param  page  a URL or String.
+     * Show the given page, adding it to the history and dealing with erasing
+     * forward history, and enabling the controls as appropriate.
+     * <p>
+     * @param page a URL or String.
      */
     protected void showPageWithHistory(Object page) {
         // Are we at the end of the history?
@@ -546,9 +559,14 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
      * Class SearchResultEntry represents a search result.
      */
     protected class SearchResultEntry {
-        /** Title from the help file. */
+
+        /**
+         * Title from the help file.
+         */
         private String title;
-        /** Help file. */
+        /**
+         * Help file.
+         */
         private URL file;
 
         /**
@@ -559,9 +577,9 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
         /**
          * Constructs a SearchResultEntry instance.
-         *
-         * @param  title  title of results.
-         * @param  file   file of results.
+         * <p>
+         * @param title title of results.
+         * @param file  file of results.
          */
         public SearchResultEntry(String title, URL file) {
             this.title = title;
@@ -570,8 +588,8 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
         /**
          * Returns the URL pointing to the file of this search result.
-         *
-         * @return  URL of resulting file.
+         * <p>
+         * @return URL of resulting file.
          */
         public URL getFile() {
             return file;
@@ -579,8 +597,8 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
         /**
          * Returns a String representation of the result.
-         *
-         * @return  String representation of this.
+         * <p>
+         * @return String representation of this.
          */
         public String toString() {
             return title;
@@ -591,17 +609,22 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
      * Class SearchResultsDialog displays the results of a search.
      */
     protected class SearchResultsDialog extends JDialog
-        implements ActionListener, ListSelectionListener {
-        /** silence the compiler warnings */
+            implements ActionListener, ListSelectionListener {
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
-        /** List showing the results. */
+        /**
+         * List showing the results.
+         */
         private JList resultsList;
 
         /**
          * Constructs a SearchResultsDialog instance.
-         *
-         * @param  owner    parent component.
-         * @param  results  list of search results.
+         * <p>
+         * @param owner   parent component.
+         * @param results list of search results.
          */
         public SearchResultsDialog(Frame owner, Object[] results) {
             super(owner, Bundle.getString("UrlViewer.searchResultsTitle"));
@@ -637,8 +660,8 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
         /**
          * Invoked when a button has been pressed.
-         *
-         * @param  e  action event.
+         * <p>
+         * @param e action event.
          */
         public void actionPerformed(ActionEvent e) {
             dispose();
@@ -646,13 +669,12 @@ public class UrlViewer implements ActionListener, HyperlinkListener {
 
         /**
          * Handle list selection events.
-         *
-         * @param  e  the list selection event.
+         * <p>
+         * @param e the list selection event.
          */
         public void valueChanged(ListSelectionEvent e) {
             if (!e.getValueIsAdjusting()) {
-                SearchResultEntry sre = (SearchResultEntry)
-                    resultsList.getSelectedValue();
+                SearchResultEntry sre = (SearchResultEntry) resultsList.getSelectedValue();
                 showPageWithHistory(sre.getFile());
             }
         } // valueChanged

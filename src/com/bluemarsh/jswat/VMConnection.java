@@ -1,6 +1,5 @@
-/*********************************************************************
- *
- *      Copyright (C) 2000-2003 Nathan Fiedler
+/*
+ *      Copyright (C) 2000-2014 Nathan Fiedler
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,29 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * PROJECT:     JSwat
- * MODULE:      JSwat
- * FILE:        VMConnection.java
- *
- * AUTHOR:      Nathan Fiedler
- *
- * REVISION HISTORY:
- *      Name    Date            Description
- *      ----    ----            -----------
- *      nf      08/09/00        Initial version
- *      nf      03/22/01        Fixed bug 87
- *      nf      05/28/01        Added getConnectArg()
- *      nf      08/17/01        Moved common code to this class
- *      nf      04/04/02        Implemented RFE 404
- *      nf      05/22/02        Fixed bug 535
- *      nf      07/19/02        Added loadingString()
- *      nf      04/06/03        Fixed bug 744
- *
- * $Id: VMConnection.java 14 2007-06-02 23:50:55Z nfiedler $
- *
- ********************************************************************/
-
+ */
 package com.bluemarsh.jswat;
 
 import com.bluemarsh.jswat.ui.UIAdapter;
@@ -67,37 +44,48 @@ import java.util.jar.Manifest;
  * Class VMConnection contains the parameters necessary for making and
  * maintaining a connection to a debuggee VM. It provides methods for
  * constructing a connection and launching a debuggee VM.
- *
- * @author  Nathan Fiedler
+ * <p>
+ * @author Nathan Fiedler
  */
 public class VMConnection {
-    /** Connector. */
-    private Connector connector;
-    /** Connector arguments. */
-    private Map connectorArgs;
-    /** Debuggee VM. */
+
+    /**
+     * Connector.
+     */
+    private final Connector connector;
+    /**
+     * Connector arguments.
+     */
+    private final Map connectorArgs;
+    /**
+     * Debuggee VM.
+     */
     private VirtualMachine debuggeeVM;
-    /** Name of the main class, if known. */
+    /**
+     * Name of the main class, if known.
+     */
     private String mainClass;
-    /** True if this is a remote connection. */
+    /**
+     * True if this is a remote connection.
+     */
     private boolean isRemoteConnection;
 
     /**
-     * Builds the connection parameters object using the given shared
-     * memory name for the debuggee VM.
-     *
-     * @param  name     shared memory name.
-     * @return  VMConnection, or null if error.
-     * @throws  NoAttachingConnectorException
-     *          if the appropriate connector could not be found.
+     * Builds the connection parameters object using the given shared memory
+     * name for the debuggee VM.
+     * <p>
+     * @param name shared memory name.
+     * @return VMConnection, or null if error.
+     * @throws NoAttachingConnectorException if the appropriate connector could
+     *                                       not be found.
      */
     public static VMConnection buildConnection(String name)
-        throws NoAttachingConnectorException {
+            throws NoAttachingConnectorException {
         // Find an attaching connector that uses 'dt_shmem'.
         AttachingConnector connector = getAttachingConnector("dt_shmem");
         if (connector == null) {
             throw new NoAttachingConnectorException(
-                "no shared memory connectors found");
+                    "no shared memory connectors found");
         }
 
         // Set the shared memory name argument.
@@ -108,22 +96,22 @@ public class VMConnection {
     } // buildConnection
 
     /**
-     * Builds the connection parameters object using the given host and
-     * port for the remote debuggee VM.
-     *
-     * @param  host  host machine name.
-     * @param  port  port of remote machine.
-     * @return  VMConnection, or null if error.
-     * @throws  NoAttachingConnectorException
-     *          if the appropriate connector could not be found.
+     * Builds the connection parameters object using the given host and port for
+     * the remote debuggee VM.
+     * <p>
+     * @param host host machine name.
+     * @param port port of remote machine.
+     * @return VMConnection, or null if error.
+     * @throws NoAttachingConnectorException if the appropriate connector could
+     *                                       not be found.
      */
     public static VMConnection buildConnection(String host, String port)
-        throws NoAttachingConnectorException {
+            throws NoAttachingConnectorException {
         // Find an attaching connector that uses 'dt_socket'.
         AttachingConnector connector = getAttachingConnector("dt_socket");
         if (connector == null) {
             throw new NoAttachingConnectorException(
-                "no socket connectors found");
+                    "no socket connectors found");
         }
 
         // Set the connector's arguments.
@@ -139,22 +127,23 @@ public class VMConnection {
     } // buildConnection
 
     /**
-     * Builds a VMConnection object to contain all the necessary
-     * parameters for launching a debuggee VM.
-     *
-     * <p>Throws <code>IllegalArgumentException</code> if
-     * <code>javaHome</code> directory does not exist.</p>
-     *
-     * @param  javaHome       home of JVM or null for default.
-     * @param  jvmExecutable  name of JVM executable file or null for default.
-     * @param  options        VM options to pass or null for none.
-     * @param  cmdline        class to launch (with optional arguments).
-     * @return  new VMConnection instance.
+     * Builds a VMConnection object to contain all the necessary parameters for
+     * launching a debuggee VM.
+     * <p>
+     * <p>
+     * Throws <code>IllegalArgumentException</code> if <code>javaHome</code>
+     * directory does not exist.</p>
+     * <p>
+     * @param javaHome      home of JVM or null for default.
+     * @param jvmExecutable name of JVM executable file or null for default.
+     * @param options       VM options to pass or null for none.
+     * @param cmdline       class to launch (with optional arguments).
+     * @return new VMConnection instance.
      */
     public static VMConnection buildConnection(String javaHome,
-                                               String jvmExecutable,
-                                               String options,
-                                               String cmdline) {
+            String jvmExecutable,
+            String options,
+            String cmdline) {
         // Get launching connector from the VM manager.
         VirtualMachineManager vmm = Bootstrap.virtualMachineManager();
         LaunchingConnector connector = vmm.defaultConnector();
@@ -167,7 +156,7 @@ public class VMConnection {
             File home = new File(javaHome);
             if (!home.exists()) {
                 throw new IllegalArgumentException(
-                    "javaHome is invalid: " + javaHome);
+                        "javaHome is invalid: " + javaHome);
             }
             ((Connector.Argument) args.get("home")).setValue(javaHome);
         }
@@ -184,14 +173,13 @@ public class VMConnection {
 
     /**
      * Dumps the contents of the input stream to the string buffer.
-     *
-     * @param  is  input stream to read from.
-     * @param  sb  string buffer to dump to.
-     * @throws  IOException
-     *          if error occurs.
+     * <p>
+     * @param is input stream to read from.
+     * @param sb string buffer to dump to.
+     * @throws IOException if error occurs.
      */
     protected static void dumpStream(InputStream is, StringBuffer sb)
-        throws IOException {
+            throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         String line = br.readLine();
         while (line != null) {
@@ -202,12 +190,12 @@ public class VMConnection {
     } // dumpStream
 
     /**
-     * Locates the attaching connector for the desired transport. If one
-     * cannot be found, <code>null</code> is returned. This method can
-     * be used to determine if a particular transport is available.
-     *
-     * @param  transport  the transport name (e.g. "dt_shmem", "dt_socket").
-     * @return  the attaching connector, or null if not found.
+     * Locates the attaching connector for the desired transport. If one cannot
+     * be found, <code>null</code> is returned. This method can be used to
+     * determine if a particular transport is available.
+     * <p>
+     * @param transport the transport name (e.g. "dt_shmem", "dt_socket").
+     * @return the attaching connector, or null if not found.
      */
     public static AttachingConnector getAttachingConnector(String transport) {
         AttachingConnector connector = null;
@@ -225,42 +213,41 @@ public class VMConnection {
     } // getAttachingConnector
 
     /**
-     * Constructs a new VMConnection with the given connector and
-     * arguments.
-     *
-     * @param  connector  connector.
-     * @param  args       connector arguments.
+     * Constructs a new VMConnection with the given connector and arguments.
+     * <p>
+     * @param connector connector.
+     * @param args      connector arguments.
      */
     public VMConnection(Connector connector, Map args) {
         this.connector = connector;
         this.connectorArgs = args;
         if (connector instanceof AttachingConnector
-            || connector instanceof ListeningConnector) {
+                || connector instanceof ListeningConnector) {
             isRemoteConnection = true;
         }
     } // VMConnection
 
     /**
      * Attaches to a remote debuggee using this connection.
-     *
-     * @param  session     Session to activate when attached.
-     * @param  showSource  true to show the source for the main class.
-     * @return  true if successful, false if error.
+     * <p>
+     * @param session    Session to activate when attached.
+     * @param showSource true to show the source for the main class.
+     * @return true if successful, false if error.
      */
     public boolean attachDebuggee(Session session, boolean showSource) {
         // Try to attach to the running VM.
-        VirtualMachine vm = null;
+        VirtualMachine vm;
         try {
             // Hopefully it really is an attaching connector.
             AttachingConnector conn = (AttachingConnector) connector;
             vm = conn.attach(connectorArgs);
         } catch (IOException ioe) {
             session.getUIAdapter().showMessage(UIAdapter.MESSAGE_ERROR,
-                                               ioe.toString());
+                    ioe.toString());
             return false;
         } catch (IllegalConnectorArgumentsException icae) {
             session.getUIAdapter().showMessage(UIAdapter.MESSAGE_ERROR,
-                                               icae.toString());
+                    icae.toString());
             return false;
         }
 
@@ -272,16 +259,16 @@ public class VMConnection {
 
     /**
      * Set the current VM reference to the one given.
-     *
-     * @param  vm  new virtual machine reference.
+     * <p>
+     * @param vm new virtual machine reference.
      */
     public void connectVM(VirtualMachine vm) {
         debuggeeVM = vm;
     } // connectVM
 
     /**
-     * Clear the current VM reference. This should be called in the
-     * event that the debuggee has terminated.
+     * Clear the current VM reference. This should be called in the event that
+     * the debuggee has terminated.
      */
     public void disconnect() {
         debuggeeVM = null;
@@ -289,12 +276,12 @@ public class VMConnection {
     } // disconnect
 
     /**
-     * Indicates whether some other object is "equal to" this one.
-     * Compares just the main class argument for equality.
-     *
-     * @param  o  the reference object with which to compare.
-     * @return  true if this object is the same as the obj argument;
-     *          false otherwise.
+     * Indicates whether some other object is "equal to" this one. Compares just
+     * the main class argument for equality.
+     * <p>
+     * @param o the reference object with which to compare.
+     * @return true if this object is the same as the obj argument; false
+     *         otherwise.
      */
     public boolean equals(Object o) {
         if (o == this) {
@@ -315,22 +302,28 @@ public class VMConnection {
         }
     } // equals
 
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + (this.mainClass != null ? this.mainClass.hashCode() : 0);
+        return hash;
+    }
+
     /**
-     * Returns the connector used to launch, listen, or attach to the
-     * debuggee VM. This is one of the
-     * <code>com.sun.jdi.connect.Connector</code> subclasses.
-     *
-     * @return  Connector, or null if there has never been a connection.
+     * Returns the connector used to launch, listen, or attach to the debuggee
+     * VM. This is one of the <code>com.sun.jdi.connect.Connector</code>
+     * subclasses.
+     * <p>
+     * @return Connector, or null if there has never been a connection.
      */
     public Connector getConnector() {
         return connector;
     } // getConnector
 
     /**
-     * Returns the connector arguments used to launch, listen, or attach
-     * to the debuggee VM.
-     *
-     * @return  Map, or null if there has never been a connection.
+     * Returns the connector arguments used to launch, listen, or attach to the
+     * debuggee VM.
+     * <p>
+     * @return Map, or null if there has never been a connection.
      */
     public Map getConnectArgs() {
         return connectorArgs;
@@ -338,9 +331,9 @@ public class VMConnection {
 
     /**
      * Returns the named connector argument.
-     *
-     * @param  name  name of argument to retrieve.
-     * @return  Named argument, or null if none (or no arguments).
+     * <p>
+     * @param name name of argument to retrieve.
+     * @return Named argument, or null if none (or no arguments).
      */
     public String getConnectArg(String name) {
         if (connectorArgs != null) {
@@ -353,10 +346,10 @@ public class VMConnection {
     } // getConnectArg
 
     /**
-     * Returns the "main" connector argument. This is the class name of
-     * the class that is being debugged.
-     *
-     * @return  Main class name, or null if undefined.
+     * Returns the "main" connector argument. This is the class name of the
+     * class that is being debugged.
+     * <p>
+     * @return Main class name, or null if undefined.
      */
     public String getMainClass() {
         if (mainClass == null && connectorArgs != null) {
@@ -376,7 +369,7 @@ public class VMConnection {
                             JarFile jf = new JarFile(s);
                             Manifest man = jf.getManifest();
                             Attributes attrs = man.getMainAttributes();
-                            s = (String) attrs.getValue("Main-Class");
+                            s = attrs.getValue("Main-Class");
                         } catch (IOException ioe) {
                             // oh well, too bad.
                             s = null;
@@ -391,9 +384,8 @@ public class VMConnection {
 
     /**
      * Returns the debuggee Process associated with this connection.
-     *
-     * @return  Process, or null if no connection or if the connection is
-     *          remote.
+     * <p>
+     * @return Process, or null if no connection or if the connection is remote.
      */
     public Process getProcess() {
         if (debuggeeVM != null) {
@@ -404,10 +396,9 @@ public class VMConnection {
     } // getProcess
 
     /**
-     * Returns the debuggee VirtualMachine associated with this
-     * connection.
-     *
-     * @return  VirtualMachine, or none if no connection.
+     * Returns the debuggee VirtualMachine associated with this connection.
+     * <p>
+     * @return VirtualMachine, or none if no connection.
      */
     public VirtualMachine getVM() {
         return debuggeeVM;
@@ -415,43 +406,41 @@ public class VMConnection {
 
     /**
      * Returns true if this connection is to a remote debuggee.
-     *
-     * @return  true if debuggee is remote, false if debuggee was
-     *          launched.
+     * <p>
+     * @return true if debuggee is remote, false if debuggee was launched.
      */
     public boolean isRemote() {
         return isRemoteConnection;
     } // isRemote
 
     /**
-     * Launches the debuggee VM using this connection. If there are
-     * problems, this method will dump the errors to the Session's
-     * status Log.
-     *
-     * @param  session     Session to activate.
-     * @param  showSource  true to show the source for the main class.
-     * @return  true if VM launched, false if error.
+     * Launches the debuggee VM using this connection. If there are problems,
+     * this method will dump the errors to the Session's status Log.
+     * <p>
+     * @param session    Session to activate.
+     * @param showSource true to show the source for the main class.
+     * @return true if VM launched, false if error.
      */
     public boolean launchDebuggee(Session session, boolean showSource) {
         // Try to launch the new VM and handle all the errors.
-        VirtualMachine vm = null;
+        VirtualMachine vm;
         try {
             // Hopefully it really is a launching connector.
             LaunchingConnector conn = (LaunchingConnector) connector;
             vm = conn.launch(connectorArgs);
         } catch (VMDisconnectedException vmde) {
             session.getUIAdapter().showMessage(
-                UIAdapter.MESSAGE_ERROR,
-                vmde.toString() + '\n'
-                + Bundle.getString("VMConn.checkClassExists"));
+                    UIAdapter.MESSAGE_ERROR,
+                    vmde.toString() + '\n'
+                    + Bundle.getString("VMConn.checkClassExists"));
             return false;
         } catch (IOException ioe) {
             session.getUIAdapter().showMessage(UIAdapter.MESSAGE_ERROR,
-                                               ioe.toString());
+                    ioe.toString());
             return false;
         } catch (IllegalConnectorArgumentsException icae) {
             session.getUIAdapter().showMessage(UIAdapter.MESSAGE_ERROR,
-                                               icae.toString());
+                    icae.toString());
             return false;
         } catch (VMStartException vmse) {
             // VM failed to start correctly, show what happened.
@@ -469,7 +458,7 @@ public class VMConnection {
                 sb.append('\n');
             }
             session.getUIAdapter().showMessage(UIAdapter.MESSAGE_ERROR,
-                                               sb.toString());
+                    sb.toString());
             return false;
         }
 
@@ -486,12 +475,12 @@ public class VMConnection {
     } // launchDebuggee
 
     /**
-     * Returns a string describing the action of launching the debuggee
-     * using this connection. The string is prefixed with the
-     * 'vmLoading' resource, followed by the 'home', 'vmexec',
-     * 'options', and 'main' connector arguments.
-     *
-     * @return  string describing the launching arguments.
+     * Returns a string describing the action of launching the debuggee using
+     * this connection. The string is prefixed with the 'vmLoading' resource,
+     * followed by the 'home', 'vmexec', 'options', and 'main' connector
+     * arguments.
+     * <p>
+     * @return string describing the launching arguments.
      */
     public String loadingString() {
         StringBuffer buf = new StringBuffer(256);

@@ -1,6 +1,5 @@
-/*********************************************************************
- *
- *      Copyright (C) 2000-2005 Nathan Fiedler
+/*
+ *      Copyright (C) 2000-2014 Nathan Fiedler
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,11 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * $Id: WatchPanel.java 14 2007-06-02 23:50:55Z nfiedler $
- *
- ********************************************************************/
-
+ */
 package com.bluemarsh.jswat.panel;
 
 import com.bluemarsh.jswat.ContextManager;
@@ -73,28 +68,40 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * Class WatchPanel watches the modification events of variables and
- * displays the changed values in a table.
- *
- * <p>This works by maintaining a blank row in the watch table for the user
- * to add new watchpoints. That is, the user will type the name of a
- * variable to watch into the blank row. To remove a watchpoint, the user
- * must clear the name from that row.</p>
- *
- * @author  Nathan Fiedler
+ * Class WatchPanel watches the modification events of variables and displays
+ * the changed values in a table.
+ * <p>
+ * <p>
+ * This works by maintaining a blank row in the watch table for the user to add
+ * new watchpoints. That is, the user will type the name of a variable to watch
+ * into the blank row. To remove a watchpoint, the user must clear the name from
+ * that row.</p>
+ * <p>
+ * @author Nathan Fiedler
  */
 public class WatchPanel extends AbstractPanel
-    implements ContextListener, TableModelListener, VMEventListener {
-    /** Variable name column number. */
+        implements ContextListener, TableModelListener, VMEventListener {
+
+    /**
+     * Variable name column number.
+     */
     private static final int NAME_COLUMN = 0;
-    /** Variable value column number. */
+    /**
+     * Variable value column number.
+     */
     private static final int VALUE_COLUMN = 1;
-    /** Table displaying the threads. */
-    private JTable table;
-    /** Our UI component - scrollable panel */
-    private JScrollPane uicomp;
-    /** List of the existing watchpoint requests. */
-    private List watchpointList;
+    /**
+     * Table displaying the threads.
+     */
+    private final JTable table;
+    /**
+     * Our UI component - scrollable panel
+     */
+    private final JScrollPane uicomp;
+    /**
+     * List of the existing watchpoint requests.
+     */
+    private final List watchpointList;
 
     /**
      * Constructs a WatchPanel with the default table.
@@ -105,15 +112,15 @@ public class WatchPanel extends AbstractPanel
         // Rebuild the table column model from user preferences.
         TableColumnModel colmod = new DefaultTableColumnModel();
         Preferences prefs = Preferences.userRoot().node(
-            "com/bluemarsh/jswat/panel/watch");
-        int[] columnWidths = new int[] { 50, 75 };
+                "com/bluemarsh/jswat/panel/watch");
+        int[] columnWidths = new int[]{50, 75};
         String[] columnNames = new String[2];
         columnNames[0] = Bundle.getString("Watch.column.name");
         columnNames[1] = Bundle.getString("Watch.column.value");
         columnNames = restoreTable(colmod, prefs, columnWidths, columnNames);
         // Column names are now in adjusted order.
 
-        boolean[] editableCols = new boolean[] { true, false };
+        boolean[] editableCols = new boolean[]{true, false};
         ViewTableModel model = new ViewTableModel(columnNames, editableCols);
         model.addTableModelListener(this);
 
@@ -126,21 +133,19 @@ public class WatchPanel extends AbstractPanel
     } // WatchPanel
 
     /**
-     * Called when the Session has activated. This occurs when the
-     * debuggee has launched or has been attached to the debugger.
-     *
-     * @param  sevt  session event.
+     * Called when the Session has activated. This occurs when the debuggee has
+     * launched or has been attached to the debugger.
+     * <p>
+     * @param sevt session event.
      */
     public void activated(SessionEvent sevt) {
-        VMEventManager vmeman = (VMEventManager)
-            owningSession.getManager(VMEventManager.class);
+        VMEventManager vmeman = (VMEventManager) owningSession.getManager(VMEventManager.class);
         // Listen to all modification watchpoint events.
         vmeman.addListener(ModificationWatchpointEvent.class, this,
-                           VMEventListener.PRIORITY_DEFAULT);
+                VMEventListener.PRIORITY_DEFAULT);
 
         // Add ourselves as a context change listener.
-        ContextManager ctxtMgr = (ContextManager)
-            owningSession.getManager(ContextManager.class);
+        ContextManager ctxtMgr = (ContextManager) owningSession.getManager(ContextManager.class);
         ctxtMgr.addContextListener(this);
 
         // Read the previously set watchpoints from the session properties.
@@ -164,10 +169,9 @@ public class WatchPanel extends AbstractPanel
     } // activated
 
     /**
-     * Adds the blank row to the model, to allow entry of a new
-     * watchpoint.
-     *
-     * @return  new row number.
+     * Adds the blank row to the model, to allow entry of a new watchpoint.
+     * <p>
+     * @return new row number.
      */
     protected int addBlankRow() {
         ViewTableModel model = (ViewTableModel) table.getModel();
@@ -180,12 +184,12 @@ public class WatchPanel extends AbstractPanel
     } // addBlankRow
 
     /**
-     * Add the named variable to the watch list. This may or may not
-     * display a value for the variable immediately.
-     *
-     * @param  expr      name of variable to watch.
-     * @param  row       row to add to.
-     * @param  addBlank  true to add a blank row as needed.
+     * Add the named variable to the watch list. This may or may not display a
+     * value for the variable immediately.
+     * <p>
+     * @param expr     name of variable to watch.
+     * @param row      row to add to.
+     * @param addBlank true to add a blank row as needed.
      */
     protected void addWatchpoint(String expr, int row, boolean addBlank) {
         // Save the data the user entered in case it works later.
@@ -205,22 +209,21 @@ public class WatchPanel extends AbstractPanel
 
     /**
      * Called when the Session is about to be closed.
-     *
-     * @param  sevt  session event.
+     * <p>
+     * @param sevt session event.
      */
     public void closing(SessionEvent sevt) {
         Preferences prefs = Preferences.userRoot().node(
-            "com/bluemarsh/jswat/panel/watch");
+                "com/bluemarsh/jswat/panel/watch");
         saveTable(table.getColumnModel(), prefs);
         super.closing(sevt);
     } // closing
 
     /**
-     * Invoked when the current context has changed. The context
-     * change event identifies which aspect of the context has
-     * changed.
-     *
-     * @param  cce  context change event
+     * Invoked when the current context has changed. The context change event
+     * identifies which aspect of the context has changed.
+     * <p>
+     * @param cce context change event
      */
     public void contextChanged(ContextChangeEvent cce) {
         resolveWatchpoints();
@@ -228,20 +231,18 @@ public class WatchPanel extends AbstractPanel
     } // contextChanged
 
     /**
-     * Called when the Session has deactivated. The debuggee VM is no
-     * longer connected to the Session.
-     *
-     * @param  sevt  session event.
+     * Called when the Session has deactivated. The debuggee VM is no longer
+     * connected to the Session.
+     * <p>
+     * @param sevt session event.
      */
     public void deactivated(SessionEvent sevt) {
         // Remove ourselves as a VM event listener.
-        VMEventManager vmeman = (VMEventManager)
-            owningSession.getManager(VMEventManager.class);
+        VMEventManager vmeman = (VMEventManager) owningSession.getManager(VMEventManager.class);
         vmeman.removeListener(ModificationWatchpointEvent.class, this);
 
         // Remove ourselves as a context change listener.
-        ContextManager ctxtMgr = (ContextManager)
-            owningSession.getManager(ContextManager.class);
+        ContextManager ctxtMgr = (ContextManager) owningSession.getManager(ContextManager.class);
         ctxtMgr.removeContextListener(this);
 
         if (table.isEditing()) {
@@ -258,10 +259,9 @@ public class WatchPanel extends AbstractPanel
         // the next time the session activates.
         int n = 1;
         for (int i = 0; i < watchpointList.size(); i++) {
-            WatchpointListEntry wle = (WatchpointListEntry)
-                watchpointList.get(i);
+            WatchpointListEntry wle = (WatchpointListEntry) watchpointList.get(i);
             owningSession.setProperty("watchpoint" + Integer.toString(n),
-                wle.watchName);
+                    wle.watchName);
             n++;
         }
 
@@ -271,10 +271,10 @@ public class WatchPanel extends AbstractPanel
             // By getting the property first, we avoid Windows registry
             // error code 2 in RegDeleteValue(). JRE bug 4709908.
             old = owningSession.getProperty("watchpoint"
-                + Integer.toString(n));
+                    + Integer.toString(n));
             if (old != null) {
                 owningSession.setProperty("watchpoint"
-                    + Integer.toString(n), null);
+                        + Integer.toString(n), null);
                 n++;
             } else {
                 break;
@@ -286,9 +286,9 @@ public class WatchPanel extends AbstractPanel
 
     /**
      * Invoked when a VM event has occurred.
-     *
-     * @param  e  VM event
-     * @return  true if debuggee VM should be resumed, false otherwise.
+     * <p>
+     * @param e VM event
+     * @return true if debuggee VM should be resumed, false otherwise.
      */
     public boolean eventOccurred(Event e) {
         if (e instanceof ModificationWatchpointEvent) {
@@ -297,14 +297,13 @@ public class WatchPanel extends AbstractPanel
             ObjectReference object = mwpe.object();
 
             // Find the row this event concerns.
-            ModificationWatchpointRequest mwpr =
-                (ModificationWatchpointRequest) mwpe.request();
+            ModificationWatchpointRequest mwpr
+                    = (ModificationWatchpointRequest) mwpe.request();
             int row = -1;
             for (int i = 0; i < watchpointList.size(); i++) {
-                WatchpointListEntry entry = (WatchpointListEntry)
-                    watchpointList.get(i);
+                WatchpointListEntry entry = (WatchpointListEntry) watchpointList.get(i);
                 if (entry.isFieldVar() && entry.watchRequest != null
-                    && entry.watchRequest.equals(mwpr)) {
+                        && entry.watchRequest.equals(mwpr)) {
                     row = i;
                     break;
                 }
@@ -317,7 +316,7 @@ public class WatchPanel extends AbstractPanel
                     model.setValueAt("null", row, VALUE_COLUMN);
                 } else {
                     model.setValueAt(Strings.cleanForPrinting(
-                        valueToString(value), 100), row, VALUE_COLUMN);
+                            valueToString(value), 100), row, VALUE_COLUMN);
                 }
             }
         }
@@ -325,11 +324,11 @@ public class WatchPanel extends AbstractPanel
     } // eventOccurred
 
     /**
-     * Returns a reference to the peer UI component. In many cases this
-     * is a JList, JTree, or JTable, depending on the type of data being
-     * displayed in the panel.
-     *
-     * @return  peer ui component object
+     * Returns a reference to the peer UI component. In many cases this is a
+     * JList, JTree, or JTable, depending on the type of data being displayed in
+     * the panel.
+     * <p>
+     * @return peer ui component object
      */
     public JComponent getPeer() {
         return table;
@@ -337,23 +336,21 @@ public class WatchPanel extends AbstractPanel
 
     /**
      * Returns a reference to the UI component.
-     *
-     * @return  ui component object
+     * <p>
+     * @return ui component object
      */
     public JComponent getUI() {
         return uicomp;
     } // getUI
 
     /**
-     * Update the display on the screen. Use the given Session to fetch
-     * the desired data. This must be run on the AWT event dispatching
-     * thread.
-     *
-     * @param  session  Debugging Session object.
+     * Update the display on the screen. Use the given Session to fetch the
+     * desired data. This must be run on the AWT event dispatching thread.
+     * <p>
+     * @param session Debugging Session object.
      */
     public void refresh(Session session) {
-        ContextManager ctxtman = (ContextManager)
-            session.getManager(ContextManager.class);
+        ContextManager ctxtman = (ContextManager) session.getManager(ContextManager.class);
         ThreadReference thread = ctxtman.getCurrentThread();
         String errorMsg = null;
         if (thread == null) {
@@ -363,60 +360,56 @@ public class WatchPanel extends AbstractPanel
         try {
             if (thread != null) {
                 // Get current stack frame.
-                ContextManager ctxtMgr = (ContextManager)
-                    session.getManager(ContextManager.class);
+                ContextManager ctxtMgr = (ContextManager) session.getManager(ContextManager.class);
                 StackFrame frame = thread.frame(ctxtMgr.getCurrentFrame());
                 if (frame == null) {
                     errorMsg = Bundle.getString("error.noStackFrame");
-                }
+                } else {
 
-                // Get the visible local variables in this frame.
-                List localVars = frame.visibleVariables();
-
-                // First get a list of entries to be updated.
-                Object[] updates = new Object[watchpointList.size()];
-                for (int ii = watchpointList.size() - 1; ii >= 0; ii--) {
-                    WatchpointListEntry entry = (WatchpointListEntry)
-                        watchpointList.get(ii);
-                    if (!entry.isFieldVar()) {
-                        LocalVariable lvar = frame.visibleVariableByName(
-                            entry.watchName);
-                        if (lvar != null) {
-                            Value val = frame.getValue(lvar);
-                            if (val == null) {
-                                updates[ii] = "null";
+                    // First get a list of entries to be updated.
+                    Object[] updates = new Object[watchpointList.size()];
+                    for (int ii = watchpointList.size() - 1; ii >= 0; ii--) {
+                        WatchpointListEntry entry = (WatchpointListEntry) watchpointList.get(ii);
+                        if (!entry.isFieldVar()) {
+                            LocalVariable lvar = frame.visibleVariableByName(
+                                    entry.watchName);
+                            if (lvar != null) {
+                                Value val = frame.getValue(lvar);
+                                if (val == null) {
+                                    updates[ii] = "null";
+                                } else {
+                                    // By not being a String, this entry will
+                                    // be updated in the second phase.
+                                    updates[ii] = val;
+                                }
                             } else {
-                                // By not being a String, this entry will
-                                // be updated in the second phase.
-                                updates[ii] = val;
+                                updates[ii] = Bundle.getString(
+                                        "Watch.error.invisible");
                             }
-                        } else {
-                            updates[ii] = Bundle.getString(
-                                "Watch.error.invisible");
                         }
                     }
-                }
 
-                // Then update the local variable table entries. This
-                // two-phase approach is necessary because Classes'
-                // callToString() method invalidates the stack frame.
-                ViewTableModel model = (ViewTableModel) table.getModel();
-                for (int ii = updates.length - 1; ii >= 0; ii--) {
-                    Object o = updates[ii];
-                    if (o == null) {
-                        // An empty entry.
-                        continue;
+                    // Then update the local variable table entries. This
+                    // two-phase approach is necessary because Classes'
+                    // callToString() method invalidates the stack frame.
+                    ViewTableModel model = (ViewTableModel) table.getModel();
+                    for (int ii = updates.length - 1; ii >= 0; ii--) {
+                        Object o = updates[ii];
+                        if (o == null) {
+                            // An empty entry.
+                            continue;
+                        }
+                        String valueStr = null;
+                        if (o instanceof String) {
+                            valueStr = (String) o;
+                        } else {
+                            // It must be a Value then.
+                            valueStr = Strings.cleanForPrinting(
+                                    valueToString((Value) o), 100);
+                        }
+                        // Set cell in value column of that row to new value.
+                        model.setValueAt(valueStr, ii, VALUE_COLUMN);
                     }
-                    String valueStr = null;
-                    if (o instanceof String) {
-                        valueStr = (String) o;
-                    } else {
-                        // It must be a Value then.
-                        valueStr = Strings.cleanForPrinting(
-                            valueToString((Value) o), 100);
-                    }
-                    // Set cell in value column of that row to new value.
-                    model.setValueAt(valueStr, ii, VALUE_COLUMN);
                 }
             }
 
@@ -440,8 +433,7 @@ public class WatchPanel extends AbstractPanel
             // Whatever the error was, it affects all local variables.
             ViewTableModel model = (ViewTableModel) table.getModel();
             for (int ii = watchpointList.size() - 1; ii >= 0; ii--) {
-                WatchpointListEntry entry = (WatchpointListEntry)
-                    watchpointList.get(ii);
+                WatchpointListEntry entry = (WatchpointListEntry) watchpointList.get(ii);
                 if (!entry.isFieldVar()) {
                     model.setValueAt(errorMsg, ii, VALUE_COLUMN);
                 }
@@ -451,35 +443,32 @@ public class WatchPanel extends AbstractPanel
 
     /**
      * Try to resolve a watchpoint.
-     *
-     * @param  row    row number in table.
-     * @param  entry  watchpoint list entry.
+     * <p>
+     * @param row   row number in table.
+     * @param entry watchpoint list entry.
      */
     protected void resolveWatchpoint(int row, WatchpointListEntry entry) {
         ViewTableModel model = (ViewTableModel) table.getModel();
-        String errorMsg = null;
+        String errorMsg;
         try {
             // Figure out what field the user is referring to.
-            ContextManager ctxtman = (ContextManager)
-                owningSession.getManager(ContextManager.class);
+            ContextManager ctxtman = (ContextManager) owningSession.getManager(ContextManager.class);
             ThreadReference thrd = ctxtman.getCurrentThread();
             if (thrd == null) {
                 model.setValueAt(Bundle.getString("error.threadNotSet"),
-                                 row, VALUE_COLUMN);
+                        row, VALUE_COLUMN);
                 return;
             }
 
             int frameNum = ctxtman.getCurrentFrame();
-            VariableValue varValue = Variables.getField
-                (entry.watchName, thrd, frameNum);
+            VariableValue varValue = Variables.getField(entry.watchName, thrd, frameNum);
             if (varValue.field() != null) {
                 // Create a watchpoint request for this field.
-                EventRequestManager erm =
-                    owningSession.getVM().eventRequestManager();
-                ModificationWatchpointRequest mwpr =
-                    (ModificationWatchpointRequest)
-                    erm.createModificationWatchpointRequest(
-                        varValue.field());
+                EventRequestManager erm
+                        = owningSession.getVM().eventRequestManager();
+                ModificationWatchpointRequest mwpr
+                        = erm.createModificationWatchpointRequest(
+                                varValue.field());
                 mwpr.setSuspendPolicy(EventRequest.SUSPEND_NONE);
                 VirtualMachine vm = mwpr.virtualMachine();
                 if (vm.canUseInstanceFilters()) {
@@ -487,8 +476,8 @@ public class WatchPanel extends AbstractPanel
                 } else {
                     // Warn the user about lack of filter support.
                     owningSession.getUIAdapter().showMessage(
-                        UIAdapter.MESSAGE_WARNING,
-                        Bundle.getString("Watch.noInstanceFilters"));
+                            UIAdapter.MESSAGE_WARNING,
+                            Bundle.getString("Watch.noInstanceFilters"));
                 }
                 mwpr.enable();
                 entry.watchRequest = mwpr;
@@ -503,7 +492,7 @@ public class WatchPanel extends AbstractPanel
                 valueStr = "null";
             } else {
                 valueStr = Strings.cleanForPrinting(
-                    valueToString(varValue.value()), 100);
+                        valueToString(varValue.value()), 100);
             }
             model.setValueAt(valueStr, row, VALUE_COLUMN);
             return;
@@ -538,7 +527,7 @@ public class WatchPanel extends AbstractPanel
             model.setValueAt(errorMsg, row, VALUE_COLUMN);
         } else {
             model.setValueAt(Bundle.getString("Watch.error.unknown"),
-                             row, VALUE_COLUMN);
+                    row, VALUE_COLUMN);
         }
     } // resolveWatchpoint
 
@@ -560,8 +549,8 @@ public class WatchPanel extends AbstractPanel
 
     /**
      * Invoked whenever the table model changes.
-     *
-     * @param  e  Table model event.
+     * <p>
+     * @param e Table model event.
      */
     public void tableChanged(TableModelEvent e) {
         // We only care about table data changes.
@@ -583,8 +572,7 @@ public class WatchPanel extends AbstractPanel
         if (expr.length() == 0) {
             try {
                 // See if the user is removing an entry.
-                WatchpointListEntry entry = (WatchpointListEntry)
-                    watchpointList.remove(row);
+                WatchpointListEntry entry = (WatchpointListEntry) watchpointList.remove(row);
                 if (entry.isFieldVar() && entry.watchRequest != null) {
                     entry.watchRequest.disable();
                     erm.deleteEventRequest(entry.watchRequest);
@@ -602,8 +590,7 @@ public class WatchPanel extends AbstractPanel
             // Find the current watchpoint and disable it.
             // Do not remove it from the watchpoint list; the entry
             // will be overwritten by the addWatchpoint() method.
-            WatchpointListEntry entry = (WatchpointListEntry)
-                watchpointList.get(row);
+            WatchpointListEntry entry = (WatchpointListEntry) watchpointList.get(row);
             if (entry.isFieldVar() && entry.watchRequest != null) {
                 entry.watchRequest.disable();
                 erm.deleteEventRequest(entry.watchRequest);
@@ -617,21 +604,21 @@ public class WatchPanel extends AbstractPanel
     } // tableChanged
 
     /**
-     * Returns the string representing the value. If the Value is an
-     * object (but not a String), then call the toString() method on
-     * that object. Otherwise, return the toString() of the Value.
-     *
-     * <p>Note that this method will invalidate the current stack
-     * frame. That is, JDI will believe the thread has resumed when
-     * in fact it was but is now suspended. Thus, the current stack
-     * frame is in an unknown state and must be retrieved again.</p>
-     *
-     * @param  value  value to be converted to a string.
-     * @return  value as String, or error message.
+     * Returns the string representing the value. If the Value is an object (but
+     * not a String), then call the toString() method on that object. Otherwise,
+     * return the toString() of the Value.
+     * <p>
+     * <p>
+     * Note that this method will invalidate the current stack frame. That is,
+     * JDI will believe the thread has resumed when in fact it was but is now
+     * suspended. Thus, the current stack frame is in an unknown state and must
+     * be retrieved again.</p>
+     * <p>
+     * @param value value to be converted to a string.
+     * @return value as String, or error message.
      */
     protected String valueToString(Value value) {
-        ContextManager ctxtman = (ContextManager)
-            owningSession.getManager(ContextManager.class);
+        ContextManager ctxtman = (ContextManager) owningSession.getManager(ContextManager.class);
         ThreadReference thread = ctxtman.getCurrentThread();
         if (thread == null) {
             return Bundle.getString("error.threadNotSet");
@@ -641,7 +628,7 @@ public class WatchPanel extends AbstractPanel
         } catch (Exception e) {
             String s = Strings.exceptionToString(e);
             owningSession.getUIAdapter().showMessage(
-                UIAdapter.MESSAGE_ERROR, s);
+                    UIAdapter.MESSAGE_ERROR, s);
             return e.getMessage();
         }
     } // valueToString
@@ -650,16 +637,21 @@ public class WatchPanel extends AbstractPanel
      * Custom JTable to show custom tooltip.
      */
     protected class WatchTable extends JTable {
-        /** silence the compiler warnings */
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
-        /** Default tooltip text. */
+        /**
+         * Default tooltip text.
+         */
         private String defaultTip;
 
         /**
          * Constructs a WatchTable with the specified models.
-         *
-         * @param  model   TableModel to use.
-         * @param  colmod  TableColumnModel to use.
+         * <p>
+         * @param model  TableModel to use.
+         * @param colmod TableColumnModel to use.
          */
         public WatchTable(TableModel model, TableColumnModel colmod) {
             super(model, colmod);
@@ -668,9 +660,9 @@ public class WatchPanel extends AbstractPanel
 
         /**
          * Returns custom tooltip text for this tree.
-         *
-         * @param  me  Mouse event.
-         * @return  Custom tooltip text.
+         * <p>
+         * @param me Mouse event.
+         * @return Custom tooltip text.
          */
         public String getToolTipText(MouseEvent me) {
             int row = table.rowAtPoint(me.getPoint());
@@ -686,23 +678,30 @@ public class WatchPanel extends AbstractPanel
     } // WatchTable
 
     /**
-     * Class WatchpointListEntry represents any type of watchpoint the user
-     * has specified. This includes field variables of any object as well
-     * as any local variable.
+     * Class WatchpointListEntry represents any type of watchpoint the user has
+     * specified. This includes field variables of any object as well as any
+     * local variable.
      */
     protected class WatchpointListEntry {
-        /** Name entered by the user to specify the watchpoint. */
+
+        /**
+         * Name entered by the user to specify the watchpoint.
+         */
         private String watchName;
-        /** WatchpointRequest, if resolved. */
+        /**
+         * WatchpointRequest, if resolved.
+         */
         private WatchpointRequest watchRequest;
-        /** Local variable, if not a field variable. Used for comparison
-         * only, as the value can become stale after a hotswap. */
+        /**
+         * Local variable, if not a field variable. Used for comparison only, as
+         * the value can become stale after a hotswap.
+         */
         private LocalVariable watchLocal;
 
         /**
          * Constructs a WatchpointListEntry object.
-         *
-         * @param  name  Name of variable to watch.
+         * <p>
+         * @param name Name of variable to watch.
          */
         public WatchpointListEntry(String name) {
             this.watchName = name;
@@ -710,8 +709,8 @@ public class WatchPanel extends AbstractPanel
 
         /**
          * Indicates if this watchpoint entry is a field variable or not.
-         *
-         * @return  true if this entry is a field variable.
+         * <p>
+         * @return true if this entry is a field variable.
          */
         public boolean isFieldVar() {
             // Can't check the object since it may be a static field.
@@ -720,14 +719,19 @@ public class WatchPanel extends AbstractPanel
     } // WatchpointListEntry
 
     /**
-     * Class WatchPopup is a popup menu that allows the user to
-     * clear all of the entries from the watchpoints list.
+     * Class WatchPopup is a popup menu that allows the user to clear all of the
+     * entries from the watchpoints list.
      */
     protected class WatchPopup extends SmartPopupMenu
-        implements ActionListener {
-        /** silence the compiler warnings */
+            implements ActionListener {
+
+        /**
+         * silence the compiler warnings
+         */
         private static final long serialVersionUID = 1L;
-        /** The Clear menu item. */
+        /**
+         * The Clear menu item.
+         */
         private JMenuItem clearMenuItem;
 
         /**
@@ -736,15 +740,15 @@ public class WatchPanel extends AbstractPanel
         WatchPopup() {
             super(Bundle.getString("Watch.menu.label"));
             clearMenuItem = new JMenuItem(
-                Bundle.getString("Watch.menu.clearLabel"));
+                    Bundle.getString("Watch.menu.clearLabel"));
             clearMenuItem.addActionListener(this);
             add(clearMenuItem);
         } // WatchPopup
 
         /**
          * Invoked when a menu item has been selected.
-         *
-         * @param  event  action event
+         * <p>
+         * @param event action event
          */
         public void actionPerformed(ActionEvent event) {
             JMenuItem source = (JMenuItem) event.getSource();
@@ -761,8 +765,8 @@ public class WatchPanel extends AbstractPanel
 
         /**
          * Show the popup menu.
-         *
-         * @param  e  mouse event.
+         * <p>
+         * @param e mouse event.
          */
         protected void showPopup(MouseEvent e) {
             show(e.getComponent(), e.getX(), e.getY());

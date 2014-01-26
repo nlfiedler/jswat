@@ -1,6 +1,5 @@
-/*********************************************************************
- *
- *      Copyright (C) 1999-2005 Nathan Fiedler
+/*
+ *      Copyright (C) 1999-2014 Nathan Fiedler
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,11 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- * $Id: VMEventManager.java 14 2007-06-02 23:50:55Z nfiedler $
- *
- ********************************************************************/
-
+ */
 package com.bluemarsh.jswat.event;
 
 import com.bluemarsh.jswat.Log;
@@ -38,26 +33,39 @@ import java.util.logging.Logger;
 
 /**
  * This class is responsible for maintaining a list of all the objects
- * interested in events sent from the back-end of the JPDA debugger.
- * Listeners registered for VM events are listed according to the event
- * they are interested in. Within each of these lists the listeners are
- * sorted in priority order. Those with a higher priority will be
- * notified of the event before those of a lower priority.
- *
- * @author  Nathan Fiedler
+ * interested in events sent from the back-end of the JPDA debugger. Listeners
+ * registered for VM events are listed according to the event they are
+ * interested in. Within each of these lists the listeners are sorted in
+ * priority order. Those with a higher priority will be notified of the event
+ * before those of a lower priority.
+ * <p>
+ * @author Nathan Fiedler
  */
 public class VMEventManager implements Manager, Runnable {
-    /** A null array to be shared by all empty listener lists. */
+
+    /**
+     * A null array to be shared by all empty listener lists.
+     */
     private static final Object[] NULL_ARRAY = new Object[0];
-    /** Logger. */
-    private static Logger logger;
-    /** VM event queue. */
+    /**
+     * Logger.
+     */
+    private static final Logger logger;
+    /**
+     * VM event queue.
+     */
     private EventQueue eventQueue;
-    /** True if we are connected to the debuggee VM. */
+    /**
+     * True if we are connected to the debuggee VM.
+     */
     private boolean vmConnected;
-    /** Owning session. */
+    /**
+     * Owning session.
+     */
     private Session owningSession;
-    /** The list of event class-listener pairs.  */
+    /**
+     * The list of event class-listener pairs.
+     */
     private Object[] listenerList;
 
     static {
@@ -74,10 +82,10 @@ public class VMEventManager implements Manager, Runnable {
     } // VMEventManager
 
     /**
-     * Called when the Session has activated. This occurs when the
-     * debuggee has launched or has been attached to the debugger.
-     *
-     * @param  sevt  session event.
+     * Called when the Session has activated. This occurs when the debuggee has
+     * launched or has been attached to the debugger.
+     * <p>
+     * @param sevt session event.
      */
     public void activated(SessionEvent sevt) {
         // Start the event handling thread. Continuously monitors
@@ -89,20 +97,20 @@ public class VMEventManager implements Manager, Runnable {
     } // activated
 
     /**
-     * Adds the given listener as a listener for events of the
-     * given type. When an event of type <code>event</code> occurs,
-     * all registered listeners for that type will be notified.
-     *
-     * @param  event     VM event to listen for.
-     * @param  listener  Listener to add for event.
-     * @param  priority  Priority for this listener (1-255), where
-     *                   higher values give higher priority.
+     * Adds the given listener as a listener for events of the given type. When
+     * an event of type <code>event</code> occurs, all registered listeners for
+     * that type will be notified.
+     * <p>
+     * @param event    VM event to listen for.
+     * @param listener Listener to add for event.
+     * @param priority Priority for this listener (1-255), where higher values
+     *                 give higher priority.
      */
     public synchronized void addListener(Class event, VMEventListener listener,
-                                         int priority) {
+            int priority) {
         // Do the usual arguments checking.
         if ((priority > VMEventListener.PRIORITY_HIGHEST)
-            || (priority < VMEventListener.PRIORITY_LOWEST)) {
+                || (priority < VMEventListener.PRIORITY_LOWEST)) {
             throw new IllegalArgumentException("priority out of range");
         }
         if (listener == null) {
@@ -111,12 +119,12 @@ public class VMEventManager implements Manager, Runnable {
 
         // Handle the special-case priorities.
         if ((priority == VMEventListener.PRIORITY_BREAKPOINT)
-            && !(listener instanceof Breakpoint)) {
+                && !(listener instanceof Breakpoint)) {
             throw new IllegalArgumentException(
-                "priority only for breakpoints");
+                    "priority only for breakpoints");
         }
         if ((priority == VMEventListener.PRIORITY_SESSION)
-            && !(listener instanceof Session)) {
+                && !(listener instanceof Session)) {
             throw new IllegalArgumentException("priority only for Session");
         }
 
@@ -124,7 +132,7 @@ public class VMEventManager implements Manager, Runnable {
         if (listenerList == NULL_ARRAY) {
             // If this is the first listener added, initialize the lists.
             list = new PriorityList();
-            listenerList = new Object[] { event, list };
+            listenerList = new Object[]{event, list};
         } else {
 
             // Find the event in our list, if any.
@@ -148,17 +156,16 @@ public class VMEventManager implements Manager, Runnable {
         // Add the listener to the event's listener list.
         list.add(listener, priority);
         if (logger.isLoggable(Level.INFO)) {
-            logger.info(
-                "added " + Names.justTheName(event.getName())
-                + " listener: "
-                + Names.justTheName(listener.getClass().getName()));
+            logger.log(Level.INFO, "added {0} listener: {1}",
+                    new Object[]{Names.justTheName(event.getName()),
+                        Names.justTheName(listener.getClass().getName())});
         }
     } // addListener
 
     /**
      * Called when the Session is about to be closed.
-     *
-     * @param  sevt  session event.
+     * <p>
+     * @param sevt session event.
      */
     public void closing(SessionEvent sevt) {
         owningSession = null;
@@ -166,21 +173,20 @@ public class VMEventManager implements Manager, Runnable {
     } // closing
 
     /**
-     * Called when the Session has deactivated. The debuggee VM is no
-     * longer connected to the Session.
-     *
-     * @param  sevt  session event.
+     * Called when the Session has deactivated. The debuggee VM is no longer
+     * connected to the Session.
+     * <p>
+     * @param sevt session event.
      */
     public void deactivated(SessionEvent sevt) {
     } // deactivated
 
     /**
-     * Get the priority list matching the given event. Checks
-     * the event's class and whether it "is an instance of" any
-     * of the events in our list.
-     *
-     * @param  event  VM event to find in list.
-     * @return  PriorityList if found, or null.
+     * Get the priority list matching the given event. Checks the event's class
+     * and whether it "is an instance of" any of the events in our list.
+     * <p>
+     * @param event VM event to find in list.
+     * @return PriorityList if found, or null.
      */
     protected synchronized PriorityList getList(Object event) {
         for (int i = listenerList.length - 2; i >= 0; i -= 2) {
@@ -192,22 +198,22 @@ public class VMEventManager implements Manager, Runnable {
     } // getList
 
     /**
-     * Called after the Session has added this listener to the Session
-     * listener list.
-     *
-     * @param  session  the Session.
+     * Called after the Session has added this listener to the Session listener
+     * list.
+     * <p>
+     * @param session the Session.
      */
     public void opened(Session session) {
         owningSession = session;
     } // opened
 
     /**
-     * Send the given event to the listeners on the list. The listeners
-     * are notified in order of the priority enforced by the list.
-     *
-     * @param  event      event to process.
-     * @param  listeners  list of listeners to handle event.
-     * @return  true to resume VM, false to suspend VM.
+     * Send the given event to the listeners on the list. The listeners are
+     * notified in order of the priority enforced by the list.
+     * <p>
+     * @param event     event to process.
+     * @param listeners list of listeners to handle event.
+     * @return true to resume VM, false to suspend VM.
      */
     protected boolean processEvent(Event event, PriorityList listeners) {
         // Process the listeners in priority order, as enforced
@@ -236,12 +242,12 @@ public class VMEventManager implements Manager, Runnable {
 
     /**
      * Removes the given listener from the event listener list.
-     *
-     * @param  event     VM event to listen for.
-     * @param  listener  Listener to remove from list.
+     * <p>
+     * @param event    VM event to listen for.
+     * @param listener Listener to remove from list.
      */
     public synchronized void removeListener(Class event,
-                                            VMEventListener listener) {
+            VMEventListener listener) {
         if (listener == null) {
             throw new IllegalArgumentException("listener cannot be null");
         }
@@ -259,10 +265,9 @@ public class VMEventManager implements Manager, Runnable {
             PriorityList list = (PriorityList) listenerList[index + 1];
             list.remove(listener);
             if (logger.isLoggable(Level.INFO)) {
-                logger.info(
-                    "removed " + Names.justTheName(event.getName())
-                    + " listener: "
-                    + Names.justTheName(listener.getClass().getName()));
+                logger.log(Level.INFO, "removed {0} listener: {1}",
+                        new Object[]{Names.justTheName(event.getName()),
+                            Names.justTheName(listener.getClass().getName())});
             }
         }
         // Note that we never remove the priority list from our array.
@@ -271,18 +276,18 @@ public class VMEventManager implements Manager, Runnable {
 
     /**
      * Called when the debuggee is about to be resumed.
-     *
-     * @param  sevt  session event.
+     * <p>
+     * @param sevt session event.
      */
     public void resuming(SessionEvent sevt) {
     } // resuming
 
     /**
-     * Start waiting for events from the back-end of the JPDA debugger.
-     * When events occur the notifications will be sent out to all of
-     * the registered listeners. This thread dies automatically when
-     * the debuggee VM disconnects from the debugger.
-     *
+     * Start waiting for events from the back-end of the JPDA debugger. When
+     * events occur the notifications will be sent out to all of the registered
+     * listeners. This thread dies automatically when the debuggee VM
+     * disconnects from the debugger.
+     * <p>
      * @see #activate
      * @see #deactivate
      */
@@ -297,16 +302,16 @@ public class VMEventManager implements Manager, Runnable {
                 while (iter.hasNext()) {
                     Event event = (Event) iter.next();
                     if (logger.isLoggable(Level.INFO)) {
-                        logger.info("received event: " + event);
+                        logger.log(Level.INFO, "received event: {0}", event);
                     }
 
                     // Notify the appropriate listeners of the event.
-                    PriorityList list = (PriorityList) getList(event);
+                    PriorityList list = getList(event);
                     if (list != null) {
                         // processEvent() returns true if we should resume.
                         shouldResume &= processEvent(event, list);
                         if (logger.isLoggable(Level.INFO)) {
-                            logger.info("processed event: " + event);
+                            logger.log(Level.INFO, "processed event: {0}", event);
                         }
                     }
                 }
@@ -334,8 +339,8 @@ public class VMEventManager implements Manager, Runnable {
 
     /**
      * Called when the debuggee has been suspended.
-     *
-     * @param  sevt  session event.
+     * <p>
+     * @param sevt session event.
      */
     public void suspended(SessionEvent sevt) {
     } // suspended
