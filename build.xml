@@ -1,141 +1,73 @@
-<?xml version="1.0"?>
-<!--
-        Copyright (C) 2001-2014 Nathan Fiedler
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!-- By default, only the Clean and Build commands use this build script. -->
+<!-- Commands such as Run, Debug, and Test only use this build script if -->
+<!-- the Compile on Save feature is turned off for the project. -->
+<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
+<!-- in the project's Project Properties dialog box.-->
+<project name="JSwat" default="default" basedir=".">
+    <description>Builds, tests, and runs the project JSwat.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
 
-  Use Apache Ant to process this build file and create a build of JSwat.
-  See the docs/dev/build.html page to learn more about making builds.
--->
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
 
-<project name="JSwat" default="build" basedir=".">
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
 
-  <!-- Set all the build properties. -->
-  <property file="build.properties"/>
-  <property name="source" value="src"/>
-  <property name="ext.dir" value="lib"/>
-  <property name="classes" value="build/classes"/>
-  <property name="bindist" value="build/dist"/>
-  <property name="tests" value="build/test"/>
-  <property name="pkgname" value="com.bluemarsh.jswat"/>
-  <property name="pkgpath" value="com/bluemarsh/jswat"/>
-  <property name="compile.debug" value="on"/>
-  <property name="compile.deprecation" value="on"/>
-  <property name="compile.source" value="1.3"/>
-  <property name="compile.target" value="1.2"/>
+    (Targets beginning with '-' are not intended to be called on their own.)
 
-  <!-- Set the classpath. -->
-  <path id="class.path">
-    <!-- To compile with JDK 1.2, change the following to jpda.jar -->
-    <pathelement location="${java.home}/../lib/tools.jar"/>
-    <pathelement location="build/classes"/>
-    <fileset dir="${ext.dir}">
-      <include name="*.jar"/>
-    </fileset>
-  </path>
+    Example of inserting an obfuscator after compilation could look like this:
 
-  <target name="prepare">
-    <mkdir dir="${classes}"/>
-    <mkdir dir="${bindist}"/>
-    <mkdir dir="${tests}"/>
-  </target>
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
 
-  <target name="all" depends="clean,build" description="Clean and build."/>
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
 
-  <target name="clean" description="Removes build artifacts.">
-    <delete dir="${classes}"/>
-    <delete dir="${bindist}"/>
-    <delete dir="${tests}"/>
-    <delete>
-      <fileset dir="." includes="*.zip"/>
-    </delete>
-  </target>
 
-  <target name="build" depends="prepare" description="Build project.">
-    <javac srcdir="${source}" destdir="${classes}" debug="${compile.debug}"
-           classpathref="class.path" source="${compile.source}"
-           target="${compile.target}" deprecation="${compile.deprecation}"/>
-    <copy todir="${classes}/${pkgpath}/resources">
-      <fileset dir="${source}/${pkgpath}/resources"/>
-    </copy>
-    <copy todir="${classes}/${pkgpath}/ui/resources">
-      <fileset dir="${source}/${pkgpath}/ui/resources"/>
-    </copy>
-    <!-- Make sure to get all of the properties files. -->
-    <copy todir="${classes}">
-      <fileset dir="${source}" includes="com/**/*.properties"/>
-    </copy>
-    <!-- Get the Java parser dat files. -->
-    <copy todir="${classes}">
-      <fileset dir="${source}" includes="com/**/*.dat"/>
-    </copy>
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
 
-    <!-- Compile the test classes. -->
-    <javac srcdir="test/src" destdir="${tests}" debug="${compile.debug}"
-           source="${compile.source}" target="${compile.target}"
-           deprecation="${compile.deprecation}"/>
-  </target>
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar:                  JAR building
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
 
-  <!-- Get the release version number from the builder. -->
-  <target name="version" depends="build">
-    <!-- Newer Ant releases only ask if 'version' is not set. -->
-    <input message="Enter JSwat version number (x.y[.z]):"
-           addproperty="version"/>
-    <!-- Update the version.properties file for this build. -->
-    <propertyfile file="${classes}/${pkgpath}/util/version.properties">
-      <entry key="version" value="${version}"/>
-    </propertyfile>
-  </target>
+    An example of overriding the target for project execution could look like this:
 
-  <!-- Make the binary distribution. -->
-  <target name="dist" depends="version" description="Produces the release.">
-    <!-- Make the jar file. -->
-    <mkdir dir="${bindist}"/>
-    <jar jarfile="${bindist}/jswat.jar" basedir="${classes}">
-      <exclude name="**/test/**"/>
-      <manifest>
-        <attribute name="Built-By" value="${user.name}"/>
-        <attribute name="Class-Path" value="parser.jar"/>
-        <attribute name="Main-Class" value="com.bluemarsh.jswat.Main"/>
-      </manifest>
-    </jar>
+        <target name="run" depends="JSwat-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
 
-    <zip destfile="jswat-${version}.zip">
-      <zipfileset dir="." prefix="jswat-${version}">
-        <include name="*.txt"/>
-        <include name="*.html"/>
-      </zipfileset>
-      <zipfileset file="${bindist}/jswat.jar" prefix="jswat-${version}"/>
-      <zipfileset dir="${ext.dir}" includes="*.jar" prefix="jswat-${version}"/>
-      <zipfileset dir="docs" prefix="jswat-${version}/docs"/>
-    </zip>
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
 
-    <!-- Make the source distribution. -->
-    <zip destfile="jswat-src-${version}.zip">
-      <zipfileset dir="." prefix="jswat-${version}">
-        <exclude name="*.zip"/>
-        <exclude name="build/**"/>
-        <exclude name="build.properties"/>
-        <exclude name="nbproject/**"/>
-      </zipfileset>
-    </zip>
-
-    <!-- Calculate the file checksums. -->
-    <checksum file="jswat-${version}.zip" algorithm="SHA" property="sum"/>
-    <echo level="info">${sum}  jswat-${version}.zip</echo>
-    <!-- Work-around apparent checksum bug by using a different property. -->
-    <checksum file="jswat-src-${version}.zip" algorithm="SHA" property="sum2"/>
-    <echo level="info">${sum2}  jswat-src-${version}.zip</echo>
-  </target>
-
-  <target name="run" depends="build" description="Run the project.">
-    <java classname="com.bluemarsh.jswat.Main" fork="yes"
-          classpathref="class.path"/>
-  </target>
-
-  <target name="debug" depends="build" description="Debug the project.">
-    <java classname="com.bluemarsh.jswat.Main" fork="yes"
-          classpathref="class.path">
-      <jvmarg value="-Xdebug"/>
-      <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5858"/>
-    </java>
-  </target>
+    -->
 </project>
