@@ -1,0 +1,1122 @@
+JSWAT REVISION HISTORY
+======================================================================
+$Id: HISTORY.txt 1989 2005-09-04 07:39:30Z nfiedler $
+
+1.10 - September 4, 2005
+- Sorted the properties in the About dialog.
+- Added the tutorial to the documentation.
+
+1.9 - August 3, 2005
+- Removed uses of methods found only in JDKs after 1.2.
+
+1.8 - July 30, 2005
+- By default, center the window on the screen and ensure it fits
+  if the resolution is less than 800 by 600 pixels.
+- Improving JDI event dispatcher exception handling.
+- Fixing some mistakes in the documentation.
+- Fixing all compiler warnings when compiling with Java 1.5 JDK.
+
+1.7.1 - April 24, 2003
+- Included the documentation.
+
+1.7 - October 28, 2002
+- Updated README file with better instructions and more information.
+- Added documentation for the Start VM dialog.
+- Implemented RFE 43: added a tooltip to the locals panel to display
+  detailed information about the variable under the mouse.
+- Implemented RFE 267: added popup menu to threads panel for suspending,
+  resuming, and interrupting the threads.
+- Implemented RFE 581: allow source view popup menu to manage breakpoints
+  even when session is inactive.
+- Fixed bug 546: avoid NPE in GraphicalAdapter by not setting fields
+  to null. Just can't do the right thing in this case...
+- Fixed bug 572: unresolved breakpoints can now be deleted via the
+  source view popup menu.
+- Fixed bug 575: can clear classpath and sourcepath without exception.
+- Fixed bug 580: do not resolve disabled breakpoints.
+- Fixed bug 584: VM start dialog now uses accurate argument defaults
+  and displays the actual values used when launching.
+- Fixed bug 590: make sure breakpoint properties dialog does not slip
+  behind the main window when an error message appears.
+- Fixed bug 613: file selection dialogs default to wrong directory on
+  their initial appearance (should be current working directory).
+- Fixed bug 615: uncaught exception breakpoint no longer halts when a
+  thread is told to stop (which generates a ThreadDeath Error).
+- Fixed bug 632: classpath property is now set automatically only during
+  the startup of JSwat. Connecting to a remote VM will no longer overwrite
+  the classpath setting.
+- Fixed problem with adding entries to classpath and sourcepath via
+  dialog. Apparently JDK 1.2 does not properly support multi-selection,
+  so it has be disabled.
+
+1.6 - June 19, 2002
+- Added all the docs from the 2.x version, with appropriate changes.
+- Fixed bug 573: add message confirming that some VM connectors
+  may be without a port number in the VM connector list.
+- Fixed bug 558: breakpoints that fail to resolve for any reason
+  are automatically deleted.
+- Fixed bug 540: made the panel status messages a little clearer.
+- Fixed bug 541: give indication of what is happening when clicking
+  on a thread in the Threads panel.
+- Fixed bug 531: classpath and sourcepath were not consistently
+  canonicalized.
+- Fixed bug 535: applied change suggested by Takeo M. regarding the
+  illegal connector argument problem first reported in April by
+  Takuhiro N.
+- Fixed bug 526: Java parser was setting first class line to zero
+  when class appeared to contain no executable code.
+- Fixed bug 528: some breakpoints were still acting as listeners
+  after being removed, causing problems.
+- Fixed bug 520: attach command was not checking for null or empty
+  port number and share name values.
+- Fixed bug 521: fixed Java parser wrapper so it finds the correct
+  line of code for the beginning of classes.
+- Fixed bug 522: log was missing notifications and occasionally
+  not displaying messages to the messages panel.
+- Fixed bug 516: sourcepath now handles quotes around argument.
+- Fixed bug 477: breakpoint conditionals now throw exceptions rather
+  than printing errors to the console. Appropriate messages are now
+  printed to the messages panel instead.
+- Fixed bug 511: duplicate source views kept opening with the same
+  file each time the session was started.
+- Fixed bug 512: source view was reading Unicode escapes in strings
+  incorrectly and colorizing too little of the string.
+
+1.5.11 - April 26, 2002
+- Fixed bug #461: breakpoint properties dialog now properly centered
+  when activated via the source view popup menu.
+- Fixed bug #464: opened source file was kept 'open' and other Windows
+  programs saw the file as being locked by another process.
+- Fixed bug #471: validate input field values in VM attach dialog.
+- Fixed bug #474: print brief messages about lexer/parser errors
+  when opening a source view of a non-Java file.
+- Fixed bug #475: breakpoints dialog was initially too narrow.
+- Fixed bug #481: value condition no longer spews exceptions, and
+  treats null variable value appropriately.
+- Fixed bug #482: invoking 'unalias' printed both a 'deleted' and a
+  'removed' message.
+- Fixed bug #485: down, frame, up now handle case of current thread
+  not being set.
+- Fixed bug #487: invoke command now deals with some errors properly.
+- Fixed bug #488: empty classpath values are treated as undefined
+  and the fall-back values are used (java.class.path or the current
+  working directory).
+- Fixed bug #490: the java.source.path System property is only used
+  at startup, not every time the sourcepath value is queried.
+- Fixed bug #491: new option to disable the parsing of the contents
+  of source views.
+
+1.5.10 - April 16, 2002
+- Fixed bug #426: remove support for the 'assert' keyword as it
+  requires JDK 1.4 and this version of JSwat does not support
+  that version of the JDK. Instead, use the 2.0 series.
+- Implemented #433: applied Masaru Ohba's implementation for
+  proportional font support in the source view text area.
+
+1.5.9 - April 8, 2002
+- Removed JDK 1.4 dependencies again.
+- Fixed classpath/sourcepath dialog table sizing problem apparent
+  only in JDK 1.2.2.
+
+1.5.8 - April 7, 2002
+- Implemented #315: source view colors can now be changed via the
+  preferences dialog, in the "View, Colors" category.
+- Implemented #404: added support for shared memory connectors in the
+  attach and listen operations.
+- Implemented #420: format of command line arguments has changed to
+  allow any arbitrary command and its arguments.
+- Implemented #423: popup menu in watch panel to clear all watches.
+- Fixed bug #417: message area stays scrolled at the bottom even when
+  text is automatically trimmed from the top.
+- Fixed bug #419: show Java parser exceptions in the messages window.
+- Fixed bug #421: made the menu items line up in all the menus.
+- Removed 'detach' because it is redundant. Use 'close' instead.
+- Put the documentation in a separate downloadable. Not everyone needs
+  the docs every time they download the binary.
+
+1.5.7 - April 2, 2002
+- Reorganized the menus a little bit.
+- Implemented #24: added 'trace' command and equivalent menu item to
+  watch method entry and exit events.
+- Implemented #27: added 'invoke' command to call methods on classes
+  or objects in the debuggee process.
+- Implemented #177: added class and thread filters to breakpoints.
+- Implemented #178: added simple breakpoint that traces method entry
+  and exit events and shows the location in the message log. This is
+  related to feature request #24.
+- Implemented #207: added 'this' to local variables panel which shows
+  the reference type and object identifier of the 'this' object.
+- Fixed bug #413 (mohba): source view was not handling files with mixed
+  end of line characters correctly.
+- Fixed bug #414 (mohba): source view was not taking gutter width into
+  account in certain conditions.
+- Fixed bug #415: clarified the VM "list" operation by renaming it to
+  "List Connectors" since it does not show remote VMs.
+- Fixed bug #416: fixed null pointer exception in threads panel.
+
+1.5.6 - March 20, 2002
+- Fixed bug #217: all method breakpoint properties can now be adjusted,
+  including method name and arguments.
+- Fixed bug #411: if sourcepath undefined, null pointer exception was
+  thrown whenever a source view needed to be displayed.
+- Fixed bug #412: method breakpoint specifiers can contain primitives
+  in the argument list, e.g. "method(java.lang.String, char, int)".
+
+1.5.5 - March 19, 2002
+- Minor change to allow the JSwat-jEdit plugin to work once again.
+- Implemented #89: added preference option for the default source file
+  extension. This allows JSwat to treat non-Java files as if they were
+  source files.
+- Implemented #174: added Find and Find Next icons to the main toolbar.
+- Fixed bug #373: added more information about how JSwat finds source
+  files using the classpath and sourcepath settings.
+
+1.5.4 - March 18, 2002
+- Added Dooren's code for saving session properties to arbitrary files.
+  Useful for debugging multiple projects using JSwat.
+- Fixed bug #401: changed 'print' command to avoid array reference issue
+  caused by JDI with arrays of zero size.
+- Fixed bug #405: removed a dependence on JDK 1.3.
+- Fixed bug #406: show the breakpoint number in the message that indicates
+  that the breakpoint was hit.
+- Fixed bug #409: attach action was not deactivating the current session
+  before trying to attach to the debuggee.
+- Fixed bug #410: watch panel now calls the toString() method on objects
+  to display much more readable values.
+
+1.5.3 - February 28, 2002
+- Implemented #52: JSwat can now search .zip and .jar archives for source
+  files. Obviously this is a little slower than searching directory paths,
+  but the matching results are cached for better performance.
+- Implemented #402: new optional argument for 'list' command to control
+  how many lines of output are displayed. Naturally this can be aliased
+  for the sake of convenience.
+- Fixed bug #296: no visible change with this bug, just changing the
+  underlying Java lexical analyzer and parser library from JFLex and
+  JavaCC to SableCC. This makes the JSwat code much easier to maintain
+  and extend going forward.
+- Fixed bug #306: take the classpath from a new session property instead
+  of always defaulting to the environment value. The environment value
+  is rarely useful since it is whatever was used to launch JSwat, and
+  this often is not the same classpath used to run the debuggee.
+- Fixed bug #399: deal with out of bounds cases in the source view
+  tooltip code.
+
+1.5.2 - February 16, 2002
+- Fixed bug #205: wrote instructions on reporting JSwat bugs and created
+  jswat-bugs mailing list.
+- Fixed bug #241: the appropriate menu items and toolbar buttons are now
+  enabled and disabled when the session activates and deactivates.
+- Fixed bug #391: 'list' command now defaults to showing the current
+  line and the 9 lines following it. Optional argument 'center' reverts
+  to the original centering behavior. It is easy to create an alias for
+  'list center' that simulates the old behavior, if so desired.
+- Fixed bug #393: handle array references better in a number of places,
+  in particular the source view tooltip code. Now evaluates variables
+  inside square brackets (e.g. "arr[idx].val" is understood).
+- Fixed bug #397 (jshute): Java parsing module now handles the 'assert'
+  keyword.
+- Fixed bug #398 (jshute): Command input prompt is clearer with regards
+  to the input modes (help mode, macro mode, etc).
+- Added code from Andreas S. to display class references as the name of
+  the class in the local variables panel.
+
+1.5.1 - January 24, 2002
+- Implemented #388: added 'list' command to show source code around
+  the current stepping location; useful while in console mode.
+- Fixed bug #280: can now watch and print static fields of arbitrary
+  (loaded) classes. This affects the watch panel, disablegc, dump,
+  enablegc, lock, print, and set commands.
+- Fixed bug #376: work around javac bug 4404985 in which SourceFile
+  class property had a file path when it should not.
+- Fixed bug #390: apropos clearly indicates failure when no matching
+  commands are found.
+- Console mode source code view support now shows current stepping
+  line indicator.
+
+1.5 - January 13, 2002
+- Implemented #20: 'threads' takes an optional thread group name or
+  identifier and shows the threads in that group only.
+- Implemented #50: 'classes' takes an optional class filter.
+- Implemented #240: added a new 'apropos' command that searches the
+  command descriptions for a matching phrase.
+- Implemented #272: added primitive source code viewing support in
+  console mode.
+- Implemented #384: changed the 'help' command to offer interactive
+  help, presenting sets of categories to help you find commands.
+- Implemented #385: added 'condition' and 'monitor' commands to modify
+  breakpoints via the command interface.
+- Added 'brkinfo' command to display properties of breakpoints.
+- Fixed bug #309: added 'thread' option to stepping commands.
+- Fixed bug #387: null pointer exception in java colorizing code.
+
+1.4.12 - January 6, 2002
+- Fixed bug #369: source view search facility should not found text
+  that contains spaces when search phrase does not contain spaces.
+- Fixed bug #375: append ".java" to the name of the transformed class
+  when looking for source files using the class information provided
+  by the JPDA ReferenceType class.
+- Fixed bug #377: account for the view gutter when selecting text with
+  the mouse.
+- Fixed bug #378: colorize just the strings and not the characters
+  before and after the strings.
+- Fixed bug #379: allow searching for patterns containing spaces.
+- Fixed bug #380: tab width changes affect open views once again.
+- Fixed bug #381: permit search that finds pattern at start of view.
+- Fixed bug #382: search will find back-to-back patterns in the view.
+- Fixed bug #383: allow searching for a single character in the view.
+
+1.4.11 - January 2, 2002
+- Fixed bug #330: source code viewer is much faster now.
+- Fixed bug #362: deal better with errors that occur during the session
+  activate, deactivate, and close operations.
+- Fixed bug #371: changes of object references in arrays went unnoticed
+  by the local vars panel.
+- Fixed bug #374: use correct code to update object fields and array
+  elements in the local variables tree.
+
+1.4.10 - December 18, 2001
+- Implemented #319: "Select all" option in the popup menu for text areas.
+- Implemented #333: added shortcut for Start VM dialog.
+- Fixed bug #366: Find Next works once again.
+- Fixed bug #368: searching through source with tabs now works.
+
+1.4.9 - December 15, 2001
+- Implemented #26: (traykoff) new 'exclude' command so we can finally
+  single-step without stepping into other people's code. Hurray!
+- Implemented #326: (traykoff) cleaner string printing code for tooltips.
+- Fixed bug #129: Java parser now handles empty statements in class
+  declarations.
+- Fixed bug #229: 'options' now does not accept unknown option names.
+- Fixed bug #323: (traykoff) avoid null pointer exception when opening
+  source file that is outside of classpath or sourcepath directories.
+- Fixed bug #325: (traykoff) deal better with breakpoints in inner
+  classes and non-public "extra" classes.
+- Fixed bug #332: source view font was always 12 points in JDK 1.3.
+- Fixed bug #335: show "VM running" when launching debuggee unsuspended.
+- Fixed bug #355: changed shortcut default from F6 key to F2. However,
+  you will need to change your existing preferences setting yourself.
+- Fixed bug #356: avoid gui deadlock by modifying interface via AWT
+  event dispatching thread.
+- Fixed bug #359: changing breakpoint via properties dialog will fire
+  event so source view will update the row header breakpoint markers.
+- Fixed bug #363: added 'assert' keyword to Java lexical scanner.
+- Fixed bug #364: (aschoerk) handle null return values from getMessage()
+  method when catching exceptions thrown in the debuggee.
+- Fixed bug #365: handle quote by itself following -cp VM argument when
+  launching a debuggee VM.
+- Made source view colorization ten to fifteen percent faster.
+- Added Raykoff's "last visited directory" persistence for file dialogs.
+- Added Schoerk's class loader identifier to the classes panel.
+
+1.4.8 - November 28, 2001
+- Fixed bug #321: sourcepath can be properly overridden from the
+  command line with -Djava.source.path.
+- Fixed bug #322: JDK 1.3 had problems with source view tooltip indices
+  (the now familiar index out of bounds exceptions).
+- Fixed bug #327: source view font size would reset to 12 when the user
+  preferences were changed.
+- Fixed bug #328: show a busy cursor when a source view first opens.
+- Fixed bug #329: source view lexical scanner now handles \u escapes.
+- Made the source view loading about 25 percent faster.
+
+1.4.7 - November 25, 2001
+- Fixed bug #307: tab width in colored view was stuck at eight.
+- Fixed bug #308: color view now handles character escapes in strings.
+- Fixed bug #312: (jconfigure) upgrading old user preferences now works.
+- Fixed bug #313: preference change caused color view to lose its color.
+- Fixed bug #314: character literals in colored view not colored.
+- Fixed bug #317: color view was word-wrapping when it should not have.
+- Fixed bug #318: toggling color option did not update open source views.
+- Fixed bug #320: color source view did not automatically refresh.
+
+1.4.6 - November 12, 2001
+- Implemented #17: colorize the source code in the source view. The
+  color view is optional since it is significantly slower.
+- Fixed bug #273: macros may no longer invoke themselves. You could
+  never do this anyway, now it is simply being enforced.
+- Fixed bug #282: source view tooltips now consider dots in variable
+  names, so the value of "obj.field" will be shown when the mouse is
+  over the "field" part.
+- Fixed bug #283: use efficient search algorithm in source viewer.
+- Fixed bug #293: moved two view-related options from one group to
+  another in the preferences window. Move is made automatically via
+  the preferences upgrade process.
+
+1.4.5 - October 27, 2001
+- Implemented #141: added documentation to distribution package.
+- Implemented #259: save sourcepath setting as a session property.
+- Implemented #262: (jshute) setting breakpoints via 'stop' takes the
+  current debuggee context into consideration to offer shorter location
+  specifications. For example, "stop 217" while single stepping will
+  set the breakpoint at line 217 of the current class.
+- Fixed bug #37: (jshute) 'stop' now accepts method without parentheses.
+- Fixed bug #214: (jshute) unresolved breakpoint error appeared multiple
+  times in the message window.
+- Fixed bug #238: toolbar remembers its placement in the window.
+- Fixed bug #249: deleting unresolved breakpoint left indicator in the
+  source view window.
+- Fixed bug #269: (jshute) 'up' and 'down' were reversed.
+
+1.4.4 - October 11, 2001
+- Implemented #254: breakpoint value condition allows 'null' value.
+- Fixed bug #255: 'print' hexadecimal representation of characters.
+- Fixed bug #256: 'print' displays appropriate message when user
+  specifies an array index that is out of bounds.
+- Fixed bug #257: locals panel handles change of field type in object.
+- Fixed bug #258: locals panel shows hexadecimal representation of
+  character values.
+- Fixed bug #260: 'load' was throwing null pointer exception when
+  invoked without arguments during same run of JSwat.
+- Fixed bug #261: check that thread is suspended before evaluating
+  breakpoint conditions. I would have thought isAtBreakpoint() would
+  suffice, but apparently not.
+
+1.4.3 - October 3, 2001
+- Implemented #176: breakpoints now support monitors - any named command
+  (or alias or macro) can be invoked when the breakpoint is hit.
+- Implemented #182: breakpoint suspend policy can be modified, so
+  thread suspend choices are now: none, event thread, or all threads.
+- Fixed bug #244: 'set' allows setting an object reference to null.
+- Fixed bug #250: handle case of undefined source path in the
+  "Set Sourcepath" dialog.
+- Fixed bug #252: 'dump' now dumps the fields of a String instead of
+  just printing the string.
+- Fixed bug #253: update object fields in local variables panel.
+
+1.4.2 - September 30, 2001
+- Implemented #13: simple conditionals for breakpoints, where the
+  condition is satisfied when a variable equals a value. Only primitive
+  types (int, float, etc.) and strings are supported at this time.
+- Implemented #78: dialogs for setting the classpath and sourcepath.
+  Thanks to David Taylor, the jEdit plugin author, for writing this.
+- Fixed bug #242: ensure messages flusher thread has sufficient priority.
+- Fixed bug #243: set suspend policy before enabling event requests.
+  Avoids an exception thrown in JDK 1.4.
+- Fixed bug #245: classpath no longer automatically appears in the
+  "Start VM" dialog so the program can tell if you entered it or not.
+  Now the program only saves what you entered as the JVM options.
+- Fixed bug #247: handle null variable value in source view tooltip.
+- Fixed bug #248: avoid invalid request state exception when resolving
+  breakpoint request that has been modified before resolution.
+- Replaced occurrences of "target" with "debuggee" to be more logical.
+
+1.4.1 - September 10, 2001
+- Fixed bug #222: source view header background now uses default color.
+- Fixed bug #225: 'classpath' accepts quotes around classpath.
+- Fixed bug #226: 'help' on aliases and macros reports something useful.
+- Fixed bug #228: 'methods' now shows return type.
+- Fixed bug #230: watch panel now supports watching static fields when
+  set up while stopped in a static method.
+- Fixed bug #237: allow 'set' to modify static fields while stopped in
+  a static method.
+- Fixed bug #239: 'options' now fires a configuration changed event.
+- Implemented #22: new 'runto' command that sets a temporary breakpoint
+  and resumes the debuggee VM.
+- Implemented #65: display variable values as tooltip in source view.
+  This is a contribution by the jEdit plugin author, David Taylor.
+- Implemented #219: 'threads' indicates which thread is the current one.
+- Implemented #234: double-clicking a breakpoint in the panel or dialog
+  will make the breakpoint properties dialog appear.
+- Implemented #235: colorize the line number background in the source
+  view row header, instead of the number. Much easier to see now.
+- Implemented #236: support "run to line" in source view popup menu.
+  Sets a temporary breakpoint and then resumes the debuggee VM.
+- Breakpoints panel now shows brief breakpoint descriptions.
+- Made the toolbar and menu bar of the main window optional.
+
+1.4 - September 5, 2001
+- Fixed bug #132: local vars panel reschedules update if invalid frame.
+- Fixed bug #139: watch panel shows "(no debugging info)" when variable
+  information is not available. In addition, the print command gives an
+  explanation about using "javac -g" to generate debugging info.
+- Fixed bug #146: source view prints parser errors to Log instead of stdout.
+- Fixed bug #149: 'locals' command now shows field variables, too.
+- Fixed bug #151: open file dialog now handles dialog close button.
+- Fixed bug #154: redisplay load VM dialog if input is invalid.
+- Fixed bug #155: show normalized options in Start VM dialog.
+- Fixed bug #156: redisplay set breakpoint dialog if input is invalid.
+- Fixed bug #157: check that class name is valid in set breakpoint dialog.
+- Fixed bug #160: capture messages dialog now remembers filename.
+- Fixed bug #161: show appropriate message in capture messages dialog.
+- Fixed bug #164: validate input in define macro dialog.
+- Fixed bug #165: check if session is active in 'resume' command.
+- Fixed bug #166: left align the options in the preferences window.
+- Fixed bug #167: deiconify window before bringing it forward when using
+  the Windows menu entry.
+- Fixed bug #168: validate input in new breakpoint group dialog.
+- Fixed bug #170: rename "Input/Output" panel to just "Output". This
+  matches the way the Messages panel is named.
+- Fixed bug #171: rename "Callers" panel to "Stack". This is more
+  logical to me and seems to be what other debuggers use.
+- Fixed bug #172: handle exceptions properly in the watches panel.
+- Fixed bug #173: use correct frame value so source view is kept up-to-date.
+- Fixed bug #175: do not suspend an already suspended debuggee VM.
+- Fixed bug #179: changed some printStackTrace() calls to use messages area.
+- Fixed bug #184: properly delete breakpoints so they don't try to resolve.
+- Fixed bug #186: fixed capture messages action so it is stateless.
+- Fixed bug #187: changing a String reference now updates correctly.
+- Fixed bug #189: catch the InconsistentDebugInfoException that is
+  sometimes thrown in the local variables panel.
+- Fixed bug #190: update source view when tab size is changed.
+- Fixed bug #191: set program status when breakpoint fails to resolve.
+- Fixed bug #192: double-clicking on local variables will not exception.
+- Fixed bug #196: stop auto-scrolling to current stepping line when source
+  view is opened by one of the panels.
+- Fixed bug #203: show breakpoint description when resolution fails.
+- Fixed bug #208: 'print' command calls toString() only if not a String.
+- Fixed bug #211: made breakpoint resolve error messages more clear.
+- Fixed bug #220: 'alias' with unknown alias name printed "null".
+- Fixed bug #221: 'help' command description was weird.
+- Fixed bug #227: 'locks' and 'threadlocks' fail when running HotSpot.
+  Now prints the appropriate error message indicating that the operation
+  is not supported on HotSpot.
+- Fixed bug #231: 'view' command now takes filename as an alternative.
+- Fixed bug #232: stack panel updates for single step events.
+- Implemented #98: allow changing the source view font size.
+- Implemented #109: unresolved line breakpoints are indicated in the
+  source view by having a blue line number, if the breakpoint was set
+  using the source view popup menu.
+- Implemented #125: added button to show source for resolved breakpoint.
+- Implemented #150: same command input does not get added to the history.
+- Implemented #158: compacted the stack panel to show pertinent info only.
+- Implemented #159: show the messages/output and stack/methods panels at the
+  same time. It is a little more cramped now but should be worth it.
+- Implemented #181: added the breakpoints panel to the main window.
+- Implemented #183: trim the Messages and Output text areas to a configurable
+  number of lines.
+- Implemented #201: add "Breakpoint properties" item to source view popup.
+- Implemented #210: add "Clear" to the popup menu in text areas.
+- Implemented #212: big refactoring of all the major classes in JSwat to
+  allow support for different interfaces. JSwat now has two operating modes:
+  the usual graphical mode and a new text-only mode. Added -console switch
+  to enable text-only mode. Added commands: about, options, stdin, vmlist.
+  Useful when running in text-only mode.
+- Implemented #213: 'alias' command takes functionality of 'aliases' and
+  the latter command is removed.
+- Numerous fixes to many of the commands, most of which were broken in one
+  way or another.
+- Made the messages print a lot faster.
+
+1.3.3 - August 21, 2001
+- Fixed bug #143: stop clearing the breakpoints.
+- Stop clearing the session properties, too.
+
+1.3.2 - August 4, 2001
+- Fixed #14: Added support for creating breakpoint groups. A group of
+  breakpoints can be disabled and enabled together. Groups may contain
+  other groups.
+- Fixed #23: Breakpoints now support the notion of expiration (dying after
+  N hits).
+- Fixed #60: Breakpoints can now skip over N hits before they begin
+  stopping the debuggee VM.
+- Fixed bug #135: Local variables panel now updates when an object reference
+  is changed to point to another object of the same type.
+- Fixed bug #136: Source viewer was not appearing when single stepping into
+  a method. Other events would have also failed to bring up the source code
+  viewer.
+
+1.3.1 - July 22, 2001
+- Fixed bug 31: Local variables tree now keeps branches expanded.
+- Fixed bug 77: Added shortcuts for refresh and VM suspend actions.
+- Fixed bug 126: Launching a debuggee will always be suspended long enough
+  for the session to activate, then resumed only if the user did not
+  want to suspend.
+- Fixed bug 127: Added an icon to the main window. Visibility depends on
+  your windowing environment. Tested successfully on Windows 2000.
+- Implemented 128: Double-clicking on "..." will show all of the array
+  elements in the local variables panel.
+- Fixed bug 130: Source view now shows highlighter when stepping through
+  non-public classes defined in the source file of a public class.
+- Fixed bug 131: Source view now gracefully handles parse errors in
+  source files. View popup will show "Java parser error" in such a case.
+- Fixed bug 133: Text in command input field is not lost when scrolling
+  through command history.
+
+1.3 - July 11, 2001
+- Fixed bug 12 (and partly 13, 14, 23, 60): Completely reimplemented the
+  breakpoints functionality. Breakpoints now have support for conditions,
+  monitors, skipping hits, expiration, and persistence. Breakpoints are
+  held inside groups, which can reside in other groups. As yet, some of
+  the new features are not usable until the user interface is finished.
+- Fixed bug 120: Sorted fields in objects by name to improve readability.
+- Fixed bug 123: Changed the shortcut for 'Find Next' and added a shortcut
+  for 'Find'. As always these are user-configurable via Preferences dialog.
+- Fixed bug 124: Corrected the error message when local variable information
+  is missing.
+- Changed the localizable resources code a bit. If you see a 'null'
+  where there should not be one, please report it.
+- Moved the ".jswat*" files from the home directory to a subdirectory
+  called ".jswat". That is, the settings, session properties, and
+  preferences files have moved into ~/.jswat/ for better organization.
+- Removed the 'ignore' command since the new breakpoints code can remove
+  the exception catch using the 'clear' command.
+- Added Hugh E.'s code to allow configuring tab size in source view.
+  Sadly, JTextArea ignores the change until the source view is rebuilt.
+- Added Mike B.'s code to support alternate Java home locations and JVM
+  executables when launching a debuggee VM.
+- Assigned F5 as the default shortcut key for the Resume VM action.
+
+1.2.7 - May 28, 2001
+- Implemented feature request #73, watch panel remembers the watchpoints
+  from session to session.
+- Fixed bug #97, again. This time use Timer to ensure view is scrolled
+  to the current line when the source view first appears.
+- Fixed bug #116, make sure session properties are cleared, even when
+  switching from a remote session to a non-remote session.
+
+1.2.6 - May 19, 2001
+- Implemented feature request #11, added source code search facility.
+- Implemented feature request #64, added status messages to the main
+  window's title bar for important events.
+- Implemented feature request #103, added option to show just the class
+  names instead of the fully-qualified class names.
+- Implemented feature request #113, added a message to the title bar
+  of the main window whenever a breakpoint is hit.
+- Implemented feature request #114, added support for "this." to print
+  command (and others).
+- Fixed bug #117, source view was throwing null pointer exception.
+
+1.2.5 - May 5, 2001
+- Implemented feature request #45, print command calls toString() on any
+  Object values. Will not print anything if the current thread is not
+  suspended via the JDI. This is a JPDA restriction, not a JSwat limitation.
+- Implemented feature request #88, highlight the current stepping line.
+  The "==>" indicator has been removed in favor of the highlighter.
+- Implemented feature request #107, show a busy cursor while refreshing
+  the panels, launching debuggee VMs, and attaching to debuggee VMs.
+
+1.2.4 - May 1, 2001
+- Fixed bug #106, exception catches were not being enabled.
+- Removed the breakpoint list dialog since it is horribly broken beyond
+  repair. In the meantime, use the command line instead.
+- Added support for both prefix and suffix wildcards (*) on class names
+  when setting breakpoints.
+
+1.2.3 - April 21, 2001
+- Fixed bug #55, watch panel correctly updates field variables.
+- Fixed bug #96, watching a null variable would throw exception.
+- Fixed bug #97, source view did not scroll to current line when the view
+  had just been made visible.
+- Fixed bug #99, load command was not using classpath argument.
+- Fixed bug #100, final field variables are now shown. Only static final
+  variables are ignored (since they are constant and thus boring).
+- Fixed bug #101, classpath in JSwat set to whatever is passed to 'load'.
+- Added trace reporting support to JSwat. This allows JSwat to show what
+  it is doing during the "quiet" times. Useful for debugging JSwat itself.
+  Not a lot of reporting going on right now, but more will be added.
+  This implements feature request #90.
+- When an exception is thrown in the debuggee VM, the exception message is
+  now printed to the messages window. Very handy when ClassNotFoundException
+  occurs and you want to know which class was not found.
+
+1.2.2 - April 11, 2001
+- Fixed bug #91, callers panel updates whenever stack frame count changes.
+- Fixed bug #92, threads panel now explicitly updates when session starts.
+- Fixed bug #94, window size and position and other settings saved no
+  matter how the user closes JSwat.
+- Fixed bug #95, methods panel shows methods even inside static methods.
+
+1.2.1 - March 22, 2001
+- Fixed bug #70, set command now refreshes panels after changing variable.
+- Fixed bug #86, deleted breakpoints were not removed from session properties.
+- Fixed bug #87, null pointer exception when connecting to a remote debuggee.
+- Changed the way the panels are refreshed so they rely less on the Session.
+  This should result in fewer time-wasting visual updates.
+
+1.2 - March 18, 2001
+- Added session properties support. Presently the session will remember
+  the name of the class you are debugging and any arguments passed to
+  it and to the debuggee JVM. Also enabled breakpoints are remembered and
+  automatically reset the next time the session is started. This fixes
+  feature request #9. Subsequently fixed bug #72.
+- Implemented feature request #32, allow watch panel to watch local
+  variables, in addition to field variables.
+- Implemented feature request #69, remember the positions of the main
+  window dividers (the dividers in the JSplitPanes).
+- Implemented feature request #10, show the source for the main class
+  when the session is activated.
+- Fixed bug #68, breakpoints dialog had a null pointer exception.
+- Fixed bug #71, context change events should be combined for efficiency.
+- Fixed bug #74, source view wasn't grabbing current location when opened.
+- Fixed bug #76, thread panel would print "Thread object collected."
+- Fixed bug #79, callers panel didn't show status in case of invalid state.
+- Fixed bug #80, source view loses current line indicator after thread change.
+- Fixed bug #81, methods panel doesn't draw when single-stepping.
+- Fixed bug #83, thread panel didn't show current thread in red when the
+  user double-clicked to make a thread the current one.
+
+1.1.2 - March 3, 2001
+- Fixed bug #47, improved the error message when 'kill' is invoked on
+  suspended threads.
+- Fixed bug #51, added Hugh Emberson's patch for finding .jswatrc files.
+
+1.1.1 - February 25, 2001
+- Fixed bug #44 and #46, both had to do with custom class loaders
+  causing breakpoints to become useless. Changed JSwat to be more
+  like NetBeans in that it creates a ClassPrepareRequest and leaves
+  it enabled forever, setting the breakpoint each time the class is
+  prepared.
+
+1.1 - February 24, 2001
+- Print command now prints arrays and array elements.
+- New methods panel that shows the methods of 'this' object.
+- Fixed bug #54, center the preferences dialog.
+- Fixed bug #56, make use of -classic an option.
+- Fixed bug #57, the methods panel would throw a null pointer
+  exception when the method had no line number information.
+- Fixed bug #58, watching same field of two instances was confused.
+
+1.0 - February 7, 2001
+- Fixed bug #49. Source view was scrolling too often.
+- Fixed classes panel so it shows correct tooltip text.
+- Changed "Commands" panel label to "Messages" which makes more sense.
+
+0.9.7 - February 2, 2001
+- Fixed bug #4, the problem with the source view and setting breakpoints
+  in anything but the top-level, public class. Changed it to use a Java
+  parser to find the class definitions and thus know which classes are
+  on what lines of the file. Now you can set breakpoints in any class.
+- Made a bunch of very minor code improvements suggested by JTest.
+- Fixed class panel again so it creates the class unload request so it
+  will be notified when classes are unloaded from the debuggee VM.
+
+0.9.6 - January 25, 2001
+- Fixed close action so it doesn't terminate the running debuggee VM.
+- Fixed class panel to unconditionally build class tree when session
+  is activated. Fixes bug #28.
+- Fixed the Session.resumeVM() so it resets the current location before
+  resuming the VM. Otherwise an asynchronous breakpoint event could
+  cause the current location to be set before it is reset by the Session.
+  Fixes bugs #1 and 2.
+
+0.9.5 - January 24, 2001
+- Putting suspend() and resume() calls around all calls to the
+  VirtualMachine.allClasses() method, per recommendation from JavaSoft.
+- Changing local vars panel to not show final field variables. They
+  are boring since they don't change. Fixes RFE #6.
+- Changed source manager so it doesn't clear the classpath when the
+  session deactivates. This was annoying me. Fixes bug #29.
+- Fixed resume command to show "VM resuming" before actually resuming
+  the VM. Otherwise events can fire off and messages will appear out
+  of order and be confusing. Fixes bug #35.
+- Fixed disable and enable commands to not show inappropriate messages.
+- Fixed breakpoint list function to show (none) as necessary. Fixes
+  bug #34.
+
+0.9.4 - January 23, 2001
+- Fixed the event request manager so it actually prints an error message
+  when the event request cannot be resolved. This fixes bug #36 in which
+  trying to set a breakpoint in a non-matching method does not report as
+  an error.
+
+0.9.3 - January 12, 2001
+- Fixed popup menu on message and standard output panels. Added that
+  new paste option a couple days ago and didn't test it very well.
+- Fixed array index out of bounds problem in local vars panel.
+
+0.9.2 - January 10, 2001
+- Fixed listen command to work correctly. It now properly stops listening
+  for incoming connections after a connection has been made.
+- Changed class panel so it updates much less frequently (around 10 times)
+  instead of doing a little update for every class that loads. Hopefully
+  this will make JSwat connect to the debuggee VM faster.
+
+0.9.1 - January 7, 2001
+- Made a workaround to JPDA bug 4331522: Setting a breakpoint in class
+  named "Foo" may actually resolve to another class whose name starts
+  with "Foo".
+- Fixed setting breakpoint from source view. Previously the SourceManager
+  mapClassName() would find the first match rather than the best one.
+  This resulted in messages about the breakpoint being deferred.
+- Add copy/paste functionality to the command input field and the debuggee
+  VM standard input field.
+
+0.9 - December 31, 2000
+- Changed the distribution format of JSwat. Source is now in a separate
+  zip file from the classes. The classes are placed in a jar file by
+  themselves and the docs are put in a zip file with the jar file.
+- Fixed the preferences upgrade so it will set the user preferences
+  filename. Without this the user preferences were not saved.
+- Changed source view code to reload the source only when a debugging
+  session becomes active. This reduces confusion due to the source
+  view updating during debugging, causing the view to become out of
+  sync with the class being debugged. This was a user request.
+- Changed the LocalsTreePanel to stop causing frequent visual updates
+  so as to run a lot faster. Switching to use this panel over the
+  LocalsTablePanel since it offers the ability to examine variables.
+- Fixed an InvalidStackFrameException in local vars and stack panel.
+- Added dialog for creating macros.
+- Wrote the implementation for the listen command.
+- Added a "Copy" popup menu to the message and output panels.
+- Added a "Capture Messages" action to save output from the message
+  panel to either the JSwat stdout stream or a named file.
+
+0.8.12 - December 5, 2000
+- Attach action now remembers the previously entered host and port.
+- JSwat now automatically upgrades user preferences in the event that
+  the application preferences have changed.
+- Start button now deactivates current session rather than creating a
+  new one. This, in effect, provides a button for restarting the current
+  debug session.
+
+0.8.11 - December 1, 2000
+- New set command to change variable values, added by Bill Smith.
+- Fixed 'attach', 'load' and 'run' to check for null VM connection.
+- Fixed 'detach' to say right thing when invoked in an inactive session.
+- Improved help information for 'attach' to explain hidden features.
+- Fixed null pointer exception when invoking 'where all' command
+  and no current thread had been set.
+- Fixed local vars panel to show "(native method)" in case of an
+  exception when accessing the StackFrame.visibleVariables() method.
+- Right clicking on the source view line number to set a breakpoint
+  is now working. This was a recent feature request.
+- Right clicking on the source view when there is no active session
+  displays a menu with a single "Session not active" menu item.
+  This was a recent feature request.
+- Fixed SourceManager to force loading classpath in mapSourceFile.
+  This corrects the problem of 'view <source.java>' not working
+  before the session is made active.
+- Fixed MainWindow so keyboard shortcut preference changes take effect
+  right away. Unfortunately, there's a JMenuItem accelerator bug that
+  I've described in the JSwat README.
+- SourceManager reads the source path setting from the Java environment
+  property "java.source.path" when JSwat is first started. That is,
+  you can now set the sourcepath from the command line like so:
+     java -Djava.source.path="/usr/java/src" com.bluemarsh.jswat.Main
+- SourceManager now clears the classpath when the session ends. This is
+  to force it to reload the classpath the next time the session starts.
+  Otherwise it may retain an old setting that no longer applies.
+- Upped the preferences file version to 1 (from the implied 0 version).
+
+0.8.10 - November 4, 2000
+- Fixed local variables table to show static field variables. It now
+  hides field variables with local variable values, too. Static field
+  variables are hidden by subclass instance variables of the same name.
+- Fixed a null pointer exception in that troublesome thread panel.
+- Fixed the source view auto-scroll: Moved the out of bounds check to
+  be after the need-to-scroll check.
+- Fixed the window geometry memory feature so it works no matter how
+  JSwat is terminated. Made the feature optional.
+
+0.8.9 - October 4, 2000
+- Enclosed classpath in double-quotes to avoid problems when classpath
+  contains spaces. This change affects the 'load' command and the Start
+  menu item and toolbar button.
+- Main window remembers its size and position (saved to ~/.jswat_settings).
+- JSwat remembers what the look and feel was set to.
+- A preferences dialog is now available for setting some preferences.
+  Some of the settings do not take affect until JSwat is restarted.
+  These are saved to ~/.jswat_preferences.
+
+0.8.8 - September 21, 2000
+- Added information about load command passing arguments to the debuggee VM.
+- Added information about the as yet not implemented 'listen' command.
+- Changed SourceManager.mapClassNameLow() so it deals with classpath
+  entries that end with the file separator character. This is unusual
+  but we need to handle this case properly.
+
+0.8.7 - September 2, 2000
+- Changed Session so it includes the current working directory in the
+  classpath in the event that the classpath is empty. This supports
+  an assumption made in SourceManager and may solve a recent problem.
+
+0.8.6 - August 30, 2000
+- Matt made source windows maximize by default when they're first
+  opened. Someday this will be a configurable option.
+- Peter Boothe solved the source-view-popup-menu-disappearing problem
+  for Solaris and Linux. The menu still works fine for Win32.
+- Fixed problem of reading user's home directory .jswatrc file twice.
+
+0.8.5 - August 17, 2000
+- Matt fixed command manager to scroll the command history correctly,
+  and added up/down cursor support as well (previously only Ctrl-P
+  and Ctrl-N worked).
+- Matt fixed local variables table to catch exception when invalid
+  thread is selected.
+- Matt modified the callers panel to switch frames and show source for
+  the row that is double-clicked on.
+- Matt modified the threads panel to support double-clicking to switch
+  the current thread.
+
+0.8.4 - August 14, 2000
+- Moved the debuggee VM launching/attaching code from the Session class
+  to the appropriate actions. This simplifies the Session class a bit.
+  Created a VMConnection class to hold the necessary objects for
+  relaunching/reattaching to a debuggee VM.
+- Renamed the JSwat package to use all lower-case names, as the Java
+  coding conventions call for.
+- Renamed the bootstrap class to Main. This means you invoke JSwat with
+  'java com.bluemarsh.jswat.Main' now.
+- Changed the license to GNU General Public License (from LGPL).
+
+0.8.3 - August 10, 2000
+- Fixed CommandManager to check for empty string before accessing the
+  first character of the input.
+- Fixed SourceManager to use canonical file paths when comparing input
+  to classpath and sourcepath entries.
+
+0.8.2 - July 30, 2000
+- Added new panel to display stack frame of current thread. If you
+  double-click on * or # columns, the stack panel will set the current
+  stack frame. If you double-click on the method or source columns,
+  the stack panel will open the appropriate source view and scroll to
+  the source line.
+
+0.8.1 - July 29, 2000
+- Fixed Output panel so it continues to scroll to new output, as it
+  used to do.
+- Added tooltip to local variables display. Shows all the field
+  variables for objects, which is much more informative than the
+  usual "instance of ..." label.
+- The dump command now prints array values. If the array has more than
+  20 elements, only the first 10 and last 10 elements are shown.
+
+0.8 - July 23, 2000
+- Finished the new watchpoints panel. Now possible to watch any field
+  variable of any object and see it change value as the program runs.
+
+0.7.12 - July 21, 2000
+- JSwat now looks for .jswatrc file in current directory and runs it.
+  This is in addition to JSwat running the .jswatrc file found in the
+  user's home directory.
+
+0.7.11 - July 20, 2000
+- Fixed a bug in the VM start dialog so it adds a space between the
+  classpath and JVM arguments.
+- The VM start dialog now saves the entries from one start to the next.
+- The VM start dialog now offers a "start suspended" checkbox for
+  controlling whether the debuggee VM is started after loading.
+- The load command now takes the usual Java VM options, just like the
+  VM start dialog.
+
+0.7.10 - July 16, 2000
+- Changed all the commands to use my new StringTokenizer. Makes some
+  string functions more efficient.
+- Allowed clear, disable, and enable to operate on multiple breakpoints.
+- Suspend and resume commands can operate on multiple threads at once.
+- Fixed source view scroller so it scrolls to the bottom of the file
+  when necessary. I made the original code too cautious and it wouldn't
+  scroll at all even when it should have.
+- Added 'go' and 'thread' options to the stop command. These flags
+  control which threads in the debuggee VM are paused upon the event.
+
+0.7.9.1 - July 15, 2000
+- Screwed up and didn't make the previous build using the latest code.
+  I had made the code changes on the laptop but made the build on the
+  workstation without first doing 'cvs update' to get the changes made
+  from the laptop. Duh.
+
+0.7.9 - July 14, 2000
+- Fixed the thread synchronization issues that only manifested themselves
+  on Java VMs using native threads. Those darn missed notifications. Now
+  JSwat won't hang when you try to exit on Win32 and Solaris.
+
+0.7.8 - July 12, 2000
+- Fixed the threads panel to avoid throwing exceptions due to the table
+  model being modified in unexpected ways.
+- Improved the auto-scrolling behavior of the source view, to reduce the
+  number of times the text area scrolls. Also prevents scrolling past
+  the end of the text area.
+- Fixed SourceManager.mapSourceFile() so it properly returns the results
+  of files found in the sourcepath.
+- Fixed bug in thread panel that occurred only rarely, when the session
+  deactivated and thread death events were being handled at the same time.
+
+0.7.7 - July 9, 2000
+- Changed SourceManager to deal with inner classes (i.e. the $) by
+  simply removing everything after the $ and thus finding the source
+  file correctly. Note that breakpoints worked regardless of this change.
+- Replaced most of the icons with new ones from The Swing Connection.
+  Modified the remaining icons to match the new ones from TSC.
+  Added a couple of new icons for About and Refresh, also from TSC.
+- Fixed RefreshAction so it checks for active session first. Otherwise
+  some panels choke when refresh() is called during an inactive session.
+- Changed the way JSwat handles deferred event request settings (such
+  as breakpoints). Now correctly sets the deferred breakpoints as soon
+  as possible.
+- Changed how output from the debuggee VM is read. This is only the first
+  change required to fix the output reading problems.
+- Fixed bug in local variables panel where 'this' was null.
+
+0.7.6.3 - July 8, 2000
+- Fixed problem with source view popup not being able to set breakpoints.
+  This is correcting the fix made to SourceManager in 0.7.6.2.
+
+0.7.6.2 - July 6, 2000
+- Fixed a problem in the source manager that wasn't correctly converting
+  the file separators to periods.
+- Improved exception handling in locals panel and thread panel.
+
+0.7.6.1 - July 5, 2000
+- Forgot some required files in the util package. Rebuilt JSwat.
+- Added ability to set classpath that debuggee VM will use when loaded.
+  That is, before loading the debuggee VM, use 'classpath' to set the
+  classpath to something. Then use 'load' or 'run' to start the debuggee
+  VM, which will use that classpath set previously.
+
+0.7.6 - July 4, 2000
+- Fixed a problem in the breakpoints dialog after the recent change of
+  the SessionListeners.
+- Added a Close and Add button to the breakpoints dialog. The Add button
+  invokes the breakpoint setting action.
+- Added a SessionListenerList to manage the SessionListener objects in
+  a reliable manner. Should solve problems seen on Win32.
+- Added two new commands, stdout and stderr, for printing to console.
+- Fixed the problem with the source view not dropping the current line
+  indicator when the VM resumes.
+- Fixed a problem in CommandManager which did not show an appropriate
+  error message when an invalid command was entered.
+- Converted resources/JSwat.properties to Unix file format. This fixed
+  a problem on Win32 where the 'commands' key was not read properly.
+- Added a case-insensitive search to the SourceManager.mapClassName()
+  method. This works around stupid Win32 where files can be in either
+  case and are still allowed to match.
+- Removed the out-dated BUGS.txt file.
+- Corrected Session to throw NotActiveException when resumeVM() or
+  suspendVM() are called during an inactive session.
+
+0.7.5 - June 29, 2000
+- Added some more detailed and appropriate error messages to the stop
+  command.
+- Fixed a bug that appeared in JDK 1.3. StringTokenizer apparently has
+  fixed a bug and that messed up JSwat's stopCommand. I've since fixed
+  the stopCommand to do the right thing.
+
+0.7.4 - June 27, 2000
+- Fixed bugs in the managers and panels that were setting the Session
+  reference in the activate() method instead of in init().
+
+0.7.3 - June 25, 2000
+- Changed JSwatCommand to print help for commands using classname.
+  Removed all the description() and help() methods from all the
+  command classes.
+- Fixed a bug in CommandManager where it wouldn't create macros from
+  within scripts.
+
+0.7.2 - June 24, 2000
+- Added new 'macro' command to allow creation of command macros.
+- Made a new Manager abstract class and many of the important classes
+  now extend it. VMEventHandler was renamed to VMEventManager;
+  Commander is now CommandManager; EventRequestSpecList is now
+  EventRequestSpecManager.
+- Panels have been overhauled to use a consistent and more useful API.
+- Fixed a bug in the sourcepath command when source path is empty.
+
+0.7.1 - June 11, 2000
+- Sorted the variables in the LocalsTablePanel display by name of the
+  variable.
+- Added messages in a couple of places to point users in the right
+  direction when the debuggee VM fails to start. For instance, look at
+  the Input/Output panel for possible error messages from the VM.
+
+0.7 - May 7, 2000
+- Fixed the VMEventHandler so it handles JDI events synchronously.
+  This prevents the "Bad file descriptor" problem seen by some folks.
+- Fixed the Log class so it always writes the log contents to the
+  attached writers on the AWT event dispatching thread. This gets
+  around a new problem caused by the above change. This is really how
+  it should have been done in the first place.
+- Discarded the Loader class since it is unnecessary now with the
+  change in the Log class.
+- Now the program launches faster and writes to the message panel
+  faster, too.
+
+0.6.1 - May 3, 2000
+- Fixed a really stupid, embarrassing problem in the ThreadPanel. I was
+  using the assigned row number to keep track of threads in the table.
+  Silly me, I forgot all about threads dying "out of order". Damn those
+  threads. I've found my mind again and fixed this oversight.
+  Note to programmers: If you review the JSwat code and find some brain
+  dead coding, please tell me. I'm not easily wounded. :)
+
+0.6 - April 30, 2000
+- Changed the breakpoint manager to track resolved breakpoints by an
+  associated number. This means that the clear, disable, and enable
+  commands now just take the number as an argument. One drawback to
+  this approach is it is now impossible to delete unresolved breakpoints.
+  However, this is not much of a problem until the breakpoint becomes
+  resolved, in which case you can then disable or clear it.
+- Added an important feature to the source code viewer. Right-clicking
+  will now present a popup menu to set, delete, and en/disable breakpoints.
+  The code is not very intelligent. It assumes the name of the class is
+  the same as the name of the source file. If more than one class is
+  defined in a single .java file, the popup menu will probably do the
+  wrong thing.
+
+0.5.7 - April 16, 2000
+- Used Marcus Andersson's faster file-reading code in SourceView.refresh().
+  It looks like JTextArea is okay with any kind of EOL marker.
+- Changed LocalsPanel to use just the name of the data members without the
+  fully-qualified class name as a prefix.
+- Local variables and thread display now use a table to better format the
+  information. I think it is much more readable in a table.
+
+0.5.6 - December 25, 1999
+- Added support for the 'sourcepath' command, which provides an additional
+  path to source code.
+- Added 'classpath' command to print out the classpath setting from the
+  debuggee VM, if available.
+- Session now uses debuggee VM's classpath, if available.
+
+0.5.5 - December 13, 1999
+- When setting a breakpoint with 'stop' it now finds the next possible
+  code line at which to set the breakpoint, in the event that the requested
+  line does not contain executable code.
+- Fixed a couple of minor problems in the source view. It would not update
+  itself visually when the session ended. It also would show the current
+  stepping line indicator ("==>") while you had stepped into a function in
+  another source file.
+
+0.5.4 - December 4, 1999
+- Fixed a bug in the source file viewer. The second and subsequent file
+  windows failed to show all the line numbers in the row header. Can't be
+  sure what caused this problem, but I believe it was the component listener
+  having problems (it wouldn't receive the 'componentResized' call). I changed
+  the SourceRowHeader class to not use ComponentListener and instead use
+  another mechanism for keeping up-to-date. Thanks to "Teo Kian Hui" for
+  finding the problem.
+
+0.5.3 - October 17, 1999
+- Improved the source viewer substantially. It now determines all the
+  existing breakpoints and current stepping location when a view is opened.
+  Properly unregisters itself when the view closes, allowing the view to
+  be successfully reopened later.
+- Added three new commands: frame, up, and down for managing the stack frame
+  view.
+- Renamed the NoSessionException to NotActiveException, which is more logical.
+- Did a little bit of cleanup in various classes.
+
+0.5.2 - October 3, 1999
+- Enhanced the source file viewer so that it shows the current line being
+  single-stepped. Also queries the existing breakpoints when a new source
+  file is viewed, so the row header is set appropriately. Opening the same
+  file will now bring the existing window forward, rather than opening the
+  file twice.
+- Added three new toolbar buttons for single stepping.
+- Internally, the event handler now supports priorities for event listeners.
+  This allows the Session to get events before other listeners so it may set
+  the current thread, among other things.
+
+0.5.1 - September 12, 1999
+- Commander now supports '<n> <command>' syntax for running a given command
+  multiple times.
+- ThreadPanel has been corrected to actively show new threads as the debuggee
+  VM is running.
+- Mike Calder provided a bug fix to the breakpoints panel, too.
+- Added the disable, enable, and view commands.
+
+0.5 - September 6, 1999
+- All known problems are corrected in this version (assuming you use either
+  JDK 1.2.1 with JPDA 1.0 or JDK 1.3).
+- Has a pile of debugging commands now (43 to be exact), making this debugger
+  practically useful.
+
+0.3 - August 29, 1999
+- Time to drop the 'alpha' and adopt a real version numbering-system.
+  I'm starting at 0.3 since this debugger is roughly a third of the way
+  complete. There are still many basic features yet to implement.
+- Now supports single-key stepping (i.e. 'F11' will single-step through
+  code) and shows local variables in a window. Only problem is the local
+  variable code crashes the debuggee process. :( I'm going to contact the
+  Java debugger folks for assistance on this bug.

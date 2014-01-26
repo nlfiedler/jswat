@@ -1,0 +1,24 @@
+JSWAT AUTHORS
+======================================================================
+$Id: AUTHORS.txt 629 2002-10-26 23:03:26Z nfiedler $
+
+
+AUTHORS
+----------------------------------------------------------------------
+Author and maintainer:
+  Nathan Fiedler
+
+Other contributors:
+  Matt Conway
+  Hugh Emberson
+  David Lum
+  Taavo Raykoff
+  Andreas Schoerk
+  Torsten Schlueter
+  Jeff Shute
+  Bill Smith
+  Michael Swartz
+  David Taylor
+
+If you have contributed to JSwat and your name is not shown above,
+please send me (nfiedler@bluemarsh.com) a message.

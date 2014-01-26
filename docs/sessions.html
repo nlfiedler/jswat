@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 June 2005), see www.w3.org" />
+
+  <title>JSwat - Sessions</title>
+</head>
+
+<body>
+  <h2>Sessions</h2>
+
+  <h3>What are Sessions?</h3>
+
+  <p>A JSwat Session is the object that manages the debuggee VM from
+  the standpoint of the debugger. It launches a debuggee or connects to
+  a remote debuggee. A Session can suspend and resume a debuggee. The
+  Session also keeps a variety of persistent properties.</p>
+
+  <p>At present JSwat supports only one open session at a time.</p>
+
+  <h3>Session Properties</h3>
+
+  <p>The properties of a Session include the classpath, sourcepath,
+  list of excludes, last-used search phrase, watchpoints, main class,
+  remote host and port, JVM options and so on. All of these properties
+  are initially empty until they are defined during normal interaction
+  with JSwat. When JSwat exits it automatically saves the properties to
+  a file on disk. The next time JSwat starts, it reads those properties
+  from the file.</p>
+
+  <p>JSwat has basic support for multiple sets of Session properties.
+  That is, the current Session properties can be saved to an arbitrary
+  file and later recalled. This is done through the &quot;Open
+  Session&quot; and &quot;Save Session&quot; menu items in the
+  &quot;File&quot; menu.</p>
+</body>
+</html>

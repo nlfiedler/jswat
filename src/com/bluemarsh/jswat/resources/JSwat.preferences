@@ -1,0 +1,312 @@
+root [
+  version 22
+  comment "$Id: JSwat.preferences,v 1.26 2002/04/27 06:44:01 nfiedler Exp $"
+  label "Preferences"
+  group [
+    name appearance
+    label "Appearance"
+    option boolean [
+      comment "true to remember main window geometry"
+      label "Remember main window geometry?"
+      name rememberGeometry
+      value true
+    ]
+
+    option boolean [
+      comment "true to trim package names from classes"
+      label "Trim package names from classes?"
+      name trimClassNames
+      value true
+    ]
+
+    option number [
+      comment "maximum number of lines in text areas"
+      label "Maximum lines displayed in Messages"
+      name messageLines
+      value 1000
+      width 5
+    ]
+
+    option number [
+      comment "maximum number of lines in text areas"
+      label "Maximum lines displayed in Output"
+      name outputLines
+      value 1000
+      width 5
+    ]
+
+    group [
+      name layout
+      label "Layout"
+
+      option boolean [
+        comment "true to show menu bar"
+        label "Show menu bar?"
+        name showMenubar
+        value true
+      ]
+
+      option boolean [
+        comment "true to show tool bar"
+        label "Show tool bar?"
+        name showToolbar
+        value true
+      ]
+    ]
+  ]
+
+  group [
+    name launch
+    label "Launching"
+
+    option boolean [
+      comment "true to add -classic switch when launching target VM"
+      label "Use -classic when launching VM"
+      name useClassicVM
+      value false
+    ]
+
+    option boolean [
+      comment "true to read output from target VM"
+      label "Read stdout and stderr from target VM"
+      name readOutput
+      value true
+    ]
+  ]
+
+  group [
+    name view
+    label "View"
+
+    option boolean [
+      comment "true to colorize the source view"
+      label "Colorize source view?"
+      name colorSource
+      value true
+    ]
+
+    option boolean [
+      comment "true to parse the source view"
+      label "Parse source view as Java?"
+      name parseView
+      value true
+    ]
+
+    option boolean [
+      comment "whether source view should be maximized by default"
+      label "Maximize source view on open"
+      name maximize
+      value true
+    ]
+
+    option number [
+      comment "width of tab stops in source view"
+      label "Source view tab width"
+      name tabWidth
+      movedFrom appearance.tabWidth
+      value 8
+      width 3
+    ]
+
+    option number [
+      comment "pointsize of font in source view"
+      label "Source view font size"
+      name fontSize
+      movedFrom appearance.fontSize
+      value 12
+      width 3
+    ]
+
+    group [
+      name colors
+      label "Colors"
+
+      option label [
+        label "<html><p>Colors used in highlighting the syntactical</p><p>elements of the source code.</p></html>"
+      ]
+
+      option color [
+        name character
+        label "Characters"
+        value "0x00b200"
+      ]
+
+      option color [
+        name comment
+        label "Comments"
+        value "0xff0000"
+      ]
+
+      option color [
+        name identifier
+        label "Identifiers"
+        value "0x404040"
+      ]
+
+      option color [
+        name keyword
+        label "Keywords"
+        value "0x0000ff"
+      ]
+
+      option color [
+        name literal
+        label "Literals"
+        value "0x00b2b2"
+      ]
+
+      option color [
+        name number
+        label "Numbers"
+        value "0xb27a7a"
+      ]
+
+      option color [
+        name primitive
+        label "Primitives"
+        value "0xb2b200"
+      ]
+
+      option color [
+        name string
+        label "Strings"
+        value "0x00b200"
+      ]
+    ]
+  ]
+
+  group [
+    name keys
+    label "Shortcuts"
+    comment "Shortcut key options"
+    option text [
+      label "Single Step Line"
+      name step
+      value F11
+      width 5
+    ]
+
+    option text [
+      label "Step Next Line"
+      name next
+      value F12
+      width 5
+    ]
+
+    option text [
+      label "Finish (return from) method"
+      name finish
+      value F2
+      width 5
+    ]
+
+    option text [
+      label "Start VM"
+      name vmStart
+      value "alt S"
+      width 5
+    ]
+
+    option text [
+      label "Suspend running VM"
+      name vmSuspend
+      value F4
+      width 5
+    ]
+
+    option text [
+      label "Resume suspended VM"
+      name vmResume
+      value F5
+      width 5
+    ]
+
+    option text [
+      label "Set breakpoint"
+      name setBreak
+      value F9
+      width 5
+    ]
+
+    option text [
+      label "Show breakpoints"
+      name listBreak
+      value F7
+      width 5
+    ]
+
+    option text [
+      label "Find in source view"
+      name find
+      value "alt F"
+      width 5
+    ]
+
+    option text [
+      label "Find next (in source view)"
+      name findAgain
+      value "alt G"
+      width 5
+    ]
+
+    option text [
+      label "Refresh views and panels"
+      name refresh
+      value F3
+      width 5
+    ]
+  ]
+
+  group [
+    name report
+    label "Reporting"
+
+    option boolean [
+      label "Report command-related events"
+      name command
+      value false
+    ]
+
+    option boolean [
+      label "Report session-related events"
+      name session
+      value false
+    ]
+
+    option boolean [
+      label "Report session listener-related events"
+      name "session_listener_list"
+      value false
+    ]
+
+    option boolean [
+      label "Report source view events"
+      name sourceview
+      value false
+    ]
+
+    option boolean [
+      label "Report breakpoint events"
+      name breakpoint
+      value false
+    ]
+
+    option boolean [
+      label "Report JDI event-processing events"
+      name event
+      value false
+    ]
+  ]
+
+  group [
+    name "files"
+    label "Files"
+
+    option text [
+      label "Default source extension"
+      name "defaultExtension"
+      value ".java"
+      width 7
+    ]
+  ]
+]

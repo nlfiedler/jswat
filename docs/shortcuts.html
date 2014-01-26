@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 June 2005), see www.w3.org" />
+
+  <title>Keyboard Shortcuts</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+  <h2>Keyboard Shortcuts</h2>
+
+  <h3>Using the Shortcuts</h3>
+
+  <p>Keyboard shortcuts are simply keyboard equivalents for invoking
+  certain menu items. For instance, the single step menu item can be
+  invoked using the mouse by clicking on the &quot;Step&quot; menu and
+  selecting the &quot;Single Step&quot; item. In addition to using the
+  mouse, there should be a keyboard key that is also assigned to invoke
+  that menu item. By default it is the F11 key. On most user
+  interfaces, the shortcut keys are indicated in the menu itself. Next
+  to the words &quot;Single Step&quot; you should see a
+  &quot;F11&quot;.</p>
+
+  <h3>Reassigning the Shortcuts</h3>
+
+  <p>To change the keys used to invoke menu items, use the Preferences
+  feature of JSwat. This is found under the &quot;Options&quot; menu
+  and will bring up a dialog containing various JSwat settings. Select
+  the &quot;Shortcuts&quot; item to see the assignable keyboard
+  shortcuts. There are presently only a small set of menu items with
+  keyboard shortcuts, but over time this will improve.</p>
+
+  <p>The allowable values for keyboard shortcuts are defined by the
+  <code>javax.swing.KeyStroke().getKeyStroke(String)</code> method.
+  That information is reprinted here for your convenience.</p>
+
+  <p>The keystroke string has the following syntax:</p>
+  <pre>
+     &lt;modifiers&gt;* (&lt;typedID&gt; | &lt;pressedReleasedID&gt;)
+     modifiers := shift | control | meta | alt | button1 | button2 | button3
+     typedID := typed &lt;typedKey&gt;
+     typedKey := string of length 1 giving Unicode character.
+     pressedReleasedID := (pressed | released)? key
+     key := KeyEvent keycode name, i.e. the name following &quot;VK_&quot;.
+</pre>
+
+  <p>If typed, pressed or released is not specified, pressed is
+  assumed. The button1, button2, and button3 modifiers refer to the
+  respective mouse buttons. Here are some examples:</p>
+  <pre>
+     &quot;INSERT&quot;
+     &quot;control DELETE&quot;
+     &quot;alt shift X&quot;
+     &quot;alt shift released X&quot;
+     &quot;typed a&quot;
+</pre>
+
+  <h3>Reserved Key Combinations</h3>
+
+  <p>The Java Foundation Classes, the component set used by JSwat to
+  build the graphical interface, seems to reserve some key
+  combinations. In particular:</p>
+
+  <ul>
+    <li>F6, F8 - accessibility hot keys.</li>
+
+    <li>F10 - opens the first menu in the menubar.</li>
+  </ul>
+</body>
+</html>

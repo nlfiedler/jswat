@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+        Copyright (C) 2002 Nathan Fiedler
+
+  Use Jakarta Ant to process this build file and create the Java parser.
+  This requires the sablecc.jar to be in the Jakarta Ant lib directory.
+  SableCC is available on the web at http://www.sablecc.org/
+
+  $Id: build.xml 654 2002-10-29 07:17:59Z nfiedler $
+-->
+
+<project name="JSwat parser" default="dist" basedir=".">
+  <!-- Need to define the task before we can use it. -->
+  <taskdef name="sablecc" classname="org.sablecc.ant.taskdef.Sablecc"/>
+
+  <!-- Set all the build properties. -->
+  <target name="init">
+    <property name="source" value="source"/>
+    <property name="classes" value="classes"/>
+    <property name="compile.dbg" value="on"/>
+  </target>
+
+  <target name="prepare" depends="init">
+    <mkdir dir="${source}"/>
+    <mkdir dir="${classes}"/>
+  </target>
+
+  <target name="clean" depends="init">
+    <delete dir="${source}"/>
+    <delete dir="${classes}"/>
+  </target>
+
+  <target name="compile" depends="prepare">
+    <!-- Use SableCC to generate the Java parser. -->
+    <sablecc src="${basedir}" outputdirectory="${source}"
+             includes="j11.sablecc"/>
+    <!-- Compile the generated source files. -->
+    <javac srcdir="${source}" destdir="${classes}" debug="${compile.dbg}"/>
+  </target>
+
+  <target name="dist" depends="compile">
+    <!-- Package the compiled classes into a jar. -->
+    <jar jarfile="parser.jar">
+      <fileset dir="${classes}"/>
+      <fileset dir="${source}">
+        <include name="**/*.dat"/>
+      </fileset>
+    </jar>
+  </target>
+</project>

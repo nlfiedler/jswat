@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org">
+
+    <title>Threads, Call Stack</title>
+  </head>
+
+  <body>
+    <h3>Threads, Call Stack</h3>
+
+    <p>The debuggee threads are displayed in the &quot;Threads&quot;
+    panel. The <code>threads</code> command will also display the
+    threads of the debuggee.</p>
+
+    <h4>Current Thread</h4>
+
+    <p>JSwat has a notion of a &quot;current&quot; thread. That is, the
+    thread upon which various operations are performed. The current
+    thread is set automatically when the debuggee hits a breakpoint of
+    any kind. Otherwise, the current thread can be set manually using
+    the <code>thread</code> command. It can also be set by clicking on
+    the thread in the &quot;Threads&quot; panel.</p>
+
+    <p>The current thread is indicated in the &quot;Threads&quot; panel
+    by drawing it in the color red. The <code>threads</code> command
+    uses the asterisk (*) character to indicate the current thread.</p>
+
+    <p>Any operations which require the current thread to be set will
+    report an error message if the current thread has not been set.</p>
+
+    <h4>Call Stack</h4>
+
+    <p>When the debuggee is suspended and the current thread is set,
+    the call stack is displayed in the &quot;Stack&quot; panel. The
+    stack can also be displayed using the <code>where</code>
+    command.</p>
+
+    <p>Whenever a breakpoint is hit, the current stack frame is set to
+    zero. The current frame can be changed by double-clicking on the
+    entry in the &quot;Stack&quot; panel. This has the side-effect of
+    opening the source file for the location given by that frame. The
+    current stack frame can also be changed using the <code>up</code>,
+    <code>down</code>, or <code>frame</code> commands.</p>
+  </body>
+</html>
+

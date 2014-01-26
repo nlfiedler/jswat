@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org">
+
+    <title>Traces</title>
+  </head>
+
+  <body>
+    <h3>Method Traces</h3>
+
+    <p>JSwat supports setting traces. A trace is a breakpoint that is
+    hit every time any method is entered or exited. As you might
+    imagine, this generates a lot of events. Thus, it is vitally
+    important that the trace has a class and/or thread filter. See the
+    <a href="breakpoints.html">breakpoints help</a> for the section on
+    setting up filters.</p>
+
+    <p>By default, the trace breakpoint does not suspend the debuggee
+    VM. It would be rather useless to do so, but the option is
+    available via the breakpoint properties dialog box.</p>
+
+    <p>The <code>trace</code> command can be used to create a trace.
+    There is also a dialog box available from the
+    &quot;Breakpoints&quot; menu. The command requires that you specify
+    the name of a class to act as the class filter. You could specify
+    &#39;<code>all</code>&#39; but I do not recommend it.</p>
+
+    <p>Although trace breakpoints are like any other breakpoint and
+    support conditions and monitors, it has not been tested. At the
+    very least, the suspend policy has to be changed from
+    &quot;none&quot; to either &quot;thread&quot; or
+    &quot;all&quot;.</p>
+  </body>
+</html>
+

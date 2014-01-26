@@ -1,0 +1,44 @@
+JSWAT BUGS
+======================================================================
+
+
+KNOWN PROBLEMS IN JDK
+----------------------------------------------------------------------
+- javac incorrectly includes relative path in SourceFile attribute of
+  class files on Windows (see java:build bug #4404985). This causes
+  JSwat to not be able to find the source file using the class file.
+
+- Changing the look and feel may cause the command input text field
+  to become unusable. This seems to go away in JDK 1.4.
+
+- Watching a static boolean field will crash the HotSpot VM. This is
+  reportedly fixed in JDK 1.4 beta 2 (see JDI bug #4440900).
+
+- Calling VirtualMachine.allClasses() can sometimes result in a
+  ConcurrentModificationException. (JDI bug #4406439)
+
+- Similar to the above error, you may get NoSuchElementException in
+  the classes panel code. Should be fixed in JDK 1.4 beta 2.
+
+- Locals panel code may sometimes report an InconsistentDebugInfoException
+  which is caused by the javac compiler (compiler bug #4349534).
+
+- Command field cursor sometimes disappears on Linux. (JFC bug #4309079)
+
+- Dragging mouse out of edit popup and frame causes array out of bounds
+  exception. (JFC bug #4246027, so called duplicate of 4352790)
+
+- On Linux/GNOME, java.awt.Frame geometry values incorrectly include
+  the window decorations. This does not occur on Win32. This problem
+  appears to have been fixed for JDK 1.4.
+
+- Debuggee VM blocks when jswat attempts to send user input through the
+  System.in stream on Linux. Use iotest and watch line 14 never return
+  from a single step. Use Refresh action to correct the hangup.
+  It works fine on Win32, IBM JDK for Linux, and JavaSoft JDK 1.4.
+  It also works fine if you type input into the JSwat input text field
+  before stepping over line 14. I believe this is a problem with green
+  threads.
+
+- Double clicking does not seem to work in IBM JDK 1.3 for Linux. The
+  MouseEvent.getClickCount() method always returns '1'.

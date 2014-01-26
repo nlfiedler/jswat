@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org">
+
+    <title>Stepping Through Code</title>
+  </head>
+
+  <body>
+    <h3>Stepping Through Code</h3>
+
+    <p>Stepping in source code executes just one instruction or line of
+    code in the debuggee at a time. This is useful for finding exactly
+    where a particular condition occurs in the code. The actions
+    described below are accessible via the named commands as well as
+    through the &quot;Step&quot; menu items.</p>
+
+    <h4>Operations</h4>
+
+    <p>There are several commands for stepping through source code.
+    They are described as follows.</p>
+
+    <dl>
+      <dt><code>step</code></dt>
+
+      <dd>Step a single line of source code, going <em>into</em> method
+      calls, if any. That is, if there is a method call being made,
+      execution will be halted at the top of that new method.</dd>
+
+      <dt><code>next</code></dt>
+
+      <dd>Step a single line of source code, going <em>through</em>
+      method calls, if any. That is, it runs the method at full speed
+      rather than stepping into it.</dd>
+
+      <dt><code>stepi</code></dt>
+
+      <dd>Step a single instruction, going <em>into</em> method calls,
+      if any.</dd>
+
+      <dt><code>nexti</code></dt>
+
+      <dd>Step a single instruction, going <em>through</em> method
+      calls, if any.</dd>
+
+      <dt><code>step out|up</code></dt>
+
+      <dd>Returns to the line that invoked the current method. This is
+      identical to the &quot;finish&quot; operation found in other
+      debuggers.</dd>
+    </dl>
+
+    <h4>Exclusion filters</h4>
+
+    <p>At some point or another you will single-step into the Java core
+    classes. This will happen often enough that you wish you could
+    avoid stepping into such classes. Fortunately, JSwat provides the
+    <code>exclude</code> command for just this purpose. You can add
+    individual classes and entire packages to the list of class
+    filters. During single-stepping, the debugger will not step into
+    these classes. See the exclude command help for more
+    information.</p>
+  </body>
+</html>
+

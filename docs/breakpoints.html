@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1 June 2005), see www.w3.org" />
+
+  <title>Breakpoints</title>
+</head>
+
+<body>
+  <h2>JSwat Breakpoints</h2>
+
+  <h3>How to Set Breakpoints</h3>
+
+  <p>JSwat supports setting breakpoints inside classes, including inner
+  classes. Breakpoints can be set in at least two ways using JSwat.
+  First there is the command &#39;<code>stop</code>&#39; which can be
+  used to set a breakpoint at a method in a class or at a code line in
+  the class. Second, there is the &quot;New Breakpoint&quot; item in
+  the &quot;Breakpoints&quot; menu, and finally there is a button in
+  the toolbar. This presents a dialog which allows you to set a
+  breakpoint at a code line in a class.</p>
+
+  <p>For using the &#39;<code>stop</code>&#39; command, type
+  &#39;<code>help stop</code>&#39; to learn the syntax for the command.
+  It is generally of the form &quot;<code>stop
+  &lt;class&gt;:&lt;line&gt;</code>&quot; where &lt;class&gt; is the
+  name of a class and &lt;line&gt; is the code line at which to set the
+  breakpoint. To set a breakpoint inside an inner class, use the dollar
+  sign ($) to separate the names of the outer and inner classes. Some
+  examples are:</p>
+  <pre>
+&gt; stop MyClass:213
+&gt; stop mypackage.MyClass.myMethod(java.lang.String, int)
+&gt; stop *.ClassName$Inner:41
+</pre>
+
+  <p>The second example demonstrates setting a breakpoint at a method,
+  by giving the method name and argument types. You do not give the
+  argument names, just the fully-qualified argument types.</p>
+
+  <h3>What Breakpoints Do I Have Set?</h3>
+
+  <p>Any breakpoints that have been set and resolved are assigned
+  numbers. The numbers assigned to a breakpoint remain in effect for
+  the life of the breakpoint. To see the breakpoints and their numbers,
+  use the &#39;<code>stop</code>&#39; command with no arguments. To see
+  the breakpoints in a dialog, select the &quot;Breakpoints...&quot;
+  menu item. There is also the panel labeled
+  &quot;Breakpoints&quot;.</p>
+
+  <p>Breakpoints are also visually displayed in the source code viewer.
+  The breakpoints are displayed by colorizing the area on the left
+  margin of the source window. Resolved breakpoints are colored with
+  green and disabled breakpoints are gray. Breakpoints that have
+  expired are red. Unresolved breakpoints are blue. Breakpoints that
+  are skipping hits are yellow.</p>
+
+  <h3>How to Disable/Enable Breakpoints</h3>
+
+  <p>There are at least three ways to disable and enable breakpoints.
+  The first is through the &#39;<code>disable</code>&#39; and
+  &#39;<code>enable</code>&#39; commands. These each take the number of
+  the breakpoint (as described above) to disable or enable.</p>
+
+  <p>Another way to disable or enable breakpoints is to use the
+  &quot;Breakpoints...&quot; menu item. This presents a dialog that
+  shows all the set breakpoints. Select a breakpoint in the dialog and
+  click either the &quot;Disable&quot; or &quot;Enable&quot; button, as
+  desired.</p>
+
+  <p>Yet another way to disable and enable breakpoints is by using the
+  source code viewer. If a source file is displayed which contains
+  breakpoints, you can right click on the code line with the breakpoint
+  and a popup menu will appear. This menu has items to disable, enable,
+  and remove breakpoints.</p>
+
+  <h3>How to Clear Breakpoints</h3>
+
+  <p>There are at least three ways to clear breakpoints. The first is
+  through the &#39;<code>clear</code>&#39; command. This takes the
+  number of the breakpoint (as described above) to remove.</p>
+
+  <p>Another way to clear breakpoints is to use the &quot;List
+  Breakpoints&quot; menu item and the &quot;Breakpoints&quot; menu.
+  This presents a dialog that shows all the set breakpoints. Select a
+  breakpoint and click the &quot;Remove&quot; button to remove the
+  breakpoint.</p>
+
+  <p>Yet another way to clear breakpoints is by using the source code
+  viewer. If a source file is displayed which contains breakpoints, you
+  can right click on the code line with the breakpoint and a popup menu
+  will appear. This menu has items to disable, enable, and remove
+  breakpoints.</p>
+
+  <h3>Grouping Breakpoints</h3>
+
+  <p>Breakpoints are automatically added to a breakpoint group called
+  &quot;Default&quot;. Via the breakpoints manager dialog (accessible
+  via the &quot;Breakpoints&quot; menu) it is possible to create new
+  breakpoint groups and move breakpoints to that group. Breakpoint
+  groups can be disabled, causing all of the breakpoints contained
+  within them to also be disabled. Re-enabling the group will restore
+  the breakpoints to their original enabled state.</p>
+
+  <p>Breakpoint groups can contain other groups, which may contain yet
+  other groups.</p>
+
+  <p>Deleting a breakpoint group will delete all of the breakpoints and
+  groups contained therein.</p>
+
+  <p>The &quot;Default&quot; breakpoint group cannot be deleted and it
+  will be automatically re-enabled whenever a session is restarted.</p>
+
+  <h3>Skipping and Expiration</h3>
+
+  <p>All breakpoints support the notion of skipping and expiration.
+  Skipping means that a breakpoint will be hit but will immediately
+  resume execution of the debuggee VM until the breakpoint has been hit
+  enough times. A skip value of zero means the breakpoint will not skip
+  at all. Expiration is when a breakpoint has been hit enough times
+  that it is no longer useful. This is the inverse of skipping, where
+  the breakpoint will halt execution of the VM until the breakpoint
+  expires. An expiration value of zero means the breakpoint will never
+  expire.</p>
+
+  <p>If the skip value is larger than the expiration value (assuming
+  the expiration value is non-zero), the breakpoint will effectively
+  never halt execution of the debuggee VM.</p>
+
+  <h3>Manipulating Multiple Breakpoints</h3>
+
+  <p>This is very easy to do. Simply select all of the breakpoints you
+  want to modify in the breakpoints panel, then select the button to
+  modify them. You can enable, disable, and remove multiple breakpoints
+  just be selecting them.</p>
+
+  <h3>Breakpoint Conditions</h3>
+
+  <p>Breakpoints may have one or more conditions assigned to them,
+  allowing you to avoid hitting the breakpoint more often than is
+  necessary. Presently only one type of breakpoint condition is
+  supported, called a &quot;value&quot; condition. The condition is
+  satisfied when the named variable (e.g. &quot;obj1.fieldx&quot;)
+  equals a particular value (e.g. &quot;123&quot;). The variable type
+  must be a primitive (boolean, byte, char, double, float, int, long,
+  short) or a String.</p>
+
+  <h3>Breakpoint Monitors</h3>
+
+  <p>Breakpoints may have one or more monitors assigned to them. A
+  monitor is something that is &quot;performed&quot; whenever the
+  breakpoint is hit and the breakpoint is not disabled, skipping, or
+  expired. Presently only one type of monitor is supported, called a
+  &quot;command&quot; monitor. When this monitor is performed, the
+  named command is executed, just as if you had entered it yourself.
+  For instance, you could add a monitor to invoke the &quot;where&quot;
+  command whenever the assigned breakpoint is hit. In addition to the
+  built-in commands, any defined alias or macro can be used.</p>
+
+  <h3>Thread Suspend Policy</h3>
+
+  <p>Normally when a breakpoint causes execution of the debuggee VM to
+  stop, all of the debuggee threads are suspended. This behavior can be
+  modified with the breakpoints properties dialog. The &quot;Suspend
+  Threads&quot; radio buttons indicate which threads should be
+  suspended when the breakpoint is hit. &quot;None&quot; and
+  &quot;All&quot; are obvious, while &quot;Event&quot; may be unclear.
+  The event thread is the one in which the breakpoint event
+  occurred.</p>
+
+  <h3>Filters</h3>
+
+  <p>Location-based breakpoints (line and method) support thread
+  filters. That is, the breakpoint is only considered hit if it occurs
+  on a particular thread or threads. The set of threads can be
+  manipulated using either the breakpoint properties dialog box, or
+  through the <code>filter</code> command.</p>
+
+  <p>Traces and exception catches can have both thread and class
+  filters. A class filter causes the trace or catch to only operate
+  when the event occurs within the given class or classes. The set of
+  class can be manipulated using either the breakpoint properties
+  dialog box, or through the <code>filter</code> command.</p>
+</body>
+</html>

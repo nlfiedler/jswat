@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- $Id: README.html 946 2003-04-24 07:35:59Z nfiedler $ -->
+
+<head>
+  <meta name="generator"
+  content="HTML Tidy for Linux/x86 (vers 1st February 2003), see www.w3.org" />
+
+  <title>JSwat README</title>
+</head>
+
+<body>
+  <h1>JSwat README</h1>
+
+  <h2>What is it?</h2>
+
+  <p>JSwat is a graphical Java debugger front-end, written for the Java
+  2 platform, utilizing the
+  <a href="http://java.sun.com/products/jpda/">Java Platform Debugger
+  Architecture</a> (JPDA). The source code is licensed under the
+  <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public
+  License</a>. This version of the program is maintained for
+  compatibility with older Java 2 releases. You may want to consider
+  upgrading to Java 2 version 1.4 or higher and use the latest version
+  of JSwat.</p>
+  <hr />
+
+  <h2>Requirements</h2>
+
+  <h3>J2SE</h3>
+
+  <p>JSwat requires the <a href="http://java.sun.com/j2se/">Java 2
+  Standard Edition</a> software, version 1.2 or higher. Compatible
+  software from other vendors may be used, if so desired. If you are
+  running J2SE version 1.4 or higher, you should use the latest version
+  of JSwat. It has many more features and is under constant
+  development.</p>
+
+  <h3>JPDA</h3>
+
+  <p>The Java Platform Debugger Architecture (JPDA) software, which is
+  included in most releases of the J2SE, is utilized by JSwat to carry
+  out its debugging activities. The required classes are typically
+  found in the <code>&lt;jdk&gt;\lib\tools.jar</code> file, and begin
+  with the prefix <code>com.sun.jdi</code> (where JDI stands for Java
+  Debug Interface). These classes may also be found in a file called
+  <code>jpda.jar</code>.</p>
+
+  <p>To find the JPDA classes, look in the <code>lib</code> directory
+  of the JDK installation. If there is a <code>jpda.jar</code> file
+  there, then you have the JPDA and you can skip all of these steps.
+  If, instead, there is a <code>tools.jar</code> file, there is a
+  chance that it contains the JPDA classes. Scan the output from
+  <code>jar tf tools.jar</code> and look for the
+  &quot;<code>com/sun/jdi</code>&quot; classes. If you see them, then
+  your <code>tools.jar</code> file contains the JPDA classes. Otherwise
+  you need to download the
+  <a href="http://www.javasoft.com/products/jpda/">JPDA</a>.</p>
+
+  <p><strong>Linux JDK 1.2.2 users:</strong><br />
+   Yes, it seems that the JPDA is not included with the Linux JDK
+  version 1.2.2, despite what the web site may tell you. Download the
+  Sun SPARC version and extract just the <code>jpda.jar</code> file and
+  copy it to the <code>lib</code> directory of your JDK installation.
+  You will also need to follow the JPDA installation instructions. The
+  important step is to add <code>&lt;jdk_home&gt;/lib/i386</code> to
+  your <code>LD_LIBRARY_PATH</code> setting. If you fail to do this,
+  you will see the &quot;can&#39;t find libjdwp.so&quot; error message
+  when using JSwat.</p>
+
+  <h3>Debugging Info</h3>
+
+  <p>JSwat, like most Java debuggers, requires that the classes to be
+  debugged be compiled using the <code>-g</code> flag. In addition, do
+  not compile the classes with the optimization flags, as that may
+  hinder debugging.</p>
+  <hr />
+
+  <h2>Starting JSwat</h2>
+
+  <p>There are several ways to start JSwat, but we will only cover the
+  simplest of these for now.</p>
+
+  <p style="margin: 0 2em 0"><code>java
+  -Djava.ext.dirs=&lt;JAVA_HOME&gt;\lib -jar
+  &lt;JSWAT_HOME&gt;\jswat.jar</code></p>
+
+  <p style="margin: 1ex 2em 0"><em>Unix users must replace
+  <code>\</code> with <code>/</code> in the line above.</em></p>
+
+  <p>Note that <code>JAVA_HOME</code> is the path to the JDK, while
+  <code>JSWAT_HOME</code> is the path to the <code>jswat.jar</code>
+  file. The <code>&lt;JAVA_HOME&gt;\lib</code> directory must contain
+  the <code>tools.jar</code> (or <code>jpda.jar</code>) file in order
+  for JSwat to start. This file contains the JPDA classes
+  (<code>com.sun.jdi</code>) used by JSwat. If the file containing
+  these classes is located elsewhere in your system, you must make the
+  appropriate change to the command used to invoke JSwat.</p>
+
+  <h3>Passing Arguments</h3>
+
+  <p>JSwat can accept a string of commands to be executed as soon as it
+  has completed its startup. These commands are passed at the end of
+  the command line used to start the program. Here are some
+  examples:</p>
+
+  <ul>
+    <li><code>java ... jswat.jar load -client MyClass arg1
+    arg2</code></li>
+
+    <li><code>java ... jswat.jar attach mymachine:1234</code></li>
+
+    <li><code>java ... jswat.jar &quot;load MyClass; stop MyClass:120;
+    resume&quot;</code></li>
+  </ul>
+
+  <p>Read the help section titled &quot;Commands&quot; to learn more
+  about using JSwat commands.</p>
+
+  <h3>Other Ways to Start JSwat</h3>
+
+  <ol>
+    <li>
+      <div>
+        As an alternative to using the Java Extensions Mechanism, you
+        may invoke JSwat like so:
+      </div>
+      <pre>
+java -Xbootclasspath/a:&lt;JAVA_HOME&gt;\lib\tools.jar -jar &lt;JSWAT_HOME&gt;\jswat.jar
+</pre>
+    </li>
+
+    <li>
+      <div>
+        For a shorter invocation, list the aforementioned
+        <code>tools.jar</code> file and the JSwat jar files in your
+        classpath and invoke the program with this simple command:
+      </div>
+      <pre>
+java com.bluemarsh.jswat.Main
+</pre>
+    </li>
+
+    <li>
+      <div>
+        Another short invocation can be accomplished by copying the
+        <code>tools.jar</code> file to the
+        <code>&lt;JAVA_HOME&gt;\jre\lib\ext</code> directory, then
+        starting JSwat like so:
+      </div>
+      <pre>
+java -jar &lt;JSWAT_HOME&gt;\jswat.jar
+</pre>
+
+      <p>Note that the <code>-jar</code> option causes the classpath
+      setting to be ignored. This includes the path following the
+      <code>-cp</code> or <code>-classpath</code> options, as well as
+      the <code>CLASSPATH</code> environment variable.</p>
+    </li>
+  </ol>
+  <hr />
+
+  <h2>Documentation</h2>
+
+  <p>The JSwat documentation is found in the <code>docs</code>
+  directory. Additionally, there are several &quot;how to&quot;
+  documents and a tutorial on the
+  <a href="http://www.bluemarsh.com/java/jswat/docs/">web site</a>.</p>
+  <hr />
+
+  <h2>Stopping JSwat</h2>
+
+  <h3>Do not use Ctrl-C to exit!</h3>
+
+  <p>Using Ctrl-c to exit a program is generally incorrect. It is
+  especially incorrect with JSwat. You can expect things to break if
+  you do this. It must <em>only</em> be used in cases where the JVM
+  hosting JSwat has frozen. The correct way to exit JSwat is via either
+  the window close button, the <code>exit</code> command, or the Exit
+  item in the File menu.</p>
+  <hr />
+
+  <h2>Removing JSwat</h2>
+
+  <p>Removing JSwat from your system is generally pretty simple. Find
+  the files, wherever it is that you originally put them, and delete
+  them. If, on the other hand, you used one of the packaged versions
+  such as RPM or DEB, you will need to remove the package using the
+  appropriate tool.</p>
+
+  <p>To remove all traces of JSwat from your system, you will need to
+  look in only one place. Find your home directory and remove the
+  <code>.jswat</code> directory found there.</p>
+  <hr />
+
+  <h2>Getting the latest source</h2>
+
+  <p>The latest source code can be found in the Subversion repository
+  at <code>http://www.bluemarsh.com/repos/jswat/1_x</code> using any
+  web browser, or a
+  <a href="http://subversion.tigris.org/">Subversion</a> client. See
+  the
+  <a href="http://www.bluemarsh.com/java/jswat/contrib.html">contributing</a>
+  page on the JSwat web page for more information about using
+  Subversion to access the repository.</p>
+  <hr />
+
+  <h2>Platform Particulars</h2>
+
+  <p>Below are notes concerning particular platforms and what must be
+  done to make JSwat work correctly on them.</p>
+
+  <h3>Mac OS X</h3>
+
+  <p>According to a Mac OS X 10.1.5 user, it is necessary to add the
+  hostname of your machine to the <code>netinfo</code> file. Otherwise
+  you will see an error about <code>gethostbyname</code> when launching
+  the debuggee. This is because the JPDA uses sockets to communicate
+  between JSwat and the debuggee, even when the debuggee is launched by
+  JSwat.</p>
+
+  <h3>Windows</h3>
+
+  <p>The JRE, often installed with the JDK, seems to cause more
+  problems than it solves. If JSwat tells you that the JPDA cannot be
+  found and you are certain you followed the instructions above
+  correctly, then chances are the JRE is getting in the way. I
+  recommend saving yourself time and trouble and removing the JRE from
+  your system. If you cannot do this, then at least delete or rename
+  the <code>java.exe</code> and <code>javaw.exe</code> files in the
+  Windows directory.</p>
+
+  <h3>Windows NT and JDK 1.4</h3>
+
+  <p>There seems to be a problem with using JDK 1.4 on Windows NT 4.0,
+  relating to the DirectX features. The errors occur in the method
+  <code>sun.awt.windows.Win32DDRenderer.doFillRectDD</code>. The
+  solution appears to be quite simple, just add the following option
+  after <code>java</code> when starting JSwat:
+  <code>-Dsun.java2d.noddraw=true</code></p>
+
+  <h3>Windows XP and JDK 1.4</h3>
+
+  <p>There seems to be a problem with using JDK 1.4.1 on Windows XP,
+  relating to certain video cards. The relevant bug report is on the
+  <a href="http://developer.java.sun.com/developer/bugParade/bugs/4713003.html">
+  developer services</a> site, which you may want to read for further
+  information. There is a work-around that seems to work for some users
+  and is worth trying. Add the following option after <kbd>java</kbd>
+  when starting JSwat: <kbd>-Dsun.java2d.d3d=false</kbd></p>
+  <hr />
+
+  <div style="text-align: center">
+    <small>JSwat and related documentation are Copyright (c)
+    1999-2003</small>
+  </div>
+</body>
+</html>

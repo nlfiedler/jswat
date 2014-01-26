@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org">
+
+    <title>Source View</title>
+  </head>
+
+  <body>
+    <h3>Source View</h3>
+
+    <p>The source view is the most sophisticated part of JSwat. It uses
+    a Java language parser to colorize the lexical elements of the
+    file, identify the locations and names of the defined classes, and
+    determine the locations of all of the methods. It uses a popup menu
+    to manage breakpoints and scroll to method definitions.</p>
+    <a name="gutter"></a> 
+
+    <h4>The Gutter</h4>
+
+    <p>The gutter is the place where the line numbers are shown, on the
+    left side of the source view. The background color is used to
+    indicate the location of breakpoints. The default light gray
+    indicates that line does not have a breakpoint. The other colors
+    are defined as follows:</p>
+
+    <dl>
+      <dt><strong>Red</strong></dt>
+
+      <dd>Expired; hit count reached &#39;expire count&#39;.</dd>
+
+      <dt><strong>Gray</strong></dt>
+
+      <dd>Disabled by user.</dd>
+
+      <dt><strong>Blue</strong></dt>
+
+      <dd>Unresolved; waiting for class to load.</dd>
+
+      <dt><strong>Yellow</strong></dt>
+
+      <dd>Skipping hits until &#39;skip count&#39; is reached.</dd>
+
+      <dt><strong>Green</strong></dt>
+
+      <dd>Ready to be hit.</dd>
+    </dl>
+
+    <h4>Current Location</h4>
+
+    <p>The current location is like the current thread (see <a href= 
+    "threads.html">Threads, Call Stack</a>). It is set whenever a
+    breakpoint is hit and indicates the line about to be executed in
+    the debuggee. The line is indicated in the source view using a blue
+    highlight across that line. Changing the current thread or stack
+    frame will move the highlight to the corresponding line of the
+    appropriate source view.</p>
+
+    <h4>Searching</h4>
+
+    <p>You can search for words and phrases in the source view by using
+    the &quot;Search Source&quot; menu item in the &quot;View&quot;
+    menu (or the toolbar button with the binoculars). In the Find
+    dialog, simply enter the word or phrase you are looking for, then
+    click Ok. To ignore letter casing, select the checkbox
+    provided.</p>
+
+    <h4>Options</h4>
+
+    <p>There are a number of options affecting the view, which include
+    the following. They are specified in the &quot;View&quot; category
+    of the user preferences dialog.</p>
+
+    <dl>
+      <dt><strong>Colorize</strong></dt>
+
+      <dd>This enables or disables the use of a Java lexical analyzer
+      to determine the locations of all of the tokens in the source
+      file. This information, when enabled, is used to colorize the
+      source code. You may want to disable this if you usually view
+      files that are not Java source code.</dd>
+
+      <dt><strong>Parse as Java</strong></dt>
+
+      <dd>This enables or disables the use of a Java language parser to
+      determine the locations of all of the classes and methods in the
+      source file. This information, when enabled, is used to set
+      breakpoints and scroll to method definitions. You may want to
+      disable this if you usually view files that are not Java source
+      code.</dd>
+
+      <dt><strong>Maximize</strong></dt>
+
+      <dd>When enabled, the source view windows will be maximized when
+      they are first opened.</dd>
+    </dl>
+  </body>
+</html>
+

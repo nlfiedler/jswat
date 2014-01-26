@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+  <head>
+    <meta name="generator" content=
+    "HTML Tidy for Linux/x86 (vers 1st February 2002), see www.w3.org">
+
+    <title>Classpath and Sourcepath</title>
+  </head>
+
+  <body bgcolor="#ffffff">
+    <h2>Classpath and Sourcepath</h2>
+
+    <h3>Class Path</h3>
+
+    <p>The classpath in JSwat is used much the same way the Java
+    Virtual Machine uses it. The classpath provides a list of locations
+    where classes can be found on the system. The entries correspond to
+    directories containing the classes concerned. For example, on my
+    system the classpath is set to <code>/home/nfiedler/java</code> and
+    all of my Java code resides inside that directory or subdirectories
+    therein.</p>
+
+    <p>The way in which JSwat handles the classpath is quite simple.
+    When the session is inactive, the classpath is simply that which
+    was set via the <code>classpath</code> command or the &quot;Set
+    Classpath&quot; dialog. If no setting is available, then JSwat
+    takes the classpath from the
+    &quot;<code>java.class.path</code>&quot; property, or if that
+    property is not defined, the current working directory is used.
+    When JSwat launches a new debuggee VM it sets the classpath of the
+    debuggee VM to that which is set in JSwat. When JSwat is connecting
+    to a remote debuggee VM then the classpath in JSwat becomes the
+    classpath of the remote VM. Thus you will probably see a different
+    classpath value depending on whether a remote debugging session is
+    active or not.</p>
+
+    <p>When using either the <code>load</code> command or the
+    &quot;Start VM&quot; dialog, you may provide an alternate value for
+    the classpath. You do this with the &quot;<code>-cp</code>&quot; or
+    &quot;<code>-classpath</code>&quot; Java VM options, just as you
+    would when invoking &#39;<code>java</code>&#39; from the command
+    line. This will override (and overwrite) the classpath value
+    defined in JSwat.</p>
+
+    <p>See the help for the <code>classpath</code> JSwat command to
+    learn how to view and set the classpath used by JSwat. An easier
+    way to modify the classpath is through the &quot;Set
+    Classpath&quot; menu item in the &quot;Options&quot; menu.</p>
+
+    <h3>Source Path</h3>
+
+    <p>The sourcepath in JSwat looks just like a classpath setting.
+    However, it is used only for finding source files. The sourcepath
+    is used by JSwat as another means of finding the source file for a
+    class. If a sourcepath is not set, JSwat will fall back on the
+    classpath to find the source files.</p>
+
+    <p>The format of the sourcepath is exactly like the classpath. That
+    is, if your source code is in <code>/usr/source/stuff</code> and
+    your classes are in <code>/usr/classes/stuff</code> and the name of
+    your class is <code>stuff.Test</code>, then the sourcepath should
+    be set to <code>/usr/source</code>, just as the classpath is set to
+    <code>/usr/classes</code>. You may also add Zip or Jar files to
+    your sourcepath, and JSwat will find the source files inside of the
+    named archives. Just as with the directories, the paths of the
+    files in the archives must match the fully-qualified names of the
+    classes (e.g. &quot;<code>java/lang/String.java</code>&quot; for
+    &quot;<code>java.lang.String</code>&quot;).</p>
+
+    <p>The sourcepath can be set one of two ways in JSwat. First, it
+    can be passed when launching JSwat using the <code>-D</code>
+    argument to the JVM, like so:</p>
+<pre>
+% java -Djava.source.path=/usr/java/src com.bluemarsh.jswat.Main
+</pre>
+
+    <p>This value will override any previous sourcepath setting in
+    JSwat. This is unlike the classpath, which defaults to the setting
+    in JSwat rather than the <code>java.class.path</code> property
+    setting.</p>
+
+    <p>The second way to set the sourcepath is with the
+    <code>sourcepath</code> JSwat command. This works just like the
+    <code>classpath</code> command and takes a set of directory paths
+    and or Zip/Jar files as an argument. On Windows the directory paths
+    are separated with &#39;<code>;</code>&#39; characters, while on
+    Unix systems it is the &#39;<code>:</code>&#39; character. An
+    easier way to modify the sourcepath is through the &quot;Set
+    Sourcepath&quot; menu item in the &quot;Options&quot; menu.</p>
+
+    <h3>How JSwat Finds Source Files</h3>
+
+    <p>Apparently this is complicated because new users run into this
+    problem with surprising frequency. It generally boils down to a
+    misunderstanding of how the classpath and sourcepath are used. Keep
+    in mind that JSwat uses the classpath pretty much the way you would
+    expect. It is generally where Java source files (and class files)
+    are found. The sourcepath is a set of alternative paths for finding
+    source files, taking precedence over the classpath.</p>
+
+    <p>Let&#39;s look at a detailed example. Take for instance the
+    class &quot;<code>java.lang.String</code>&quot;. Let&#39;s assume
+    the source file is called <code>String.java</code> and is located
+    in <code>/usr/java/src/java/lang</code>. If the classpath is set to
+    something like <code>/usr/java/jre/lib/rt.jar</code> then JSwat is
+    not going to be able to find the source for
+    <code>java.lang.String</code> since it has no idea where on the
+    file system the file could be located.</p>
+
+    <p>This is where the sourcepath comes in. With the classpath set to
+    <code>/usr/java/jre/lib/rt.jar</code>, JSwat only sees class files
+    in that jar file. If we set the sourcepath to be
+    <code>/usr/java/src</code> then JSwat will look for the file named
+    <code>/usr/java/src/java/lang/String.java</code>. Lo and behold,
+    there is the source code.</p>
+
+    <p>If this still does not make sense, read this page again until it
+    does. I have explained this as simply as I can and provided
+    multiple examples. If you cannot figure it out, you probably are
+    confused with the classpath and should read a book on Java until
+    you have grasped the concept.</p>
+  </body>
+</html>
+
