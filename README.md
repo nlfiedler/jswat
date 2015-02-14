@@ -7,6 +7,14 @@ with code navigator; movable display panels showing threads, call stack,
 visible variables, and loaded classes; command interface for more advanced
 features; and Java-like expression evaluation, including method invocation.
 
+## Discontinued ##
+
+This project is effectively discontinued as of 2013. It is known _not_ to work with Java 8 and possibly even Java 7. No one is working on this project any more, including the original author. May I humbly suggest using one of the much better altneratives?
+
+* [NetBeans](https://netbeans.org)
+* [Eclipse](http://eclipse.org)
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+
 ## Downloads ##
 
 The compiled binaries and installers for milestone releases are available from
