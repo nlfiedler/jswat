@@ -9,7 +9,7 @@ features; and Java-like expression evaluation, including method invocation.
 
 ## Discontinued ##
 
-This project is effectively discontinued as of 2013. It is known _not_ to work with Java 8 and possibly even Java 7. No one is working on this project any more, including the original author. May I humbly suggest using one of the much better altneratives?
+This project is effectively discontinued as of 2013. It is known _not_ to work with Java 8 and possibly even Java 7. No one is working on this project any more, including the original author. May I humbly suggest using one of the much better alternatives?
 
 * [NetBeans](https://netbeans.org)
 * [Eclipse](http://eclipse.org)
